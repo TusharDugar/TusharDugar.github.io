@@ -158,7 +158,9 @@ html::before {
     position: relative;
     z-index: 1; /* Ensure sections are above background elements */
     /* FIX: Consistent left/right spacing for all main sections as per prompt */
-    padding: 100px 60px; /* shifted right side with balanced left space */
+    /* Original: padding: 100px 60px; */
+    /* Corrected as per new prompt: Top 100px, Right 40px, Bottom 100px, Left 60px */
+    padding: 100px 40px 100px 60px; 
 }
 
 /* Reveal Animation Base for general sections */
@@ -168,7 +170,7 @@ html::before {
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     will-change: transform, opacity; /* Performance hint for reveal animations */
 }
-.reveal-item.revealed {
+.reveal-item.visible { /* Changed from .revealed to .visible */
     opacity: 1;
     transform: translateY(0);
 }
@@ -180,7 +182,7 @@ html::before {
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     will-change: transform, opacity; /* Performance hint for stagger animations */
 }
-.reveal-stagger.revealed {
+.reveal-stagger.visible { /* Changed from .revealed to .visible */
     opacity: 1;
     transform: translateY(0) scale(1);
 }
@@ -201,7 +203,7 @@ html::before {
   will-change: transform, opacity;
 }
 
-.reveal-child.revealed {
+.reveal-child.visible { /* Changed from .revealed to .visible */
   opacity: 1;
   transform: translateY(0) scale(1);
 }
@@ -275,9 +277,8 @@ html::before {
     overflow: hidden;
     background-color: var(--bg-profile-card);
 }
-/* The .revealed class is no longer applied to .about-left-content by JS if it's always visible by default */
-/* However, it's good practice to keep the class definition if it *could* be applied in other contexts */
-.about-left-content.revealed {
+/* The .visible class is not applied here, as it's meant to be visible by default for a sticky element */
+.about-left-content.visible { 
     opacity: 1;
     transform: translateY(0);
 }
@@ -545,7 +546,6 @@ html::before {
 
 
 /* Services Content Wrapper (Combined old + new prompt CSS) */
-/* --- MODIFIED FOR SIMPLE GRID ANIMATION --- */
 /* This container is now just a layout wrapper for the grid of service items.
    It does *not* have sticky positioning, fixed height, or 3D cube properties. */
 .services-content-wrapper {
@@ -578,6 +578,7 @@ html::before {
 }
 
 /* Service Item (Combined old + new prompt CSS) */
+/* ADDED: Scroll reveal for services */
 .service-item {
   /* flex properties moved to parent .services-items-container (grid) */
   /* Remove width, height, top, left, backface-visibility from cube concept */
@@ -588,8 +589,27 @@ html::before {
   z-index: 1; /* As per prompt's .service-item example */
   overflow: visible; /* No clipping as per prompt's .service-item example */
   text-align: left; /* Ensure text is left-aligned within the item */
-  will-change: transform, opacity; /* Keep for Framer Motion */
+  will-change: transform, opacity; /* Keep for performance */
+
+  /* ADDED ANIMATION PROPERTIES */
+  opacity: 0;
+  transform: translateX(-80px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
+.service-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+/* Stagger effect */
+.service-item:nth-child(1) { transition-delay: 0.1s; }
+.service-item:nth-child(2) { transition-delay: 0.2s; }
+.service-item:nth-child(3) { transition-delay: 0.3s; }
+.service-item:nth-child(4) { transition-delay: 0.4s; }
+.service-item:nth-child(5) { transition-delay: 0.5s; }
+.service-item:nth-child(6) { transition-delay: 0.6s; }
+.service-item:nth-child(7) { transition-delay: 0.7s; }
+.service-item:nth-child(8) { transition-delay: 0.8s; }
+
 
 /* Service item children styling */
 .service-item .service-title,
@@ -598,35 +618,19 @@ html::before {
     z-index: 1; /* Ensures text is above numbers */
 }
 
-.service-item .service-title {
-    color: var(--accent-primary-sawad); /* Orange color for titles */
-    font-size: 1.5em;
-    font-weight: 700;
-    margin: 0 0 8px 0;
-    line-height: 1.2;
-    font-style: normal;
-    text-transform: none;
-}
-.service-item .service-description {
-    font-size: 1em;
-    color: var(--text-medium);
-    margin: 0;
-    line-height: 1.6;
-    font-style: normal;
-    word-break: break-word; /* Helps break long words to fit better */
-}
 /* Subtitle background numbers as per prompt's example */
+/* MODIFIED: Fix subtitle numbers visibility */
 .subtitle-number { /* This is the actual element in your HTML */
   position: absolute;
   top: 50%;
-  right: 20px; /* FIX: Corrected position to right: 20px to prevent distortion and place correctly as per original prompt's example */
+  right: 20px; /* Keeping original right placement as it works visually */
   transform: translateY(-50%); /* Centered vertically only */
-  font-size: 7em; /* As per prompt's example */
-  color: rgba(255, 255, 255, 0.08); /* As per prompt's example */
+  font-size: 4rem; /* Changed from 7em as per prompt */
+  opacity: 0.1; /* Changed from rgba(255, 255, 255, 0.08) as per prompt */
   z-index: 0; /* Behind text */
   pointer-events: none;
 }
-.subtitle-text { /* New class from prompt */
+.subtitle-text { /* New class from prompt, already defined */
   position: relative;
   z-index: 1; 
 }
@@ -676,6 +680,7 @@ html::before {
     justify-items: stretch; 
 }
 
+/* MODIFIED & ADDED: Scroll reveal for tool cards */
 .tool-card {
     background-color: var(--bg-tool-card);
     border-radius: 15px;
@@ -684,8 +689,18 @@ html::before {
     align-items: center;
     gap: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    /* Combined existing hover transition with new reveal animation */
+    transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out;
     cursor: pointer;
+    will-change: transform, opacity; /* Added for performance */
+
+    /* ADDED ANIMATION PROPERTIES */
+    opacity: 0;
+    transform: translateY(60px);
+}
+.tool-card.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .tool-card:hover {
@@ -1370,13 +1385,13 @@ footer h2 {
         opacity: 1 !important;
     }
 
-    /* Services cube animation items */
-    .service-item {
+    /* Services & Tools animation items */
+    .service-item, .tool-card { /* Added .tool-card here */
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
     }
-    /* Only the first item should be visible if motion is reduced */
+    /* For staggered items, display only the first one if motion is reduced */
     .service-item:not(:first-child) {
         opacity: 0 !important;
     }
