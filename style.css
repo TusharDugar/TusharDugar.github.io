@@ -159,9 +159,9 @@ html::before {
     margin: 0 auto; /* Center sections horizontally */
     position: relative;
     z-index: 1; /* Ensure sections are above background elements */
-    /* NEW: Consistent left spacing for all main sections */
+    /* NEW: Consistent left/right spacing for all main sections as per prompt */
     padding-left: 60px;   /* Shift content slightly right */
-    padding-right: 40px;  /* Optional, to balance spacing */
+    padding-right: 40px;  /* To balance spacing */
 }
 
 /* Reveal Animation Base for general sections */
@@ -298,6 +298,13 @@ html::before {
     transform: translateX(0);
     background-color: var(--accent-primary-sawad);
 }
+/* NEW: Profile Photo sizing to prevent clipping */
+.profile-image-container .profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image covers container without distortion */
+}
+
 
 /* Updated: Main Name */
 .about-left-content h3 {
@@ -513,15 +520,12 @@ html::before {
 /* SERVICES SECTION FIX */
 .services-section {
   position: relative;
-  /* Perspective is now on .services-content-wrapper for more direct control of 3D children */
-  perspective: none; /* Removed from here */
   /* MODIFIED: Padding as per prompt */
   padding: 100px 40px; /* Balanced padding */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  /* FIX: Background removed as per user instruction.
-          WARNING: This will cause overlap of content below when pinned. */
-  background: none; 
+  /* FIX: Background color added back. This is CRUCIAL for preventing overlap of content below when pinned. */
+  background-color: var(--bg-main); 
 }
 
 /* Services Heading (for the 3D cube section) */
@@ -530,14 +534,11 @@ html::before {
     font-size: 5em;
     line-height: 0.9;
     font-weight: 800;
-    /* MODIFIED: Reduced margin-bottom to bring heading closer to cube */
-    margin-bottom: 15px; 
+    margin-bottom: 40px; /* Consistent spacing as per prompt */
     text-transform: uppercase;
     text-align: left;
     /* NEW: Margin-left for services heading specifically */
     margin-left: 20px;
-    /* FIX: Removed position: sticky; and top: 0; as its parent (services-section) is pinned by GSAP.
-            This prevents the heading from disappearing and ensures consistent spacing. */
     position: relative; /* Default position for normal flow within the section */
     z-index: 4; /* Higher than cube wrapper to ensure it's on top of cube faces */
     padding-bottom: 20px;
@@ -610,7 +611,6 @@ html::before {
 }
 
 /* Service item children styling, including background number and text z-index */
-/* These styles are applied via .subtitle-text to the specific elements */
 .service-item .service-title,
 .service-item .service-description {
     /* These elements will inherit styles from .subtitle-text below */
@@ -634,7 +634,7 @@ html::before {
     word-break: break-word; /* Helps break long words to fit better */
 }
 /* SUBTITLE BACKGROUND NUMBERS FIX: Styles as per prompt */
-.subtitle-number { /* Changed from .service-item .service-bg-number to match prompt */
+.subtitle-number { 
   position: absolute;
   top: 50%;
   left: 20px; /* NEW: Aligned left as per prompt's example */
