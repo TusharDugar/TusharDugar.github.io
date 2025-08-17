@@ -659,7 +659,10 @@ html::before {
     text-align: left;
     background: none; /* As per prompt */
     position: relative;
-    z-index: 2; /* Ensure visible above pinned Services */
+    /* NEW: Spacing fix for Premium Tools */
+    margin-top: 100px; /* Extra gap so it doesn’t overlap Services */
+    margin-bottom: 80px; /* For consistent spacing, as per prompt's example */
+    z-index: 1; /* Match prompt example for .premium-tools */
 }
 
 .tools-heading {
