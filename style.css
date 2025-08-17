@@ -39,10 +39,6 @@
     --services-sticky-top-wrapper: 0px; /* Unused in this GSAP setup */
 }
 
-/* Global utility text colors */
-/* Removed .text-white and .text-gray here for hero heading, as specific classes are used now */
-
-
 /* Layer 1: Solid Black Background (Base) */
 html {
     background-color: var(--bg-main); /* Solid black */
@@ -487,16 +483,16 @@ html::before {
 /* New hero heading color classes */
 .hero-heading .crafting {
   color: #ffffff; /* white */
-  display: block; /* Ensure it takes its own line */
+  /* display: block; removed as <br> is used in HTML */
 }
 
 .hero-heading .digital {
   color: #888888; /* grey */
-  display: block; /* Ensure it takes its own line */
+  /* display: block; removed as <br> is used in HTML */
 }
 
 
-/* FIX: Added margin-bottom for #premium-tools and margin-top for #services */
+/* FIX: Added margin-bottom for #tools and margin-top for #services */
 #tools { /* Changed from #premium-tools to #tools as per HTML ID */
   margin-bottom: 80px; /* adjust if needed */
 }
@@ -515,9 +511,8 @@ html::before {
   padding: 100px 40px; /* Balanced padding */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  /* FIX: Background removed as per user instruction.
-          WARNING: This will cause overlap of content below when pinned. */
-  background: none; /* Remove unwanted background */
+  /* FIX: Background color added back. This is CRUCIAL for preventing overlap of content below when pinned. */
+  background-color: var(--bg-main); 
 }
 
 /* Services Heading (for the 3D cube section) */
@@ -602,10 +597,10 @@ html::before {
 }
 
 /* Service item children styling, including background number and text z-index */
+/* These styles are applied via .subtitle-text to the specific elements */
 .service-item .service-title,
 .service-item .service-description {
-    position: relative; /* Ensures these elements create a stacking context */
-    z-index: 1; /* Ensures text is above numbers */
+    /* These elements will inherit styles from .subtitle-text below */
 }
 
 .service-item .service-title {
