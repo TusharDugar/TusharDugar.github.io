@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tushar Dugar - Digital Portfolio</title>
+    <!-- Google Fonts Import (Poppins for all text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- GSAP and ScrollTrigger CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+    <!-- The background is now purely CSS on the html and body elements -->
+    
+    <div class="main-layout-container"> <!-- Main container for the two columns -->
+        <div class="left-column-sticky">
+            <section id="about" class="section about-left-content reveal-item">
+                <div class="profile-card-wrapper reveal-parent">
+                    <!-- Decorative background dashed lines (from Aabid Ahmed card) -->
+                    <div class="dashed-decoration top-left-curve"></div>
+                    <div class="dashed-decoration bottom-right-curve"></div>
+
+                    <div class="profile-image-container reveal-child">
+                        <!-- Placeholder image: A black silhouette on orange background to match Aabid Ahmed style -->
+                        <img src="https://via.placeholder.com/250x180/FF6B00/000000?text=" alt="Tushar Dugar Profile" class="profile-photo">
+                    </div>
+
+                    <!-- Name - changed to single line as per Aabid Ahmed -->
+                    <h3 class="reveal-child">Tushar Dugar</h3>
+                    
+                    <div class="fire-icon-with-line reveal-child">
+                        <span class="fire-icon"><i class="fas fa-fire"></i></span>
+                    </div>
+                    
+                    <p class="about-short-desc reveal-child">A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.</p>
+                    
+                    <div class="about-social-icons reveal-child">
+                        <!-- Social icons for Aabid Ahmed's style -->
+                        <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
+                        <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="mailto:imtushar4621@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="right-column-scroll">
+            <!-- Hero/Introduction Section -->
+            <section id="hero-right" class="section hero-right-content reveal-item">
+                <!-- HERO HEADING: Updated as per prompt -->
+                <h1 class="hero-heading">
+                    <span class="crafting">Crafting</span><br>
+                    <span class="digital">Digital Experiences</span>
+                </h1>
+                <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
+            </section>
+
+            <!-- Services Section - Now with GSAP 3D Cube Animation -->
+            <section id="services" class="section services-section">
+                <h2 class="services-heading">
+                    <span class="text-white">MY</span><br>
+                    <span class="text-gray">SERVICES</span>
+                </h2>
+
+                <div class="services-content-wrapper">
+                    <div class="services-items-container">
+                        <!-- Services Data will be dynamically transformed by GSAP -->
+                        <div class="service-item" id="service-0" data-service-index="0">
+                            <!-- Apply subtitle-text and subtitle-number logic -->
+                            <h3 class="service-title subtitle-text">Web Design</h3>
+                            <p class="service-description subtitle-text">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p>
+                            <div class="service-bg-number subtitle-number">01</div>
+                        </div>
+                        <div class="service-item" id="service-1" data-service-index="1">
+                            <h3 class="service-title subtitle-text">SEO Optimization</h3>
+                            <p class="service-description subtitle-text">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p>
+                            <div class="service-bg-number subtitle-number">02</div>
+                        </div>
+                        <div class="service-item" id="service-2" data-service-index="2">
+                            <h3 class="service-title subtitle-text">UX/UI Design</h3>
+                            <p class="service-description subtitle-text">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p>
+                            <div class="service-bg-number subtitle-number">03</div>
+                        </div>
+                        <div class="service-item" id="service-3" data-service-index="3">
+                            <h3 class="service-title subtitle-text">Graphic Design</h3>
+                            <p class="service-description subtitle-text">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p>
+                            <div class="service-bg-number subtitle-number">04</div>
+                        </div>
+                        <div class="service-item" id="service-4" data-service-index="4">
+                            <h3 class="service-title subtitle-text">E-commerce Solutions</h3>
+                            <p class="service-description subtitle-text">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p>
+                            <div class="service-bg-number subtitle-number">05</div>
+                        </div>
+                        <div class="service-item" id="service-5" data-service-index="5">
+                            <h3 class="service-title subtitle-text">Digital Marketing</h3>
+                            <p class="service-description subtitle-text">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p>
+                            <div class="service-bg-number subtitle-number">06</div>
+                        </div>
+                        <div class="service-item" id="service-6" data-service-index="6">
+                            <h3 class="service-title subtitle-text">Content Creation</h3>
+                            <p class="service-description subtitle-text">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p>
+                            <div class="service-bg-number subtitle-number">07</div>
+                        </div>
+                        <div class="service-item" id="service-7" data-service-index="7">
+                            <h3 class="service-title subtitle-text">Social Media Management</h3>
+                            <p class="service-description subtitle-text">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p>
+                            <div class="service-bg-number subtitle-number">08</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Premium Tools Section -->
+            <section id="tools" class="section tools-section reveal-item">
+                <h2 class="tools-heading">
+                    <span class="text-white">PREMIUM</span>
+                    <span class="text-gray">TOOLS</span>
+                </h2>
+
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <!-- Using Simple Icons CDN for common brand logos -->
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg" alt="Google Gemini Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">Google Gemini</h4>
+                            <p class="tool-category">AI Assistant</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/openai.svg" alt="ChatGPT Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">ChatGPT</h4>
+                            <p class="tool-category">AI Assistant</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="Figma Logo"
+                            class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">Figma</h4>
+                            <p class="tool-category">Design Tool</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="Photoshop Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">Adobe Photoshop</h4>
+                            <p class="tool-category">Image Editing</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googleanalytics.svg" alt="Google Analytics Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">Google Analytics</h4>
+                            <p class="tool-category">Web Analytics</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/semrush.svg" alt="SEMrush Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">SEMrush</h4>
+                            <p class="tool-category">SEO & Content Marketing</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div> <!-- End main-layout-container -->
+
+    <footer id="contact" class="section reveal-item">
+        <h2>Let’s Connect!</h2>
+        <p class="contact-tagline">
+            I am always open to discuss your project,<br>improve your online presence or help with your website.
+        </p>
+        <div class="contact-buttons">
+            <button class="contact-button" id="phone-button" data-contact="+919330077650">
+                <div class="button-content-main">
+                    <i class="fas fa-phone-alt"></i> 
+                    <span class="button-value">+91 9330077650</span>
+                </div>
+                <span class="copied-text">Copied!</span>
+            </button>
+            <button class="contact-button" id="email-button" data-contact="imtushar4621@gmail.com">
+                <div class="button-content-main">
+                    <i class="fas fa-envelope"></i> 
+                    <span class="button-value">imtushar4621@gmail.com</span>
+                </div>
+                <span class="copied-text">Copied!</span>
+            </button>
+        </div>
+        <div class="social-links">
+            <!-- Social links removed as per earlier request -->
+        </div>
+    </footer>
+
+    <!-- Main JavaScript File -->
+    <script src="script.js"></script>
+</body>
+</html>
