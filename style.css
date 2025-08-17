@@ -637,9 +637,9 @@ html::before {
 .subtitle-number { 
   position: absolute;
   top: 50%;
-  left: 20px; /* NEW: Aligned left as per prompt's example */
-  transform: translate(-50%, -50%); /* Centered vertically, but now left-aligned */
-  font-size: 6rem; /* As per prompt */
+  right: 20px; /* CORRECTED: Back to right: 20px as per your earlier prompt's CSS example, and to prevent left-side distortion. */
+  transform: translateY(-50%); /* Centered vertically only */
+  font-size: 7em; /* CORRECTED: Back to 7em as per your earlier prompt's CSS example for visual weight. */
   color: rgba(255, 255, 255, 0.1); /* As per prompt (semi-transparent) */
   z-index: 0; /* Behind text */
   pointer-events: none;
