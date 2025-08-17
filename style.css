@@ -44,33 +44,24 @@
     --services-sticky-top-wrapper: 0px; /* Unused in this GSAP setup */
 }
 
-/* Layer 1: Solid Black Background (Base) */
+/* Global Reset from prompt (overrides some default body/html styles) */
 html {
-    background-color: var(--bg-main); /* Solid black */
-    height: 100%; /* Ensure html takes full viewport height */
+    width: 100%;
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
-    position: relative; /* Needed for fixed children positioning in some browsers */
-}
-
-/* Keyframes for the animated colorful gradient */
-@keyframes gradient {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    position: relative;
 }
 
 body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    color: var(--text-light);
-    background-color: transparent; /* Make body transparent to show html background */
+    width: 100%;
     overflow-x: hidden;
-    position: relative;
-    scroll-behavior: smooth;
-    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
     background-color: #000; /* As per prompt's reset */
     color: #fff; /* As per prompt's reset */
+    line-height: 1.6; /* Retained from original */
+    scroll-behavior: smooth; /* Retained from original */
+    min-height: 100vh; /* Retained from original */
 }
 
 /* Layer 2: Subtle Background Glowing Elements (Over Black Background) */
@@ -510,10 +501,12 @@ html::before {
 /* Services Section (Combined old + new prompt CSS) */
 .services-section {
   position: relative;
+  /* MODIFIED: Padding as per prompt */
   padding: 100px 60px; /* Balanced padding as per new prompt */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  background-color: var(--bg-main); /* FIX: Re-added solid background for opacity as per discussion and screenshot */
+  /* FIX: Background color added back. This is CRUCIAL for preventing overlap of content below when pinned. */
+  background-color: var(--bg-main); /* Re-added solid background for opacity */
 
   /* Spacing fix from prompt */
   margin-top: 100px; /* Extra gap so it doesn’t overlap Services */
@@ -548,7 +541,7 @@ html::before {
 .services-content-wrapper {
   position: sticky; /* Sticky positioning for the main cube viewport */
   top: 0; /* Sticky to top of the viewport once it starts */
-  height: 250px; /* Fixed height for the viewport of the cube, matches example */
+  height: 250px; /* Fixed height for the cube viewport, matches example */
   overflow: hidden; /* CRITICAL: Clips rotating items to maintain cube illusion */
   perspective: 1000px; /* As per earlier prompt */
   transform-style: preserve-3d; /* CRITICAL for children to be 3D */
@@ -618,37 +611,18 @@ html::before {
     font-style: normal;
     word-break: break-word; /* Helps break long words to fit better */
 }
-
-/* Service background numbers as per prompt's example */
-.service-bg-number { /* This is the actual element in your HTML */
+/* Subtitle background numbers as per prompt's example */
+.subtitle-number { /* This is the actual element in your HTML */
   position: absolute;
   top: 50%;
-  right: 20px; /* Corrected: Back to right: 20px to avoid distortion and place correctly */
+  right: 20px; /* FIX: Corrected position to right: 20px to prevent distortion and place correctly as per original prompt's example */
   transform: translateY(-50%); /* Centered vertically only */
-  font-size: 7em; /* Corrected: Back to 7em for visual weight */
+  font-size: 7em; /* FIX: Corrected font-size back to 7em for visual weight as per original prompt's example */
   color: rgba(255, 255, 255, 0.08); /* As per prompt's example */
   z-index: 0; /* Behind text */
   pointer-events: none;
 }
-.service-content { /* This class does not exist in your HTML, .service-item children need .subtitle-text */
-  /* This rule is kept to match prompt, but might not apply unless HTML is adjusted */
-  position: relative;
-  z-index: 1;
-}
-
-/* NEW: subtitle-number and subtitle-text classes from prompt (applied in HTML and used for z-index) */
-.subtitle-number { 
-  /* These styles are defined above in .service-bg-number, this serves as a fallback/redundancy */
-  position: absolute;
-  top: 50%;
-  right: 20px; /* As per prompt's example */
-  transform: translateY(-50%); 
-  font-size: 7em; 
-  color: rgba(255, 255, 255, 0.08); 
-  z-index: 0; 
-  pointer-events: none;
-}
-.subtitle-text { 
+.subtitle-text { /* New class from prompt */
   position: relative;
   z-index: 1; 
 }
