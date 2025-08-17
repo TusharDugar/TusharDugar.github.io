@@ -511,8 +511,7 @@ html::before {
   padding: 100px 60px; /* Balanced padding as per new prompt */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  /* FIX: Background color added back. This is CRUCIAL for preventing overlap of content below when pinned. */
-  background-color: var(--bg-main); /* Re-added solid background for opacity */
+  background-color: var(--bg-main); /* FIX: Re-added solid background for opacity as per discussion and screenshot */
 
   /* Spacing fix from prompt */
   margin-top: 100px; /* Extra gap so it doesn’t overlap Services */
@@ -619,7 +618,7 @@ html::before {
     word-break: break-word; /* Helps break long words to fit better */
 }
 /* Subtitle background numbers as per prompt's example */
-.subtitle-number { 
+.subtitle-number { /* This is the actual element in your HTML */
   position: absolute;
   top: 50%;
   right: 20px; /* FIX: Corrected position to right: 20px to prevent distortion and place correctly as per original prompt's example */
@@ -638,7 +637,7 @@ html::before {
 /* Tools Section (Combined old + new prompt CSS) */
 .tools-section {
   text-align: center; /* As per prompt's Tools Section example */
-  margin-top: 100px; /* Avoids overlap with services as per prompt */
+  margin-top: 120px; /* FIX: Explicitly set margin-top to 120px for separation */
   margin-bottom: 80px; /* For consistent spacing, as per prompt's example */
   
   /* Inherited/adjusted original properties */
@@ -664,3 +663,729 @@ html::before {
 }
 
 .tools-heading .text-gray {
+    color: var(--text-medium);
+    display: block;
+}
+
+/* TOOLS GRID ALIGNMENT */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    /* Ensure left alignment by default, will be overridden by media query if needed */
+    margin-left: 0; 
+    margin-right: 0;
+    justify-items: stretch; 
+}
+
+.tool-card {
+    background-color: var(--bg-tool-card);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.tool-card:hover {
+    transform: translateY(-5px);
+    background-color: rgba(26, 26, 26, 0.9);
+}
+
+.tool-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background-color: var(--tool-icon-bg);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.tool-logo {
+    max-width: 70%;
+    max-height: 70%;
+    object-fit: contain;
+    filter: brightness(0.01);
+}
+
+.tool-info {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.tool-name {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--tool-name-color);
+    margin: 0 0 5px 0;
+    line-height: 1.2;
+}
+
+.tool-category {
+    font-size: 0.85em;
+    color: var(--tool-category-color);
+    margin: 0;
+    line-height: 1.2;
+}
+
+
+/* Subtitles Section as per prompt */
+.subtitles-section {
+  position: relative;
+  padding: 120px 60px;
+  background: #111;
+  text-align: center;
+}
+
+.subtitles-section .section-bg-number {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 180px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.08);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.subtitles-section h2,
+.subtitles-section p {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* Footer (Contact Section - Full Width, adjusted for smaller height) (UNCHANGED) */
+footer {
+    background-color: var(--bg-main);
+    color: var(--text-light);
+    text-align: center;
+    padding: 60px 0;
+    position: relative;
+    z-index: 1; /* Ensures footer is above general background elements, but below pinned section */
+}
+
+footer a {
+    color: var(--accent-secondary-sawad);
+    text-decoration: none;
+    transition: text-decoration 0.3s ease;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer h2 {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 3.2em;
+    color: var(--primary-heading-color);
+    font-weight: 700;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+    letter-spacing: 1.5px;
+}
+
+.contact-tagline {
+    font-size: 1.25em;
+    margin-bottom: 40px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.95;
+    line-height: 1.8;
+    color: var(--text-light);
+}
+
+.contact-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.contact-button {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 280px;
+    height: 130px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    text-align: center;
+}
+
+.contact-button:hover {
+    transform: translateY(-8px);
+    background-color: rgba(26, 26, 26, 0.9);
+}
+
+.contact-button .button-content-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.contact-button i {
+    font-size: 2.8em;
+    color: var(--accent-primary-sawad);
+}
+
+.contact-button .button-value {
+    font-size: 15px;
+    font-weight: bold;
+    opacity: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 5px;
+    max-width: 90%;
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+.contact-button .copied-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--gradient-skills-front);
+    color: var(--text-light);
+    font-size: 1.5em;
+    font-weight: bold;
+    border-radius: 12px;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    z-index: 3;
+}
+
+/* States when button is 'copied' */
+.contact-button.copied .button-content-main {
+    transform: translateY(-100%) !important;
+    opacity: 0 !important;
+}
+
+.contact-button.copied .copied-text {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+}
+
+.social-links {
+    margin-top: 30px;
+}
+.social-links a {
+    color: var(--text-light);
+    margin: 0 20px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+.social-links a:hover {
+    color: var(--accent-secondary-sawad);
+    transform: scale(1.3);
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 1200px) {
+    .main-layout-container {
+        padding: 0 40px;
+        gap: 60px; /* Adjusted gap */
+    }
+    .left-column-sticky {
+        flex-basis: 320px; /* Adjusted fixed width */
+    }
+    .about-left-content {
+        max-width: 320px; /* Maintain consistent max-width */
+        padding: 25px 20px;
+    }
+    .profile-image-container {
+        width: calc(100% + 40px);
+        max-width: 360px;
+        height: 190px;
+        margin-bottom: 20px;
+    }
+    .about-left-content h3 {
+        font-size: 2.6em;
+    }
+    .fire-icon-with-line {
+        margin-bottom: 20px;
+    }
+    .fire-icon {
+        padding: 7px;
+        font-size: 1em;
+    }
+    .about-short-desc {
+        font-size: 0.88em;
+        margin-bottom: 20px;
+    }
+    .contact-info-list {
+        margin: 15px 0 25px;
+    }
+    .contact-info-list li {
+        font-size: 0.9em;
+    }
+    .contact-info-list li i {
+        margin-right: 12px;
+        font-size: 1.1em;
+    }
+    .contact-info-list li span {
+        margin-right: 6px;
+    }
+    .about-social-icons a {
+        font-size: 1.4em;
+    }
+
+    .dashed-decoration {
+        border-width: 1.5px;
+    }
+    .top-left-curve, .bottom-right-curve {
+        width: 130px;
+        height: 130px;
+        top: -45px;
+        left: -45px;
+        bottom: -45px;
+        right: -45px;
+    }
+
+    .right-column-scroll {
+        padding-right: 40px; /* Adjusted padding */
+    }
+    .hero-heading {
+        font-size: 4.5em; /* Adjusted hero heading font size */
+        margin-bottom: 25px;
+    }
+    .hero-description {
+        font-size: 1.1em;
+        margin-bottom: 60px;
+    }
+
+    /* Services section adjustments for responsiveness */
+    .services-section {
+        padding-top: 60px;
+        padding-bottom: 80px;
+        z-index: 2; /* Maintain z-index */
+    }
+    .services-heading {
+        font-size: 4.5em; /* Adjusted for consistency */
+    }
+    .services-content-wrapper {
+        height: 300px; /* Fixed height for the cube viewport */
+    }
+    .service-item {
+        padding: 15px;
+    }
+
+    .tools-section {
+        padding-top: 60px;
+        padding-bottom: 80px;
+        z-index: 1; /* Maintain z-index */
+    }
+    .tools-heading {
+        font-size: 5em; /* Kept original size for tools heading */
+        margin-bottom: 40px;
+        /* NEW: Consistent alignment for tools section at this breakpoint */
+        text-align: center; /* Center the heading to match grid */
+    }
+    .tools-grid {
+        margin: 0 auto; /* Center the grid */
+        max-width: 500px; /* Constrain width when centered */
+    }
+    /* END NEW */
+    .tool-card {
+        padding: 18px;
+        gap: 12px;
+    }
+    .tool-icon-wrapper {
+        width: 45px;
+        height: 45px;
+        border-radius: 8px;
+    }
+    .tool-name {
+        font-size: 1em;
+    }
+    .tool-category {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-layout-container {
+        flex-direction: column;
+        padding: 0 20px;
+        padding-top: 20px;
+        gap: 0; /* No gap in column layout, use padding on sections */
+    }
+    .left-column-sticky {
+        width: 100%; /* Take full width in column mode */
+        position: relative;
+        top: 0;
+        padding-right: 0;
+        min-height: unset;
+        padding-bottom: 50px;
+        display: flex;
+        justify-content: flex-start; /* Aligned to top */
+        align-items: center;
+        flex-direction: column;
+        padding-top: 0;
+        flex-basis: auto; /* Allow it to take natural height when stacking */
+    }
+    .about-left-content {
+        max-width: 350px;
+        padding: 30px 25px;
+        border-radius: 18px;
+    }
+    .profile-image-container {
+        width: calc(100% + 50px);
+        max-width: 400px;
+        height: 210px;
+        margin-bottom: 30px;
+        border-radius: 15px;
+    }
+    .about-left-content h3 {
+        font-size: 2.8em;
+        margin-bottom: 25px;
+    }
+    .fire-icon-with-line {
+        height: 45px;
+        margin-bottom: 30px;
+    }
+    .fire-icon {
+        padding: 9px;
+        font-size: 1.2em;
+    }
+    .fire-icon-with-line::before,
+    .fire-icon-with-line::after {
+        width: calc(50% - 30px);
+    }
+    .about-short-desc {
+        font-size: 1em;
+        margin-bottom: 30px;
+        padding: 0 10px;
+        max-width: 100%;
+    }
+    .contact-info-list {
+        margin: 25px 0 35px;
+    }
+    .contact-info-list li {
+        font-size: 1em;
+        margin-bottom: 18px;
+    }
+    .contact-info-list li i {
+        margin-right: 18px;
+        font-size: 1.3em;
+        width: 25px;
+    }
+    .contact-info-list li span {
+        margin-right: 10px;
+    }
+    .about-social-icons {
+        gap: 20px;
+        padding-top: 15px;
+    }
+    .about-social-icons a {
+        font-size: 1.6em;
+    }
+
+    .dashed-decoration {
+        border-width: 2px;
+    }
+    .top-left-curve, .bottom-right-curve {
+        width: 160px;
+        height: 160px;
+        top: -55px;
+        left: -55px;
+        bottom: -55px;
+        right: -55px;
+    }
+
+    .right-column-scroll {
+        width: 100%;
+        padding: 40px 20px;
+        min-height: auto;
+        padding-top: 50px;
+        text-align: left;
+    }
+    .hero-heading {
+        font-size: 3.5em; /* Adjusted hero heading font size */
+        margin-bottom: 20px;
+    }
+    .hero-description {
+        font-size: 1.1em;
+        line-height: 1.6;
+        max-width: 100%;
+        margin-bottom: 40px;
+    }
+
+    /* Services section adjustments for responsiveness */
+    .services-section {
+        padding-top: 40px;
+        padding-bottom: 60px;
+        z-index: 2; /* Maintain z-index */
+    }
+    .services-heading {
+        font-size: 3.5em; /* Adjusted for consistency */
+    }
+    .services-content-wrapper {
+        height: 250px; /* Fixed height for the cube viewport */
+    }
+    .service-item {
+        padding: 10px;
+    }
+
+    .tools-section {
+        padding-top: 40px;
+        padding-bottom: 60px;
+        z-index: 1; /* Maintain z-index */
+    }
+    .tools-heading {
+        font-size: 3.5em;
+        margin-bottom: 30px;
+    }
+    .tools-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        max-width: 100%;
+    }
+    .tool-card {
+        padding: 15px;
+        gap: 10px;
+    }
+    .tool-icon-wrapper {
+        width: 40px;
+        height: 40px;
+        border-radius: 7px;
+    }
+    .tool-name {
+        font-size: 0.95em;
+    }
+    .tool-category {
+        font-size: 0.75em;
+    }
+
+    footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-layout-container {
+        padding: 0 15px;
+    }
+    .section h2 {
+        font-size: 2.8em;
+        letter-spacing: 0.5px;
+        margin-bottom: 30px;
+    }
+    .contact-tagline {
+        font-size: 1em;
+        margin-bottom: 25px;
+    }
+    .contact-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+    .contact-button {
+        width: 100%;
+        height: 80px;
+        font-size: 0.95em;
+    }
+    .contact-button i {
+        font-size: 1.6em;
+    }
+    .contact-button .button-value {
+        font-size: 0.75em;
+    }
+    .contact-button .copied-text {
+        font-size: 0.95em;
+    }
+
+    .about-left-content {
+        max-width: 320px;
+        padding: 25px 20px;
+    }
+    .profile-image-container {
+        width: calc(100% + 30px);
+        max-width: 350px;
+        height: 180px;
+        margin-bottom: 25px;
+        border-radius: 12px;
+    }
+    .about-left-content h3 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+    }
+    .fire-icon-with-line {
+        height: 40px;
+        margin-bottom: 25px;
+    }
+    .fire-icon {
+        padding: 8px;
+        font-size: 1.1em;
+    }
+    .fire-icon-with-line::before,
+    .fire-icon-with-line::after {
+        width: calc(50% - 25px);
+    }
+    .about-short-desc {
+        font-size: 0.9em;
+        margin-bottom: 25px;
+        padding: 0 5px;
+    }
+    .contact-info-list {
+        margin: 20px 0 30px;
+    }
+    .contact-info-list li {
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    .contact-info-list li i {
+        margin-right: 15px;
+        font-size: 1.2em;
+        width: 20px;
+    }
+    .contact-info-list li span {
+        margin-right: 8px;
+    }
+    .about-social-icons {
+        gap: 15px;
+        padding-top: 10px;
+    }
+    .about-social-icons a {
+        font-size: 1.4em;
+    }
+
+    .dashed-decoration {
+        border-width: 1.5px;
+    }
+    .top-left-curve, .bottom-right-curve {
+        width: 140px;
+        height: 140px;
+        top: -45px;
+        left: -45px;
+        bottom: -45px;
+        right: -45px;
+    }
+
+    .right-column-scroll {
+        padding: 30px 15px;
+        padding-top: 40px;
+    }
+    .hero-heading {
+        /* NEW: clamp for better scaling on small screens */
+        font-size: clamp(1.8em, 8vw, 3em);
+        margin-bottom: 15px;
+    }
+    .hero-description {
+        font-size: 0.95em;
+        line-height: 1.5;
+        margin-bottom: 30px;
+    }
+
+    /* Services section adjustments for responsiveness */
+    .services-section {
+        padding-top: 30px;
+        padding-bottom: 50px;
+        z-index: 2; /* Maintain z-index */
+    }
+    .services-heading {
+        font-size: 2.5em; /* Adjusted for consistency */
+    }
+    .services-content-wrapper {
+        height: 230px; /* Fixed height for the cube viewport */
+    }
+    .service-item {
+        padding: 12px;
+    }
+
+    .tools-section {
+        padding-top: 30px;
+        padding-bottom: 50px;
+        z-index: 1; /* Maintain z-index */
+    }
+    .tools-heading {
+        font-size: 2.8em;
+        margin-bottom: 25px;
+    }
+    .tools-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .tool-card {
+        padding: 15px;
+        gap: 8px;
+    }
+    .tool-icon-wrapper {
+        width: 35px;
+        height: 35px;
+        border-radius: 6px;
+    }
+    .tool-name {
+        font-size: 0.9em;
+    }
+    .tool-category {
+        font-size: 0.75em;
+    }
+
+    footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    /* General reveal items */
+    .reveal-item,
+    .reveal-stagger {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    /* Services cube animation items */
+    .service-item {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+    /* Only the first item should be visible if motion is reduced */
+    .service-item:not(:first-child) {
+        opacity: 0 !important;
+    }
+}
