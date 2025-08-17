@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Observe all main sections with the general section observer
     // NOTE: The #about section's main card (.about-left-content) is now always visible by CSS
-    // The stagger animation for its *children* is handled separately below.
+    // The stagger animation for its *children's) is handled separately below.
     document.querySelectorAll('#hero-right, #tools, #services, #contact').forEach(el => {
         if (el) sectionObserver.observe(el);
     });
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --------------------------
-    // Services Section GSAP 3D Cube Animation (REVERTED to scroll-triggered rotateX)
+    // Services Section GSAP 3D Cube Animation (REVERTED to scroll-triggered rotateX, with dynamic width)
     // --------------------------
     // Ensure GSAP and ScrollTrigger are loaded
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const servicesSection = document.getElementById('services');
     const servicesContentWrapper = servicesSection?.querySelector('.services-content-wrapper'); // The sticky perspective container
     const servicesItemsContainer = servicesContentWrapper?.querySelector('.services-items-container'); // The element that rotates
-    const serviceItems = servicesItemsContainer ? Array.from(servicesItemsContainer.querySelectorAll('.service-item')) : [];
+    const serviceItems = serviceItemsContainer ? Array.from(serviceItemsContainer.querySelectorAll('.service-item')) : [];
     
     // Check for core elements
     if (!servicesSection || !servicesContentWrapper || !servicesItemsContainer || serviceItems.length === 0) {
@@ -111,20 +111,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to update cube dimensions and initial transforms (Reverted to original logic)
     function updateCubeDimensions() {
-        let cubeWidth = 0; // Local variable for calculated width
-        const width = window.innerWidth;
-        // Keep dynamic width for responsiveness
-        if (width >= 1024) cubeWidth = 1000; // Adjusted for better visibility
-        else if (width >= 768) cubeWidth = 800; // Adjusted for better visibility
-        else cubeWidth = 500; // Adjusted for better visibility
+        // Dynamically calculate maxWidth based on content, as per prompt
+        let maxWidth = 0;
+        // Temporarily clear GSAP transforms to get accurate natural width
+        gsap.set(serviceItems, { clearProps: "transform" }); 
 
-        // Apply width to the servicesItemsContainer (the cube itself)
-        gsap.set(servicesItemsContainer, { width: cubeWidth });
-        // Apply height to each item (CSS already has height: 100%, but good for consistency)
-        gsap.set(serviceItems, { height: cubeHeight });
+        serviceItems.forEach(item => {
+            const width = item.offsetWidth;
+            if (width > maxWidth) maxWidth = width;
+        });
+        
+        servicesItemsContainer.style.setProperty("--cube-width", maxWidth + "px"); // Set CSS variable
 
-
-        // Set initial transforms for each service item (face)
+        // Re-apply initial transforms based on calculated maxWidth
         serviceItems.forEach((item, i) => {
             gsap.set(item, {
                 transform: `rotateX(${i * 90}deg) translateZ(${faceOffset}px)`,
@@ -175,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Iterate through all items to control their background number opacity
             serviceItems.forEach((item, i) => {
-                const itemBgNumber = item.querySelector('.service-bg-number');
+                const itemBgNumber = item.querySelector('.subtitle-number'); // Use .subtitle-number class
                 if (itemBgNumber) {
                     gsap.to(itemBgNumber, {
                         opacity: (i === activeItemIndex) ? 1 : 0, // Only active item's number is visible
@@ -187,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // FIX: Added JS snippet to apply z-index to subtitle elements as per prompt
-    // (This is a redundant safeguard if CSS z-index is correct, but harmless.)
+    // This is primarily a CSS responsibility, but this JS ensures it if CSS is missed.
     document.querySelectorAll('.subtitle-number').forEach(num => {
       num.style.zIndex = '0';
     });
