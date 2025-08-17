@@ -511,7 +511,8 @@ html::before {
   padding: 100px 60px; /* Balanced padding as per new prompt */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  background-color: var(--bg-main); /* FIX: Re-added solid background for opacity as per discussion and screenshot */
+  /* FIX: Background color added back. This is CRUCIAL for preventing overlap of content below when pinned. */
+  background-color: var(--bg-main); /* Re-added solid background for opacity */
 
   /* Spacing fix from prompt */
   margin-top: 100px; /* Extra gap so it doesn’t overlap Services */
@@ -544,36 +545,42 @@ html::before {
 
 
 /* Services Content Wrapper (Combined old + new prompt CSS) */
+/* --- MODIFIED FOR SIMPLE GRID ANIMATION --- */
+/* This container is now just a layout wrapper for the grid of service items.
+   It does *not* have sticky positioning, fixed height, or 3D cube properties. */
 .services-content-wrapper {
-  position: sticky; /* Sticky positioning for the main cube viewport */
-  top: 0; /* Sticky to top of the viewport once it starts */
-  height: 250px; /* Fixed height for the cube viewport, matches example */
-  overflow: hidden; /* CRITICAL: Clips rotating items to maintain cube illusion */
-  perspective: 1000px; /* As per earlier prompt */
-  transform-style: preserve-3d; /* CRITICAL for children to be 3D */
-  display: flex; /* For centering the inner container */
-  justify-content: center; /* Horizontally center */
-  align-items: center; /* Vertically center content inside fixed height wrapper */
-  z-index: 3; /* Lower than heading, higher than default content */
-  width: 100%; /* As per prompt example */
+  position: relative; /* Not sticky anymore, just a normal container */
+  height: auto; /* Allow height to adapt to content */
+  overflow: visible; /* Do not clip content */
+  perspective: none; /* No 3D perspective needed for flat animations */
+  transform-style: flat; /* No preserve-3d needed */
+  
+  display: flex; /* Changed from display:flex to grid for better control */
+  flex-wrap: wrap; /* Allow items to wrap */
+  justify-content: center; /* Center items in the wrapper */
+  align-items: flex-start; /* Align items to the start vertically */
+
+  gap: 40px; /* Gap between service items */
+  width: 100%; /* Take full width */
   max-width: 1200px; /* Prevents text cutoff as per prompt */
   margin: 0 auto; /* Center as per prompt */
   padding-left: 20px; /* Ensures cube text isn’t clipped as per prompt */
-  /* transform is handled by GSAP.set for initial position and then GSAP.to for rotation */
 }
 
 .services-items-container {
   position: relative;
-  width: var(--cube-width); /* Will be set dynamically by JS */
-  height: 100%;
-  transform-style: preserve-3d; /* This container *rotates*, so it needs preserve-3d */
+  /* Removed width, height, transform-style from cube concept */
+  width: 100%; /* Take full width of its parent */
+  display: grid; /* Use CSS Grid for better control of columns */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
   gap: 40px; /* As per prompt's .services-items-container example */
-  flex-wrap: wrap; /* As per prompt's .services-items-container example */
+  justify-items: center; /* Center items within grid cells */
 }
 
 /* Service Item (Combined old + new prompt CSS) */
 .service-item {
-  flex: 1 1 280px; /* As per prompt's .service-item example */
+  /* flex properties moved to parent .services-items-container (grid) */
+  /* Remove width, height, top, left, backface-visibility from cube concept */
   background-color: #111; /* As per prompt's .service-item example */
   border-radius: 12px; /* As per prompt's .service-item example */
   padding: 40px 60px; /* Consistent spacing as per prompt */
@@ -581,16 +588,7 @@ html::before {
   z-index: 1; /* As per prompt's .service-item example */
   overflow: visible; /* No clipping as per prompt's .service-item example */
   text-align: left; /* Ensure text is left-aligned within the item */
-  
-  /* Inherited/adjusted original properties from 3D structure */
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%; 
-  backface-visibility: hidden; 
-  opacity: 1; 
-  transform-origin: center center; 
-  will-change: transform; 
+  will-change: transform, opacity; /* Keep for Framer Motion */
 }
 
 /* Service item children styling */
@@ -637,7 +635,7 @@ html::before {
 /* Tools Section (Combined old + new prompt CSS) */
 .tools-section {
   text-align: center; /* As per prompt's Tools Section example */
-  margin-top: 120px; /* FIX: Explicitly set margin-top to 120px for separation */
+  margin-top: 100px; /* Avoids overlap with services as per prompt */
   margin-bottom: 80px; /* For consistent spacing, as per prompt's example */
   
   /* Inherited/adjusted original properties */
@@ -997,9 +995,7 @@ footer h2 {
     .services-heading {
         font-size: 4.5em; /* Adjusted for consistency */
     }
-    .services-content-wrapper {
-        height: 300px; /* Fixed height for the cube viewport */
-    }
+    /* Removed fixed height from .services-content-wrapper */
     .service-item {
         padding: 15px;
     }
@@ -1154,9 +1150,7 @@ footer h2 {
     .services-heading {
         font-size: 3.5em; /* Adjusted for consistency */
     }
-    .services-content-wrapper {
-        height: 250px; /* Fixed height for the cube viewport */
-    }
+    /* Removed fixed height from .services-content-wrapper */
     .service-item {
         padding: 10px;
     }
@@ -1325,9 +1319,7 @@ footer h2 {
     .services-heading {
         font-size: 2.5em; /* Adjusted for consistency */
     }
-    .services-content-wrapper {
-        height: 230px; /* Fixed height for the cube viewport */
-    }
+    /* Removed fixed height from .services-content-wrapper */
     .service-item {
         padding: 12px;
     }
