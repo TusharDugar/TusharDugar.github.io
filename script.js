@@ -1,197 +1,156 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --------------------------
-    // Contact Button Copy to Clipboard (UNCHANGED)
-    // --------------------------
-    const contactButtons = document.querySelectorAll('.contact-button');
+// Function to update the glowing background elements positions
+function glowEffect(event) {
+    const glows = document.querySelectorAll('body::before, body::after');
+    const x = event.clientX;
+    const y = event.clientY;
 
-    contactButtons.forEach(button => {
-        button.addEventListener('click', async () => {
-            const contactValue = button.dataset.contact;
+    glows.forEach((glow, index) => {
+        // Adjust these values to control how much the glows move with the mouse
+        const moveX = (x / window.innerWidth - 0.5) * 60; // Max 60px movement
+        const moveY = (y / window.innerHeight - 0.5) * 60; // Max 60px movement
 
-            if (button.classList.contains('copied')) return;
+        // Apply a subtle rotation for a dynamic feel
+        const rotate = (x / window.innerWidth - 0.5) * 10; // Max 10deg rotation
 
-            try {
-                await navigator.clipboard.writeText(contactValue);
+        // Ensure these transformations are compatible with existing CSS animations
+        // Best to only apply transforms that don't conflict, or use GSAP if complex
+        glow.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
+    });
+}
+
+// Attach the glow effect to mouse movement
+// document.addEventListener('mousemove', glowEffect); // Re-enable if you want mouse tracking glow
+
+// Initialize sticky header offsets (if any) - This might be a remnant from a previous design.
+// If your design changed, these might not be relevant anymore.
+function setStickyOffsets() {
+    const servicesH2 = document.querySelector('.services-section .services-heading');
+    const servicesWrapper = document.querySelector('.services-content-wrapper');
+    if (servicesH2) {
+        document.documentElement.style.setProperty('--services-sticky-top-h2', `${servicesH2.offsetTop}px`);
+    }
+    if (servicesWrapper) {
+        document.documentElement.style.setProperty('--services-sticky-top-wrapper', `${servicesWrapper.offsetTop}px`);
+    }
+}
+// window.addEventListener('resize', setStickyOffsets);
+// window.addEventListener('load', setStickyOffsets);
+
+
+// Function to copy text to clipboard for contact buttons
+function copyToClipboard(button) {
+    const valueElement = button.querySelector('.button-value');
+    const value = valueElement ? valueElement.textContent : '';
+
+    if (value) {
+        navigator.clipboard.writeText(value)
+            .then(() => {
                 button.classList.add('copied');
                 setTimeout(() => {
                     button.classList.remove('copied');
-                }, 1500);
-            } catch (err) {
-                alert('Could not copy automatically. Please copy manually: ' + contactValue);
-            }
-        });
-    });
-
-    // --------------------------
-    // Intersection Observer for General Reveal (MODIFIED for About section)
-    // --------------------------
-    const sectionObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('revealed');
-                observer.unobserve(entry.target); // Unobserve after reveal
-            }
-        });
-    }, { threshold: 0.1 });
-
-    // Observe all main sections with the general section observer
-    // NOTE: The #about section's main card (.about-left-content) is now always visible by CSS
-    // The stagger animation for its *children's) is handled separately below.
-    document.querySelectorAll('#hero-right, #tools, #services, #contact').forEach(el => {
-        if (el) sectionObserver.observe(el);
-    });
-
-
-    // --------------------------
-    // About Section Stagger Reveal (DesignCube-like)
-    // --------------------------
-    const aboutSection = document.getElementById('about');
-    // aboutLeftContent is defined but no longer directly observed for initial reveal by JS,
-    // as it's set to be visible by default in CSS.
-    const aboutLeftContent = aboutSection ? aboutSection.querySelector('.about-left-content') : null; 
-
-    // This is the parent of the elements that *will* stagger reveal.
-    // Ensure your HTML structure has an element with `profile-card-wrapper` and `reveal-parent` classes
-    // that contains the `.reveal-child` elements within your About Me card.
-    const revealStaggerParent = aboutSection ? aboutSection.querySelector('.profile-card-wrapper.reveal-parent') : null;
-    const revealStaggerChildren = revealStaggerParent ? revealStaggerParent.querySelectorAll('.reveal-child') : [];
-
-    if (revealStaggerParent && revealStaggerChildren.length > 0) {
-        const staggerObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // The aboutLeftContent card itself is now visible by default via CSS.
-                    // This block only focuses on staggering its internal .reveal-child elements.
-                    revealStaggerChildren.forEach((child, index) => {
-                        setTimeout(() => {
-                            child.classList.add('revealed');
-                        }, index * 200); // 0.2s stagger delay
-                    });
-                    observer.unobserve(entry.target); // Only animate once
-                }
+                }, 2000); // Reset after 2 seconds
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
             });
-        }, { threshold: 0.1 });
-
-        // Observe the stagger parent to trigger the staggered animation of its children.
-        staggerObserver.observe(revealStaggerParent);
-    } else {
-        // Fallback: If no specific stagger parent/children are found,
-        // and if you want any other part of the 'about' section to reveal,
-        // you would observe 'aboutSection' itself here.
-        // For this current setup, since the card is visible by default, this 'else' is less critical.
-        // If (aboutSection) sectionObserver.observe(aboutSection); // Re-enable if needed for other reveals
     }
+}
 
+// Add event listeners for DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    const contactButtons = document.querySelectorAll('.contact-button');
+    contactButtons.forEach(button => {
+        button.addEventListener('click', () => copyToClipboard(button));
+    });
 
-    // --------------------------
-    // Services Section GSAP 3D Cube Animation (REVERTED to scroll-triggered rotateX, with dynamic width)
-    // --------------------------
-    // Ensure GSAP and ScrollTrigger are loaded
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-        console.error("GSAP or ScrollTrigger is not loaded. Skipping Services Cube Animation.");
-        return;
-    }
-    gsap.registerPlugin(ScrollTrigger);
-
-    const servicesSection = document.getElementById('services');
-    const servicesContentWrapper = servicesSection?.querySelector('.services-content-wrapper'); // The sticky perspective container
-    const servicesItemsContainer = servicesContentWrapper?.querySelector('.services-items-container'); // The element that rotates
-    const serviceItems = serviceItemsContainer ? Array.from(serviceItemsContainer.querySelectorAll('.service-item')) : [];
+    // Initial call for unified scroll animations
+    initScrollAnimations(); 
     
-    // Check for core elements
-    if (!servicesSection || !servicesContentWrapper || !servicesItemsContainer || serviceItems.length === 0) {
-        console.warn("GSAP Services Cube: One or more required elements missing. Skipping animation setup.");
-        // Ensure the section still reveals itself normally if animation fails
-        if(servicesSection) servicesSection.classList.add('revealed');
-        return;
-    }
+    // Initial call to set the correct section title on page load/refresh
+    // Trigger a scroll event immediately to set the initial section.
+    window.dispatchEvent(new Event('scroll'));
+});
 
-    const cubeHeight = 250; // Fixed height of each face as per example
-    const faceOffset = cubeHeight / 2; // Half of cubeHeight
 
-    // Function to update cube dimensions and initial transforms (Reverted to original logic)
-    function updateCubeDimensions() {
-        // Dynamically calculate maxWidth based on content, as per prompt
-        let maxWidth = 0;
-        // Temporarily clear GSAP transforms to get accurate natural width
-        gsap.set(serviceItems, { clearProps: "transform" }); 
+// Unified Function to reveal elements on scroll (MODIFIED TO INCLUDE NEW CLASSES AND USE 'visible')
+function initScrollAnimations() {
+  const revealElements = document.querySelectorAll(
+    // Original selectors + added .service-item and .tool-card
+    ".reveal-item, .reveal-stagger, .reveal-child, .service-item, .tool-card" 
+  );
 
-        serviceItems.forEach(item => {
-            const width = item.offsetWidth;
-            if (width > maxWidth) maxWidth = width;
-        });
-        
-        servicesItemsContainer.style.setProperty("--cube-width", maxWidth + "px"); // Set CSS variable
+  const observerOptions = {
+    root: null, // relative to the viewport
+    rootMargin: "0px",
+    threshold: 0.1 // show when 10% of the element is visible
+  };
 
-        // Re-apply initial transforms based on calculated maxWidth
-        serviceItems.forEach((item, i) => {
-            gsap.set(item, {
-                transform: `rotateX(${i * 90}deg) translateZ(${faceOffset}px)`,
-                opacity: 1 // All faces are initially visible for a scrubbing effect
-            });
-        });
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Add the 'visible' class as specified in the new CSS
+        entry.target.classList.add("visible"); 
 
-        // Set the counter-translate for the wrapper to bring the whole cube forward
-        gsap.set(servicesContentWrapper, { transform: `translateZ(${-faceOffset}px)` });
-    }
-
-    // Call on load and resize
-    window.addEventListener('resize', updateCubeDimensions);
-    updateCubeDimensions(); // Initial call to set dimensions and initial transforms
-
-    // FIX: Main Cube Rotation Animation REVERTED to scroll-triggered rotateX
-    gsap.timeline({
-        scrollTrigger: {
-            trigger: servicesSection,
-            start: "top top", // Pin the section when its top hits viewport top
-            end: "bottom top", // Unpin when section's bottom hits viewport top
-            scrub: true, // Smoothly link animation to scroll
-            pin: true, // Keep the section pinned while animating
-            pinSpacing: false, // Prevents ScrollTrigger from adding extra spacing due to pin if not desired
+        // Existing logic for stagger containers (keeping this for compatibility with your existing HTML structure)
+        if (entry.target.classList.contains("reveal-stagger-container")) {
+          const children = entry.target.querySelectorAll(".reveal-stagger");
+          children.forEach((child, index) => {
+            child.style.transitionDelay = `${index * 0.1}s`;
+            child.classList.add("visible"); // Changed to 'visible'
+          });
         }
-    })
-    .to(servicesItemsContainer, {
-        rotateX: serviceItems.length * 90, // Total rotation for all 8 items (8 * 90 = 720 degrees)
-        ease: "none" // Linear easing for scrubbing
-    });
-
-
-    // FIX: Update background number opacity based on scroll progress (REINSTATED)
-    ScrollTrigger.create({
-        trigger: servicesSection,
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-        onUpdate: self => {
-            // Get current rotation value (0 to 720 degrees) mapped to progress (0-1)
-            const totalRotationDegrees = serviceItems.length * 90; 
-            const currentRotationDegrees = self.progress * totalRotationDegrees;
-            
-            // Determine which face is currently "active"
-            // Divide by 90 (degrees per face step) and round to get the nearest index
-            let activeItemIndex = Math.round(currentRotationDegrees / 90);
-            activeItemIndex = Math.max(0, Math.min(serviceItems.length - 1, activeItemIndex)); // Clamp to valid index range
-
-            // Iterate through all items to control their background number opacity
-            serviceItems.forEach((item, i) => {
-                const itemBgNumber = item.querySelector('.subtitle-number'); // Use .subtitle-number class
-                if (itemBgNumber) {
-                    gsap.to(itemBgNumber, {
-                        opacity: (i === activeItemIndex) ? 1 : 0, // Only active item's number is visible
-                        duration: 0.1 // Small fade for the number visibility
-                    });
-                }
+        // Existing logic for About left content (keeping this for compatibility with your existing HTML structure)
+        if (entry.target.classList.contains("about-left-content")) {
+            const children = entry.target.querySelectorAll(".reveal-child");
+            children.forEach((child, index) => {
+                child.style.transitionDelay = `${index * 0.1}s`;
+                child.classList.add("visible"); // Changed to 'visible'
             });
         }
-    });
+        // No special stagger logic needed for .service-item here because CSS nth-child handles it
 
-    // FIX: Added JS snippet to apply z-index to subtitle elements as per prompt
-    // This is primarily a CSS responsibility, but this JS ensures it if CSS is missed.
-    document.querySelectorAll('.subtitle-number').forEach(num => {
-      num.style.zIndex = '0';
+        observer.unobserve(entry.target); // Stop observing once revealed
+      }
     });
-    // Select both titles and descriptions for subtitle-text
-    document.querySelectorAll('.service-item .subtitle-text').forEach(text => { 
-      text.style.zIndex = '1';
-    });
+  }, observerOptions);
+
+  revealElements.forEach(el => observer.observe(el));
+}
+
+
+// Scroll Spy for section title (ADDED NEW FUNCTIONALITY)
+// Selects sections and footer with an ID. Ensure your HTML elements have these IDs!
+const sections = document.querySelectorAll("section[id], footer[id]"); 
+const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for updating text
+
+window.addEventListener("scroll", () => {
+  let current = "";
+  sections.forEach(section => {
+    // Adjust offset based on desired trigger point for the scroll spy.
+    // -150px means it changes when the section is 150px from the top of the viewport.
+    const sectionTop = section.offsetTop - 150; 
+    
+    // Check if the current scroll position is past the top of the section
+    // and if it's within the section's height.
+    if (window.scrollY >= sectionTop && window.scrollY < sectionTop + section.offsetHeight) {
+      current = section.getAttribute("id");
+    }
+  });
+
+  // If a current section is detected and the target element exists
+  if (current && navIndicator) {
+    // Format the section ID for display (e.g., "my-services" -> "My Services")
+    const formattedTitle = current
+      .split('-') // Split by hyphen
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter of each word
+      .join(' '); // Join back with spaces
+      
+    navIndicator.textContent = formattedTitle;
+  } else if (navIndicator && current === "") {
+      // Optional: If no specific section is in view (e.g., at the very top of the page),
+      // set a default title (e.g., "HERO" for the very first section).
+      if (window.scrollY < 100 && navIndicator.textContent !== "HERO") { // Adjust 100px threshold as needed
+          navIndicator.textContent = "HERO";
+      }
+  }
 });
