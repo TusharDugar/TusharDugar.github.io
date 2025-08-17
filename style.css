@@ -46,11 +46,11 @@
 
 /* Layer 1: Solid Black Background (Base) */
 html {
-    background-color: var(--bg-main); /* Solid black */
-    height: 100%; /* Ensure html takes full viewport height */
+    width: 100%;
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
-    position: relative; /* Needed for fixed children positioning in some browsers */
+    position: relative;
 }
 
 /* Keyframes for the animated colorful gradient */
@@ -60,15 +60,14 @@ html {
 }
 
 body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    color: var(--text-light);
-    background-color: transparent; /* Make body transparent to show html background */
+    width: 100%;
     overflow-x: hidden;
-    position: relative;
-    scroll-behavior: smooth;
-    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background-color: #000; /* As per prompt's reset */
+    color: #fff; /* As per prompt's reset */
+    line-height: 1.6; /* Retained from original */
+    scroll-behavior: smooth; /* Retained from original */
+    min-height: 100vh; /* Retained from original */
 }
 
 /* Layer 2: Subtle Background Glowing Elements (Over Black Background) */
@@ -523,14 +522,15 @@ html::before {
 /* Services Heading (Combined old + new prompt CSS) */
 .services-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 3rem; /* As per prompt example */
-    font-weight: 600; /* As per prompt example */
-    margin-bottom: 50px; /* As per prompt example */
+    font-size: 5em; /* FIX: Reverted font-size back to 5em as per your instruction */
+    line-height: 0.9;
+    font-weight: 800;
+    margin-bottom: 40px; /* Consistent spacing as per prompt */
+    text-transform: uppercase;
     text-align: left;
     margin-left: 20px; /* Ensure it’s not stuck to left edge as per prompt */
     position: relative; /* Default position for normal flow within the section */
     z-index: 4; /* Higher than cube wrapper to ensure it's on top of cube faces */
-    /* Removed padding-bottom: 20px; from previous iteration to simplify */
 }
 /* Span colors for MY SERVICES heading */
 .services-heading .text-white {
@@ -619,10 +619,10 @@ html::before {
     word-break: break-word; /* Helps break long words to fit better */
 }
 /* Subtitle background numbers as per prompt's example */
-.subtitle-number { 
+.subtitle-number { /* This is the actual element in your HTML */
   position: absolute;
   top: 50%;
-  right: 20px; /* FIX: Corrected to right: 20px as per your prompt's CSS example */
+  right: 20px; /* FIX: Corrected position to right: 20px to prevent distortion and place correctly as per original prompt's example */
   transform: translateY(-50%); /* Centered vertically only */
   font-size: 7em; /* As per prompt's example */
   color: rgba(255, 255, 255, 0.08); /* As per prompt's example */
