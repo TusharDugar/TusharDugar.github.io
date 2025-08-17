@@ -151,38 +151,36 @@ html::before {
 }
 
 
-/* Global Section Styling (only for about-left-content and footer now) */
-.section {
-    max-width: 1200px; /* Overall content width */
-    margin: 0 auto; /* Center sections horizontally */
-    position: relative;
-    z-index: 1; /* Ensure sections are above background elements */
-    /* FIX: Consistent left/right spacing for all main sections as per prompt */
-    /* Original: padding: 100px 60px; */
-    /* Corrected as per new prompt: Top 100px, Right 40px, Bottom 100px, Left 60px */
-    padding: 100px 40px 100px 60px; 
+/* Global Section Styling */
+section {
+  max-width: 1200px; /* Overall content width */
+  margin: 0 auto; /* Center sections horizontally */
+  position: relative;
+  z-index: 1; /* Ensure sections are above background elements */
+  /* FIX: Consistent left/right spacing for all main sections as per prompt */
+  padding: 100px 40px 100px 60px; /* Top 100px, Right 40px, Bottom 100px, Left 60px */
 }
 
-/* Reveal Animation Base for general sections */
+/* Reveal Animation Base for general elements (used by footer buttons etc.) */
 .reveal-item {
     opacity: 0;
     transform: translateY(40px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     will-change: transform, opacity; /* Performance hint for reveal animations */
 }
-.reveal-item.visible { /* Changed from .revealed to .visible */
+.reveal-item.visible {
     opacity: 1;
     transform: translateY(0);
 }
 
 /* Staggered reveal style for children within a parent */
-.reveal-stagger { /* Note: This class is applied in JS via revealStaggerChildren */
+.reveal-stagger { /* For elements that have a parent applying staggered delays via JS */
     opacity: 0;
     transform: translateY(40px) scale(0.95);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     will-change: transform, opacity; /* Performance hint for stagger animations */
 }
-.reveal-stagger.visible { /* Changed from .revealed to .visible */
+.reveal-stagger.visible {
     opacity: 1;
     transform: translateY(0) scale(1);
 }
@@ -194,36 +192,39 @@ html::before {
 }
 
 
-/* --- DesignCube-style staggered reveal for About section --- */
-/* These use .reveal-child classes which are set in HTML for About section */
-.reveal-child {
-  opacity: 0;
-  transform: translateY(40px) scale(0.95);
-  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
+/* --- About Section Specific Animations (matching Design Cube style) --- */
+/* About Heading: Slides down from top */
+.about-heading-animation {
+    opacity: 0;
+    transform: translateY(-50px); /* Start above */
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+}
+.about-heading-animation.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.reveal-child.visible { /* Changed from .revealed to .visible */
-  opacity: 1;
-  transform: translateY(0) scale(1);
+/* About Content (Paragraphs, Blockquotes): Slides up from bottom */
+.about-content-animation {
+    opacity: 0;
+    transform: translateY(100px); /* Start below */
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
 }
-
-.reveal-child:hover {
-  transform: translateY(0) scale(1.03);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+.about-content-animation.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
-
-/* Accessibility: Reduce motion for reveal-child elements */
-@media (prefers-reduced-motion: reduce) {
-  .reveal-child {
-    transition: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-  }
-}
+/* Stagger for multiple about content items (if any, like p and blockquote) */
+/* Adjust these delays based on how many .about-content-animation elements you have */
+/* For a single p and single blockquote, they will both animate up with these delays */
+.about-content-wrapper .about-content-animation:nth-child(1) { transition-delay: 0.2s; }
+.about-content-wrapper .about-content-animation:nth-child(2) { transition-delay: 0.4s; }
+/* Add more if you have more content items */
 
 
-/* Main Layout Container (now with left sticky and empty right scrollable area) */
+/* Main Layout Container */
 .main-layout-container {
     display: flex;
     justify-content: center;
@@ -264,8 +265,7 @@ html::before {
     max-width: 370px;
     height: auto;
     box-sizing: border-box;
-    /* MODIFIED: Make it visible on load, no initial animation for the card itself */
-    opacity: 1; 
+    opacity: 1; /* Should be visible by default for a sticky element */
     transform: translateY(0);
     transition: none; /* No transition for its default state */
 
@@ -276,11 +276,6 @@ html::before {
     position: relative;
     overflow: hidden;
     background-color: var(--bg-profile-card);
-}
-/* The .visible class is not applied here, as it's meant to be visible by default for a sticky element */
-.about-left-content.visible { 
-    opacity: 1;
-    transform: translateY(0);
 }
 
 
@@ -505,93 +500,159 @@ html::before {
 }
 
 
-/* Services Section (Combined old + new prompt CSS) */
+/* Services Section Styles (Modified for 3D Cube) */
 .services-section {
   position: relative;
-  /* MODIFIED: Padding as per prompt */
-  padding: 100px 60px; /* Balanced padding as per new prompt */
+  padding: 100px 40px 100px 60px; /* Adjusted padding, matches global section */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  /* FIX: Background color added back. This is CRUCIAL for preventing overlap of content below when pinned. */
   background-color: var(--bg-main); /* Re-added solid background for opacity */
-
-  /* Spacing fix from prompt */
-  margin-top: 100px; /* Extra gap so it doesn’t overlap Services */
-  margin-bottom: 100px; /* To maintain spacing after Services */
+  margin-top: 100px; 
+  margin-bottom: 100px; 
 }
 
-/* Services Heading (Combined old + new prompt CSS) */
-.services-heading {
+/* Services Main Title (will pin and fade out via GSAP) */
+.services-main-title {
     font-family: 'Poppins', sans-serif;
-    font-size: 5em; /* FIX: Reverted font-size back to 5em as per your instruction */
+    font-size: 5em; 
     line-height: 0.9;
     font-weight: 800;
-    margin-bottom: 40px; /* Consistent spacing as per prompt */
+    margin-bottom: 40px; 
     text-transform: uppercase;
     text-align: left;
-    margin-left: 20px; /* Ensure it’s not stuck to left edge as per prompt */
-    position: relative; /* Default position for normal flow within the section */
-    z-index: 4; /* Higher than cube wrapper to ensure it's on top of cube faces */
+    margin-left: 20px; 
+    position: relative; 
+    z-index: 4; 
+    /* GSAP will control opacity and pinning */
 }
-/* Span colors for MY SERVICES heading */
-.services-heading .text-white {
-  color: var(--text-light);
-  display: block;
-}
-
-.services-heading .text-gray {
-  color: var(--text-medium);
-  display: block;
-}
+.services-main-title .text-white { color: var(--text-light); display: block; }
+.services-main-title .text-gray { color: var(--text-medium); display: block; }
 
 
-/* Services Content Wrapper (Combined old + new prompt CSS) */
-/* This container is now just a layout wrapper for the grid of service items.
-   It does *not* have sticky positioning, fixed height, or 3D cube properties. */
-.services-content-wrapper {
-  position: relative; /* Not sticky anymore, just a normal container */
-  height: auto; /* Allow height to adapt to content */
-  overflow: visible; /* Do not clip content */
-  perspective: none; /* No 3D perspective needed for flat animations */
-  transform-style: flat; /* No preserve-3d needed */
-  
-  display: flex; /* Changed from display:flex to grid for better control */
-  flex-wrap: wrap; /* Allow items to wrap */
-  justify-content: center; /* Center items in the wrapper */
-  align-items: flex-start; /* Align items to the start vertically */
-
-  gap: 40px; /* Gap between service items */
-  width: 100%; /* Take full width */
-  max-width: 1200px; /* Prevents text cutoff as per prompt */
-  margin: 0 auto; /* Center as per prompt */
-  padding-left: 20px; /* Ensures cube text isn’t clipped as per prompt */
+/* Services 3D Cube Structure */
+.services-scroll-trigger-area {
+    /* This needs enough height to allow for the scrubbing animation */
+    /* Set this via JS for responsiveness, or use a large fixed value */
+    height: 400vh; /* This needs to be tall enough to allow the cube to fully animate */
+    overflow: clip; /* Hide parts of cube when out of sticky container */
+    margin-top: -100px; /* Pull it up to hide the cube initially */
 }
 
-.services-items-container {
-  position: relative;
-  /* Removed width, height, transform-style from cube concept */
-  width: 100%; /* Take full width of its parent */
-  display: grid; /* Use CSS Grid for better control of columns */
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
-  gap: 40px; /* As per prompt's .services-items-container example */
-  justify-items: center; /* Center items within grid cells */
+.services-sticky-container {
+    position: sticky;
+    top: 0; /* Pins the cube wrapper to the top of the viewport */
+    height: 100vh; /* Make it full viewport height when pinned */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px; /* Essential for 3D effect */
+    overflow: clip; /* Hide any overflow from cube as it rotates */
 }
 
-/* Service Item (Combined old + new prompt CSS) */
-/* ADDED: Scroll reveal for services */
+.services-cube {
+    position: relative;
+    width: 300px; /* Default width for cube */
+    height: 250px; /* Fixed height for cube faces */
+    transform-style: preserve-3d; /* Crucial for child elements to be 3D */
+    transition: transform 0.3s; /* Smooth transition for GSAP controlled transforms */
+    /* GSAP will control initial opacity/position and rotation */
+    opacity: 0;
+    transform: translateY(100px); /* Initial state before GSAP animates it in */
+}
+
+/* Responsive cube width adjustments */
+@media (min-width: 768px) {
+    .services-cube {
+        width: 640px;
+    }
+}
+@media (min-width: 1024px) {
+    .services-cube {
+        width: 900px;
+    }
+}
+
+
+.services-face {
+    position: absolute;
+    height: 250px; /* Match services-cube height */
+    width: 100%; /* Take full width of cube container */
+    border: 1px solid #CCCCCC; /* Border from design-cube example */
+    background-color: #000; /* Black background for faces */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align text to start */
+    justify-content: space-between; /* Space out title/desc and number */
+    padding: 28px; /* Padding for content inside face */
+    font-weight: bold;
+    backface-visibility: hidden; /* Hide back of the face when rotated away */
+    overflow: hidden; /* Prevent content overflow */
+}
+
+/* Transforms for each face to form a 4-sided prism (like design-cube with rotateX) */
+.services-face.face-1 { transform: translateZ(125px); } /* Front face */
+.services-face.face-2 { transform: rotateX(90deg) translateZ(125px); } /* Top face */
+.services-face.face-3 { transform: rotateX(180deg) translateZ(125px); } /* Back face */
+.services-face.face-4 { transform: rotateX(270deg) translateZ(125px); } /* Bottom face */
+
+/* Content styling for faces */
+.services-face .service-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+}
+.services-face .service-title {
+    font-size: 1.5em; /* Adjust as needed */
+    font-weight: 200; /* As per design-cube example */
+    color: var(--accent-secondary-sawad); /* Green color from example */
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+}
+.services-face .service-description {
+    font-size: 1.1em; /* Adjust as needed */
+    font-weight: medium;
+    color: var(--text-light); /* White/light text */
+    margin: 0;
+    line-height: 1.6;
+    word-break: break-word;
+}
+/* Subtitle number on faces (larger, more transparent) */
+.services-face .subtitle-number {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  font-size: 8em; /* Much larger for 3D cube effect */
+  opacity: 0.1; /* More transparent */
+  color: #CCCCCC; /* Light gray for subtle background effect */
+  z-index: 0;
+  pointer-events: none;
+}
+
+
+/* Remaining Services Grid (2D animation) */
+.services-remaining-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    justify-items: center;
+    margin-top: 100px; /* Space from the 3D cube above */
+}
+
+/* Service Item for 2D Grid (Animations) */
 .service-item {
-  /* flex properties moved to parent .services-items-container (grid) */
-  /* Remove width, height, top, left, backface-visibility from cube concept */
-  background-color: #111; /* As per prompt's .service-item example */
-  border-radius: 12px; /* As per prompt's .service-item example */
-  padding: 40px 60px; /* Consistent spacing as per prompt */
-  position: relative; /* As per prompt's .service-item example */
-  z-index: 1; /* As per prompt's .service-item example */
-  overflow: visible; /* No clipping as per prompt's .service-item example */
-  text-align: left; /* Ensure text is left-aligned within the item */
-  will-change: transform, opacity; /* Keep for performance */
+  background-color: #111; 
+  border-radius: 12px; 
+  padding: 40px 60px; 
+  position: relative; 
+  z-index: 1; 
+  overflow: visible; 
+  text-align: left; 
+  will-change: transform, opacity; 
 
-  /* ADDED ANIMATION PROPERTIES */
+  /* ANIMATION PROPERTIES: Slide in from left */
   opacity: 0;
   transform: translateX(-80px);
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -600,54 +661,50 @@ html::before {
   opacity: 1;
   transform: translateX(0);
 }
-/* Stagger effect */
-.service-item:nth-child(1) { transition-delay: 0.1s; }
-.service-item:nth-child(2) { transition-delay: 0.2s; }
-.service-item:nth-child(3) { transition-delay: 0.3s; }
-.service-item:nth-child(4) { transition-delay: 0.4s; }
-.service-item:nth-child(5) { transition-delay: 0.5s; }
-.service-item:nth-child(6) { transition-delay: 0.6s; }
-.service-item:nth-child(7) { transition-delay: 0.7s; }
-.service-item:nth-child(8) { transition-delay: 0.8s; }
+/* Stagger effect for service items in the 2D grid */
+/* These delays start from 0.1s after the main .service-remaining-grid is visible */
+.services-remaining-grid .service-item:nth-child(1) { transition-delay: 0.1s; }
+.services-remaining-grid .service-item:nth-child(2) { transition-delay: 0.2s; }
+.services-remaining-grid .service-item:nth-child(3) { transition-delay: 0.3s; }
+.services-remaining-grid .service-item:nth-child(4) { transition-delay: 0.4s; }
 
 
 /* Service item children styling */
 .service-item .service-title,
 .service-item .service-description {
-    position: relative; /* Ensures these elements create a stacking context */
-    z-index: 1; /* Ensures text is above numbers */
+    position: relative; 
+    z-index: 1; 
 }
 
-/* Subtitle background numbers as per prompt's example */
-/* MODIFIED: Fix subtitle numbers visibility */
-.subtitle-number { /* This is the actual element in your HTML */
+/* Subtitle background numbers visibility for 2D cards */
+.service-item .subtitle-number { 
   position: absolute;
   top: 50%;
-  right: 20px; /* Keeping original right placement as it works visually */
-  transform: translateY(-50%); /* Centered vertically only */
-  font-size: 4rem; /* Changed from 7em as per prompt */
-  opacity: 0.1; /* Changed from rgba(255, 255, 255, 0.08) as per prompt */
-  z-index: 0; /* Behind text */
+  right: 20px; 
+  transform: translateY(-50%); 
+  font-size: 4rem; /* As per prompt */
+  opacity: 0.1; /* As per prompt */
+  color: rgba(255, 255, 255, 0.08); /* Fallback to original rgba value for 2D cards */
+  z-index: 0; 
   pointer-events: none;
 }
-.subtitle-text { /* New class from prompt, already defined */
+.service-item .subtitle-text { 
   position: relative;
   z-index: 1; 
 }
 
 
-/* Tools Section (Combined old + new prompt CSS) */
+/* Tools Section */
 .tools-section {
-  text-align: center; /* As per prompt's Tools Section example */
-  margin-top: 100px; /* Avoids overlap with services as per prompt */
-  margin-bottom: 80px; /* For consistent spacing, as per prompt's example */
+  text-align: center; 
+  margin-top: 100px; 
+  margin-bottom: 80px; 
   
-  /* Inherited/adjusted original properties */
   padding-top: 80px;
   padding-bottom: 80px;
   position: relative;
-  z-index: 1; /* Match prompt example for .premium-tools */
-  background: none; /* As per prompt */
+  z-index: 1; 
+  background: none; 
 }
 
 .tools-heading {
@@ -674,13 +731,12 @@ html::before {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
-    /* Ensure left alignment by default, will be overridden by media query if needed */
     margin-left: 0; 
     margin-right: 0;
     justify-items: stretch; 
 }
 
-/* MODIFIED & ADDED: Scroll reveal for tool cards */
+/* Tool Card (Animations) */
 .tool-card {
     background-color: var(--bg-tool-card);
     border-radius: 15px;
@@ -692,9 +748,9 @@ html::before {
     /* Combined existing hover transition with new reveal animation */
     transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out;
     cursor: pointer;
-    will-change: transform, opacity; /* Added for performance */
+    will-change: transform, opacity; 
 
-    /* ADDED ANIMATION PROPERTIES */
+    /* ANIMATION PROPERTIES: Slide up */
     opacity: 0;
     transform: translateY(60px);
 }
@@ -748,7 +804,7 @@ html::before {
 }
 
 
-/* Subtitles Section as per prompt */
+/* Subtitles Section */
 .subtitles-section {
   position: relative;
   padding: 120px 60px;
@@ -775,14 +831,14 @@ html::before {
 }
 
 
-/* Footer (Contact Section - Full Width, adjusted for smaller height) (UNCHANGED) */
+/* Footer (Contact Section) */
 footer {
     background-color: var(--bg-main);
     color: var(--text-light);
     text-align: center;
     padding: 60px 0;
     position: relative;
-    z-index: 1; /* Ensures footer is above general background elements, but below pinned section */
+    z-index: 1; 
 }
 
 footer a {
@@ -1007,11 +1063,13 @@ footer h2 {
         padding-bottom: 80px;
         z-index: 2; /* Maintain z-index */
     }
-    .services-heading {
+    .services-main-title {
         font-size: 4.5em; /* Adjusted for consistency */
     }
-    /* Removed fixed height from .services-content-wrapper */
-    .service-item {
+    .services-cube {
+        width: 640px; /* Adjusted cube size */
+    }
+    .services-remaining-grid .service-item {
         padding: 15px;
     }
 
@@ -1162,11 +1220,14 @@ footer h2 {
         padding-bottom: 60px;
         z-index: 2; /* Maintain z-index */
     }
-    .services-heading {
+    .services-main-title {
         font-size: 3.5em; /* Adjusted for consistency */
     }
-    /* Removed fixed height from .services-content-wrapper */
-    .service-item {
+    .services-cube {
+        width: 300px; /* Adjusted cube size for smaller screens */
+        height: 250px;
+    }
+    .services-remaining-grid .service-item {
         padding: 10px;
     }
 
@@ -1331,11 +1392,13 @@ footer h2 {
         padding-bottom: 50px;
         z-index: 2; /* Maintain z-index */
     }
-    .services-heading {
+    .services-main-title {
         font-size: 2.5em; /* Adjusted for consistency */
     }
-    /* Removed fixed height from .services-content-wrapper */
-    .service-item {
+    .services-cube {
+        width: 300px; /* Kept default cube size */
+    }
+    .services-remaining-grid .service-item {
         padding: 12px;
     }
 
@@ -1377,22 +1440,29 @@ footer h2 {
 
 /* Accessibility: Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
-    /* General reveal items */
+    /* All animated elements should have no transition and be visible immediately */
     .reveal-item,
-    .reveal-stagger {
+    .reveal-stagger,
+    .about-heading-animation,
+    .about-content-animation,
+    .service-item,
+    .tool-card,
+    .services-main-title, /* Added for GSAP controlled elements */
+    .services-cube /* Added for GSAP controlled elements */
+    {
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
-    }
-
-    /* Services & Tools animation items */
-    .service-item, .tool-card { /* Added .tool-card here */
-        transition: none !important;
-        transform: none !important;
-        opacity: 1 !important;
+        animation: none !important; /* Ensure CSS animations are also removed */
     }
     /* For staggered items, display only the first one if motion is reduced */
-    .service-item:not(:first-child) {
-        opacity: 0 !important;
+    .services-remaining-grid .service-item:not(:first-child) { /* Specific to 2D service items */
+        opacity: 0 !important; 
+    }
+    /* Ensure all faces of the cube are immediately visible if motion is reduced */
+    .services-face {
+        opacity: 1 !important;
+        transform: none !important;
+        backface-visibility: visible !important;
     }
 }
