@@ -483,12 +483,10 @@ html::before {
 /* New hero heading color classes */
 .hero-heading .crafting {
   color: #ffffff; /* white */
-  /* display: block; removed as <br> is used in HTML */
 }
 
 .hero-heading .digital {
   color: #888888; /* grey */
-  /* display: block; removed as <br> is used in HTML */
 }
 
 
