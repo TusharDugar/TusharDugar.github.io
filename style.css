@@ -1,3 +1,8 @@
+/* Universal Box-Sizing for easier layout management */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* Basic Reset & Font */
 :root {
     /* Sawad-inspired Color Palette */
@@ -154,6 +159,9 @@ html::before {
     margin: 0 auto; /* Center sections horizontally */
     position: relative;
     z-index: 1; /* Ensure sections are above background elements */
+    /* NEW: Consistent left spacing for all main sections */
+    padding-left: 60px;   /* Shift content slightly right */
+    padding-right: 40px;  /* Optional, to balance spacing */
 }
 
 /* Reveal Animation Base for general sections */
@@ -473,6 +481,8 @@ html::before {
     margin-bottom: 40px; /* Consistent spacing */
     text-transform: uppercase;
     text-align: left;
+    /* NEW: Margin-left for hero heading specifically */
+    margin-left: 20px; /* Extra push away from left edge */
     /* Removed gradient background properties as per prompt's new color classes */
     background: none; 
     -webkit-background-clip: unset; 
@@ -509,8 +519,9 @@ html::before {
   padding: 100px 40px; /* Balanced padding */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  /* FIX: Background color added back. This is CRUCIAL for preventing overlap of content below when pinned. */
-  background-color: var(--bg-main); 
+  /* FIX: Background removed as per user instruction.
+          WARNING: This will cause overlap of content below when pinned. */
+  background: none; 
 }
 
 /* Services Heading (for the 3D cube section) */
@@ -523,6 +534,8 @@ html::before {
     margin-bottom: 15px; 
     text-transform: uppercase;
     text-align: left;
+    /* NEW: Margin-left for services heading specifically */
+    margin-left: 20px;
     /* FIX: Removed position: sticky; and top: 0; as its parent (services-section) is pinned by GSAP.
             This prevents the heading from disappearing and ensures consistent spacing. */
     position: relative; /* Default position for normal flow within the section */
@@ -558,6 +571,8 @@ html::before {
   width: 100%;
   max-width: 1200px; /* Prevents text cutoff */
   margin: 0 auto;
+  /* NEW: Padding-left for services items container */
+  padding-left: 20px; /* Ensures cube text isn’t clipped */
   /* transform is handled by GSAP.set for initial position and then GSAP.to for rotation */
 }
 
@@ -622,8 +637,8 @@ html::before {
 .subtitle-number { /* Changed from .service-item .service-bg-number to match prompt */
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Centered as per prompt */
+  left: 20px; /* NEW: Aligned left as per prompt's example */
+  transform: translate(-50%, -50%); /* Centered vertically, but now left-aligned */
   font-size: 6rem; /* As per prompt */
   color: rgba(255, 255, 255, 0.1); /* As per prompt (semi-transparent) */
   z-index: 0; /* Behind text */
