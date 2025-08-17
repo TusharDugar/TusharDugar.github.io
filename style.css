@@ -44,24 +44,31 @@
     --services-sticky-top-wrapper: 0px; /* Unused in this GSAP setup */
 }
 
-/* Global Reset from prompt (overrides some default body/html styles) */
+/* Layer 1: Solid Black Background (Base) */
 html {
-    width: 100%;
-    overflow-x: hidden;
+    background-color: var(--bg-main); /* Solid black */
+    height: 100%; /* Ensure html takes full viewport height */
     margin: 0;
     padding: 0;
-    position: relative;
+    position: relative; /* Needed for fixed children positioning in some browsers */
+}
+
+/* Keyframes for the animated colorful gradient */
+@keyframes gradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 body {
-    width: 100%;
-    overflow-x: hidden;
+    margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #000; /* As per prompt's reset */
-    color: #fff; /* As per prompt's reset */
-    line-height: 1.6; /* Retained from original */
-    scroll-behavior: smooth; /* Retained from original */
-    min-height: 100vh; /* Retained from original */
+    line-height: 1.6;
+    color: var(--text-light);
+    background-color: transparent; /* Make body transparent to show html background */
+    overflow-x: hidden;
+    position: relative;
+    scroll-behavior: smooth;
+    min-height: 100vh;
 }
 
 /* Layer 2: Subtle Background Glowing Elements (Over Black Background) */
@@ -151,7 +158,7 @@ html::before {
     margin: 0 auto; /* Center sections horizontally */
     position: relative;
     z-index: 1; /* Ensure sections are above background elements */
-    /* NEW: Consistent left/right spacing for all main sections as per prompt */
+    /* FIX: Consistent left/right spacing for all main sections as per prompt */
     padding: 100px 60px; /* shifted right side with balanced left space */
 }
 
@@ -289,7 +296,7 @@ html::before {
     transform: translateX(0);
     background-color: var(--accent-primary-sawad);
 }
-/* NEW: Profile Photo sizing to prevent clipping */
+/* FIX: Profile Photo sizing to prevent clipping */
 .profile-image-container .profile-photo {
     width: 100%;
     height: 100%;
@@ -479,7 +486,7 @@ html::before {
     margin-bottom: 40px; /* Consistent spacing */
     text-transform: uppercase;
     text-align: left;
-    /* NEW: Margin-left for hero heading specifically */
+    /* FIX: Margin-left for hero heading specifically */
     margin-left: 20px; /* Extra push away from left edge */
     /* Removed gradient background properties as per prompt's new color classes */
     background: none; 
@@ -576,15 +583,15 @@ html::before {
   overflow: visible; /* No clipping as per prompt's .service-item example */
   text-align: left; /* Ensure text is left-aligned within the item */
   
-  /* Inherited/adjusted original properties */
-  top: 0; /* From original structure */
-  left: 0; /* From original structure */
-  width: 100%; /* From original structure */
-  height: 100%; /* From original structure */
-  backface-visibility: hidden; /* From original structure */
-  opacity: 1; /* From original structure */
-  transform-origin: center center; /* From original structure */
-  will-change: transform; /* From original structure */
+  /* Inherited/adjusted original properties from 3D structure */
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  backface-visibility: hidden; 
+  opacity: 1; 
+  transform-origin: center center; 
+  will-change: transform; 
 }
 
 /* Service item children styling */
@@ -612,12 +619,12 @@ html::before {
     word-break: break-word; /* Helps break long words to fit better */
 }
 /* Subtitle background numbers as per prompt's example */
-.subtitle-number { /* This is the actual element in your HTML */
+.subtitle-number { 
   position: absolute;
   top: 50%;
-  right: 20px; /* FIX: Corrected position to right: 20px to prevent distortion and place correctly as per original prompt's example */
+  right: 20px; /* FIX: Corrected to right: 20px as per your prompt's CSS example */
   transform: translateY(-50%); /* Centered vertically only */
-  font-size: 7em; /* FIX: Corrected font-size back to 7em for visual weight as per original prompt's example */
+  font-size: 7em; /* As per prompt's example */
   color: rgba(255, 255, 255, 0.08); /* As per prompt's example */
   z-index: 0; /* Behind text */
   pointer-events: none;
