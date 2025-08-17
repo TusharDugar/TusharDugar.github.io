@@ -1,3 +1,6 @@
+// Register GSAP plugins (REQUIRED for ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
+
 // Function to update the glowing background elements positions
 function glowEffect(event) {
     const glows = document.querySelectorAll('body::before, body::after');
@@ -5,37 +8,16 @@ function glowEffect(event) {
     const y = event.clientY;
 
     glows.forEach((glow, index) => {
-        // Adjust these values to control how much the glows move with the mouse
-        const moveX = (x / window.innerWidth - 0.5) * 60; // Max 60px movement
-        const moveY = (y / window.innerHeight - 0.5) * 60; // Max 60px movement
+        const moveX = (x / window.innerWidth - 0.5) * 60; 
+        const moveY = (y / window.innerHeight - 0.5) * 60; 
+        const rotate = (x / window.innerWidth - 0.5) * 10; 
 
-        // Apply a subtle rotation for a dynamic feel
-        const rotate = (x / window.innerWidth - 0.5) * 10; // Max 10deg rotation
-
-        // Ensure these transformations are compatible with existing CSS animations
-        // Best to only apply transforms that don't conflict, or use GSAP if complex
         glow.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
     });
 }
 
-// Attach the glow effect to mouse movement
-// document.addEventListener('mousemove', glowEffect); // Re-enable if you want mouse tracking glow
-
-// Initialize sticky header offsets (if any) - This might be a remnant from a previous design.
-// If your design changed, these might not be relevant anymore.
-function setStickyOffsets() {
-    const servicesH2 = document.querySelector('.services-section .services-heading');
-    const servicesWrapper = document.querySelector('.services-content-wrapper');
-    if (servicesH2) {
-        document.documentElement.style.setProperty('--services-sticky-top-h2', `${servicesH2.offsetTop}px`);
-    }
-    if (servicesWrapper) {
-        document.documentElement.style.setProperty('--services-sticky-top-wrapper', `${servicesWrapper.offsetTop}px`);
-    }
-}
-// window.addEventListener('resize', setStickyOffsets);
-// window.addEventListener('load', setStickyOffsets);
-
+// Attach the glow effect to mouse movement (uncomment if you want this feature)
+// document.addEventListener('mousemove', glowEffect); 
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
@@ -56,27 +38,11 @@ function copyToClipboard(button) {
     }
 }
 
-// Add event listeners for DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-    const contactButtons = document.querySelectorAll('.contact-button');
-    contactButtons.forEach(button => {
-        button.addEventListener('click', () => copyToClipboard(button));
-    });
-
-    // Initial call for unified scroll animations
-    initScrollAnimations(); 
-    
-    // Initial call to set the correct section title on page load/refresh
-    // Trigger a scroll event immediately to set the initial section.
-    window.dispatchEvent(new Event('scroll'));
-});
-
-
-// Unified Function to reveal elements on scroll (MODIFIED TO INCLUDE NEW CLASSES AND USE 'visible')
-function initScrollAnimations() {
+// Unified Function to reveal elements on scroll (for 2D animations)
+function initIntersectionObserverAnimations() {
   const revealElements = document.querySelectorAll(
-    // Original selectors + added .service-item and .tool-card
-    ".reveal-item, .reveal-stagger, .reveal-child, .service-item, .tool-card" 
+    // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
+    ".reveal-item, .reveal-stagger, .about-heading-animation, .about-content-animation, .services-remaining-grid .service-item, .tool-card" 
   );
 
   const observerOptions = {
@@ -88,26 +54,25 @@ function initScrollAnimations() {
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        // Add the 'visible' class as specified in the new CSS
         entry.target.classList.add("visible"); 
 
-        // Existing logic for stagger containers (keeping this for compatibility with your existing HTML structure)
+        // Specific stagger logic for .reveal-stagger-container (like footer buttons)
         if (entry.target.classList.contains("reveal-stagger-container")) {
           const children = entry.target.querySelectorAll(".reveal-stagger");
           children.forEach((child, index) => {
             child.style.transitionDelay = `${index * 0.1}s`;
-            child.classList.add("visible"); // Changed to 'visible'
+            child.classList.add("visible"); 
           });
         }
-        // Existing logic for About left content (keeping this for compatibility with your existing HTML structure)
-        if (entry.target.classList.contains("about-left-content")) {
-            const children = entry.target.querySelectorAll(".reveal-child");
+        // Specific stagger logic for .about-content-wrapper (like paragraphs/blockquote)
+        if (entry.target.classList.contains("about-content-wrapper")) {
+            const children = entry.target.querySelectorAll(".about-content-animation");
             children.forEach((child, index) => {
-                child.style.transitionDelay = `${index * 0.1}s`;
-                child.classList.add("visible"); // Changed to 'visible'
+                // CSS nth-child already handles stagger delay, but this ensures it's applied.
+                child.classList.add("visible"); 
             });
         }
-        // No special stagger logic needed for .service-item here because CSS nth-child handles it
+        // No explicit JS stagger needed for .services-remaining-grid .service-item or .tool-card, as CSS nth-child / their own transitions handle it.
 
         observer.unobserve(entry.target); // Stop observing once revealed
       }
@@ -118,39 +83,108 @@ function initScrollAnimations() {
 }
 
 
-// Scroll Spy for section title (ADDED NEW FUNCTIONALITY)
-// Selects sections and footer with an ID. Ensure your HTML elements have these IDs!
+// GSAP Scroll Animations for Services Cube (NEW)
+function initServicesCubeAnimation() {
+    const servicesSection = document.getElementById('services');
+    const servicesCube = document.getElementById('servicesCube');
+    const servicesScrollArea = document.querySelector('.services-scroll-trigger-area');
+    const servicesMainTitle = document.querySelector('.services-main-title');
+
+    if (!servicesSection || !servicesCube || !servicesScrollArea || !servicesMainTitle) {
+        console.warn("Required elements for services cube animation not found.");
+        return;
+    }
+
+    // Set initial state for the cube for the entry animation
+    gsap.set(servicesCube, { opacity: 0, y: 100 });
+
+    // 1. Cube entry animation (from opacity 0, y 100 to visible, y 0)
+    gsap.to(servicesCube, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power2.in',
+        scrollTrigger: {
+            trigger: servicesSection,
+            start: 'top 30%', // When top of services section is 30% from viewport top
+            toggleActions: 'play none none reverse', // Play on enter, reverse on leave back
+        }
+    });
+
+    // 2. Cube rotation animation
+    gsap.to(servicesCube, {
+        rotateX: 270, // Rotate by 270 degrees (3 full faces + another 90 deg)
+        ease: "none",
+        scrollTrigger: {
+            trigger: servicesScrollArea, // Use the dedicated scroll area for the cube
+            start: "top top", // When the top of the scroll area hits the top of the viewport
+            end: "bottom bottom", // When the bottom of the scroll area leaves the bottom of the viewport
+            scrub: true, // Smoothly link animation to scroll
+        },
+    });
+
+    // 3. Main Services title pinning and fade out
+    gsap.to(servicesMainTitle, {
+        autoAlpha: 0, // Fades out (opacity and visibility)
+        ease: "power1.out",
+        scrollTrigger: {
+            trigger: servicesSection, // Trigger on the main services section
+            start: "top top+=150", // Start fading when section top is 150px from viewport top
+            end: "bottom top", // End fading when section bottom hits viewport top
+            toggleActions: "play reverse play reverse",
+            pin: true, // Pin the title during this animation
+            scrub: true,
+            pinSpacing: false // Prevent extra space from pinning
+        }
+    });
+}
+
+
+// Scroll Spy for section title (existing logic)
 const sections = document.querySelectorAll("section[id], footer[id]"); 
-const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for updating text
+const navIndicator = document.querySelector(".left-column-sticky h3"); 
 
 window.addEventListener("scroll", () => {
   let current = "";
   sections.forEach(section => {
     // Adjust offset based on desired trigger point for the scroll spy.
-    // -150px means it changes when the section is 150px from the top of the viewport.
     const sectionTop = section.offsetTop - 150; 
     
-    // Check if the current scroll position is past the top of the section
-    // and if it's within the section's height.
     if (window.scrollY >= sectionTop && window.scrollY < sectionTop + section.offsetHeight) {
       current = section.getAttribute("id");
     }
   });
 
-  // If a current section is detected and the target element exists
   if (current && navIndicator) {
-    // Format the section ID for display (e.g., "my-services" -> "My Services")
     const formattedTitle = current
-      .split('-') // Split by hyphen
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize first letter of each word
-      .join(' '); // Join back with spaces
+      .split('-') 
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) 
+      .join(' '); 
       
     navIndicator.textContent = formattedTitle;
   } else if (navIndicator && current === "") {
-      // Optional: If no specific section is in view (e.g., at the very top of the page),
-      // set a default title (e.g., "HERO" for the very first section).
-      if (window.scrollY < 100 && navIndicator.textContent !== "HERO") { // Adjust 100px threshold as needed
+      // If no specific section is in view (e.g., at the very top of the page), set a default title
+      if (window.scrollY < 200 && (navIndicator.textContent === "" || navIndicator.textContent === "ABOUT")) { 
           navIndicator.textContent = "HERO";
       }
   }
+});
+
+
+// Initialize all animations when the DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize contact button copy functionality
+    const contactButtons = document.querySelectorAll('.contact-button');
+    contactButtons.forEach(button => {
+        button.addEventListener('click', () => copyToClipboard(button));
+    });
+
+    // Initialize IntersectionObserver-based animations (for About section, 2D services, Tools)
+    initIntersectionObserverAnimations(); 
+    
+    // Initialize GSAP-based Services Cube animation
+    initServicesCubeAnimation();
+
+    // Trigger a scroll event immediately to set the initial scroll spy title
+    window.dispatchEvent(new Event('scroll'));
 });
