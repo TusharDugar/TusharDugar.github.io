@@ -1,8 +1,3 @@
-/* Universal Box-Sizing for easier layout management */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
 /* Basic Reset & Font */
 :root {
     /* Sawad-inspired Color Palette */
@@ -159,9 +154,6 @@ html::before {
     margin: 0 auto; /* Center sections horizontally */
     position: relative;
     z-index: 1; /* Ensure sections are above background elements */
-    /* NEW: Consistent left/right spacing for all main sections as per prompt */
-    padding-left: 60px;   /* Shift content slightly right */
-    padding-right: 40px;  /* To balance spacing */
 }
 
 /* Reveal Animation Base for general sections */
@@ -298,13 +290,6 @@ html::before {
     transform: translateX(0);
     background-color: var(--accent-primary-sawad);
 }
-/* NEW: Profile Photo sizing to prevent clipping */
-.profile-image-container .profile-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures image covers container without distortion */
-}
-
 
 /* Updated: Main Name */
 .about-left-content h3 {
@@ -488,8 +473,6 @@ html::before {
     margin-bottom: 40px; /* Consistent spacing */
     text-transform: uppercase;
     text-align: left;
-    /* NEW: Margin-left for hero heading specifically */
-    margin-left: 20px; /* Extra push away from left edge */
     /* Removed gradient background properties as per prompt's new color classes */
     background: none; 
     -webkit-background-clip: unset; 
@@ -500,10 +483,12 @@ html::before {
 /* New hero heading color classes */
 .hero-heading .crafting {
   color: #ffffff; /* white */
+  /* display: block; removed as <br> is used in HTML */
 }
 
 .hero-heading .digital {
   color: #888888; /* grey */
+  /* display: block; removed as <br> is used in HTML */
 }
 
 
@@ -520,6 +505,8 @@ html::before {
 /* SERVICES SECTION FIX */
 .services-section {
   position: relative;
+  /* Perspective is now on .services-content-wrapper for more direct control of 3D children */
+  perspective: none; /* Removed from here */
   /* MODIFIED: Padding as per prompt */
   padding: 100px 40px; /* Balanced padding */
   text-align: left;
@@ -534,11 +521,12 @@ html::before {
     font-size: 5em;
     line-height: 0.9;
     font-weight: 800;
-    margin-bottom: 40px; /* Consistent spacing as per prompt */
+    /* MODIFIED: Reduced margin-bottom to bring heading closer to cube */
+    margin-bottom: 15px; 
     text-transform: uppercase;
     text-align: left;
-    /* NEW: Margin-left for services heading specifically */
-    margin-left: 20px;
+    /* FIX: Removed position: sticky; and top: 0; as its parent (services-section) is pinned by GSAP.
+            This prevents the heading from disappearing and ensures consistent spacing. */
     position: relative; /* Default position for normal flow within the section */
     z-index: 4; /* Higher than cube wrapper to ensure it's on top of cube faces */
     padding-bottom: 20px;
@@ -572,8 +560,6 @@ html::before {
   width: 100%;
   max-width: 1200px; /* Prevents text cutoff */
   margin: 0 auto;
-  /* NEW: Padding-left for services items container */
-  padding-left: 20px; /* Ensures cube text isn’t clipped */
   /* transform is handled by GSAP.set for initial position and then GSAP.to for rotation */
 }
 
@@ -611,6 +597,7 @@ html::before {
 }
 
 /* Service item children styling, including background number and text z-index */
+/* These styles are applied via .subtitle-text to the specific elements */
 .service-item .service-title,
 .service-item .service-description {
     /* These elements will inherit styles from .subtitle-text below */
@@ -634,12 +621,12 @@ html::before {
     word-break: break-word; /* Helps break long words to fit better */
 }
 /* SUBTITLE BACKGROUND NUMBERS FIX: Styles as per prompt */
-.subtitle-number { 
+.subtitle-number { /* Changed from .service-item .service-bg-number to match prompt */
   position: absolute;
   top: 50%;
-  right: 20px; /* CORRECTED: Back to right: 20px as per your earlier prompt's CSS example, and to prevent left-side distortion. */
-  transform: translateY(-50%); /* Centered vertically only */
-  font-size: 7em; /* CORRECTED: Back to 7em as per your earlier prompt's CSS example for visual weight. */
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centered as per prompt */
+  font-size: 6rem; /* As per prompt */
   color: rgba(255, 255, 255, 0.1); /* As per prompt (semi-transparent) */
   z-index: 0; /* Behind text */
   pointer-events: none;
@@ -659,10 +646,7 @@ html::before {
     text-align: left;
     background: none; /* As per prompt */
     position: relative;
-    /* NEW: Spacing fix for Premium Tools */
-    margin-top: 100px; /* Extra gap so it doesn’t overlap Services */
-    margin-bottom: 80px; /* For consistent spacing, as per prompt's example */
-    z-index: 1; /* Match prompt example for .premium-tools */
+    z-index: 2; /* Ensure visible above pinned Services */
 }
 
 .tools-heading {
