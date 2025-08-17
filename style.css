@@ -1,3 +1,8 @@
+/* Universal Box-Sizing for easier layout management */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* Basic Reset & Font */
 :root {
     /* Sawad-inspired Color Palette */
@@ -64,6 +69,8 @@ body {
     position: relative;
     scroll-behavior: smooth;
     min-height: 100vh;
+    background-color: #000; /* As per prompt's reset */
+    color: #fff; /* As per prompt's reset */
 }
 
 /* Layer 2: Subtle Background Glowing Elements (Over Black Background) */
@@ -149,11 +156,12 @@ html::before {
 
 /* Global Section Styling (only for about-left-content and footer now) */
 .section {
-    padding: 100px 0; /* Vertical padding only, horizontal padding handled by content */
     max-width: 1200px; /* Overall content width */
     margin: 0 auto; /* Center sections horizontally */
     position: relative;
     z-index: 1; /* Ensure sections are above background elements */
+    /* NEW: Consistent left/right spacing for all main sections as per prompt */
+    padding: 100px 60px; /* shifted right side with balanced left space */
 }
 
 /* Reveal Animation Base for general sections */
@@ -290,6 +298,13 @@ html::before {
     transform: translateX(0);
     background-color: var(--accent-primary-sawad);
 }
+/* NEW: Profile Photo sizing to prevent clipping */
+.profile-image-container .profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image covers container without distortion */
+}
+
 
 /* Updated: Main Name */
 .about-left-content h3 {
@@ -473,6 +488,8 @@ html::before {
     margin-bottom: 40px; /* Consistent spacing */
     text-transform: uppercase;
     text-align: left;
+    /* NEW: Margin-left for hero heading specifically */
+    margin-left: 20px; /* Extra push away from left edge */
     /* Removed gradient background properties as per prompt's new color classes */
     background: none; 
     -webkit-background-clip: unset; 
@@ -483,53 +500,37 @@ html::before {
 /* New hero heading color classes */
 .hero-heading .crafting {
   color: #ffffff; /* white */
-  /* display: block; removed as <br> is used in HTML */
 }
 
 .hero-heading .digital {
   color: #888888; /* grey */
-  /* display: block; removed as <br> is used in HTML */
 }
 
 
-/* FIX: Added margin-bottom for #tools and margin-top for #services */
-#tools { /* Changed from #premium-tools to #tools as per HTML ID */
-  margin-bottom: 80px; /* adjust if needed */
-}
-
-#services {
-  margin-top: 120px; /* ensures no overlap during/after animation */
-}
-
-
-/* SERVICES SECTION FIX */
+/* Services Section (Combined old + new prompt CSS) */
 .services-section {
   position: relative;
-  /* Perspective is now on .services-content-wrapper for more direct control of 3D children */
-  perspective: none; /* Removed from here */
-  /* MODIFIED: Padding as per prompt */
-  padding: 100px 40px; /* Balanced padding */
+  padding: 100px 60px; /* Balanced padding as per new prompt */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  /* FIX: Background color added back. This is CRUCIAL for preventing overlap of content below when pinned. */
-  background-color: var(--bg-main); 
+  background-color: var(--bg-main); /* FIX: Re-added solid background for opacity as per discussion and screenshot */
+
+  /* Spacing fix from prompt */
+  margin-top: 100px; /* Extra gap so it doesn’t overlap Services */
+  margin-bottom: 100px; /* To maintain spacing after Services */
 }
 
-/* Services Heading (for the 3D cube section) */
+/* Services Heading (Combined old + new prompt CSS) */
 .services-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 5em;
-    line-height: 0.9;
-    font-weight: 800;
-    /* MODIFIED: Reduced margin-bottom to bring heading closer to cube */
-    margin-bottom: 15px; 
-    text-transform: uppercase;
+    font-size: 3rem; /* As per prompt example */
+    font-weight: 600; /* As per prompt example */
+    margin-bottom: 50px; /* As per prompt example */
     text-align: left;
-    /* FIX: Removed position: sticky; and top: 0; as its parent (services-section) is pinned by GSAP.
-            This prevents the heading from disappearing and ensures consistent spacing. */
+    margin-left: 20px; /* Ensure it’s not stuck to left edge as per prompt */
     position: relative; /* Default position for normal flow within the section */
     z-index: 4; /* Higher than cube wrapper to ensure it's on top of cube faces */
-    padding-bottom: 20px;
+    /* Removed padding-bottom: 20px; from previous iteration to simplify */
 }
 /* Span colors for MY SERVICES heading */
 .services-heading .text-white {
@@ -543,64 +544,61 @@ html::before {
 }
 
 
-/* SERVICES CONTENT WRAPPER FIX: Max-width and centering as per prompt */
+/* Services Content Wrapper (Combined old + new prompt CSS) */
 .services-content-wrapper {
   position: sticky; /* Sticky positioning for the main cube viewport */
   top: 0; /* Sticky to top of the viewport once it starts */
   height: 250px; /* Fixed height for the viewport of the cube, matches example */
-  /* MODIFIED: Overflow is hidden here as it clips the cube rotation */
   overflow: hidden; /* CRITICAL: Clips rotating items to maintain cube illusion */
-  perspective: 1000px; /* NEW: Perspective applied here as in DesignCube example */
+  perspective: 1000px; /* As per earlier prompt */
   transform-style: preserve-3d; /* CRITICAL for children to be 3D */
   display: flex; /* For centering the inner container */
   justify-content: center; /* Horizontally center */
   align-items: center; /* Vertically center content inside fixed height wrapper */
   z-index: 3; /* Lower than heading, higher than default content */
-  /* MODIFIED: Set width and margin auto for centering */
-  width: 100%;
-  max-width: 1200px; /* Prevents text cutoff */
-  margin: 0 auto;
+  width: 100%; /* As per prompt example */
+  max-width: 1200px; /* Prevents text cutoff as per prompt */
+  margin: 0 auto; /* Center as per prompt */
+  padding-left: 20px; /* Ensures cube text isn’t clipped as per prompt */
   /* transform is handled by GSAP.set for initial position and then GSAP.to for rotation */
 }
 
 .services-items-container {
   position: relative;
-  /* FIX: Set --cube-width via JS */
   width: var(--cube-width); /* Will be set dynamically by JS */
   height: 100%;
   transform-style: preserve-3d; /* This container *rotates*, so it needs preserve-3d */
+  gap: 40px; /* As per prompt's .services-items-container example */
+  flex-wrap: wrap; /* As per prompt's .services-items-container example */
 }
 
-/* SERVICE ITEMS FIX: Padding and text alignment as per prompt */
+/* Service Item (Combined old + new prompt CSS) */
 .service-item {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  flex: 1 1 280px; /* As per prompt's .service-item example */
+  background-color: #111; /* As per prompt's .service-item example */
+  border-radius: 12px; /* As per prompt's .service-item example */
   padding: 40px 60px; /* Consistent spacing as per prompt */
-  
-  /* CRITICAL: Solid background color to prevent content bleed-through within the cube faces themselves */
-  background-color: var(--bg-main); /* Ensure faces have solid background */
-  backface-visibility: hidden; /* CRITICAL: Hides the back of the face when rotated */
-  opacity: 1; /* All faces initially opaque for this GSAP setup */
-  transform-origin: center center; /* Rotation occurs around the center */
-  z-index: 1; /* Default z-index for faces within their container */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start; /* Aligns content to the left of the item */
-  box-sizing: border-box;
-  overflow: visible; /* Ensure text is not cut off */
-  will-change: transform; /* Performance hint for GSAP */
+  position: relative; /* As per prompt's .service-item example */
+  z-index: 1; /* As per prompt's .service-item example */
+  overflow: visible; /* No clipping as per prompt's .service-item example */
   text-align: left; /* Ensure text is left-aligned within the item */
+  
+  /* Inherited/adjusted original properties */
+  top: 0; /* From original structure */
+  left: 0; /* From original structure */
+  width: 100%; /* From original structure */
+  height: 100%; /* From original structure */
+  backface-visibility: hidden; /* From original structure */
+  opacity: 1; /* From original structure */
+  transform-origin: center center; /* From original structure */
+  will-change: transform; /* From original structure */
 }
 
-/* Service item children styling, including background number and text z-index */
-/* These styles are applied via .subtitle-text to the specific elements */
+/* Service item children styling */
 .service-item .service-title,
 .service-item .service-description {
-    /* These elements will inherit styles from .subtitle-text below */
+    position: relative; /* Ensures these elements create a stacking context */
+    z-index: 1; /* Ensures text is above numbers */
 }
 
 .service-item .service-title {
@@ -620,33 +618,54 @@ html::before {
     font-style: normal;
     word-break: break-word; /* Helps break long words to fit better */
 }
-/* SUBTITLE BACKGROUND NUMBERS FIX: Styles as per prompt */
-.subtitle-number { /* Changed from .service-item .service-bg-number to match prompt */
+
+/* Service background numbers as per prompt's example */
+.service-bg-number { /* This is the actual element in your HTML */
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Centered as per prompt */
-  font-size: 6rem; /* As per prompt */
-  color: rgba(255, 255, 255, 0.1); /* As per prompt (semi-transparent) */
+  right: 20px; /* Corrected: Back to right: 20px to avoid distortion and place correctly */
+  transform: translateY(-50%); /* Centered vertically only */
+  font-size: 7em; /* Corrected: Back to 7em for visual weight */
+  color: rgba(255, 255, 255, 0.08); /* As per prompt's example */
   z-index: 0; /* Behind text */
   pointer-events: none;
-  line-height: 1;
-  user-select: none;
 }
-.subtitle-text { /* New class from prompt */
+.service-content { /* This class does not exist in your HTML, .service-item children need .subtitle-text */
+  /* This rule is kept to match prompt, but might not apply unless HTML is adjusted */
   position: relative;
-  z-index: 1; /* ensures text is above numbers */
+  z-index: 1;
+}
+
+/* NEW: subtitle-number and subtitle-text classes from prompt (applied in HTML and used for z-index) */
+.subtitle-number { 
+  /* These styles are defined above in .service-bg-number, this serves as a fallback/redundancy */
+  position: absolute;
+  top: 50%;
+  right: 20px; /* As per prompt's example */
+  transform: translateY(-50%); 
+  font-size: 7em; 
+  color: rgba(255, 255, 255, 0.08); 
+  z-index: 0; 
+  pointer-events: none;
+}
+.subtitle-text { 
+  position: relative;
+  z-index: 1; 
 }
 
 
-/* TOOLS SECTION FIX: Background and z-index */
+/* Tools Section (Combined old + new prompt CSS) */
 .tools-section {
-    padding-top: 80px;
-    padding-bottom: 80px;
-    text-align: left;
-    background: none; /* As per prompt */
-    position: relative;
-    z-index: 2; /* Ensure visible above pinned Services */
+  text-align: center; /* As per prompt's Tools Section example */
+  margin-top: 100px; /* Avoids overlap with services as per prompt */
+  margin-bottom: 80px; /* For consistent spacing, as per prompt's example */
+  
+  /* Inherited/adjusted original properties */
+  padding-top: 80px;
+  padding-bottom: 80px;
+  position: relative;
+  z-index: 1; /* Match prompt example for .premium-tools */
+  background: none; /* As per prompt */
 }
 
 .tools-heading {
@@ -733,6 +752,33 @@ html::before {
     color: var(--tool-category-color);
     margin: 0;
     line-height: 1.2;
+}
+
+
+/* Subtitles Section as per prompt */
+.subtitles-section {
+  position: relative;
+  padding: 120px 60px;
+  background: #111;
+  text-align: center;
+}
+
+.subtitles-section .section-bg-number {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 180px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.08);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.subtitles-section h2,
+.subtitles-section p {
+  position: relative;
+  z-index: 1;
 }
 
 
