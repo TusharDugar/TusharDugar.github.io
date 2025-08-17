@@ -1,1392 +1,221 @@
-/* Universal Box-Sizing for easier layout management */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tushar Dugar - Digital Portfolio</title>
+    <!-- Google Fonts Import (Poppins for all text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
 
-/* Basic Reset & Font */
-:root {
-    /* Sawad-inspired Color Palette */
-    --bg-main: #000000; /* Solid black background from Sawad */
-    --bg-section-card: #141414; /* Background for cards/sections (if added back) */
-    --bg-profile-card: #FFFFFF; /* White background for the About Me card */
-    --text-light: #F0F0F0; /* Light text for readability */
-    --text-medium: #A0A0A0; /* Slightly darker light for secondary text */
-    --text-dark-card: #000000; /* Black text for white card background */
-    --text-medium-card: #4B4B4B; /* Dark gray for secondary text on white card */
-
-    /* Accent Colors from Sawad */
-    --accent-primary-sawad: #FF6B00; /* Main orange from Sawad */
-    --accent-secondary-sawad: #00FFC2; /* Green accent from Sawad */
-
-    /* Gradients */
-    --gradient-hero-text: linear-gradient(90deg, #F0F0F0 0%, #A0A0A0 100%); /* Light gradient for hero text (for stats if added back) */
-    --gradient-skills-front: linear-gradient(214.02deg, #EA5F5F 6.04%, #EEAA55 92.95%); /* Your specified orange gradient for skill cards (if added back) */
-
-    --primary-heading-color: var(--text-light);
-    --shadow-color-dark: rgba(0, 0, 0, 0.8); /* Darker shadow for depth */
-    --shadow-color-subtle: rgba(0, 0, 0, 0.4); /* Subtle shadow for blending */
-    --shadow-color-card-white: rgba(0, 0, 0, 0.25); /* Specific shadow for white card */
-
-    /* New colors for Tool Cards */
-    --bg-tool-card: #1A1A1A; /* Dark background for tool cards */
-    --tool-icon-bg: #FFFFFF; /* White background for tool icons */
-    --tool-name-color: var(--text-light); /* White for tool names */
-    --tool-category-color: var(--text-medium); /* Gray for categories */
-
-    /* New colors for Services Section */
-    --services-bg-number-color: rgba(51, 51, 51, 0.8); /* Dark gray, more visible */
-    --services-title-active-color: #00FFC2; /* Green for active titles */ /* Using accent-secondary-sawad */
-    --services-description-color: var(--text-light); /* White for descriptions */
+    <!-- GSAP and ScrollTrigger CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+    <!-- The background is now purely CSS on the html and body elements -->
     
-
-    /* CSS Variables for sticky services top offset (set by JS) */
-    --services-sticky-top-h2: 0px; /* Unused in this GSAP setup */
-    --services-sticky-top-wrapper: 0px; /* Unused in this GSAP setup */
-}
-
-/* Layer 1: Solid Black Background (Base) */
-html {
-    width: 100%;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-    position: relative;
-}
-
-/* Keyframes for the animated colorful gradient */
-@keyframes gradient {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-}
-
-body {
-    width: 100%;
-    overflow-x: hidden;
-    font-family: 'Poppins', sans-serif;
-    background-color: #000; /* As per prompt's reset */
-    color: #fff; /* As per prompt's reset */
-    line-height: 1.6; /* Retained from original */
-    scroll-behavior: smooth; /* Retained from original */
-    min-height: 100vh; /* Retained from original */
-}
-
-/* Layer 2: Subtle Background Glowing Elements (Over Black Background) */
-body::before, body::after {
-    content: '';
-    position: fixed; /* Keep fixed to viewport */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    filter: blur(200px); /* Very soft blur for large, subtle glows */
-    opacity: 0.15; /* Subtlety */
-    z-index: -2; /* Above html, below animated grid pattern */
-    pointer-events: none; /* Ensure no interaction with glows */
-    will-change: transform, opacity; /* Performance hint */
-}
-
-body::before {
-    width: 900px;
-    height: 900px;
-    background: radial-gradient(circle at center, var(--accent-primary-sawad) 0%, transparent 60%);
-    animation: glow1 25s infinite alternate ease-in-out;
-}
-
-body::after {
-    width: 800px;
-    height: 800px;
-    background: radial-gradient(circle at center, var(--accent-secondary-sawad) 0%, transparent 60%);
-    animation: glow2 28s infinite alternate-reverse ease-in-out; /* Slightly different timing for variation */
-}
-
-@keyframes glow1 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
-    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.2; }
-    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.15; }
-}
-
-@keyframes glow2 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
-    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.2; }
-    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.15; }
-}
-
-
-/* Layer 3: Animated Background Grid Pattern */
-/* This now goes on html::before to mask an animated background */
-html::before {
-    content: '';
-    position: fixed;
-    inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0.1799375; /* Increased opacity by 5% as requested */
-
-    /* Animated colorful gradient as the base background */
-    background-image: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
-
-    /* Masking to show background through lines */
-    mask-image:
-        linear-gradient(to right, transparent 99%, white 1%), /* Vertical grid lines */
-        linear-gradient(to bottom, transparent 99%, white 1%), /* Horizontal grid lines */
-        linear-gradient(45deg, transparent 75%, white 75.5%, white 76.5%, transparent 77%), /* Diagonal grid 1 */
-        linear-gradient(-45deg, transparent 75%, white 75.5%, white 76.5%, transparent 77%);
-
-    /* Vendor prefixes for mask-image */
-    -webkit-mask-image:
-        linear-gradient(to right, transparent 99%, white 1%),
-        linear-gradient(to bottom, transparent 99%, white 1%),
-        linear-gradient(45deg, transparent 75%, white 75.5%, white 76.5%, transparent 77%),
-        linear-gradient(-45deg, transparent 75%, white 75.5%, white 76.5%, transparent 77%);
-
-    /* Mask sizes */
-    mask-size: 100px 100px, 100px 100px, 100px 100px, 100px 100px;
-    -webkit-mask-size: 100px 100px, 100px 100px, 100px 100px, 100px 100px;
-
-    /* Mask repeats */
-    mask-repeat: repeat;
-    -webkit-mask-repeat: repeat;
-}
-
-
-/* Global Section Styling (only for about-left-content and footer now) */
-.section {
-    max-width: 1200px; /* Overall content width */
-    margin: 0 auto; /* Center sections horizontally */
-    position: relative;
-    z-index: 1; /* Ensure sections are above background elements */
-    /* FIX: Consistent left/right spacing for all main sections as per prompt */
-    padding: 100px 60px; /* shifted right side with balanced left space */
-}
-
-/* Reveal Animation Base for general sections */
-.reveal-item {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    will-change: transform, opacity; /* Performance hint for reveal animations */
-}
-.reveal-item.revealed {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Staggered reveal style for children within a parent */
-.reveal-stagger { /* Note: This class is applied in JS via revealStaggerChildren */
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    will-change: transform, opacity; /* Performance hint for stagger animations */
-}
-.reveal-stagger.revealed {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-/* Hover lift for tactile feel */
-.reveal-stagger:hover {
-    transform: translateY(0) scale(1.03);
-    transition: transform 0.3s ease-out;
-}
-
-
-/* --- DesignCube-style staggered reveal for About section --- */
-/* These use .reveal-child classes which are set in HTML for About section */
-.reveal-child {
-  opacity: 0;
-  transform: translateY(40px) scale(0.95);
-  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
-}
-
-.reveal-child.revealed {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.reveal-child:hover {
-  transform: translateY(0) scale(1.03);
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Accessibility: Reduce motion for reveal-child elements */
-@media (prefers-reduced-motion: reduce) {
-  .reveal-child {
-    transition: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-  }
-}
-
-
-/* Main Layout Container (now with left sticky and empty right scrollable area) */
-.main-layout-container {
-    display: flex;
-    justify-content: center;
-    max-width: 1920px;
-    margin: 0 auto;
-    padding: 0 80px; /* Overall padding for the container */
-    min-height: 100vh;
-    position: relative;
-    z-index: 1; /* Keep main container above background elements */
-    padding-top: 50px;
-    gap: 80px; /* NEW: Defines the gap between the flex items (columns) */
-}
-
-/* Left Column (Sticky) */
-.left-column-sticky {
-    flex-shrink: 0;
-    flex-basis: 370px; /* Fixed width for the sticky column, matching max-width of the card */
-    padding-right: 0;
-    box-sizing: border-box;
-    position: sticky;
-    top: 50px;
-    align-self: flex-start; /* Ensures content sticks to the top within the flex container */
-    height: calc(100vh - 50px);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    z-index: 2; /* Ensures left column is always above the right content */
-}
-
-/* Updated: About Left Content (White Card) - Based on Aabid Ahmed design */
-.about-left-content {
-    color: var(--text-dark-card);
-    border-radius: 20px;
-    padding: 30px 25px;
-    box-shadow: 0 10px 30px var(--shadow-color-card-white);
-    width: 100%;
-    max-width: 370px;
-    height: auto;
-    box-sizing: border-box;
-    /* MODIFIED: Make it visible on load, no initial animation for the card itself */
-    opacity: 1; 
-    transform: translateY(0);
-    transition: none; /* No transition for its default state */
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    background-color: var(--bg-profile-card);
-}
-/* The .revealed class is no longer applied to .about-left-content by JS if it's always visible by default */
-/* However, it's good practice to keep the class definition if it *could* be applied in other contexts */
-.about-left-content.revealed {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-/* New: Profile Image Container */
-.profile-image-container {
-    width: calc(100% + 50px);
-    max-width: 420px;
-    height: 200px;
-    border-radius: 15px;
-    overflow: hidden;
-    margin-bottom: 25px;
-    position: relative;
-    transform: translateX(0);
-    background-color: var(--accent-primary-sawad);
-}
-/* FIX: Profile Photo sizing to prevent clipping */
-.profile-image-container .profile-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures image covers container without distortion */
-}
-
-
-/* Updated: Main Name */
-.about-left-content h3 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2.8em;
-    font-weight: 700;
-    color: var(--text-dark-card);
-    margin-bottom: 20px;
-    line-height: 1.1;
-}
-
-/* New: Fire Icon with connecting dashed lines */
-.fire-icon-with-line {
-    position: relative;
-    width: 100%;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
-.fire-icon {
-    background-color: var(--accent-primary-sawad);
-    border-radius: 50%;
-    padding: 8px;
-    font-size: 1.1em;
-    color: var(--text-light);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    z-index: 2;
-    position: relative;
-}
-
-/* Dashed lines connected to the fire icon - approximate */
-.fire-icon-with-line::before,
-.fire-icon-with-line::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 2px;
-    border-top: 2px dashed var(--accent-primary-sawad);
-    z-index: 1;
-}
-
-.fire-icon-with-line::before {
-    left: 0;
-    width: calc(50% - 25px);
-}
-
-.fire-icon-with-line::after {
-    right: 0;
-    width: calc(50% - 25px);
-}
-
-/* New: Decorative background dashed lines (from original Aabid Ahmed card) */
-.dashed-decoration {
-    position: absolute;
-    border: 2px dashed var(--accent-primary-sawad);
-    border-radius: 50%;
-    box-sizing: border-box;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.top-left-curve {
-    width: 150px;
-    height: 150px;
-    top: -50px;
-    left: -50px;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    transform: rotate(-10deg);
-}
-
-.bottom-right-curve {
-    width: 150px;
-    height: 150px;
-    bottom: -50px;
-    right: -50px;
-    border-left-color: transparent;
-    border-top-color: transparent;
-    transform: rotate(10deg);
-}
-
-
-/* Updated: Short Description */
-.about-short-desc {
-    font-size: 0.9em;
-    line-height: 1.6;
-    color: var(--text-medium-card);
-    margin-bottom: 25px;
-    padding: 0 5px;
-    max-width: 90%;
-}
-
-/* NEW: Contact Info List */
-.contact-info-list {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0 30px;
-    width: 100%;
-    text-align: left;
-}
-
-.contact-info-list li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-    font-size: 0.95em;
-    color: var(--text-medium-card);
-}
-
-.contact-info-list li:last-child {
-    margin-bottom: 0;
-}
-
-.contact-info-list li i {
-    color: var(--accent-primary-sawad);
-    margin-right: 15px;
-    font-size: 1.2em;
-    width: 20px;
-    text-align: center;
-}
-
-.contact-info-list li span {
-    font-weight: 600;
-    color: var(--text-dark-card);
-    margin-right: 8px;
-    flex-shrink: 0;
-}
-
-
-/* Updated: Social Icons */
-.about-social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: auto;
-    padding-top: 10px;
-}
-.about-social-icons a {
-    color: var(--accent-primary-sawad);
-    font-size: 1.5em;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-.about-social-icons a:hover {
-    color: var(--accent-primary-sawad);
-    transform: translateY(-2px) scale(1.05);
-}
-
-
-/* Right Column (Scrolling) */
-.right-column-scroll {
-    flex-grow: 1;
-    padding-left: 0;
-    padding-right: 80px; /* Keep this for padding on the right edge of the content */
-    padding-bottom: 100px;
-    box-sizing: border-box;
-    min-height: 150vh;
-    padding-top: 100px;
-    text-align: left;
-    position: relative; /* CRITICAL: Establishes a stacking context for its children */
-    z-index: 0; /* Ensures this whole column's content sits below the fixed side column and main background layers */
-}
-
-/* Specific text alignment for elements within right-column-scroll */
-.right-column-scroll h1,
-.right-column-scroll h2,
-.right-column-scroll p {
-  margin-left: 0; /* Ensures left edge consistency */
-  margin-right: 0;
-}
-
-/* HERO TEXT FIX: Applied to .hero-heading */
-.hero-heading {
-    font-family: 'Poppins', sans-serif;
-    font-size: 5em; /* As per prompt */
-    line-height: 1.1;
-    font-weight: 900; /* As per prompt */
-    margin-bottom: 40px; /* Consistent spacing */
-    text-transform: uppercase;
-    text-align: left;
-    /* FIX: Margin-left for hero heading specifically */
-    margin-left: 20px; /* Extra push away from left edge */
-    /* Removed gradient background properties as per prompt's new color classes */
-    background: none; 
-    -webkit-background-clip: unset; 
-    background-clip: unset; 
-    -webkit-text-fill-color: unset;
-    color: unset; /* Ensure text color is managed by specific classes */
-}
-/* New hero heading color classes */
-.hero-heading .crafting {
-  color: #ffffff; /* white */
-}
-
-.hero-heading .digital {
-  color: #888888; /* grey */
-}
-
-
-/* Services Section (Combined old + new prompt CSS) */
-.services-section {
-  position: relative;
-  /* MODIFIED: Padding as per prompt */
-  padding: 100px 60px; /* Balanced padding as per new prompt */
-  text-align: left;
-  z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  /* FIX: Background color added back. This is CRUCIAL for preventing overlap of content below when pinned. */
-  background-color: var(--bg-main); /* Re-added solid background for opacity */
-
-  /* Spacing fix from prompt */
-  margin-top: 100px; /* Extra gap so it doesn’t overlap Services */
-  margin-bottom: 100px; /* To maintain spacing after Services */
-}
-
-/* Services Heading (Combined old + new prompt CSS) */
-.services-heading {
-    font-family: 'Poppins', sans-serif;
-    font-size: 5em; /* FIX: Reverted font-size back to 5em as per your instruction */
-    line-height: 0.9;
-    font-weight: 800;
-    margin-bottom: 40px; /* Consistent spacing as per prompt */
-    text-transform: uppercase;
-    text-align: left;
-    margin-left: 20px; /* Ensure it’s not stuck to left edge as per prompt */
-    position: relative; /* Default position for normal flow within the section */
-    z-index: 4; /* Higher than cube wrapper to ensure it's on top of cube faces */
-}
-/* Span colors for MY SERVICES heading */
-.services-heading .text-white {
-  color: var(--text-light);
-  display: block;
-}
-
-.services-heading .text-gray {
-  color: var(--text-medium);
-  display: block;
-}
-
-
-/* Services Content Wrapper (Combined old + new prompt CSS) */
-.services-content-wrapper {
-  position: sticky; /* Sticky positioning for the main cube viewport */
-  top: 0; /* Sticky to top of the viewport once it starts */
-  height: 250px; /* Fixed height for the cube viewport, matches example */
-  overflow: hidden; /* CRITICAL: Clips rotating items to maintain cube illusion */
-  perspective: 1000px; /* As per earlier prompt */
-  transform-style: preserve-3d; /* CRITICAL for children to be 3D */
-  display: flex; /* For centering the inner container */
-  justify-content: center; /* Horizontally center */
-  align-items: center; /* Vertically center content inside fixed height wrapper */
-  z-index: 3; /* Lower than heading, higher than default content */
-  width: 100%; /* As per prompt example */
-  max-width: 1200px; /* Prevents text cutoff as per prompt */
-  margin: 0 auto; /* Center as per prompt */
-  padding-left: 20px; /* Ensures cube text isn’t clipped as per prompt */
-  /* transform is handled by GSAP.set for initial position and then GSAP.to for rotation */
-}
-
-.services-items-container {
-  position: relative;
-  width: var(--cube-width); /* Will be set dynamically by JS */
-  height: 100%;
-  transform-style: preserve-3d; /* This container *rotates*, so it needs preserve-3d */
-  gap: 40px; /* As per prompt's .services-items-container example */
-  flex-wrap: wrap; /* As per prompt's .services-items-container example */
-}
-
-/* Service Item (Combined old + new prompt CSS) */
-.service-item {
-  flex: 1 1 280px; /* As per prompt's .service-item example */
-  background-color: #111; /* As per prompt's .service-item example */
-  border-radius: 12px; /* As per prompt's .service-item example */
-  padding: 40px 60px; /* Consistent spacing as per prompt */
-  position: relative; /* As per prompt's .service-item example */
-  z-index: 1; /* As per prompt's .service-item example */
-  overflow: visible; /* No clipping as per prompt's .service-item example */
-  text-align: left; /* Ensure text is left-aligned within the item */
-  
-  /* Inherited/adjusted original properties from 3D structure */
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%; 
-  backface-visibility: hidden; 
-  opacity: 1; 
-  transform-origin: center center; 
-  will-change: transform; 
-}
-
-/* Service item children styling */
-.service-item .service-title,
-.service-item .service-description {
-    position: relative; /* Ensures these elements create a stacking context */
-    z-index: 1; /* Ensures text is above numbers */
-}
-
-.service-item .service-title {
-    color: var(--accent-primary-sawad); /* Orange color for titles */
-    font-size: 1.5em;
-    font-weight: 700;
-    margin: 0 0 8px 0;
-    line-height: 1.2;
-    font-style: normal;
-    text-transform: none;
-}
-.service-item .service-description {
-    font-size: 1em;
-    color: var(--text-medium);
-    margin: 0;
-    line-height: 1.6;
-    font-style: normal;
-    word-break: break-word; /* Helps break long words to fit better */
-}
-/* Subtitle background numbers as per prompt's example */
-.subtitle-number { /* This is the actual element in your HTML */
-  position: absolute;
-  top: 50%;
-  right: 20px; /* FIX: Corrected position to right: 20px to prevent distortion and place correctly as per original prompt's example */
-  transform: translateY(-50%); /* Centered vertically only */
-  font-size: 7em; /* As per prompt's example */
-  color: rgba(255, 255, 255, 0.08); /* As per prompt's example */
-  z-index: 0; /* Behind text */
-  pointer-events: none;
-}
-.subtitle-text { /* New class from prompt */
-  position: relative;
-  z-index: 1; 
-}
-
-
-/* Tools Section (Combined old + new prompt CSS) */
-.tools-section {
-  text-align: center; /* As per prompt's Tools Section example */
-  margin-top: 100px; /* Avoids overlap with services as per prompt */
-  margin-bottom: 80px; /* For consistent spacing, as per prompt's example */
-  
-  /* Inherited/adjusted original properties */
-  padding-top: 80px;
-  padding-bottom: 80px;
-  position: relative;
-  z-index: 1; /* Match prompt example for .premium-tools */
-  background: none; /* As per prompt */
-}
-
-.tools-heading {
-    font-family: 'Poppins', sans-serif;
-    font-size: 5em;
-    line-height: 0.9;
-    font-weight: 800;
-    margin-bottom: 50px;
-    text-transform: uppercase;
-}
-
-.tools-heading .text-white {
-    color: var(--text-light);
-    display: block;
-}
-
-.tools-heading .text-gray {
-    color: var(--text-medium);
-    display: block;
-}
-
-/* TOOLS GRID ALIGNMENT */
-.tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    /* Ensure left alignment by default, will be overridden by media query if needed */
-    margin-left: 0; 
-    margin-right: 0;
-    justify-items: stretch; 
-}
-
-.tool-card {
-    background-color: var(--bg-tool-card);
-    border-radius: 15px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    cursor: pointer;
-}
-
-.tool-card:hover {
-    transform: translateY(-5px);
-    background-color: rgba(26, 26, 26, 0.9);
-}
-
-.tool-icon-wrapper {
-    width: 50px;
-    height: 50px;
-    background-color: var(--tool-icon-bg);
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    overflow: hidden;
-}
-
-.tool-logo {
-    max-width: 70%;
-    max-height: 70%;
-    object-fit: contain;
-    filter: brightness(0.01);
-}
-
-.tool-info {
-    flex-grow: 1;
-    text-align: left;
-}
-
-.tool-name {
-    font-size: 1.1em;
-    font-weight: 600;
-    color: var(--tool-name-color);
-    margin: 0 0 5px 0;
-    line-height: 1.2;
-}
-
-.tool-category {
-    font-size: 0.85em;
-    color: var(--tool-category-color);
-    margin: 0;
-    line-height: 1.2;
-}
-
-
-/* Subtitles Section as per prompt */
-.subtitles-section {
-  position: relative;
-  padding: 120px 60px;
-  background: #111;
-  text-align: center;
-}
-
-.subtitles-section .section-bg-number {
-  position: absolute;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 180px;
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.08);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.subtitles-section h2,
-.subtitles-section p {
-  position: relative;
-  z-index: 1;
-}
-
-
-/* Footer (Contact Section - Full Width, adjusted for smaller height) (UNCHANGED) */
-footer {
-    background-color: var(--bg-main);
-    color: var(--text-light);
-    text-align: center;
-    padding: 60px 0;
-    position: relative;
-    z-index: 1; /* Ensures footer is above general background elements, but below pinned section */
-}
-
-footer a {
-    color: var(--accent-secondary-sawad);
-    text-decoration: none;
-    transition: text-decoration 0.3s ease;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-footer h2 {
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 3.2em;
-    color: var(--primary-heading-color);
-    font-weight: 700;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-    letter-spacing: 1.5px;
-}
-
-.contact-tagline {
-    font-size: 1.25em;
-    margin-bottom: 40px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0.95;
-    line-height: 1.8;
-    color: var(--text-light);
-}
-
-.contact-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    margin-bottom: 40px;
-}
-
-.contact-button {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: var(--text-light);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 0;
-    font-size: 1.2em;
-    font-weight: 600;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    width: 280px;
-    height: 130px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    text-align: center;
-}
-
-.contact-button:hover {
-    transform: translateY(-8px);
-    background-color: rgba(26, 26, 26, 0.9);
-}
-
-.contact-button .button-content-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-.contact-button i {
-    font-size: 2.8em;
-    color: var(--accent-primary-sawad);
-}
-
-.contact-button .button-value {
-    font-size: 15px;
-    font-weight: bold;
-    opacity: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0 5px;
-    max-width: 90%;
-    color: var(--text-light);
-    margin-top: 5px;
-}
-
-.contact-button .copied-text {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--gradient-skills-front);
-    color: var(--text-light);
-    font-size: 1.5em;
-    font-weight: bold;
-    border-radius: 12px;
-    opacity: 0;
-    transform: translateY(100%);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    z-index: 3;
-}
-
-/* States when button is 'copied' */
-.contact-button.copied .button-content-main {
-    transform: translateY(-100%) !important;
-    opacity: 0 !important;
-}
-
-.contact-button.copied .copied-text {
-    transform: translateY(0) !important;
-    opacity: 1 !important;
-}
-
-.social-links {
-    margin-top: 30px;
-}
-.social-links a {
-    color: var(--text-light);
-    margin: 0 20px;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-.social-links a:hover {
-    color: var(--accent-secondary-sawad);
-    transform: scale(1.3);
-}
-
-
-/* Responsive Design */
-
-@media (max-width: 1200px) {
-    .main-layout-container {
-        padding: 0 40px;
-        gap: 60px; /* Adjusted gap */
-    }
-    .left-column-sticky {
-        flex-basis: 320px; /* Adjusted fixed width */
-    }
-    .about-left-content {
-        max-width: 320px; /* Maintain consistent max-width */
-        padding: 25px 20px;
-    }
-    .profile-image-container {
-        width: calc(100% + 40px);
-        max-width: 360px;
-        height: 190px;
-        margin-bottom: 20px;
-    }
-    .about-left-content h3 {
-        font-size: 2.6em;
-    }
-    .fire-icon-with-line {
-        margin-bottom: 20px;
-    }
-    .fire-icon {
-        padding: 7px;
-        font-size: 1em;
-    }
-    .about-short-desc {
-        font-size: 0.88em;
-        margin-bottom: 20px;
-    }
-    .contact-info-list {
-        margin: 15px 0 25px;
-    }
-    .contact-info-list li {
-        font-size: 0.9em;
-    }
-    .contact-info-list li i {
-        margin-right: 12px;
-        font-size: 1.1em;
-    }
-    .contact-info-list li span {
-        margin-right: 6px;
-    }
-    .about-social-icons a {
-        font-size: 1.4em;
-    }
-
-    .dashed-decoration {
-        border-width: 1.5px;
-    }
-    .top-left-curve, .bottom-right-curve {
-        width: 130px;
-        height: 130px;
-        top: -45px;
-        left: -45px;
-        bottom: -45px;
-        right: -45px;
-    }
-
-    .right-column-scroll {
-        padding-right: 40px; /* Adjusted padding */
-    }
-    .hero-heading {
-        font-size: 4.5em; /* Adjusted hero heading font size */
-        margin-bottom: 25px;
-    }
-    .hero-description {
-        font-size: 1.1em;
-        margin-bottom: 60px;
-    }
-
-    /* Services section adjustments for responsiveness */
-    .services-section {
-        padding-top: 60px;
-        padding-bottom: 80px;
-        z-index: 2; /* Maintain z-index */
-    }
-    .services-heading {
-        font-size: 4.5em; /* Adjusted for consistency */
-    }
-    .services-content-wrapper {
-        height: 300px; /* Fixed height for the cube viewport */
-    }
-    .service-item {
-        padding: 15px;
-    }
-
-    .tools-section {
-        padding-top: 60px;
-        padding-bottom: 80px;
-        z-index: 1; /* Maintain z-index */
-    }
-    .tools-heading {
-        font-size: 5em; /* Kept original size for tools heading */
-        margin-bottom: 40px;
-        /* NEW: Consistent alignment for tools section at this breakpoint */
-        text-align: center; /* Center the heading to match grid */
-    }
-    .tools-grid {
-        margin: 0 auto; /* Center the grid */
-        max-width: 500px; /* Constrain width when centered */
-    }
-    /* END NEW */
-    .tool-card {
-        padding: 18px;
-        gap: 12px;
-    }
-    .tool-icon-wrapper {
-        width: 45px;
-        height: 45px;
-        border-radius: 8px;
-    }
-    .tool-name {
-        font-size: 1em;
-    }
-    .tool-category {
-        font-size: 0.8em;
-    }
-}
-
-@media (max-width: 768px) {
-    .main-layout-container {
-        flex-direction: column;
-        padding: 0 20px;
-        padding-top: 20px;
-        gap: 0; /* No gap in column layout, use padding on sections */
-    }
-    .left-column-sticky {
-        width: 100%; /* Take full width in column mode */
-        position: relative;
-        top: 0;
-        padding-right: 0;
-        min-height: unset;
-        padding-bottom: 50px;
-        display: flex;
-        justify-content: flex-start; /* Aligned to top */
-        align-items: center;
-        flex-direction: column;
-        padding-top: 0;
-        flex-basis: auto; /* Allow it to take natural height when stacking */
-    }
-    .about-left-content {
-        max-width: 350px;
-        padding: 30px 25px;
-        border-radius: 18px;
-    }
-    .profile-image-container {
-        width: calc(100% + 50px);
-        max-width: 400px;
-        height: 210px;
-        margin-bottom: 30px;
-        border-radius: 15px;
-    }
-    .about-left-content h3 {
-        font-size: 2.8em;
-        margin-bottom: 25px;
-    }
-    .fire-icon-with-line {
-        height: 45px;
-        margin-bottom: 30px;
-    }
-    .fire-icon {
-        padding: 9px;
-        font-size: 1.2em;
-    }
-    .fire-icon-with-line::before,
-    .fire-icon-with-line::after {
-        width: calc(50% - 30px);
-    }
-    .about-short-desc {
-        font-size: 1em;
-        margin-bottom: 30px;
-        padding: 0 10px;
-        max-width: 100%;
-    }
-    .contact-info-list {
-        margin: 25px 0 35px;
-    }
-    .contact-info-list li {
-        font-size: 1em;
-        margin-bottom: 18px;
-    }
-    .contact-info-list li i {
-        margin-right: 18px;
-        font-size: 1.3em;
-        width: 25px;
-    }
-    .contact-info-list li span {
-        margin-right: 10px;
-    }
-    .about-social-icons {
-        gap: 20px;
-        padding-top: 15px;
-    }
-    .about-social-icons a {
-        font-size: 1.6em;
-    }
-
-    .dashed-decoration {
-        border-width: 2px;
-    }
-    .top-left-curve, .bottom-right-curve {
-        width: 160px;
-        height: 160px;
-        top: -55px;
-        left: -55px;
-        bottom: -55px;
-        right: -55px;
-    }
-
-    .right-column-scroll {
-        width: 100%;
-        padding: 40px 20px;
-        min-height: auto;
-        padding-top: 50px;
-        text-align: left;
-    }
-    .hero-heading {
-        font-size: 3.5em; /* Adjusted hero heading font size */
-        margin-bottom: 20px;
-    }
-    .hero-description {
-        font-size: 1.1em;
-        line-height: 1.6;
-        max-width: 100%;
-        margin-bottom: 40px;
-    }
-
-    /* Services section adjustments for responsiveness */
-    .services-section {
-        padding-top: 40px;
-        padding-bottom: 60px;
-        z-index: 2; /* Maintain z-index */
-    }
-    .services-heading {
-        font-size: 3.5em; /* Adjusted for consistency */
-    }
-    .services-content-wrapper {
-        height: 250px; /* Fixed height for the cube viewport */
-    }
-    .service-item {
-        padding: 10px;
-    }
-
-    .tools-section {
-        padding-top: 40px;
-        padding-bottom: 60px;
-        z-index: 1; /* Maintain z-index */
-    }
-    .tools-heading {
-        font-size: 3.5em;
-        margin-bottom: 30px;
-    }
-    .tools-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 15px;
-        max-width: 100%;
-    }
-    .tool-card {
-        padding: 15px;
-        gap: 10px;
-    }
-    .tool-icon-wrapper {
-        width: 40px;
-        height: 40px;
-        border-radius: 7px;
-    }
-    .tool-name {
-        font-size: 0.95em;
-    }
-    .tool-category {
-        font-size: 0.75em;
-    }
-
-    footer {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
-@media (max-width: 480px) {
-    .main-layout-container {
-        padding: 0 15px;
-    }
-    .section h2 {
-        font-size: 2.8em;
-        letter-spacing: 0.5px;
-        margin-bottom: 30px;
-    }
-    .contact-tagline {
-        font-size: 1em;
-        margin-bottom: 25px;
-    }
-    .contact-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-        max-width: 320px;
-        margin: 0 auto;
-    }
-    .contact-button {
-        width: 100%;
-        height: 80px;
-        font-size: 0.95em;
-    }
-    .contact-button i {
-        font-size: 1.6em;
-    }
-    .contact-button .button-value {
-        font-size: 0.75em;
-    }
-    .contact-button .copied-text {
-        font-size: 0.95em;
-    }
-
-    .about-left-content {
-        max-width: 320px;
-        padding: 25px 20px;
-    }
-    .profile-image-container {
-        width: calc(100% + 30px);
-        max-width: 350px;
-        height: 180px;
-        margin-bottom: 25px;
-        border-radius: 12px;
-    }
-    .about-left-content h3 {
-        font-size: 2.5em;
-        margin-bottom: 20px;
-    }
-    .fire-icon-with-line {
-        height: 40px;
-        margin-bottom: 25px;
-    }
-    .fire-icon {
-        padding: 8px;
-        font-size: 1.1em;
-    }
-    .fire-icon-with-line::before,
-    .fire-icon-with-line::after {
-        width: calc(50% - 25px);
-    }
-    .about-short-desc {
-        font-size: 0.9em;
-        margin-bottom: 25px;
-        padding: 0 5px;
-    }
-    .contact-info-list {
-        margin: 20px 0 30px;
-    }
-    .contact-info-list li {
-        font-size: 0.9em;
-        margin-bottom: 15px;
-    }
-    .contact-info-list li i {
-        margin-right: 15px;
-        font-size: 1.2em;
-        width: 20px;
-    }
-    .contact-info-list li span {
-        margin-right: 8px;
-    }
-    .about-social-icons {
-        gap: 15px;
-        padding-top: 10px;
-    }
-    .about-social-icons a {
-        font-size: 1.4em;
-    }
-
-    .dashed-decoration {
-        border-width: 1.5px;
-    }
-    .top-left-curve, .bottom-right-curve {
-        width: 140px;
-        height: 140px;
-        top: -45px;
-        left: -45px;
-        bottom: -45px;
-        right: -45px;
-    }
-
-    .right-column-scroll {
-        padding: 30px 15px;
-        padding-top: 40px;
-    }
-    .hero-heading {
-        /* NEW: clamp for better scaling on small screens */
-        font-size: clamp(1.8em, 8vw, 3em);
-        margin-bottom: 15px;
-    }
-    .hero-description {
-        font-size: 0.95em;
-        line-height: 1.5;
-        margin-bottom: 30px;
-    }
-
-    /* Services section adjustments for responsiveness */
-    .services-section {
-        padding-top: 30px;
-        padding-bottom: 50px;
-        z-index: 2; /* Maintain z-index */
-    }
-    .services-heading {
-        font-size: 2.5em; /* Adjusted for consistency */
-    }
-    .services-content-wrapper {
-        height: 230px; /* Fixed height for the cube viewport */
-    }
-    .service-item {
-        padding: 12px;
-    }
-
-    .tools-section {
-        padding-top: 30px;
-        padding-bottom: 50px;
-        z-index: 1; /* Maintain z-index */
-    }
-    .tools-heading {
-        font-size: 2.8em;
-        margin-bottom: 25px;
-    }
-    .tools-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    .tool-card {
-        padding: 15px;
-        gap: 8px;
-    }
-    .tool-icon-wrapper {
-        width: 35px;
-        height: 35px;
-        border-radius: 6px;
-    }
-    .tool-name {
-        font-size: 0.9em;
-    }
-    .tool-category {
-        font-size: 0.75em;
-    }
-
-    footer {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
-/* Accessibility: Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-    /* General reveal items */
-    .reveal-item,
-    .reveal-stagger {
-        transition: none !important;
-        transform: none !important;
-        opacity: 1 !important;
-    }
-
-    /* Services cube animation items */
-    .service-item {
-        transition: none !important;
-        transform: none !important;
-        opacity: 1 !important;
-    }
-    /* Only the first item should be visible if motion is reduced */
-    .service-item:not(:first-child) {
-        opacity: 0 !important;
-    }
-}
+    <div class="main-layout-container"> <!-- Main container for the two columns -->
+        <div class="left-column-sticky">
+            <section id="about" class="section about-left-content reveal-item">
+                <div class="profile-card-wrapper reveal-parent">
+                    <!-- Decorative background dashed lines (from Aabid Ahmed card) -->
+                    <div class="dashed-decoration top-left-curve"></div>
+                    <div class="dashed-decoration bottom-right-curve"></div>
+
+                    <div class="profile-image-container reveal-child">
+                        <!-- Placeholder image: A black silhouette on orange background to match Aabid Ahmed style -->
+                        <img src="https://via.placeholder.com/250x180/FF6B00/000000?text=" alt="Tushar Dugar Profile" class="profile-photo">
+                    </div>
+
+                    <!-- Name - changed to single line as per Aabid Ahmed -->
+                    <h3 class="reveal-child">Tushar Dugar</h3>
+                    
+                    <div class="fire-icon-with-line reveal-child">
+                        <span class="fire-icon"><i class="fas fa-fire"></i></span>
+                    </div>
+                    
+                    <p class="about-short-desc reveal-child">A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.</p>
+                    
+                    <div class="about-social-icons reveal-child">
+                        <!-- Social icons for Aabid Ahmed's style -->
+                        <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
+                        <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="mailto:imtushar4621@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="right-column-scroll">
+            <!-- Hero/Introduction Section -->
+            <section id="hero-right" class="section hero-right-content reveal-item">
+                <!-- HERO HEADING: Updated as per prompt -->
+                <h1 class="hero-heading">
+                    <span class="crafting">Crafting</span><br>
+                    <span class="digital">Digital Experiences</span>
+                </h1>
+                <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
+            </section>
+
+            <!-- Services Section - Now with GSAP 3D Cube Animation -->
+            <section id="services" class="section services-section">
+                <h2 class="services-heading">
+                    <span class="text-white">MY</span><br>
+                    <span class="text-gray">SERVICES</span>
+                </h2>
+
+                <div class="services-content-wrapper">
+                    <div class="services-items-container">
+                        <!-- Services Data will be dynamically transformed by GSAP -->
+                        <div class="service-item" id="service-0" data-service-index="0">
+                            <!-- Apply subtitle-text and subtitle-number logic -->
+                            <h3 class="service-title subtitle-text">Web Design</h3>
+                            <p class="service-description subtitle-text">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p>
+                            <div class="service-bg-number subtitle-number">01</div>
+                        </div>
+                        <div class="service-item" id="service-1" data-service-index="1">
+                            <h3 class="service-title subtitle-text">SEO Optimization</h3>
+                            <p class="service-description subtitle-text">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p>
+                            <div class="service-bg-number subtitle-number">02</div>
+                        </div>
+                        <div class="service-item" id="service-2" data-service-index="2">
+                            <h3 class="service-title subtitle-text">UX/UI Design</h3>
+                            <p class="service-description subtitle-text">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p>
+                            <div class="service-bg-number subtitle-number">03</div>
+                        </div>
+                        <div class="service-item" id="service-3" data-service-index="3">
+                            <h3 class="service-title subtitle-text">Graphic Design</h3>
+                            <p class="service-description subtitle-text">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p>
+                            <div class="service-bg-number subtitle-number">04</div>
+                        </div>
+                        <div class="service-item" id="service-4" data-service-index="4">
+                            <h3 class="service-title subtitle-text">E-commerce Solutions</h3>
+                            <p class="service-description subtitle-text">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p>
+                            <div class="service-bg-number subtitle-number">05</div>
+                        </div>
+                        <div class="service-item" id="service-5" data-service-index="5">
+                            <h3 class="service-title subtitle-text">Digital Marketing</h3>
+                            <p class="service-description subtitle-text">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p>
+                            <div class="service-bg-number subtitle-number">06</div>
+                        </div>
+                        <div class="service-item" id="service-6" data-service-index="6">
+                            <h3 class="service-title subtitle-text">Content Creation</h3>
+                            <p class="service-description subtitle-text">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p>
+                            <div class="service-bg-number subtitle-number">07</div>
+                        </div>
+                        <div class="service-item" id="service-7" data-service-index="7">
+                            <h3 class="service-title subtitle-text">Social Media Management</h3>
+                            <p class="service-description subtitle-text">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p>
+                            <div class="service-bg-number subtitle-number">08</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Premium Tools Section -->
+            <section id="tools" class="section tools-section reveal-item">
+                <h2 class="tools-heading">
+                    <span class="text-white">PREMIUM</span>
+                    <span class="text-gray">TOOLS</span>
+                </h2>
+
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <!-- Using Simple Icons CDN for common brand logos -->
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg" alt="Google Gemini Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">Google Gemini</h4>
+                            <p class="tool-category">AI Assistant</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/openai.svg" alt="ChatGPT Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">ChatGPT</h4>
+                            <p class="tool-category">AI Assistant</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="Figma Logo"
+                            class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">Figma</h4>
+                            <p class="tool-category">Design Tool</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="Photoshop Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">Adobe Photoshop</h4>
+                            <p class="tool-category">Image Editing</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googleanalytics.svg" alt="Google Analytics Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">Google Analytics</h4>
+                            <p class="tool-category">Web Analytics</p>
+                        </div>
+                    </div>
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/semrush.svg" alt="SEMrush Logo" class="tool-logo">
+                        </div>
+                        <div class="tool-info">
+                            <h4 class="tool-name">SEMrush</h4>
+                            <p class="tool-category">SEO & Content Marketing</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div> <!-- End main-layout-container -->
+
+    <footer id="contact" class="section reveal-item">
+        <h2>Let’s Connect!</h2>
+        <p class="contact-tagline">
+            I am always open to discuss your project,<br>improve your online presence or help with your website.
+        </p>
+        <div class="contact-buttons">
+            <button class="contact-button" id="phone-button" data-contact="+919330077650">
+                <div class="button-content-main">
+                    <i class="fas fa-phone-alt"></i> 
+                    <span class="button-value">+91 9330077650</span>
+                </div>
+                <span class="copied-text">Copied!</span>
+            </button>
+            <button class="contact-button" id="email-button" data-contact="imtushar4621@gmail.com">
+                <div class="button-content-main">
+                    <i class="fas fa-envelope"></i> 
+                    <span class="button-value">imtushar4621@gmail.com</span>
+                </div>
+                <span class="copied-text">Copied!</span>
+            </button>
+        </div>
+        <div class="social-links">
+            <!-- Social links removed as per earlier request -->
+        </div>
+    </footer>
+
+    <!-- Main JavaScript File -->
+    <script src="script.js"></script>
+</body>
+</html>
