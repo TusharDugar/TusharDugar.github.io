@@ -157,8 +157,8 @@ section {
   margin: 0 auto; /* Center sections horizontally */
   position: relative;
   z-index: 1; /* Ensure sections are above background elements */
-  /* FIX: Consistent left/right spacing for all main sections as per prompt */
-  padding: 100px 40px 100px 60px; /* Top 100px, Right 40px, Bottom 100px, Left 60px */
+  /* Consistent left/right spacing for all main sections: padding: Top Right Bottom Left */
+  padding: 100px 40px 100px 60px; 
 }
 
 /* Reveal Animation Base for general elements (used by footer buttons etc.) */
@@ -211,6 +211,10 @@ section {
     transform: translateY(100px); /* Start below */
     transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform, opacity;
+    /* Ensure font styles are from your main body/paragraph styles, or define here if specific */
+    color: var(--text-light); /* Assuming this is your general paragraph text color */
+    line-height: 1.7;
+    font-size: 1.1em;
 }
 .about-content-animation.visible {
     opacity: 1;
@@ -506,7 +510,8 @@ section {
   padding: 100px 40px 100px 60px; /* Adjusted padding, matches global section */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  background-color: var(--bg-main); /* Re-added solid background for opacity */
+  /* --- FIX: Removed background-color to make it transparent as requested --- */
+  background-color: transparent; 
   margin-top: 100px; 
   margin-bottom: 100px; 
 }
@@ -522,7 +527,7 @@ section {
     text-align: left;
     margin-left: 20px; 
     position: relative; 
-    z-index: 4; 
+    z-index: 4; /* Higher than services-remaining-grid to be on top of it */
     /* GSAP will control opacity and pinning */
 }
 .services-main-title .text-white { color: var(--text-light); display: block; }
@@ -532,9 +537,8 @@ section {
 /* Services 3D Cube Structure */
 .services-scroll-trigger-area {
     /* This needs enough height to allow for the scrubbing animation */
-    /* Set this via JS for responsiveness, or use a large fixed value */
     height: 400vh; /* This needs to be tall enough to allow the cube to fully animate */
-    overflow: clip; /* Hide parts of cube when out of sticky container */
+    /* overflow: clip; Removed this from here, moved to services-sticky-container */
     margin-top: -100px; /* Pull it up to hide the cube initially */
 }
 
@@ -546,7 +550,9 @@ section {
     align-items: center;
     justify-content: center;
     perspective: 1000px; /* Essential for 3D effect */
-    overflow: clip; /* Hide any overflow from cube as it rotates */
+    /* --- FIX: Changed overflow to hidden and set higher z-index --- */
+    overflow: hidden; /* Hide any overflow from cube as it rotates */
+    z-index: 10; /* Make sure cube and its content are above pinned titles/other elements */
 }
 
 .services-cube {
@@ -555,9 +561,8 @@ section {
     height: 250px; /* Fixed height for cube faces */
     transform-style: preserve-3d; /* Crucial for child elements to be 3D */
     transition: transform 0.3s; /* Smooth transition for GSAP controlled transforms */
-    /* GSAP will control initial opacity/position and rotation */
+    /* --- FIX: Removed initial transform: translateY(100px) from CSS --- */
     opacity: 0; /* Set initial opacity to 0, GSAP will animate to 1 */
-    transform: translateY(100px); /* Initial state before GSAP animates it in */
 }
 
 /* Responsive cube width adjustments */
@@ -683,7 +688,7 @@ section {
 .service-item .subtitle-number { 
   position: absolute;
   top: 50%;
-  right: 20px; 
+  left: 0; /* Changed from right: 20px to left: 0 as you requested */
   transform: translateY(-50%); 
   font-size: 4rem; /* As per prompt */
   opacity: 0.1; /* As per prompt */
