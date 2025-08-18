@@ -52,7 +52,7 @@ body {
     inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
     z-index: -2; /* Above body's background-color, but below other overlays */
     pointer-events: none;
-    opacity: 0.2; /* Adjusted opacity to 20% */
+    opacity: 0.3; /* Adjusted opacity to 30% */
     background-image: url('./71976 (1).jpg'); /* Your specified image, explicit current directory */
     background-repeat: repeat; /* To stack */
     background-size: 400px auto; /* A tile size that creates visible repetition (roughly 4-5 times horizontally) */
@@ -64,7 +64,7 @@ body {
     inset: 0;
     z-index: -2; /* Above .site-background-image, below color glows */
     pointer-events: none;
-    opacity: 0.2; /* Adjusted opacity to 20% */
+    opacity: 0.03; /* Adjusted opacity to 3% */
     background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); /* New gradient */
     background-size: 400% 400%;
     animation: gradient 15s ease infinite; /* New animation */
@@ -791,8 +791,9 @@ footer h2 {
 /* Responsive Design */
 @media (max-width: 1200px) {
     .main-layout-container {
-        padding: 0 40px;
-        gap: 60px;
+        /* Adjusted for smaller screens */
+        padding: 0 40px; /* Kept 40px */
+        gap: 40px; /* Reduced further from 60px */
     }
     .left-column-sticky {
         width: 100%;
