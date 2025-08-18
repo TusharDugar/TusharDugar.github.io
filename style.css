@@ -1,8 +1,3 @@
-/* Universal Box-Sizing for easier layout management */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
 /* Basic Reset & Font */
 :root {
     /* Sawad-inspired Color Palette */
@@ -13,11 +8,11 @@
     --text-medium: #A0A0A0; /* Slightly darker light for secondary text */
     --text-dark-card: #000000; /* Black text for white card background */
     --text-medium-card: #4B4B4B; /* Dark gray for secondary text on white card */
-
+    
     /* Accent Colors from Sawad */
     --accent-primary-sawad: #FF6B00; /* Main orange from Sawad */
     --accent-secondary-sawad: #00FFC2; /* Green accent from Sawad */
-
+    
     /* Gradients */
     --gradient-hero-text: linear-gradient(90deg, #F0F0F0 0%, #A0A0A0 100%); /* Light gradient for hero text (for stats if added back) */
     --gradient-skills-front: linear-gradient(214.02deg, #EA5F5F 6.04%, #EEAA55 92.95%); /* Your specified orange gradient for skill cards (if added back) */
@@ -32,40 +27,55 @@
     --tool-icon-bg: #F8F8F8; /* Adjusted to a slightly off-white for tool icons, closer to Sawad */
     --tool-name-color: var(--text-light); /* White for tool names */
     --tool-category-color: var(--text-medium); /* Gray for categories */
-
-    /* New colors for Services Section */
-    --services-bg-number-color: rgba(51, 51, 51, 0.8); /* Dark gray, more visible */
-    --services-title-active-color: #00FFC2; /* Green for active titles */ /* Using accent-secondary-sawad */
-    --services-description-color: var(--text-light); /* White for descriptions */
 }
 
-/* Layer 1: Solid Black Background (Base) */
-html {
-    width: 100%;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-    position: relative;
-}
-
-/* Keyframes for the animated colorful gradient */
-@keyframes gradient {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+/* Universal Box-Sizing for easier layout management */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
-    width: 100%;
-    overflow-x: hidden;
+    margin: 0;
     font-family: 'Poppins', sans-serif;
-    background-color: #000;
-    color: #fff;
     line-height: 1.6;
+    color: var(--text-light);
+    background-color: var(--bg-main);
+    overflow-x: hidden;
+    position: relative;
     scroll-behavior: smooth;
     min-height: 100vh;
 }
 
-/* Layer 2: Subtle Background Glowing Elements (Over Black Background) */
+/* Background Video */
+.background-video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -3; /* Placed behind body glows and html grid */
+}
+
+.background-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.2) grayscale(0.8);
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.9) 100%);
+    z-index: -2; /* Above video, below body glows */
+}
+
+
+/* Subtle Background Glowing Elements (Mimicking Sawad's subtle ambient light) */
 body::before, body::after {
     content: '';
     position: fixed;
@@ -73,71 +83,69 @@ body::before, body::after {
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    /* FURTHER INCREASED BLUR and DECREASED OPACITY */
-    filter: blur(300px); /* Increased from 250px */
-    opacity: 0.05; /* Decreased from 0.08 */
-    z-index: -2;
+    filter: blur(400px); /* FURTHER INCREASED BLUR */
+    opacity: 0.03; /* FURTHER DECREASED OPACITY */
+    z-index: -1; /* Above video overlay, below html grid */
     pointer-events: none;
     will-change: transform, opacity;
 }
 
 body::before {
-    width: 1100px; /* Larger */
-    height: 1100px; /* Larger */
+    width: 1300px; /* Larger */
+    height: 1300px; /* Larger */
     background: radial-gradient(circle at center, var(--accent-primary-sawad) 0%, transparent 60%);
     animation: glow1 25s infinite alternate ease-in-out;
 }
 
 body::after {
-    width: 1000px; /* Larger */
-    height: 1000px; /* Larger */
+    width: 1200px; /* Larger */
+    height: 1200px; /* Larger */
     background: radial-gradient(circle at center, var(--accent-secondary-sawad) 0%, transparent 60%);
     animation: glow2 28s infinite alternate-reverse ease-in-out;
 }
 
 @keyframes glow1 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.05; }
-    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.08; } /* Adjusted max opacity */
-    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.05; }
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
+    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.05; } /* Adjusted max opacity */
+    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; }
 }
 
 @keyframes glow2 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.05; }
-    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.08; } /* Adjusted max opacity */
-    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.05; }
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
+    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; } /* Adjusted max opacity */
+    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; }
 }
 
 
-/* Layer 3: Animated Background Grid Pattern */
+/* Animated Background Grid Pattern */
 html::before {
     content: '';
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    /* EVEN FURTHER DECREASED OPACITY and TWEAKED MASK SIZE for ultimate subtlety */
-    opacity: 0.015; /* Significantly reduced from 0.03, very very subtle */
+    opacity: 0.008; /* EXTREMELY SUBTLE */
 
     background-image: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
 
-    /* TWEAKED LINE THICKNESS */
+    /* TWEAKED LINE THICKNESS & SEGMENTATION */
     mask-image:
-        linear-gradient(to right, transparent 99.7%, white 0.3%), /* Thinner vertical lines */
-        linear-gradient(to bottom, transparent 99.7%, white 0.3%), /* Thinner horizontal lines */
-        linear-gradient(45deg, transparent 75%, white 75.1%, white 75.4%, transparent 75.5%), /* Thinner diagonal grid 1 */
-        linear-gradient(-45deg, transparent 75%, white 75.1%, white 75.4%, transparent 75.5%); /* Thinner diagonal grid 2 */
+        linear-gradient(to right, transparent 99.85%, white 0.15%), /* Even thinner vertical lines */
+        linear-gradient(to bottom, transparent 99.85%, white 0.15%), /* Even thinner horizontal lines */
+        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%), /* Extremely thin diagonal grid 1 */
+        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%); /* Extremely thin diagonal grid 2 */
 
     -webkit-mask-image:
-        linear-gradient(to right, transparent 99.7%, white 0.3%),
-        linear-gradient(to bottom, transparent 99.7%, white 0.3%),
-        linear-gradient(45deg, transparent 75%, white 75.1%, white 75.4%, transparent 75.5%),
-        linear-gradient(-45deg, transparent 75%, white 75.1%, white 75.4%, transparent 75.5%);
+        linear-gradient(to right, transparent 99.85%, white 0.15%),
+        linear-gradient(to bottom, transparent 99.85%, white 0.15%),
+        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
+        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
 
     /* ADJUSTED MASK SIZES for even denser pattern */
-    mask-size: 60px 60px, 60px 60px, 60px 60px, 60px 60px; /* Adjusted from 80px */
-    -webkit-mask-size: 60px 60px, 60px 60px, 60px 60px, 60px 60px;
+    mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px; /* Adjusted from 50px */
+    -webkit-mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
 
     mask-repeat: repeat;
     -webkit-mask-repeat: repeat;
@@ -145,73 +153,25 @@ html::before {
 
 
 /* Global Section Styling */
-section {
+.section {
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
-  /* ADJUSTED VERTICAL PADDING for more space, closer to Sawad's rhythm */
-  padding: 180px 40px; /* Increased from 150px */
+  padding: 200px 40px; /* Increased from 180px for more vertical rhythm */
 }
 
-/* Reveal Animation Base for general elements (used by footer buttons etc.) */
+/* Reveal Animation Base */
 .reveal-item {
     opacity: 0;
     transform: translateY(40px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform, opacity;
 }
 .reveal-item.visible {
     opacity: 1;
     transform: translateY(0);
 }
-
-/* Staggered reveal style for children within a parent */
-.reveal-stagger {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    will-change: transform, opacity;
-}
-.reveal-stagger.visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-/* Hover lift for tactile feel */
-.reveal-stagger:hover {
-    transform: translateY(0) scale(1.03);
-    transition: transform 0.3s ease-out;
-}
-
-
-/* --- About Section Specific Animations --- */
-.about-heading-animation {
-    opacity: 0;
-    transform: translateY(-50px);
-    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: transform, opacity;
-}
-.about-heading-animation.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.about-content-animation {
-    opacity: 0;
-    transform: translateY(100px);
-    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: transform, opacity;
-    color: var(--text-light);
-    line-height: 1.7;
-    font-size: 1.1em;
-}
-.about-content-animation.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-.about-content-wrapper .about-content-animation:nth-child(1) { transition-delay: 0.2s; }
-.about-content-wrapper .about-content-animation:nth-child(2) { transition-delay: 0.4s; }
 
 
 /* Main Layout Container */
@@ -220,14 +180,12 @@ section {
     justify-content: center;
     max-width: 1920px;
     margin: 0 auto;
-    /* ADJUSTED HORIZONTAL PADDING to match Sawad's wider content area */
-    padding: 0 140px; /* Increased from 120px */
+    padding: 0 180px; /* Increased from 160px for wider content area */
     min-height: 100vh;
     position: relative;
     z-index: 1;
     padding-top: 50px;
-    /* INCREASED GAP between columns significantly */
-    gap: 140px; /* Increased from 120px */
+    gap: 180px; /* Increased from 160px for larger gap between columns */
 }
 
 /* Left Column (Sticky) */
@@ -247,8 +205,9 @@ section {
     z-index: 2;
 }
 
-/* Updated: About Left Content (White Card) */
+/* About Left Content (White Card) */
 .about-left-content {
+    background-color: var(--bg-profile-card);
     color: var(--text-dark-card);
     border-radius: 20px;
     padding: 30px 25px;
@@ -257,8 +216,6 @@ section {
     max-width: 370px;
     height: auto;
     box-sizing: border-box;
-    opacity: 1;
-    transform: translateY(0);
     transition: none;
 
     display: flex;
@@ -267,11 +224,9 @@ section {
     text-align: center;
     position: relative;
     overflow: hidden;
-    background-color: var(--bg-profile-card);
 }
 
-
-/* New: Profile Image Container */
+/* Profile Image Container */
 .profile-image-container {
     width: calc(100% + 50px);
     max-width: 420px;
@@ -287,10 +242,11 @@ section {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.01);
 }
 
-
-/* Updated: Main Name */
+/* Main Name */
 .about-left-content h3 {
     font-family: 'Poppins', sans-serif;
     font-size: 2.8em;
@@ -300,7 +256,7 @@ section {
     line-height: 1.1;
 }
 
-/* New: Fire Icon with connecting dashed lines */
+/* Fire Icon with connecting dashed lines */
 .fire-icon-with-line {
     position: relative;
     width: 100%;
@@ -343,7 +299,7 @@ section {
     width: calc(50% - 25px);
 }
 
-/* New: Decorative background dashed lines */
+/* Decorative background dashed lines */
 .dashed-decoration {
     position: absolute;
     border: 2px dashed var(--accent-primary-sawad);
@@ -373,8 +329,7 @@ section {
     transform: rotate(10deg);
 }
 
-
-/* Updated: Short Description */
+/* Short Description */
 .about-short-desc {
     font-size: 0.9em;
     line-height: 1.6;
@@ -384,7 +339,7 @@ section {
     max-width: 90%;
 }
 
-/* Updated: Social Icons */
+/* Social Icons */
 .about-social-icons {
     display: flex;
     justify-content: center;
@@ -395,7 +350,7 @@ section {
 .about-social-icons a {
     color: var(--accent-primary-sawad);
     font-size: 1.5em;
-    transition: color 0.3s ease, transform 0.3s ease;
+    transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .about-social-icons a:hover {
     color: var(--accent-primary-sawad);
@@ -406,11 +361,11 @@ section {
 /* Right Column (Scrolling) */
 .right-column-scroll {
     flex-grow: 1;
-    /* Removed padding-left/right here, rely on main-layout-container's padding */
-    padding-bottom: 100px; /* Kept for bottom section spacing */
+    /* Removed padding-left/right here, rely on main-layout-container's padding for overall content and section padding */
+    padding-bottom: 100px;
     box-sizing: border-box;
     min-height: 150vh;
-    padding-top: 100px; /* Kept for top spacing */
+    padding-top: 100px;
     text-align: left;
     position: relative;
     z-index: 0;
@@ -427,13 +382,10 @@ section {
 /* HERO TEXT ADJUSTMENTS */
 .hero-heading {
     font-family: 'Poppins', sans-serif;
-    /* FONT SIZE Adjusted to match Sawad's visual scale */
-    font-size: 6.5em; /* Increased significantly from 5.5em for more impact */
-    /* LINE-HEIGHT Adjusted for ultra-condensed look */
-    line-height: 0.85em; /* Tighter line-height */
+    font-size: 8em; /* Further increased for max impact */
+    line-height: 0.75em; /* TIGHTEST line-height */
     font-weight: 900;
-    /* MARGIN-BOTTOM Adjusted */
-    margin-bottom: 40px; /* Adjusted from 30px */
+    margin-bottom: 40px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -453,21 +405,18 @@ section {
 
 /* HERO DESCRIPTION ADJUSTMENTS */
 .hero-description {
-    /* FONT SIZE Adjusted */
-    font-size: 1.05em; /* Slightly smaller for lighter feel */
+    font-size: 1em; /* Adjusted to 1em for a finer look */
     line-height: 1.7;
-    /* MARGIN-BOTTOM Adjusted */
-    margin-bottom: 140px; /* Increased from 120px for more separation */
-    max-width: 800px; /* Kept max-width for better line length */
-    color: var(--text-medium); /* Use text-medium for a slightly softer look */
+    margin-bottom: 160px; /* Increased for more separation */
+    max-width: 800px;
+    color: var(--text-medium);
 }
 
 
 /* Services Section Styles */
 .services-section {
   position: relative;
-  /* PADDING Adjusted */
-  padding: 180px 40px; /* Consistent with global section padding */
+  padding: 200px 40px; /* Consistent with global section padding */
   text-align: left;
   z-index: 2;
   background-color: transparent;
@@ -478,13 +427,10 @@ section {
 /* Services Main Title */
 .services-heading {
     font-family: 'Poppins', sans-serif;
-    /* FONT SIZE Adjusted */
-    font-size: 6.5em; /* Increased significantly from 5.5em for more impact */
-    /* LINE-HEIGHT Adjusted for ultra-condensed look */
-    line-height: 0.85em; /* Tighter line-height */
+    font-size: 8em; /* Consistent with Hero heading size */
+    line-height: 0.75em; /* Consistent with Hero heading line-height */
     font-weight: 800;
-    /* MARGIN-BOTTOM Adjusted */
-    margin-bottom: 70px; /* Increased from 60px for more separation */
+    margin-bottom: 70px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -498,10 +444,8 @@ section {
 /* Services Flat Grid (2D animation) */
 .services-items-container {
     display: grid;
-    /* GRID TEMPLATE COLUMNS ADJUSTED for better layout on wider screens */
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Min-width increased from 320px */
-    /* GAP Adjusted */
-    gap: 25px; /* Tighter gap */
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 25px;
     justify-items: stretch;
     margin-top: 0;
 }
@@ -510,8 +454,7 @@ section {
 .service-item {
   background-color: #111;
   border-radius: 12px;
-  /* PADDING Adjusted for larger cards */
-  padding: 55px; /* Increased from 50px */
+  padding: 60px;
   position: relative;
   z-index: 1;
   overflow: hidden;
@@ -520,14 +463,14 @@ section {
 
   opacity: 0;
   transform: translateY(60px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .service-item.visible {
   opacity: 1;
   transform: translateY(0);
 }
 /* Stagger effect for service items in the 2D grid */
-.services-items-container .service-item:nth-child(1) { transition-delay: 0.08s; } /* Tighter stagger */
+.services-items-container .service-item:nth-child(1) { transition-delay: 0.08s; }
 .services-items-container .service-item:nth-child(2) { transition-delay: 0.16s; }
 .services-items-container .service-item:nth-child(3) { transition-delay: 0.24s; }
 .services-items-container .service-item:nth-child(4) { transition-delay: 0.32s; }
@@ -541,17 +484,15 @@ section {
 .service-item .service-title {
     position: relative;
     z-index: 1;
-    /* FONT SIZE Adjusted */
-    font-size: 1.7em; /* Adjusted again */
+    font-size: 1.7em;
     font-weight: 700;
-    margin-bottom: 12px; /* Increased margin-bottom */
+    margin-bottom: 12px;
     line-height: 1.2;
 }
 .service-item .service-description {
     position: relative;
     z-index: 1;
-    /* FONT SIZE Adjusted */
-    font-size: 0.95em; /* Adjusted again for a finer look */
+    font-size: 0.95em;
     color: var(--text-medium);
     line-height: 1.6;
 }
@@ -562,9 +503,8 @@ section {
   top: 50%;
   right: 0px;
   transform: translateY(-50%);
-  /* FONT SIZE and OPACITY Adjusted to match Sawad's huge, faded numbers */
-  font-size: 12em; /* Significantly larger */
-  opacity: 0.02; /* Extremely transparent */
+  font-size: 16em; /* EVEN LARGER */
+  opacity: 0.01; /* EXTREMELY TRANSPARENT */
   color: #FFFFFF;
   z-index: 0;
   pointer-events: none;
@@ -574,8 +514,8 @@ section {
 /* Tools Section */
 .tools-section {
   text-align: left;
-  padding-top: 180px; /* Consistent with section padding */
-  padding-bottom: 180px; /* Consistent with section padding */
+  padding-top: 200px; /* Consistent with section padding */
+  padding-bottom: 200px; /* Consistent with section padding */
   margin-top: 0;
   margin-bottom: 0;
   position: relative;
@@ -585,12 +525,10 @@ section {
 
 .tools-heading {
     font-family: 'Poppins', sans-serif;
-    /* FONT SIZE Adjusted */
-    font-size: 6.5em; /* Increased significantly from 5.5em */
-    line-height: 0.85em; /* Tighter line-height */
+    font-size: 7.5em; /* Consistent with other headings */
+    line-height: 0.8em; /* Consistent with other headings */
     font-weight: 800;
-    /* MARGIN-BOTTOM Adjusted */
-    margin-bottom: 70px; /* Increased from 60px */
+    margin-bottom: 70px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -609,10 +547,8 @@ section {
 /* TOOLS GRID ALIGNMENT */
 .tools-grid {
     display: grid;
-    /* GRID TEMPLATE COLUMNS ADJUSTED for more items per row on large screens */
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Adjusted minmax for closer fit */
-    /* GAP Adjusted */
-    gap: 15px; /* Tighter gap */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
     margin-left: 0;
     margin-right: 0;
     justify-items: stretch;
@@ -622,14 +558,12 @@ section {
 .tool-card {
     background-color: var(--bg-tool-card);
     border-radius: 15px;
-    /* PADDING Adjusted */
-    padding: 20px; /* Adjusted to 20px */
+    padding: 20px;
     display: flex;
     align-items: center;
-    /* GAP Adjusted */
-    gap: 15px; /* Adjusted to 15px */
+    gap: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
     will-change: transform, opacity;
 
@@ -648,10 +582,9 @@ section {
 }
 
 .tool-icon-wrapper {
-    /* DIMENSIONS Adjusted */
-    width: 50px; /* Adjusted to 50px */
-    height: 50px; /* Adjusted to 50px */
-    background-color: var(--tool-icon-bg); /* Use the slightly off-white variable */
+    width: 50px;
+    height: 50px;
+    background-color: var(--tool-icon-bg);
     border-radius: 10px;
     display: flex;
     justify-content: center;
@@ -673,8 +606,7 @@ section {
 }
 
 .tool-name {
-    /* FONT SIZE Adjusted */
-    font-size: 1.1em; /* Adjusted to 1.1em */
+    font-size: 1.1em;
     font-weight: 600;
     color: var(--tool-name-color);
     margin: 0 0 5px 0;
@@ -682,8 +614,7 @@ section {
 }
 
 .tool-category {
-    /* FONT SIZE Adjusted */
-    font-size: 0.85em; /* Adjusted to 0.85em */
+    font-size: 0.85em;
     color: var(--tool-category-color);
     margin: 0;
     line-height: 1.2;
@@ -695,8 +626,7 @@ footer {
     background-color: var(--bg-main);
     color: var(--text-light);
     text-align: center;
-    /* PADDING Adjusted for more vertical space */
-    padding: 120px 0; /* Increased from 100px */
+    padding: 120px 0;
     position: relative;
     z-index: 1;
 }
@@ -704,7 +634,7 @@ footer {
 footer a {
     color: var(--accent-secondary-sawad);
     text-decoration: none;
-    transition: text-decoration 0.3s ease;
+    transition: text-decoration 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 footer a:hover {
@@ -737,15 +667,13 @@ footer h2 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    /* GAP Adjusted */
-    gap: 20px; /* Tighter gap */
+    gap: 20px;
     margin-bottom: 40px;
 }
 
 .contact-button {
-    /* BACKGROUND and BORDER Adjusted for subtlety */
-    background-color: rgba(255, 255, 255, 0.01); /* Even more transparent */
-    border: 1px solid rgba(255, 255, 255, 0.03); /* Even more transparent border */
+    background-color: rgba(255, 255, 255, 0.005); /* Very very transparent */
+    border: 1px solid rgba(255, 255, 255, 0.01); /* Very very transparent border */
     border-radius: 12px;
     padding: 0;
     font-size: 1.2em;
@@ -753,16 +681,16 @@ footer h2 {
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    /* DIMENSIONS Adjusted to be more rectangular like Sawad */
-    width: 260px; /* Adjusted from 250px */
-    height: 110px; /* Adjusted from 120px */
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    width: 280px; /* Slightly wider */
+    height: 120px; /* Slightly taller */
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     text-align: center;
 }
 
 .contact-button:hover {
     transform: translateY(-8px);
     background-color: rgba(26, 26, 26, 0.9);
+    box-shadow: 0 10px 25px var(--shadow-color-dark), 0 0 15px var(--accent-secondary-sawad);
 }
 
 .contact-button .button-content-main {
@@ -775,7 +703,7 @@ footer h2 {
     position: absolute;
     top: 0;
     left: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     padding: 15px;
     box-sizing: border-box;
 }
@@ -807,14 +735,14 @@ footer h2 {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--accent-primary-sawad);
+    background: var(--accent-primary-sawad); /* Solid orange, not gradient */
     color: var(--text-light);
     font-size: 1.5em;
     font-weight: bold;
     border-radius: 12px;
     opacity: 0;
     transform: translateY(100%);
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     z-index: 3;
 }
@@ -836,7 +764,7 @@ footer h2 {
 .social-links a {
     color: var(--text-light);
     margin: 0 20px;
-    transition: color 0.3s ease, transform 0.3s ease;
+    transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .social-links a:hover {
     color: var(--accent-secondary-sawad);
@@ -845,27 +773,42 @@ footer h2 {
 
 
 /* Responsive Design */
-
 @media (max-width: 1200px) {
     .main-layout-container {
         padding: 0 40px;
         gap: 60px;
     }
     .left-column-sticky {
-        flex-basis: 320px;
+        width: 100%;
+        padding-right: 0;
+        max-width: 400px;
+        margin: 0 auto;
     }
+    .right-column-scroll {
+        flex-grow: 1;
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        margin-top: 50px;
+        text-align: center;
+    }
+    .section { /* General section padding */
+        padding: 120px 40px; /* Reduced vertical padding for medium screens */
+    }
+
+    /* Specific adjustments for profile card on 1200px screens */
     .about-left-content {
-        max-width: 320px;
+        max-width: 300px;
         padding: 25px 20px;
     }
     .profile-image-container {
         width: calc(100% + 40px);
-        max-width: 360px;
-        height: 190px;
+        max-width: 340px;
+        height: 160px;
         margin-bottom: 20px;
     }
     .about-left-content h3 {
-        font-size: 2.6em;
+        font-size: 2.5em;
     }
     .fire-icon-with-line {
         margin-bottom: 20px;
@@ -874,8 +817,12 @@ footer h2 {
         padding: 7px;
         font-size: 1em;
     }
+    .fire-icon-with-line::before,
+    .fire-icon-with-line::after {
+        width: calc(50% - 22px);
+    }
     .about-short-desc {
-        font-size: 0.88em;
+        font-size: 0.85em;
         margin-bottom: 20px;
     }
     .about-social-icons a {
@@ -886,60 +833,63 @@ footer h2 {
         border-width: 1.5px;
     }
     .top-left-curve, .bottom-right-curve {
-        width: 130px;
-        height: 130px;
-        top: -45px;
-        left: -45px;
-        bottom: -45px;
-        right: -45px;
+        width: 120px;
+        height: 120px;
+        top: -40px;
+        left: -40px;
+        bottom: -40px;
+        right: -40px;
     }
 
-    .right-column-scroll {
-        padding-right: 0px;
-        padding-left: 0px;
-    }
+    /* Adjustments for hero content */
     .hero-heading {
-        font-size: 5.5em; /* Adjusted hero heading font size */
-        margin-bottom: 30px;
+        font-size: 6em;
+        line-height: 0.85em;
+        margin-bottom: 25px;
     }
     .hero-description {
-        font-size: 1em; /* Adjusted */
-        margin-bottom: 80px; /* Adjusted */
+        font-size: 1em;
+        line-height: 1.7;
+        margin-bottom: 80px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    .services-section {
-        padding: 120px 40px; /* Adjusted section padding for medium screens */
-    }
+    /* Adjustments for services section */
     .services-heading {
-        font-size: 5.5em; /* Adjusted */
-        margin-bottom: 50px; /* Adjusted */
+        font-size: 6em;
+        line-height: 0.85em;
+        margin-bottom: 50px;
     }
     .services-items-container {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min-width */
-        gap: 20px; /* Adjusted */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
     }
     .service-item {
-        padding: 45px; /* Adjusted padding */
+        padding: 50px;
     }
     .service-item .subtitle-number {
-        font-size: 9em; /* Adjusted */
+        font-size: 11em;
     }
     .service-item .service-title {
-        font-size: 1.4em;
+        font-size: 1.5em;
     }
     .service-item .service-description {
         font-size: 0.9em;
     }
 
-    .tools-section {
-        padding: 120px 40px; /* Adjusted section padding for medium screens */
-    }
+    /* Adjustments for tools section */
     .tools-heading {
-        font-size: 5.5em; /* Adjusted */
-        margin-bottom: 50px; /* Adjusted */
+        font-size: 6em;
+        line-height: 0.85em;
+        margin-bottom: 50px;
     }
     .tools-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 15px;
+        max-width: 500px;
+        margin: 0 auto;
     }
     .tool-card {
         padding: 18px;
@@ -982,81 +932,83 @@ footer h2 {
         padding-top: 0;
         flex-basis: auto;
     }
+    .section {
+        padding: 80px 20px;
+    }
+
+    /* Specific adjustments for profile card on 768px screens */
     .about-left-content {
-        max-width: 350px;
-        padding: 30px 25px;
+        max-width: 280px;
+        padding: 20px 15px;
+        border-radius: 15px;
     }
     .profile-image-container {
-        width: calc(100% + 50px);
-        max-width: 400px;
-        height: 210px;
-        margin-bottom: 30px;
+        width: calc(100% + 40px);
+        max-width: 320px;
+        height: 150px;
+        margin-bottom: 20px;
     }
     .about-left-content h3 {
-        font-size: 2.8em;
-        margin-bottom: 25px;
+        font-size: 2.2em;
+        margin-bottom: 15px;
     }
     .fire-icon-with-line {
-        height: 45px;
-        margin-bottom: 30px;
+        height: 35px;
+        margin-bottom: 20px;
     }
     .fire-icon {
-        padding: 9px;
-        font-size: 1.2em;
+        padding: 6px;
+        font-size: 0.9em;
     }
     .fire-icon-with-line::before,
     .fire-icon-with-line::after {
-        width: calc(50% - 30px);
+        width: calc(50% - 20px);
     }
     .about-short-desc {
-        font-size: 1em;
-        margin-bottom: 30px;
-        padding: 0 10px;
-        max-width: 100%;
-    }
-    .about-social-icons {
-        gap: 20px;
-        padding-top: 15px;
+        font-size: 0.8em;
+        margin-bottom: 15px;
+        padding: 0 2px;
     }
     .about-social-icons a {
-        font-size: 1.6em;
+        font-size: 1.3em;
+        gap: 12px;
     }
-
     .dashed-decoration {
-        border-width: 2px;
+        border-width: 1px;
     }
     .top-left-curve, .bottom-right-curve {
-        width: 160px;
-        height: 160px;
-        top: -55px;
-        left: -55px;
-        bottom: -55px;
-        right: -55px;
+        width: 100px;
+        height: 100px;
+        top: -30px;
+        left: -30px;
+        bottom: -30px;
+        right: -30px;
     }
 
+    /* Adjustments for hero content */
     .right-column-scroll {
         width: 100%;
         padding: 40px 20px;
         min-height: auto;
         padding-top: 50px;
-        text-align: left;
+        text-align: center;
     }
     .hero-heading {
-        font-size: 3.5em;
+        font-size: 4.5em;
+        line-height: 0.9em;
         margin-bottom: 20px;
     }
     .hero-description {
-        font-size: 1em;
+        font-size: 0.95em;
         line-height: 1.6;
         max-width: 100%;
         margin-bottom: 40px;
     }
 
-    .services-section {
-        padding: 80px 20px;
-    }
+    /* Adjustments for services section */
     .services-heading {
-        font-size: 3.5em;
+        font-size: 4.5em;
+        line-height: 0.9em;
         margin-bottom: 30px;
     }
     .services-items-container {
@@ -1064,27 +1016,27 @@ footer h2 {
         gap: 20px;
     }
     .service-item {
-        padding: 35px; /* Adjusted padding */
+        padding: 35px;
     }
     .service-item .subtitle-number {
-        font-size: 7em; /* Adjusted */
+        font-size: 8em;
         right: 10px;
     }
     .service-item .service-title {
-        font-size: 1.3em;
+        font-size: 1.2em;
     }
     .service-item .service-description {
         font-size: 0.9em;
     }
 
-    .tools-section {
-        padding: 80px 20px;
-    }
+    /* Adjustments for tools section */
     .tools-heading {
-        font-size: 3.5em;
+        font-size: 4.5em;
+        line-height: 0.9em;
         margin-bottom: 30px;
     }
     .tools-grid {
+        grid-template-columns: 1fr;
         gap: 15px;
     }
     .tool-card {
@@ -1103,24 +1055,24 @@ footer h2 {
     }
 
     footer {
-        padding: 60px 0;
+        padding: 80px 0;
     }
     .contact-buttons {
         gap: 15px;
     }
     .contact-button {
-        width: 200px; /* Adjusted width */
-        height: 95px; /* Adjusted height */
+        width: 200px;
+        height: 95px;
         font-size: 1em;
     }
     .contact-button i {
-        font-size: 2.2em; /* Adjusted */
+        font-size: 2.2em;
     }
     .contact-button .button-value {
-        font-size: 0.8em; /* Adjusted */
+        font-size: 0.8em;
     }
     .contact-button .copied-text {
-        font-size: 1.3em; /* Adjusted */
+        font-size: 1.3em;
     }
 }
 
@@ -1128,17 +1080,18 @@ footer h2 {
     .main-layout-container {
         padding: 0 15px;
     }
-    .section h2 { /* This rule is too general, but kept as it might still apply to some h2s */
+    .section h2 { /* Global h2 within a section */
         font-size: 2.8em;
         letter-spacing: 0.5px;
         margin-bottom: 30px;
     }
     .hero-heading {
-        font-size: clamp(2.8em, 9vw, 3.5em); /* Adjusted clamp for slightly larger minimum on very small screens */
+        font-size: clamp(2.8em, 9vw, 3.5em);
+        line-height: 0.9em;
         margin-bottom: 15px;
     }
     .hero-description {
-        font-size: 0.9em; /* Smaller */
+        font-size: 0.85em;
         line-height: 1.5;
         margin-bottom: 30px;
     }
@@ -1148,13 +1101,14 @@ footer h2 {
     }
     .services-heading {
         font-size: 2.8em;
+        line-height: 0.9em;
         margin-bottom: 25px;
     }
     .service-item {
-        padding: 30px; /* Adjusted padding */
+        padding: 30px;
     }
     .service-item .subtitle-number {
-        font-size: 6em; /* Adjusted */
+        font-size: 6em;
         right: 5px;
     }
     .service-item .service-title {
@@ -1169,6 +1123,7 @@ footer h2 {
     }
     .tools-heading {
         font-size: 2.8em;
+        line-height: 0.9em;
         margin-bottom: 25px;
     }
     .tool-card {
@@ -1210,7 +1165,6 @@ footer h2 {
 
 /* Accessibility: Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
-    /* All animated elements should have no transition and be visible immediately */
     .reveal-item,
     .reveal-stagger,
     .about-heading-animation,
@@ -1221,11 +1175,10 @@ footer h2 {
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
-        animation: none !important; /* Ensure CSS animations are also removed */
+        animation: none !important;
     }
 
-    /* For about content, if there are multiple elements, ensure they are all visible */
     .about-content-wrapper .about-content-animation {
-        transition-delay: 0s !important; /* No stagger */
+        transition-delay: 0s !important;
     }
 }
