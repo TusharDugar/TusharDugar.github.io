@@ -39,23 +39,21 @@ body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     color: var(--text-light);
-    background-color: var(--bg-main);
+    background-color: var(--bg-main); /* Base black background color */
     overflow-x: hidden;
     position: relative;
     scroll-behavior: smooth;
     min-height: 100vh;
 }
 
-/* Background Video REMOVED */
-
 /* New: Repeating Image Background Container */
 .site-background-image {
     position: fixed;
     inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
-    z-index: -2; /* Behind html::before, body::before/after, but above body's background-color */
+    z-index: -2; /* Above body's background-color, but below other overlays */
     pointer-events: none;
     opacity: 0.5; /* User requested 50% opacity */
-    background-image: url('71976 (1).jpg'); /* Your specified image */
+    background-image: url('./71976 (1).jpg'); /* Your specified image, explicit current directory */
     background-repeat: repeat; /* To stack */
     background-size: 400px auto; /* A tile size that creates visible repetition (roughly 4-5 times horizontally) */
 }
@@ -70,37 +68,37 @@ body::before, body::after {
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    filter: blur(400px); /* FURTHER INCREASED BLUR */
-    opacity: 0.03; /* FURTHER DECREASED OPACITY */
+    filter: blur(450px); /* Increased blur even further for softer glow */
+    opacity: 0.015; /* Reduced opacity even further */
     z-index: -1; /* Above .site-background-image, below html::before (grid) */
     pointer-events: none;
     will-change: transform, opacity;
 }
 
 body::before {
-    width: 1300px; /* Larger */
-    height: 1300px; /* Larger */
+    width: 1400px; /* Larger */
+    height: 1400px; /* Larger */
     background: radial-gradient(circle at center, var(--accent-primary-sawad) 0%, transparent 60%);
     animation: glow1 25s infinite alternate ease-in-out;
 }
 
 body::after {
-    width: 1200px; /* Larger */
-    height: 1200px; /* Larger */
+    width: 1300px; /* Larger */
+    height: 1300px; /* Larger */
     background: radial-gradient(circle at center, var(--accent-secondary-sawad) 0%, transparent 60%);
     animation: glow2 28s infinite alternate-reverse ease-in-out;
 }
 
 @keyframes glow1 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
-    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.05; } /* Adjusted max opacity */
-    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; }
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.015; }
+    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.025; } /* Adjusted max opacity */
+    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.015; }
 }
 
 @keyframes glow2 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
-    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; } /* Adjusted max opacity */
-    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; }
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.015; }
+    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.025; } /* Adjusted max opacity */
+    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.015; }
 }
 
 
@@ -111,7 +109,7 @@ html::before {
     inset: 0;
     z-index: 0; /* Above color glows, below main content */
     pointer-events: none;
-    opacity: 0.008; /* EXTREMELY SUBTLE */
+    opacity: 0.005; /* Reduced opacity even further for ultimate subtlety */
 
     background-image: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 400% 400%;
@@ -119,20 +117,20 @@ html::before {
 
     /* TWEAKED LINE THICKNESS & SEGMENTATION */
     mask-image:
-        linear-gradient(to right, transparent 99.85%, white 0.15%), /* Even thinner vertical lines */
-        linear-gradient(to bottom, transparent 99.85%, white 0.15%), /* Even thinner horizontal lines */
-        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%), /* Extremely thin diagonal grid 1 */
-        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%); /* Extremely thin diagonal grid 2 */
+        linear-gradient(to right, transparent 99.9%, white 0.1%), /* Even thinner vertical lines */
+        linear-gradient(to bottom, transparent 99.9%, white 0.1%), /* Even thinner horizontal lines */
+        linear-gradient(45deg, transparent 75%, white 75.01%, white 75.1%, transparent 75.11%), /* Extremely thin diagonal grid 1 */
+        linear-gradient(-45deg, transparent 75%, white 75.01%, white 75.1%, transparent 75.11%); /* Extremely thin diagonal grid 2 */
 
     -webkit-mask-image:
-        linear-gradient(to right, transparent 99.85%, white 0.15%),
-        linear-gradient(to bottom, transparent 99.85%, white 0.15%),
-        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
-        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
+        linear-gradient(to right, transparent 99.9%, white 0.1%),
+        linear-gradient(to bottom, transparent 99.9%, white 0.1%),
+        linear-gradient(45deg, transparent 75%, white 75.01%, white 75.1%, transparent 75.11%),
+        linear-gradient(-45deg, transparent 75%, white 75.01%, white 75.1%, transparent 75.11%);
 
     /* ADJUSTED MASK SIZES for even denser pattern */
-    mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px; /* Adjusted from 50px */
-    -webkit-mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
+    mask-size: 30px 30px, 30px 30px, 30px 30px, 30px 30px; /* Further reduced mask size */
+    -webkit-mask-size: 30px 30px, 30px 30px, 30px 30px, 30px 30px;
 
     mask-repeat: repeat;
     -webkit-mask-repeat: repeat;
@@ -162,7 +160,6 @@ html::before {
   margin: 0 auto;
   position: relative;
   z-index: 1;
-  /* REDUCED VERTICAL PADDING for tighter sections */
   padding: 120px 40px; /* Reduced from 200px for tighter spacing */
 }
 
@@ -369,8 +366,7 @@ html::before {
     padding-bottom: 100px;
     box-sizing: border-box;
     min-height: 150vh;
-    /* REDUCED PADDING-TOP for initial content */
-    padding-top: 50px; /* Reduced from 100px */
+    padding-top: 50px;
     text-align: left;
     position: relative;
     z-index: 0;
@@ -390,8 +386,7 @@ html::before {
     font-size: 8em;
     line-height: 0.75em;
     font-weight: 900;
-    /* REDUCED MARGIN-BOTTOM for tighter spacing */
-    margin-bottom: 30px; /* Reduced from 40px */
+    margin-bottom: 30px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -413,8 +408,7 @@ html::before {
 .hero-description {
     font-size: 1em;
     line-height: 1.7;
-    /* REDUCED MARGIN-BOTTOM for tighter spacing */
-    margin-bottom: 100px; /* Reduced from 160px */
+    margin-bottom: 100px;
     max-width: 800px;
     color: var(--text-medium);
 }
@@ -423,8 +417,7 @@ html::before {
 /* Services Section Styles */
 .services-section {
   position: relative;
-  /* REDUCED PADDING for tighter sections, consistent with global .section */
-  padding: 120px 40px; /* Reduced from 200px */
+  padding: 120px 40px;
   text-align: left;
   z-index: 2;
   background-color: transparent;
@@ -438,8 +431,7 @@ html::before {
     font-size: 8em;
     line-height: 0.75em;
     font-weight: 800;
-    /* REDUCED MARGIN-BOTTOM for tighter spacing */
-    margin-bottom: 50px; /* Reduced from 70px */
+    margin-bottom: 50px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -512,8 +504,8 @@ html::before {
   top: 50%;
   right: 0px;
   transform: translateY(-50%);
-  font-size: 16em; /* EVEN LARGER */
-  opacity: 0.01; /* EXTREMELY TRANSPARENT */
+  font-size: 16em;
+  opacity: 0.01;
   color: #FFFFFF;
   z-index: 0;
   pointer-events: none;
@@ -523,8 +515,7 @@ html::before {
 /* Tools Section */
 .tools-section {
   text-align: left;
-  /* REDUCED PADDING for tighter sections, consistent with global .section */
-  padding: 120px 40px; /* Reduced from 200px */
+  padding: 120px 40px;
   margin-top: 0;
   margin-bottom: 0;
   position: relative;
@@ -537,8 +528,7 @@ html::before {
     font-size: 7.5em;
     line-height: 0.8em;
     font-weight: 800;
-    /* REDUCED MARGIN-BOTTOM for tighter spacing */
-    margin-bottom: 50px; /* Reduced from 70px */
+    margin-bottom: 50px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -636,8 +626,7 @@ footer {
     background-color: var(--bg-main);
     color: var(--text-light);
     text-align: center;
-    /* REDUCED PADDING for a more compact footer */
-    padding: 80px 0; /* Reduced from 120px */
+    padding: 80px 0;
     position: relative;
     z-index: 1;
 }
