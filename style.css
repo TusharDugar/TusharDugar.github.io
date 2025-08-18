@@ -55,7 +55,7 @@ body {
     inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
     z-index: -2; /* Above body's background-color, but below other overlays */
     pointer-events: none;
-    opacity: 0.15; /* INCREASED opacity to 15% */
+    opacity: 0.079; /* Adjusted opacity to 7.9% */
     background-image: url('./71976 (1).jpg'); /* Your specified image, explicit current directory */
     background-repeat: repeat; /* To stack */
     background-size: 400px auto; /* A tile size that creates visible repetition (roughly 4-5 times horizontally) */
@@ -67,7 +67,7 @@ body {
     inset: 0;
     z-index: -2; /* Above .site-background-image, below color glows */
     pointer-events: none;
-    opacity: 0.10; /* INCREASED opacity to 10% */
+    opacity: 0.05; /* Adjusted opacity to 5% */
     background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); /* New gradient */
     background-size: 400% 400%;
     animation: gradient 15s ease infinite; /* New animation */
@@ -201,12 +201,14 @@ html::before {
     justify-content: center;
     max-width: 1920px;
     margin: 0 auto;
-    padding: 0 180px;
+    /* REDUCED OUTER PADDING to bring content closer to screen edges */
+    padding: 0 60px; /* Reduced from 100px */
     min-height: 100vh;
     position: relative;
     z-index: 1;
     padding-top: 20px; /* Reduced from 50px */
-    gap: 180px;
+    /* REDUCED GAP between columns (approximately one-third of 180px) */
+    gap: 60px; /* Reduced from 100px */
 }
 
 /* Left Column (Sticky) */
@@ -427,7 +429,7 @@ html::before {
 .hero-description {
     font-size: 1em;
     line-height: 1.7;
-    margin-bottom: 80px; /* Reduced from 100px */
+    margin-bottom: 80px;
     max-width: 800px;
     color: var(--text-medium);
 }
