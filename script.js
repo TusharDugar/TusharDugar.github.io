@@ -1,6 +1,4 @@
-// GSAP library is no longer used for animations, removing its registration.
-// If you add GSAP-based animations later, you'll need to re-add the CDN and registration.
-// gsap.registerPlugin(ScrollTrigger); // REMOVED THIS LINE
+// GSAP library is no longer used for animations, its registration is removed.
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
@@ -66,38 +64,32 @@ function initIntersectionObserverAnimations() {
 }
 
 
-// Scroll Spy for section title
+// Scroll Spy for section title (REMOVED TEXT CHANGE LOGIC)
 const sections = document.querySelectorAll("section[id], footer[id]"); 
-const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for updating text
+const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for your name
 
 window.addEventListener("scroll", () => {
+  // This function now only exists to trigger other events if needed, 
+  // but it no longer changes navIndicator.textContent.
+  // The navIndicator will retain its original HTML text ("Tushar Dugar").
+  
+  // You can still use 'current' for other purposes if you re-introduce navigation highlights, etc.
   let current = "";
   sections.forEach(section => {
-    // Adjust offset based on desired trigger point for the scroll spy.
-    const sectionTop = section.offsetTop - 150; // Change when section is 150px from viewport top
+    const sectionTop = section.offsetTop - 150; 
     
     if (window.scrollY >= sectionTop && window.scrollY < sectionTop + section.offsetHeight) {
       current = section.getAttribute("id");
     }
   });
 
-  if (current && navIndicator) {
-    const formattedTitle = current
-      .split('-') 
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) 
-      .join(' '); 
-      
-    navIndicator.textContent = formattedTitle;
-  } else if (navIndicator) { // If no specific section is in view
-      // Set to "ABOUT" if scroll is near the top (more intuitive than "HERO")
-      if (window.scrollY < 200 && navIndicator.textContent !== "ABOUT") { 
-          navIndicator.textContent = "ABOUT";
-      }
-  }
+  // REMOVED: navIndicator.textContent = formattedTitle;
+  // REMOVED: else if (navIndicator && current === "") { ... }
+  // This ensures the h3 tag in left-column-sticky always shows "Tushar Dugar"
 });
 
 
-// Mouse Follower Glow (new implementation)
+// Mouse Follower Glow (implementation)
 document.addEventListener('DOMContentLoaded', () => {
     const mouseFollowerGlow = document.querySelector('.mouse-follower-glow');
     if (mouseFollowerGlow) { // Ensure the element exists before attaching listener
@@ -116,6 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize IntersectionObserver-based animations (for About section, 2D services, Tools)
     initIntersectionObserverAnimations(); 
     
-    // Trigger a scroll event immediately to set the initial scroll spy title
+    // Trigger a scroll event immediately to set the initial scroll spy title (though not visible now)
     window.dispatchEvent(new Event('scroll'));
 });
