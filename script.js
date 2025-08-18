@@ -38,12 +38,13 @@ function copyToClipboard(button) {
     }
 }
 
-// Unified Function to reveal elements on scroll (for 2D animations)
+// Unified Function to reveal elements on scroll (for 2D animations - About, Tools)
 function initIntersectionObserverAnimations() {
   const revealElements = document.querySelectorAll(
-    // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
-    // Note: .services-remaining-grid .service-item is specific for the 2D grid items
-    ".reveal-item, .reveal-stagger, .about-heading-animation, .about-content-animation, .services-remaining-grid .service-item, .tool-card" 
+    // Select elements that should animate using CSS transitions triggered by IntersectionObserver.
+    // The .services-remaining-grid .service-item is now controlled by the master timeline in GSAP,
+    // so it's removed from here.
+    ".reveal-item, .reveal-stagger, .about-heading-animation, .about-content-animation, .tool-card" 
   );
 
   const observerOptions = {
@@ -69,11 +70,9 @@ function initIntersectionObserverAnimations() {
         if (entry.target.classList.contains("about-content-wrapper")) {
             const children = entry.target.querySelectorAll(".about-content-animation");
             children.forEach((child, index) => {
-                // CSS nth-child already handles stagger delay, but this ensures it's applied.
                 child.classList.add("visible"); 
             });
         }
-        // No explicit JS stagger needed for .services-remaining-grid .service-item or .tool-card, as CSS nth-child / their own transitions handle it.
 
         observer.unobserve(entry.target); // Stop observing once revealed
       }
@@ -84,22 +83,24 @@ function initIntersectionObserverAnimations() {
 }
 
 
-// GSAP Scroll Animations for Services Cube
-function initServicesCubeAnimation() {
+// GSAP Master Timeline for Services Section (FIXED & REFACTORED)
+function initServicesMasterAnimation() {
     const servicesSection = document.getElementById('services');
     const servicesCube = document.getElementById('servicesCube');
     const servicesScrollArea = document.querySelector('.services-scroll-trigger-area');
     const servicesMainTitle = document.querySelector('.services-main-title');
+    const servicesRemainingGrid = document.querySelector('.services-remaining-grid');
+    const remainingServiceItems = servicesRemainingGrid ? servicesRemainingGrid.querySelectorAll('.service-item') : [];
 
     // Check if all necessary elements exist before proceeding
     if (!servicesSection || !servicesCube || !servicesScrollArea || !servicesMainTitle) {
         console.warn("Required elements for services cube animation not found. Skipping GSAP services setup.");
         return;
     } else {
-        console.log("All services cube elements found:", { servicesSection, servicesCube, servicesScrollArea, servicesMainTitle });
+        console.log("All services elements found. Initializing master timeline.");
     }
 
-    // Function to get current cube width based on screen size (for dynamic resizing)
+    // Function to get current cube width based on screen size
     function getCubeWidth() {
         const width = window.innerWidth;
         if (width >= 1024) return 900;
@@ -107,86 +108,80 @@ function initServicesCubeAnimation() {
         else return 300;
     }
 
-    // 1. Cube entry animation (GSAP FROM)
-    // Cube starts invisible and slightly below, then animates to its visible state.
-    gsap.from(servicesCube, {
-        autoAlpha: 0, // Starts completely hidden (opacity: 0, visibility: 'hidden')
-        y: 100, // Starts 100px below its final position
-        duration: 1,
-        ease: 'power2.out',
+    // --- Master Timeline for Services Section ---
+    // This single timeline will orchestrate all animations within the services section,
+    // including the title, cube, and the remaining 2D grid items.
+    const masterServicesTl = gsap.timeline({
         scrollTrigger: {
-            trigger: servicesSection, // Trigger when the services section is reached
-            start: 'top center+=100', // When the top of services section hits 100px below center of viewport
-            toggleActions: 'play none none reverse', // Play on scroll down, reverse on scroll up past trigger
-            // markers: true, // Uncomment for debugging. Will show markers for this ScrollTrigger.
-            onEnter: () => {
-                console.log("Services Cube entry animation triggered (onEnter)!");
-                servicesCube.style.width = `${getCubeWidth()}px`; // Ensure width is correct on entry
-            },
-            onLeaveBack: () => {
-                console.log("Services Cube entry animation reversed - leaving back (onLeaveBack)!");
-                gsap.to(servicesCube, { autoAlpha: 0, duration: 0.3, ease: 'power2.out' }); // Ensure it fully fades out if scrolling back up quickly
-            },
-            onComplete: () => {
-                console.log("Services Cube entry animation completed!");
-            }
-        }
-    });
-
-    // 2. Cube rotation animation (GSAP TO)
-    // This animation runs while the user scrolls through the `servicesScrollArea`.
-    gsap.to(servicesCube, {
-        rotateX: 270, // Rotate by 270 degrees (3 full faces + another 90 deg)
-        ease: "none", // Linear rotation tied directly to scroll
-        scrollTrigger: {
-            trigger: servicesScrollArea, // Use the dedicated scroll area for the cube
-            start: "top top", // When the top of the scroll area hits the top of the viewport
-            end: "bottom bottom", // When the bottom of the scroll area leaves the bottom of the viewport
-            scrub: true, // Smoothly link animation to scroll
-            // markers: true, // Uncomment for debugging. Will show markers for this ScrollTrigger.
-            onUpdate: self => {
-                // Console log to check scrubbing action (uncomment locally)
-                // console.log("Services Cube rotation scrubbing:", self.progress);
-            },
-            onLeave: () => {
-                console.log("Services Cube rotation area left (onLeave)!");
-                // Ensure the cube fades out after its main rotation scroll area is left
-                gsap.to(servicesCube, {
-                    y: -200, // Move up and out of view
-                    autoAlpha: 0, // Fade out (opacity and visibility)
-                    duration: 0.5,
-                    ease: "power2.out",
-                });
-            },
-            onEnterBack: () => {
-                console.log("Services Cube rotation area entered back (onEnterBack)!");
-                 // Animate back in when re-entering the scroll area from below
-                 gsap.fromTo(servicesCube, {
-                    y: -200, autoAlpha: 0, // Start from invisible, above
-                }, {
-                    y: 0, // Move to original position
-                    autoAlpha: 1, // Fade in
-                    duration: 0.5,
-                    ease: "power2.out"
-                });
-            }
-        },
-    });
-
-    // 3. Main Services title pinning and fade out (GSAP TO)
-    gsap.to(servicesMainTitle, {
-        autoAlpha: 0, // Fades out (opacity and visibility)
-        ease: "power1.out",
-        scrollTrigger: {
-            trigger: servicesSection, // Trigger on the main services section
-            start: "top top+=150", // Start fading when section top is 150px from viewport top
-            end: "bottom top", // End fading when section bottom hits viewport top
-            toggleActions: "play reverse play reverse",
-            pin: true, // Pin the title during this animation
+            trigger: servicesSection,
+            start: "top top", // Pin the entire section from its top
+            end: "bottom+=1000 top", // Extend scroll end to allow for all animations. Adjust this value!
             scrub: true,
-            pinSpacing: false // Prevent extra space from pinning
+            pin: true, // Pin the entire services section during its animation
+            pinSpacing: true, // Keep original pinSpacing
+            // markers: true, // Uncomment for debugging master timeline
+            onUpdate: self => {
+                // console.log("Master Timeline Progress:", self.progress);
+            }
         }
     });
+
+    // --- Phase 1: Title Fade and Cube Entry ---
+    // This happens early in the scroll of the services section.
+    masterServicesTl.to(servicesMainTitle, {
+        autoAlpha: 0, // Fade out title
+        ease: "power1.out",
+        duration: 0.1 // Relatively quick fade
+    }, 0); // Starts at the beginning of the master timeline
+
+    masterServicesTl.fromTo(servicesCube, 
+        { autoAlpha: 0, y: 100 }, // Initial state for cube
+        { 
+            autoAlpha: 1, 
+            y: 0, 
+            duration: 0.2, // Duration of cube entry
+            ease: "power2.out",
+            onStart: () => {
+                servicesCube.style.width = `${getCubeWidth()}px`; // Set cube width on entry
+                console.log("Cube entry part of master timeline triggered.");
+            }
+        }, 0.05); // Start cube entry slightly after title fade begins
+
+    // --- Phase 2: Cube Rotation ---
+    // This will be the main scrubbing animation of the cube.
+    // The duration relative to the master timeline is key.
+    masterServicesTl.to(servicesCube, {
+        rotateX: 270, // Main rotation of the cube
+        ease: "none", // Linear scrubbing
+        duration: 0.5 // Adjust this duration to control cube rotation speed within master timeline
+    }, 0.2); // Start cube rotation after initial entry, relative to master timeline
+
+    // --- Phase 3: Cube Exit and Remaining Grid Entry ---
+    // This happens after the cube finishes its main rotation.
+    masterServicesTl.to(servicesCube, {
+        autoAlpha: 0, 
+        y: -200, 
+        duration: 0.2, // Duration of cube exit
+        ease: "power2.in",
+        onComplete: () => {
+            console.log("Cube exit part of master timeline completed.");
+        }
+    }, 0.7); // Start cube exit after main rotation is mostly done (0.2 + 0.5 = 0.7)
+
+    // Animate in the remaining 4 services after the cube exits
+    masterServicesTl.fromTo(remainingServiceItems, 
+        { autoAlpha: 0, x: -80 }, // Initial state for 2D cards
+        { 
+            autoAlpha: 1, 
+            x: 0, 
+            duration: 0.5, // Duration for the group to animate
+            ease: "power2.out",
+            stagger: 0.1, // Stagger individual items
+            onStart: () => {
+                console.log("Remaining services grid animation triggered.");
+            }
+        }, 0.75); // Start 2D grid animation slightly after cube starts exiting
+
 
     // Handle cube width on resize dynamically
     function handleCubeResize() {
@@ -195,6 +190,7 @@ function initServicesCubeAnimation() {
         }
         // Refresh ScrollTrigger to recalculate positions after resize
         ScrollTrigger.refresh();
+        console.log("ScrollTrigger refreshed on resize.");
     }
     window.addEventListener('resize', handleCubeResize);
     // Initial call to set correct cube width and refresh on load
@@ -242,13 +238,17 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => copyToClipboard(button));
     });
 
-    // Initialize IntersectionObserver-based animations (for About section, 2D services, Tools)
+    // Initialize IntersectionObserver-based animations (for About section, Tools, etc.)
     initIntersectionObserverAnimations(); 
     
-    // Initialize GSAP-based Services Cube animation
-    initServicesCubeAnimation();
+    // Initialize GSAP-based Master Services Animation
+    initServicesMasterAnimation();
 
     // After all animations are set up and elements might have changed size/position,
     // refresh ScrollTrigger to ensure all calculations are accurate.
     ScrollTrigger.refresh();
+    console.log("Initial ScrollTrigger.refresh() on DOMContentLoaded.");
+    
+    // Trigger a scroll event immediately to set the initial scroll spy title
+    window.dispatchEvent(new Event('scroll'));
 });
