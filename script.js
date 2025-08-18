@@ -1,4 +1,5 @@
 // Register GSAP plugins (REQUIRED for ScrollTrigger)
+// Note: GSAP is registered but not strictly used by current animations
 gsap.registerPlugin(ScrollTrigger);
 
 // Function to update the glowing background elements positions
