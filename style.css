@@ -29,7 +29,7 @@
 
     /* New colors for Tool Cards */
     --bg-tool-card: #1A1A1A; /* Dark background for tool cards */
-    --tool-icon-bg: #FFFFFF; /* White background for tool icons */
+    --tool-icon-bg: #F8F8F8; /* Adjusted to a slightly off-white for tool icons, closer to Sawad */
     --tool-name-color: var(--text-light); /* White for tool names */
     --tool-category-color: var(--text-medium); /* Gray for categories */
 
@@ -37,11 +37,6 @@
     --services-bg-number-color: rgba(51, 51, 51, 0.8); /* Dark gray, more visible */
     --services-title-active-color: #00FFC2; /* Green for active titles */ /* Using accent-secondary-sawad */
     --services-description-color: var(--text-light); /* White for descriptions */
-    
-
-    /* CSS Variables for sticky services top offset (set by JS) */
-    --services-sticky-top-h2: 0px; /* Unused in this GSAP setup */
-    --services-sticky-top-wrapper: 0px; /* Unused in this GSAP setup */
 }
 
 /* Layer 1: Solid Black Background (Base) */
@@ -63,90 +58,86 @@ body {
     width: 100%;
     overflow-x: hidden;
     font-family: 'Poppins', sans-serif;
-    background-color: #000; /* As per prompt's reset */
-    color: #fff; /* As per prompt's reset */
-    line-height: 1.6; /* Retained from original */
-    scroll-behavior: smooth; /* Retained from original */
-    min-height: 100vh; /* Retained from original */
+    background-color: #000;
+    color: #fff;
+    line-height: 1.6;
+    scroll-behavior: smooth;
+    min-height: 100vh;
 }
 
 /* Layer 2: Subtle Background Glowing Elements (Over Black Background) */
 body::before, body::after {
     content: '';
-    position: fixed; /* Keep fixed to viewport */
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    filter: blur(200px); /* Very soft blur for large, subtle glows */
-    opacity: 0.15; /* Subtlety */
-    z-index: -2; /* Above html, below animated grid pattern */
-    pointer-events: none; /* Ensure no interaction with glows */
-    will-change: transform, opacity; /* Performance hint */
+    /* INCREASED BLUR and DECREASED OPACITY for more subtle glows, closer to Sawad */
+    filter: blur(250px); /* Increased from 200px */
+    opacity: 0.08; /* Decreased from 0.15 */
+    z-index: -2;
+    pointer-events: none;
+    will-change: transform, opacity;
 }
 
 body::before {
-    width: 900px;
-    height: 900px;
+    width: 1000px; /* Slightly larger */
+    height: 1000px; /* Slightly larger */
     background: radial-gradient(circle at center, var(--accent-primary-sawad) 0%, transparent 60%);
     animation: glow1 25s infinite alternate ease-in-out;
 }
 
 body::after {
-    width: 800px;
-    height: 800px;
+    width: 900px; /* Slightly larger */
+    height: 900px; /* Slightly larger */
     background: radial-gradient(circle at center, var(--accent-secondary-sawad) 0%, transparent 60%);
-    animation: glow2 28s infinite alternate-reverse ease-in-out; /* Slightly different timing for variation */
+    animation: glow2 28s infinite alternate-reverse ease-in-out;
 }
 
 @keyframes glow1 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
-    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.2; }
-    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.15; }
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.08; }
+    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.12; } /* Adjusted max opacity */
+    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.08; }
 }
 
 @keyframes glow2 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
-    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.2; }
-    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.15; }
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.08; }
+    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.12; } /* Adjusted max opacity */
+    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.08; }
 }
 
 
 /* Layer 3: Animated Background Grid Pattern */
-/* This now goes on html::before to mask an animated background */
 html::before {
     content: '';
     position: fixed;
-    inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
+    inset: 0;
     z-index: -1;
     pointer-events: none;
-    /* REDUCED OPACITY for a more subtle grid, closer to Sawad */
-    opacity: 0.06; /* Significantly reduced from 0.1799375 */
+    /* FURTHER DECREASED OPACITY and TWEAKED MASK SIZE for extreme subtlety */
+    opacity: 0.03; /* Significantly reduced from 0.06 */
 
-    /* Animated colorful gradient as the base background */
     background-image: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
 
-    /* Masking to show background through lines */
     mask-image:
-        linear-gradient(to right, transparent 99%, white 1%), /* Vertical grid lines */
-        linear-gradient(to bottom, transparent 99%, white 1%), /* Horizontal grid lines */
-        linear-gradient(45deg, transparent 75%, white 75.5%, white 76.5%, transparent 77%), /* Diagonal grid 1 */
-        linear-gradient(-45deg, transparent 75%, white 75.5%, white 76.5%, transparent 77%);
+        linear-gradient(to right, transparent 99.5%, white 0.5%), /* Thinner vertical lines */
+        linear-gradient(to bottom, transparent 99.5%, white 0.5%), /* Thinner horizontal lines */
+        linear-gradient(45deg, transparent 75%, white 75.2%, white 75.8%, transparent 76%), /* Thinner diagonal grid 1 */
+        linear-gradient(-45deg, transparent 75%, white 75.2%, white 75.8%, transparent 76%); /* Thinner diagonal grid 2 */
 
-    /* Vendor prefixes for mask-image */
     -webkit-mask-image:
-        linear-gradient(to right, transparent 99%, white 1%),
-        linear-gradient(to bottom, transparent 99%, white 1%),
-        linear-gradient(45deg, transparent 75%, white 75.5%, white 76.5%, transparent 77%),
-        linear-gradient(-45deg, transparent 75%, white 75.5%, white 76.5%, transparent 77%);
+        linear-gradient(to right, transparent 99.5%, white 0.5%),
+        linear-gradient(to bottom, transparent 99.5%, white 0.5%),
+        linear-gradient(45deg, transparent 75%, white 75.2%, white 75.8%, transparent 76%),
+        linear-gradient(-45deg, transparent 75%, white 75.2%, white 75.8%, transparent 76%);
 
-    /* Mask sizes */
-    mask-size: 100px 100px, 100px 100px, 100px 100px, 100px 100px;
-    -webkit-mask-size: 100px 100px, 100px 100px, 100px 100px, 100px 100px;
+    /* ADJUSTED MASK SIZES for slightly denser pattern if needed, or maintain grid scale */
+    mask-size: 80px 80px, 80px 80px, 80px 80px, 80px 80px; /* Adjusted from 100px */
+    -webkit-mask-size: 80px 80px, 80px 80px, 80px 80px, 80px 80px;
 
-    /* Mask repeats */
     mask-repeat: repeat;
     -webkit-mask-repeat: repeat;
 }
@@ -154,12 +145,12 @@ html::before {
 
 /* Global Section Styling */
 section {
-  max-width: 1200px; /* Overall content width */
-  margin: 0 auto; /* Center sections horizontally */
+  max-width: 1200px;
+  margin: 0 auto;
   position: relative;
-  z-index: 1; /* Ensure sections are above background elements */
-  /* INCREASED VERTICAL PADDING for more space, closer to Sawad */
-  padding: 120px 40px 120px 60px; /* Top Right Bottom Left */
+  z-index: 1;
+  /* ADJUSTED VERTICAL PADDING for more space */
+  padding: 150px 40px; /* Increased from 120px to match Sawad's vertical rhythm better */
 }
 
 /* Reveal Animation Base for general elements (used by footer buttons etc.) */
@@ -167,7 +158,7 @@ section {
     opacity: 0;
     transform: translateY(40px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    will-change: transform, opacity; /* Performance hint for reveal animations */
+    will-change: transform, opacity;
 }
 .reveal-item.visible {
     opacity: 1;
@@ -175,11 +166,11 @@ section {
 }
 
 /* Staggered reveal style for children within a parent */
-.reveal-stagger { /* For elements that have a parent applying staggered delays via JS */
+.reveal-stagger {
     opacity: 0;
     transform: translateY(40px) scale(0.95);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    will-change: transform, opacity; /* Performance hint for stagger animations */
+    will-change: transform, opacity;
 }
 .reveal-stagger.visible {
     opacity: 1;
@@ -193,11 +184,10 @@ section {
 }
 
 
-/* --- About Section Specific Animations (matching Design Cube style) --- */
-/* About Heading: Slides down from top */
+/* --- About Section Specific Animations --- */
 .about-heading-animation {
     opacity: 0;
-    transform: translateY(-50px); /* Start above */
+    transform: translateY(-50px);
     transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform, opacity;
 }
@@ -206,14 +196,12 @@ section {
     transform: translateY(0);
 }
 
-/* About Content (Paragraphs, Blockquotes): Slides up from bottom */
 .about-content-animation {
     opacity: 0;
-    transform: translateY(100px); /* Start below */
+    transform: translateY(100px);
     transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform, opacity;
-    /* Ensure font styles are from your main body/paragraph styles, or define here if specific */
-    color: var(--text-light); /* Assuming this is your general paragraph text color */
+    color: var(--text-light);
     line-height: 1.7;
     font-size: 1.1em;
 }
@@ -221,12 +209,8 @@ section {
     opacity: 1;
     transform: translateY(0);
 }
-/* Stagger for multiple about content items (if any, like p and blockquote) */
-/* Adjust these delays based on how many .about-content-animation elements you have */
-/* For a single p and single blockquote, they will both animate up with these delays */
 .about-content-wrapper .about-content-animation:nth-child(1) { transition-delay: 0.2s; }
 .about-content-wrapper .about-content-animation:nth-child(2) { transition-delay: 0.4s; }
-/* Add more if you have more content items */
 
 
 /* Main Layout Container */
@@ -235,34 +219,34 @@ section {
     justify-content: center;
     max-width: 1920px;
     margin: 0 auto;
-    /* ADJUSTED PADDING to expand overall layout slightly */
-    padding: 0 100px; /* Increased from 80px */
+    /* ADJUSTED HORIZONTAL PADDING to match Sawad's wider content area */
+    padding: 0 120px; /* Increased from 100px */
     min-height: 100vh;
     position: relative;
-    z-index: 1; /* Keep main container above background elements */
+    z-index: 1;
     padding-top: 50px;
-    /* INCREASED GAP between columns */
-    gap: 100px; /* Increased from 80px */
+    /* INCREASED GAP between columns significantly */
+    gap: 120px; /* Increased from 100px */
 }
 
 /* Left Column (Sticky) */
 .left-column-sticky {
     flex-shrink: 0;
-    flex-basis: 370px; /* Fixed width for the sticky column, matching max-width of the card */
+    flex-basis: 370px;
     padding-right: 0;
     box-sizing: border-box;
     position: sticky;
     top: 50px;
-    align-self: flex-start; /* Ensures content sticks to the top within the flex container */
+    align-self: flex-start;
     height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    z-index: 2; /* Ensures left column is always above the right content */
+    z-index: 2;
 }
 
-/* Updated: About Left Content (White Card) - Based on Aabid Ahmed design */
+/* Updated: About Left Content (White Card) */
 .about-left-content {
     color: var(--text-dark-card);
     border-radius: 20px;
@@ -272,9 +256,9 @@ section {
     max-width: 370px;
     height: auto;
     box-sizing: border-box;
-    opacity: 1; /* Should be visible by default for a sticky element */
+    opacity: 1;
     transform: translateY(0);
-    transition: none; /* No transition for its default state */
+    transition: none;
 
     display: flex;
     flex-direction: column;
@@ -298,11 +282,10 @@ section {
     transform: translateX(0);
     background-color: var(--accent-primary-sawad);
 }
-/* FIX: Profile Photo sizing to prevent clipping */
 .profile-image-container .profile-photo {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures image covers container without distortion */
+    object-fit: cover;
 }
 
 
@@ -338,7 +321,6 @@ section {
     position: relative;
 }
 
-/* Dashed lines connected to the fire icon - approximate */
 .fire-icon-with-line::before,
 .fire-icon-with-line::after {
     content: '';
@@ -360,7 +342,7 @@ section {
     width: calc(50% - 25px);
 }
 
-/* New: Decorative background dashed lines (from original Aabid Ahmed card) */
+/* New: Decorative background dashed lines */
 .dashed-decoration {
     position: absolute;
     border: 2px dashed var(--accent-primary-sawad);
@@ -401,43 +383,6 @@ section {
     max-width: 90%;
 }
 
-/* NEW: Contact Info List */
-.contact-info-list {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0 30px;
-    width: 100%;
-    text-align: left;
-}
-
-.contact-info-list li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-    font-size: 0.95em;
-    color: var(--text-medium-card);
-}
-
-.contact-info-list li:last-child {
-    margin-bottom: 0;
-}
-
-.contact-info-list li i {
-    color: var(--accent-primary-sawad);
-    margin-right: 15px;
-    font-size: 1.2em;
-    width: 20px;
-    text-align: center;
-}
-
-.contact-info-list li span {
-    font-weight: 600;
-    color: var(--text-dark-card);
-    margin-right: 8px;
-    flex-shrink: 0;
-}
-
-
 /* Updated: Social Icons */
 .about-social-icons {
     display: flex;
@@ -460,86 +405,89 @@ section {
 /* Right Column (Scrolling) */
 .right-column-scroll {
     flex-grow: 1;
-    /* ADJUSTED PADDINGS for right column content */
-    padding-left: 20px; /* Added left padding */
-    padding-right: 80px; /* Kept existing right padding */
-    padding-bottom: 100px;
+    /* ADJUSTED PADDINGS for right column content, narrower */
+    padding-left: 0px; /* Removed left padding, let main-layout-container handle overall padding */
+    padding-right: 0px; /* Removed right padding */
+    padding-bottom: 100px; /* Kept for bottom section spacing */
     box-sizing: border-box;
     min-height: 150vh;
-    padding-top: 100px;
+    padding-top: 100px; /* Kept for top spacing */
     text-align: left;
-    position: relative; /* CRITICAL: Establishes a stacking context for its children */
-    z-index: 0; /* Ensures this whole column's content sits below the fixed side column and main background layers */
+    position: relative;
+    z-index: 0;
 }
 
 /* Specific text alignment for elements within right-column-scroll */
 .right-column-scroll h1,
 .right-column-scroll h2,
 .right-column-scroll p {
-  margin-left: 0; /* Ensures left edge consistency */
+  margin-left: 0;
   margin-right: 0;
 }
 
-/* HERO TEXT FIX: Applied to .hero-heading */
+/* HERO TEXT ADJUSTMENTS */
 .hero-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 5em; /* As per prompt */
-    /* ADJUSTED LINE-HEIGHT to be tighter */
-    line-height: 0.95; /* Tighter line-height, closer to Sawad */
-    font-weight: 900; /* As per prompt */
-    margin-bottom: 40px; /* Consistent spacing */
+    /* FONT SIZE Adjusted to match Sawad's visual scale */
+    font-size: 5.5em; /* Increased from 5em */
+    line-height: 0.9em; /* Tighter line-height */
+    font-weight: 900;
+    /* MARGIN-BOTTOM Adjusted */
+    margin-bottom: 30px; /* Adjusted from 40px */
     text-transform: uppercase;
     text-align: left;
-    /* REMOVED explicit margin-left; let padding on parent handle it */
-    margin-left: 0; 
-    /* Removed gradient background properties as per prompt's new color classes */
-    background: none; 
-    -webkit-background-clip: unset; 
-    background-clip: unset; 
+    margin-left: 0;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
     -webkit-text-fill-color: unset;
-    color: unset; /* Ensure text color is managed by specific classes */
+    color: unset;
 }
-/* New hero heading color classes */
 .hero-heading .crafting {
-  color: #ffffff; /* white */
+  color: #ffffff;
 }
 
 .hero-heading .digital {
-  color: #888888; /* grey */
+  color: #888888;
 }
 
 /* HERO DESCRIPTION ADJUSTMENTS */
 .hero-description {
-    font-size: 1.25em; /* Slightly larger */
-    line-height: 1.7; /* Increased for readability */
-    margin-bottom: 80px; /* More space below */
+    /* FONT SIZE Adjusted */
+    font-size: 1.15em; /* Adjusted from 1.25em */
+    line-height: 1.7;
+    /* MARGIN-BOTTOM Adjusted */
+    margin-bottom: 120px; /* Increased from 80px for more separation */
+    max-width: 800px; /* Added max-width for better line length, matching Sawad */
 }
 
-/* Services Section Styles (Modified for Flat Grid) */
+
+/* Services Section Styles */
 .services-section {
   position: relative;
-  padding: 120px 40px 120px 60px; /* Adjusted padding, matches global section */
+  /* PADDING Adjusted */
+  padding: 150px 40px; /* Consistent with global section padding, removed left 60px as it's handled by main container */
   text-align: left;
-  z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  background-color: transparent; /* Changed to transparent as requested */
-  margin-top: 100px; 
-  margin-bottom: 100px; 
+  z-index: 2;
+  background-color: transparent;
+  margin-top: 0; /* Removed explicit margin-top as section padding should handle spacing */
+  margin-bottom: 0; /* Removed explicit margin-bottom */
 }
 
 /* Services Main Title */
 .services-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 5em; 
-    /* ADJUSTED LINE-HEIGHT to be tighter */
-    line-height: 0.95; /* Tighter line-height, closer to Sawad */
+    /* FONT SIZE Adjusted */
+    font-size: 5.5em; /* Increased from 5em */
+    line-height: 0.9em; /* Tighter line-height */
     font-weight: 800;
-    margin-bottom: 40px; 
+    /* MARGIN-BOTTOM Adjusted */
+    margin-bottom: 60px; /* Increased from 40px for more separation */
     text-transform: uppercase;
     text-align: left;
-    /* REMOVED explicit margin-left; let padding on parent handle it */
-    margin-left: 0; 
-    position: relative; 
-    z-index: 4; /* Higher than services-remaining-grid to be on top of it */
+    margin-left: 0;
+    position: relative;
+    z-index: 4;
 }
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-medium); display: block; }
@@ -548,27 +496,29 @@ section {
 /* Services Flat Grid (2D animation) */
 .services-items-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 40px;
-    justify-items: center;
-    margin-top: 100px; /* Space from the title above */
+    /* GRID TEMPLATE COLUMNS ADJUSTED for better layout on wider screens */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Min-width increased from 280px */
+    /* GAP Adjusted */
+    gap: 30px; /* Adjusted from 40px */
+    justify-items: stretch; /* Changed from center to stretch */
+    /* MARGIN-TOP Adjusted */
+    margin-top: 0; /* Removed explicit margin-top as heading margin should handle spacing */
 }
 
 /* Service Item for 2D Grid (Animations) */
 .service-item {
-  background-color: #111; 
-  border-radius: 12px; 
-  /* INCREASED PADDING for larger cards, closer to Sawad */
-  padding: 50px 70px; /* Increased from 40px 60px */
-  position: relative; 
-  z-index: 1; 
-  overflow: visible; 
-  text-align: left; 
-  will-change: transform, opacity; 
+  background-color: #111;
+  border-radius: 12px;
+  /* PADDING Adjusted */
+  padding: 50px; /* Unified padding for a squarer look, matching Sawad */
+  position: relative;
+  z-index: 1;
+  overflow: hidden; /* Changed from visible to hidden for number clipping */
+  text-align: left;
+  will-change: transform, opacity;
 
-  /* ANIMATION PROPERTIES: Slide in from bottom */
   opacity: 0;
-  transform: translateY(60px); 
+  transform: translateY(60px);
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 .service-item.visible {
@@ -577,68 +527,71 @@ section {
 }
 /* Stagger effect for service items in the 2D grid */
 .services-items-container .service-item:nth-child(1) { transition-delay: 0.1s; }
-.services-items-container .service-item:nth-child(2) { transition-delay: 0.2s; }
-.services-items-container .service-item:nth-child(3) { transition-delay: 0.3s; }
-.services-items-container .service-item:nth-child(4) { transition-delay: 0.4s; }
-.services-items-container .service-item:nth-child(5) { transition-delay: 0.5s; } 
-.services-items-container .service-item:nth-child(6) { transition-delay: 0.6s; } 
-.services-items-container .service-item:nth-child(7) { transition-delay: 0.7s; } 
-.services-items-container .service-item:nth-child(8) { transition-delay: 0.8s; } 
+.services-items-container .service-item:nth-child(2) { transition-delay: 0.15s; } /* Tighter stagger */
+.services-items-container .service-item:nth-child(3) { transition-delay: 0.2s; }
+.services-items-container .service-item:nth-child(4) { transition-delay: 0.25s; }
+.services-items-container .service-item:nth-child(5) { transition-delay: 0.3s; }
+.services-items-container .service-item:nth-child(6) { transition-delay: 0.35s; }
+.services-items-container .service-item:nth-child(7) { transition-delay: 0.4s; }
+.services-items-container .service-item:nth-child(8) { transition-delay: 0.45s; }
 
 
 /* Service item children styling */
 .service-item .service-title {
-    position: relative; 
-    z-index: 1; 
-    font-size: 1.8em; /* Slightly larger */
+    position: relative;
+    z-index: 1;
+    /* FONT SIZE Adjusted */
+    font-size: 1.6em; /* Adjusted from 1.8em, Sawad is slightly smaller here */
+    font-weight: 700; /* Ensuring bold */
+    margin-bottom: 10px; /* Added margin-bottom */
+    line-height: 1.2;
 }
 .service-item .service-description {
     position: relative;
     z-index: 1;
-    font-size: 1.1em; /* Slightly larger */
+    /* FONT SIZE Adjusted */
+    font-size: 1em; /* Adjusted from 1.1em, Sawad uses slightly smaller body text */
+    color: var(--text-medium); /* Ensure it's the medium gray */
+    line-height: 1.6;
 }
 
 /* Subtitle background numbers visibility for 2D cards */
-.service-item .subtitle-number { 
+.service-item .subtitle-number {
   position: absolute;
   top: 50%;
-  left: 0; 
-  transform: translateY(-50%); 
-  /* INCREASED FONT-SIZE and DECREASED OPACITY for watermark effect */
-  font-size: 8em; /* Much larger */
-  opacity: 0.05; /* Much more transparent */
-  color: #CCCCCC; /* Use #CCCCCC for consistency, or var(--text-medium) */
-  z-index: 0; 
+  right: 0px; /* Adjusted to right side instead of left, as seen on Sawad */
+  transform: translateY(-50%);
+  /* FONT SIZE and OPACITY Adjusted */
+  font-size: 8.5em; /* Slightly larger than before, huge on Sawad */
+  opacity: 0.04; /* EVEN MORE TRANSPARENT */
+  color: #FFFFFF; /* Using white, then opacity makes it subtle */
+  z-index: 0;
   pointer-events: none;
-}
-.service-item .subtitle-text { 
-  position: relative;
-  z-index: 1; 
 }
 
 
 /* Tools Section */
 .tools-section {
-  text-align: center; 
-  margin-top: 100px; 
-  margin-bottom: 80px; 
-  
-  padding-top: 80px;
-  padding-bottom: 80px;
+  text-align: left; /* Kept left aligned as Sawad */
+  padding-top: 150px; /* Consistent with section padding */
+  padding-bottom: 150px; /* Consistent with section padding */
+  margin-top: 0; /* Remove explicit margin, let padding handle it */
+  margin-bottom: 0; /* Remove explicit margin */
   position: relative;
-  z-index: 1; 
-  background: none; 
+  z-index: 1;
+  background: none;
 }
 
 .tools-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 5em;
-    /* ADJUSTED LINE-HEIGHT to be tighter */
-    line-height: 0.95; /* Tighter line-height, closer to Sawad */
+    /* FONT SIZE Adjusted */
+    font-size: 5.5em; /* Increased from 5em */
+    line-height: 0.9em; /* Tighter line-height */
     font-weight: 800;
-    margin-bottom: 50px;
-    /* REMOVED explicit margin-left; let padding on parent handle it */
-    text-align: left; 
+    /* MARGIN-BOTTOM Adjusted */
+    margin-bottom: 60px; /* Increased from 50px */
+    text-transform: uppercase;
+    text-align: left;
     margin-left: 0;
 }
 
@@ -655,28 +608,30 @@ section {
 /* TOOLS GRID ALIGNMENT */
 .tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    margin-left: 0; 
+    /* GRID TEMPLATE COLUMNS ADJUSTED for more items per row on large screens */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted minmax for more items */
+    /* GAP Adjusted */
+    gap: 20px; /* Tighter gap */
+    margin-left: 0;
     margin-right: 0;
-    justify-items: stretch; 
+    justify-items: stretch;
 }
 
 /* Tool Card (Animations) */
 .tool-card {
     background-color: var(--bg-tool-card);
     border-radius: 15px;
-    padding: 20px;
+    /* PADDING Adjusted */
+    padding: 22px; /* Slightly larger padding */
     display: flex;
     align-items: center;
-    gap: 15px;
+    /* GAP Adjusted */
+    gap: 18px; /* Slightly larger gap */
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    /* Combined existing hover transition with new reveal animation */
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out; /* Added box-shadow to transition */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out;
     cursor: pointer;
-    will-change: transform, opacity; 
+    will-change: transform, opacity;
 
-    /* ANIMATION PROPERTIES: Slide up */
     opacity: 0;
     transform: translateY(60px);
 }
@@ -688,13 +643,14 @@ section {
 .tool-card:hover {
     transform: translateY(-5px);
     background-color: rgba(26, 26, 26, 0.9);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5); /* Enhanced shadow on hover */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
 }
 
 .tool-icon-wrapper {
-    width: 50px;
-    height: 50px;
-    background-color: var(--tool-icon-bg);
+    /* DIMENSIONS Adjusted */
+    width: 55px; /* Larger */
+    height: 55px; /* Larger */
+    background-color: var(--tool-icon-bg); /* Use the slightly off-white variable */
     border-radius: 10px;
     display: flex;
     justify-content: center;
@@ -716,7 +672,8 @@ section {
 }
 
 .tool-name {
-    font-size: 1.1em;
+    /* FONT SIZE Adjusted */
+    font-size: 1.15em; /* Slightly larger */
     font-weight: 600;
     color: var(--tool-name-color);
     margin: 0 0 5px 0;
@@ -724,37 +681,11 @@ section {
 }
 
 .tool-category {
-    font-size: 0.85em;
+    /* FONT SIZE Adjusted */
+    font-size: 0.8em; /* Slightly smaller */
     color: var(--tool-category-color);
     margin: 0;
     line-height: 1.2;
-}
-
-
-/* Subtitles Section */
-.subtitles-section {
-  position: relative;
-  padding: 120px 60px;
-  background: #111;
-  text-align: center;
-}
-
-.subtitles-section .section-bg-number {
-  position: absolute;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 180px;
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.08);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.subtitles-section h2,
-.subtitles-section p {
-  position: relative;
-  z-index: 1;
 }
 
 
@@ -763,10 +694,10 @@ footer {
     background-color: var(--bg-main);
     color: var(--text-light);
     text-align: center;
-    /* ADJUSTED FOOTER PADDING for more vertical space */
-    padding: 80px 0; /* Increased from 60px */
+    /* PADDING Adjusted for more vertical space */
+    padding: 100px 0; /* Increased from 80px */
     position: relative;
-    z-index: 1; 
+    z-index: 1;
 }
 
 footer a {
@@ -791,7 +722,8 @@ footer h2 {
 }
 
 .contact-tagline {
-    font-size: 1.1em; /* Slightly smaller for better fit */
+    /* FONT SIZE Adjusted */
+    font-size: 1.1em; /* Kept at 1.1em */
     margin-bottom: 40px;
     max-width: 700px;
     margin-left: auto;
@@ -805,14 +737,15 @@ footer h2 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 30px;
+    /* GAP Adjusted */
+    gap: 20px; /* Tighter gap, matching Sawad */
     margin-bottom: 40px;
 }
 
 .contact-button {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: var(--text-light);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* BACKGROUND and BORDER Adjusted for subtlety */
+    background-color: rgba(255, 255, 255, 0.03); /* More transparent */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* More transparent border */
     border-radius: 12px;
     padding: 0;
     font-size: 1.2em;
@@ -820,8 +753,9 @@ footer h2 {
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    width: 280px;
-    height: 130px;
+    /* DIMENSIONS Adjusted */
+    width: 250px; /* Slightly narrower */
+    height: 120px; /* Slightly shorter */
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     text-align: center;
 }
@@ -873,7 +807,8 @@ footer h2 {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--gradient-skills-front);
+    /* BACKGROUND Adjusted to be more solid orange like Sawad */
+    background: var(--accent-primary-sawad); /* Changed from gradient */
     color: var(--text-light);
     font-size: 1.5em;
     font-weight: bold;
@@ -915,13 +850,13 @@ footer h2 {
 @media (max-width: 1200px) {
     .main-layout-container {
         padding: 0 40px;
-        gap: 60px; /* Adjusted gap */
+        gap: 60px;
     }
     .left-column-sticky {
-        flex-basis: 320px; /* Adjusted fixed width */
+        flex-basis: 320px;
     }
     .about-left-content {
-        max-width: 320px; /* Maintain consistent max-width */
+        max-width: 320px;
         padding: 25px 20px;
     }
     .profile-image-container {
@@ -944,19 +879,6 @@ footer h2 {
         font-size: 0.88em;
         margin-bottom: 20px;
     }
-    .contact-info-list {
-        margin: 15px 0 25px;
-    }
-    .contact-info-list li {
-        font-size: 0.9em;
-    }
-    .contact-info-list li i {
-        margin-right: 12px;
-        font-size: 1.1em;
-    }
-    .contact-info-list li span {
-        margin-right: 6px;
-    }
     .about-social-icons a {
         font-size: 1.4em;
     }
@@ -974,11 +896,11 @@ footer h2 {
     }
 
     .right-column-scroll {
-        padding-right: 40px; /* Adjusted padding */
-        padding-left: 20px; /* Consistent left padding */
+        padding-right: 0px; /* Removed, handled by section padding */
+        padding-left: 0px; /* Removed, handled by section padding */
     }
     .hero-heading {
-        font-size: 4.5em; /* Adjusted hero heading font size */
+        font-size: 4.5em;
         margin-bottom: 25px;
     }
     .hero-description {
@@ -986,41 +908,39 @@ footer h2 {
         margin-bottom: 60px;
     }
 
-    /* Services section adjustments for responsiveness */
     .services-section {
-        padding-top: 60px;
-        padding-bottom: 80px;
-        z-index: 2; /* Maintain z-index */
+        padding: 100px 40px; /* Adjusted section padding for medium screens */
     }
-    .services-heading { 
-        font-size: 4.5em; /* Adjusted for consistency */
+    .services-heading {
+        font-size: 4.5em;
+        margin-bottom: 40px;
     }
-    .services-items-container .service-item { 
-        padding: 40px 50px; /* Adjusted padding for medium screens */
+    .services-items-container {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min-width */
+        gap: 25px;
+    }
+    .service-item {
+        padding: 40px; /* Adjusted padding */
     }
     .service-item .subtitle-number {
-        font-size: 7em; /* Adjusted for medium screens */
+        font-size: 7em;
     }
     .service-item .service-title {
-        font-size: 1.6em;
+        font-size: 1.4em;
     }
     .service-item .service-description {
-        font-size: 1em;
+        font-size: 0.95em;
     }
 
     .tools-section {
-        padding-top: 60px;
-        padding-bottom: 80px;
-        z-index: 1; /* Maintain z-index */
+        padding: 100px 40px; /* Adjusted section padding for medium screens */
     }
     .tools-heading {
-        font-size: 5em; /* Kept original size for tools heading */
+        font-size: 4.5em;
         margin-bottom: 40px;
-        text-align: left; /* FIX: Left align tools heading */
     }
     .tools-grid {
-        margin: 0 auto; /* Center the grid */
-        max-width: 500px; /* Constrain width when centered */
+        gap: 15px;
     }
     .tool-card {
         padding: 18px;
@@ -1029,13 +949,20 @@ footer h2 {
     .tool-icon-wrapper {
         width: 45px;
         height: 45px;
-        border-radius: 8px;
     }
     .tool-name {
         font-size: 1em;
     }
     .tool-category {
         font-size: 0.8em;
+    }
+
+    footer {
+        padding: 80px 0;
+    }
+    .contact-button {
+        width: 220px; /* Adjusted width */
+        height: 100px; /* Adjusted height */
     }
 }
 
@@ -1044,33 +971,26 @@ footer h2 {
         flex-direction: column;
         padding: 0 20px;
         padding-top: 20px;
-        gap: 0; /* No gap in column layout, use padding on sections */
+        gap: 0;
     }
     .left-column-sticky {
-        width: 100%; /* Take full width in column mode */
+        width: 100%;
         position: relative;
         top: 0;
-        padding-right: 0;
         min-height: unset;
         padding-bottom: 50px;
-        display: flex;
-        justify-content: flex-start; /* Aligned to top */
-        align-items: center;
-        flex-direction: column;
         padding-top: 0;
-        flex-basis: auto; /* Allow it to take natural height when stacking */
+        flex-basis: auto;
     }
     .about-left-content {
         max-width: 350px;
         padding: 30px 25px;
-        border-radius: 18px;
     }
     .profile-image-container {
         width: calc(100% + 50px);
         max-width: 400px;
         height: 210px;
         margin-bottom: 30px;
-        border-radius: 15px;
     }
     .about-left-content h3 {
         font-size: 2.8em;
@@ -1093,21 +1013,6 @@ footer h2 {
         margin-bottom: 30px;
         padding: 0 10px;
         max-width: 100%;
-    }
-    .contact-info-list {
-        margin: 25px 0 35px;
-    }
-    .contact-info-list li {
-        font-size: 1em;
-        margin-bottom: 18px;
-    }
-    .contact-info-list li i {
-        margin-right: 18px;
-        font-size: 1.3em;
-        width: 25px;
-    }
-    .contact-info-list li span {
-        margin-right: 10px;
     }
     .about-social-icons {
         gap: 20px;
@@ -1137,7 +1042,7 @@ footer h2 {
         text-align: left;
     }
     .hero-heading {
-        font-size: 3.5em; /* Adjusted hero heading font size */
+        font-size: 3.5em;
         margin-bottom: 20px;
     }
     .hero-description {
@@ -1147,43 +1052,40 @@ footer h2 {
         margin-bottom: 40px;
     }
 
-    /* Services section adjustments for responsiveness */
     .services-section {
-        padding-top: 40px;
-        padding-bottom: 60px;
-        z-index: 2; /* Maintain z-index */
+        padding: 80px 20px; /* Adjusted section padding for small screens */
     }
-    .services-heading { 
-        font-size: 3.5em; /* Adjusted for consistency */
+    .services-heading {
+        font-size: 3.5em;
+        margin-bottom: 30px;
     }
-    .services-items-container .service-item { 
-        padding: 30px 40px; /* Adjusted padding for smaller screens */
+    .services-items-container {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+        gap: 20px;
+    }
+    .service-item {
+        padding: 30px; /* Adjusted padding */
     }
     .service-item .subtitle-number {
-        font-size: 6em; /* Adjusted for smaller screens */
+        font-size: 6em;
+        right: 10px; /* Adjusted right position */
     }
     .service-item .service-title {
-        font-size: 1.4em;
+        font-size: 1.2em;
     }
     .service-item .service-description {
-        font-size: 0.95em;
+        font-size: 0.9em;
     }
 
     .tools-section {
-        padding-top: 40px;
-        padding-bottom: 60px;
-        z-index: 1; /* Maintain z-index */
+        padding: 80px 20px; /* Adjusted section padding for small screens */
     }
     .tools-heading {
         font-size: 3.5em;
         margin-bottom: 30px;
-        text-align: left; /* FIX: Left align tools heading */
     }
     .tools-grid {
-        display: grid;
-        grid-template-columns: 1fr;
         gap: 15px;
-        max-width: 100%;
     }
     .tool-card {
         padding: 15px;
@@ -1192,7 +1094,6 @@ footer h2 {
     .tool-icon-wrapper {
         width: 40px;
         height: 40px;
-        border-radius: 7px;
     }
     .tool-name {
         font-size: 0.95em;
@@ -1202,8 +1103,24 @@ footer h2 {
     }
 
     footer {
-        padding-left: 0;
-        padding-right: 0;
+        padding: 60px 0;
+    }
+    .contact-buttons {
+        gap: 15px;
+    }
+    .contact-button {
+        width: 180px; /* Adjusted width */
+        height: 90px; /* Adjusted height */
+        font-size: 1em;
+    }
+    .contact-button i {
+        font-size: 2em;
+    }
+    .contact-button .button-value {
+        font-size: 0.7em;
+    }
+    .contact-button .copied-text {
+        font-size: 1.2em;
     }
 }
 
@@ -1211,112 +1128,13 @@ footer h2 {
     .main-layout-container {
         padding: 0 15px;
     }
-    .section h2 { /* This rule is too general, better to use specific classes */
+    .section h2 { /* This rule is too general, but kept as it might still apply to some h2s */
         font-size: 2.8em;
         letter-spacing: 0.5px;
         margin-bottom: 30px;
     }
-    .contact-tagline {
-        font-size: 1em;
-        margin-bottom: 25px;
-    }
-    .contact-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-        max-width: 320px;
-        margin: 0 auto;
-    }
-    .contact-button {
-        width: 100%;
-        height: 80px;
-        font-size: 0.95em;
-    }
-    .contact-button i {
-        font-size: 1.6em;
-    }
-    .contact-button .button-value {
-        font-size: 0.75em;
-    }
-    .contact-button .copied-text {
-        font-size: 0.95em;
-    }
-
-    .about-left-content {
-        max-width: 320px;
-        padding: 25px 20px;
-    }
-    .profile-image-container {
-        width: calc(100% + 30px);
-        max-width: 350px;
-        height: 180px;
-        margin-bottom: 25px;
-        border-radius: 12px;
-    }
-    .about-left-content h3 {
-        font-size: 2.5em;
-        margin-bottom: 20px;
-    }
-    .fire-icon-with-line {
-        height: 40px;
-        margin-bottom: 25px;
-    }
-    .fire-icon {
-        padding: 8px;
-        font-size: 1.1em;
-    }
-    .fire-icon-with-line::before,
-    .fire-icon-with-line::after {
-        width: calc(50% - 25px);
-    }
-    .about-short-desc {
-        font-size: 0.9em;
-        margin-bottom: 25px;
-        padding: 0 5px;
-    }
-    .contact-info-list {
-        margin: 20px 0 30px;
-    }
-    .contact-info-list li {
-        font-size: 0.9em;
-        margin-bottom: 15px;
-    }
-    .contact-info-list li i {
-        margin-right: 15px;
-        font-size: 1.2em;
-        width: 20px;
-    }
-    .contact-info-list li span {
-        margin-right: 8px;
-    }
-    .about-social-icons {
-        gap: 15px;
-        padding-top: 10px;
-    }
-    .about-social-icons a {
-        font-size: 1.4em;
-    }
-
-    .dashed-decoration {
-        border-width: 1.5px;
-    }
-    .top-left-curve, .bottom-right-curve {
-        width: 140px;
-        height: 140px;
-        top: -45px;
-        left: -45px;
-        bottom: -45px;
-        right: -45px;
-    }
-
-    .right-column-scroll {
-        padding: 30px 15px;
-        padding-top: 40px;
-    }
     .hero-heading {
-        /* NEW: clamp for better scaling on small screens */
-        font-size: clamp(1.8em, 8vw, 3em);
+        font-size: clamp(2.5em, 8vw, 3em); /* Adjusted clamp for slightly larger minimum on very small screens */
         margin-bottom: 15px;
     }
     .hero-description {
@@ -1325,62 +1143,68 @@ footer h2 {
         margin-bottom: 30px;
     }
 
-    /* Services section adjustments for responsiveness */
     .services-section {
-        padding-top: 30px;
-        padding-bottom: 50px;
-        z-index: 2; /* Maintain z-index */
+        padding: 60px 15px; /* Further adjusted padding for very small screens */
     }
     .services-heading {
-        font-size: 2.5em; /* Adjusted for consistency */
+        font-size: 2.8em;
+        margin-bottom: 25px;
     }
-    .services-items-container .service-item {
-        padding: 25px 30px; /* Adjusted padding for very small screens */
+    .service-item {
+        padding: 25px; /* Adjusted padding */
     }
     .service-item .subtitle-number {
-        font-size: 5em; /* Adjusted for very small screens */
+        font-size: 5em;
+        right: 5px; /* Adjusted right position */
     }
     .service-item .service-title {
-        font-size: 1.2em;
+        font-size: 1.1em;
     }
     .service-item .service-description {
         font-size: 0.85em;
     }
 
     .tools-section {
-        padding-top: 30px;
-        padding-bottom: 50px;
-        z-index: 1; /* Maintain z-index */
+        padding: 60px 15px; /* Further adjusted padding for very small screens */
     }
     .tools-heading {
         font-size: 2.8em;
         margin-bottom: 25px;
-        text-align: left; /* FIX: Left align tools heading */
-    }
-    .tools-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 15px;
     }
     .tool-card {
-        padding: 15px;
+        padding: 12px; /* Adjusted padding */
         gap: 8px;
     }
     .tool-icon-wrapper {
         width: 35px;
         height: 35px;
-        border-radius: 6px;
     }
     .tool-name {
-        font-size: 0.9em;
+        font-size: 0.85em;
     }
     .tool-category {
-        font-size: 0.75em;
+        font-size: 0.7em;
     }
 
-    footer {
-        padding-left: 0;
-        padding-right: 0;
+    .contact-buttons {
+        max-width: 100%; /* Allow buttons to take full width */
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: center; /* Center stacked buttons */
+        gap: 10px; /* Tighter gap when stacked */
+    }
+    .contact-button {
+        width: 90%; /* Take most of the width */
+        height: 70px; /* Shorter height */
+        font-size: 0.9em;
+    }
+    .contact-button i {
+        font-size: 1.8em;
+    }
+    .contact-button .button-value {
+        font-size: 0.7em;
+    }
+    .contact-button .copied-text {
+        font-size: 1em;
     }
 }
 
@@ -1399,7 +1223,7 @@ footer h2 {
         opacity: 1 !important;
         animation: none !important; /* Ensure CSS animations are also removed */
     }
-    
+
     /* For about content, if there are multiple elements, ensure they are all visible */
     .about-content-wrapper .about-content-animation {
         transition-delay: 0s !important; /* No stagger */
