@@ -361,7 +361,6 @@ html::before {
 /* Right Column (Scrolling) */
 .right-column-scroll {
     flex-grow: 1;
-    /* Removed padding-left/right here, rely on main-layout-container's padding for overall content and section padding */
     padding-bottom: 100px;
     box-sizing: border-box;
     min-height: 150vh;
@@ -843,7 +842,7 @@ footer h2 {
 
     /* Adjustments for hero content */
     .hero-heading {
-        font-size: 6em;
+        font-size: 6em; /* Scale down heading */
         line-height: 0.85em;
         margin-bottom: 25px;
     }
