@@ -95,6 +95,8 @@ function initServicesCubeAnimation() {
     if (!servicesSection || !servicesCube || !servicesScrollArea || !servicesMainTitle) {
         console.warn("Required elements for services cube animation not found. Skipping GSAP services setup.");
         return;
+    } else {
+        console.log("All services cube elements found:", { servicesSection, servicesCube, servicesScrollArea, servicesMainTitle });
     }
 
     // Function to get current cube width based on screen size (for dynamic resizing)
@@ -107,9 +109,9 @@ function initServicesCubeAnimation() {
 
     // 1. Cube entry animation (GSAP FROM)
     // Cube starts invisible and then animates to its visible state.
-    // Removed initial Y translation in GSAP to let CSS positioning handle the start.
     gsap.from(servicesCube, {
         opacity: 0,
+        y: 100, // Starts below and invisible
         duration: 1,
         ease: 'power2.out',
         scrollTrigger: {
@@ -119,12 +121,10 @@ function initServicesCubeAnimation() {
             // markers: true, // Uncomment for debugging
             onEnter: () => {
                 console.log("Services Cube entry animation triggered!");
-                // Set cube width here to ensure it's correct when animation starts
-                servicesCube.style.width = `${getCubeWidth()}px`;
+                servicesCube.style.width = `${getCubeWidth()}px`; // Ensure width is correct on entry
             },
             onLeaveBack: () => {
-                console.log("Services Cube entry animation reversed!");
-                // Ensure it fully fades out if scrolling back up quickly
+                console.log("Services Cube entry animation reversed - leaving back!");
                 gsap.to(servicesCube, { opacity: 0, duration: 0.3, ease: 'power2.out' });
             }
         }
@@ -140,13 +140,13 @@ function initServicesCubeAnimation() {
             start: "top top", // When the top of the scroll area hits the top of the viewport
             end: "bottom bottom", // When the bottom of the scroll area leaves the bottom of the viewport
             scrub: true, // Smoothly link animation to scroll
-            // markers: true, // Uncomment for debugging
+            // markers: true, // Uncomment for debugging. Will show markers for this ScrollTrigger.
             onUpdate: self => {
                 // Console log to check scrubbing action (uncomment locally)
                 // console.log("Services Cube rotation scrubbing:", self.progress);
             },
             onLeave: () => {
-                console.log("Services Cube rotation area left.");
+                console.log("Services Cube rotation area left - leaving down!");
                 // Ensure the cube fades out after its main rotation scroll area is left
                 gsap.to(servicesCube, {
                     y: -200, // Move up and out of view
@@ -156,7 +156,7 @@ function initServicesCubeAnimation() {
                 });
             },
             onEnterBack: () => {
-                console.log("Services Cube rotation area entered back.");
+                console.log("Services Cube rotation area entered back!");
                  // Animate back in when re-entering the scroll area from below
                  gsap.fromTo(servicesCube, {
                     y: -200, autoAlpha: 0, // Start from invisible, above
