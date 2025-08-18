@@ -556,7 +556,7 @@ section {
     transform-style: preserve-3d; /* Crucial for child elements to be 3D */
     transition: transform 0.3s; /* Smooth transition for GSAP controlled transforms */
     /* GSAP will control initial opacity/position and rotation */
-    opacity: 0;
+    opacity: 0; /* Set initial opacity to 0, GSAP will animate to 1 */
     transform: translateY(100px); /* Initial state before GSAP animates it in */
 }
 
@@ -602,6 +602,9 @@ section {
     align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
+    /* Ensure text is above background number */
+    position: relative; 
+    z-index: 1; 
 }
 .services-face .service-title {
     font-size: 1.5em; /* Adjust as needed */
@@ -627,7 +630,7 @@ section {
   font-size: 8em; /* Much larger for 3D cube effect */
   opacity: 0.1; /* More transparent */
   color: #CCCCCC; /* Light gray for subtle background effect */
-  z-index: 0;
+  z-index: 0; /* Ensures it's behind .service-details */
   pointer-events: none;
 }
 
