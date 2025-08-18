@@ -13,9 +13,7 @@
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="styles.css">
 
-    <!-- GSAP and ScrollTrigger CDN - These lines are CRUCIAL for the animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Removed GSAP and ScrollTrigger CDN as they are no longer used for this setup -->
 </head>
 <body>
     <!-- The background is now purely CSS on the html and body elements -->
@@ -64,94 +62,59 @@
                 <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
             </section>
 
-            <!-- MY SERVICES Section (TRANSFORMED FOR 3D CUBE ANIMATION) -->
+            <!-- Services Section - Now a flat grid with animations -->
             <section id="services" class="section services-section">
-                <!-- Main section heading that pins and fades (like ABOUT*US) -->
-                <h2 class="services-heading services-main-title">
+                <h2 class="services-heading">
                     <span class="text-white">MY</span>
                     <span class="text-gray">SERVICES</span>
                 </h2>
 
-                <!-- This is the container that controls the scroll length for the cube animation -->
-                <div class="services-scroll-trigger-area">
-                    <!-- This makes the cube sticky in the viewport during its animation -->
-                    <div class="services-sticky-container">
-                        <!-- This is the cube element that GSAP will rotate -->
-                        <div id="servicesCube" class="services-cube">
-                            <!-- Each of these divs represents one face of the cube -->
-                            <!-- These will display the first 4 services -->
-
-                            <!-- Service 1 on Face 1 -->
-                            <div class="services-face face-1">
-                                <div class="service-details">
-                                    <h3 class="service-title">Web Design</h3>
-                                    <p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p>
-                                </div>
-                                <span class="subtitle-number">01</span>
-                            </div>
-                            <!-- Service 2 on Face 2 -->
-                            <div class="services-face face-2">
-                                <div class="service-details">
-                                    <h3 class="service-title">SEO Optimization</h3>
-                                    <p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p>
-                                </div>
-                                <span class="subtitle-number">02</span>
-                            </div>
-                            <!-- Service 3 on Face 3 -->
-                            <div class="services-face face-3">
-                                <div class="service-details">
-                                    <h3 class="service-title">UX/UI Design</h3>
-                                    <p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p>
-                                </div>
-                                <span class="subtitle-number">03</span>
-                            </div>
-                            <!-- Service 4 on Face 4 -->
-                            <div class="services-face face-4">
-                                <div class="service-details">
-                                    <h3 class="service-title">Graphic Design</h3>
-                                    <p class="service-description">Designing compelling visuals for print and digital media to communicate your message effectively.</p>
-                                </div>
-                                <span class="subtitle-number">04</span>
-                            </div>
-                        </div>
+                <!-- This is the flat grid container -->
+                <div class="services-items-container">
+                    <div class="service-item" id="service-0" data-service-index="0">
+                        <h3 class="service-title">Web Design</h3>
+                        <p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p>
+                        <div class="service-bg-number subtitle-number">01</div>
                     </div>
-                </div>
-
-                <!-- The remaining 4 services will be displayed as regular cards below the 3D cube section -->
-                <!-- These will use the standard .service-item class and animate in from the left -->
-                <div class="services-remaining-grid">
-                    <div class="service-item">
-                        <div class="subtitle-text">
-                            <h3 class="service-title">E-commerce Solutions</h3>
-                            <p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p>
-                        </div>
-                        <span class="subtitle-number">05</span>
+                    <div class="service-item" id="service-1" data-service-index="1">
+                        <h3 class="service-title">SEO Optimization</h3>
+                        <p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p>
+                        <div class="service-bg-number subtitle-number">02</div>
                     </div>
-                    <div class="service-item">
-                        <div class="subtitle-text">
-                            <h3 class="service-title">Digital Marketing</h3>
-                            <p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p>
-                        </div>
-                        <span class="subtitle-number">06</span>
+                    <div class="service-item" id="service-2" data-service-index="2">
+                        <h3 class="service-title">UX/UI Design</h3>
+                        <p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p>
+                        <div class="service-bg-number subtitle-number">03</div>
                     </div>
-                    <div class="service-item">
-                        <div class="subtitle-text">
-                            <h3 class="service-title">Content Creation</h3>
-                            <p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p>
-                        </div>
-                        <span class="subtitle-number">07</span>
+                    <div class="service-item" id="service-3" data-service-index="3">
+                        <h3 class="service-title">Graphic Design</h3>
+                        <p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p>
+                        <div class="service-bg-number subtitle-number">04</div>
                     </div>
-                    <div class="service-item">
-                        <div class="subtitle-text">
-                            <h3 class="service-title">Social Media Management</h3>
-                            <p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p>
-                        </div>
-                        <span class="subtitle-number">08</span>
+                    <div class="service-item" id="service-4" data-service-index="4">
+                        <h3 class="service-title">E-commerce Solutions</h3>
+                        <p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p>
+                        <div class="service-bg-number subtitle-number">05</div>
+                    </div>
+                    <div class="service-item" id="service-5" data-service-index="5">
+                        <h3 class="service-title">Digital Marketing</h3>
+                        <p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p>
+                        <div class="service-bg-number subtitle-number">06</div>
+                    </div>
+                    <div class="service-item" id="service-6" data-service-index="6">
+                        <h3 class="service-title">Content Creation</h3>
+                        <p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p>
+                        <div class="service-bg-number subtitle-number">07</div>
+                    </div>
+                    <div class="service-item" id="service-7" data-service-index="7">
+                        <h3 class="service-title">Social Media Management</h3>
+                        <p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p>
+                        <div class="service-bg-number subtitle-number">08</div>
                     </div>
                 </div>
             </section>
 
-            <!-- PREMIUM TOOLS Section -->
+            <!-- Premium Tools Section -->
             <section id="tools" class="section tools-section reveal-item">
                 <h2 class="tools-heading">
                     <span class="text-white">PREMIUM</span>
