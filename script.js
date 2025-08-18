@@ -122,7 +122,6 @@ function initServicesCubeAnimation() {
             onEnter: () => {
                 console.log("Services Cube entry animation triggered (onEnter)!");
                 servicesCube.style.width = `${getCubeWidth()}px`; // Ensure width is correct on entry
-                // No need for gsap.to(visibility: 'visible') here, autoAlpha handles it
             },
             onLeaveBack: () => {
                 console.log("Services Cube entry animation reversed - leaving back (onLeaveBack)!");
