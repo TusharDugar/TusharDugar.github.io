@@ -1,4 +1,5 @@
-// All GSAP and ScrollTrigger code has been removed as per the decision to use plain JS/CSS animations.
+// Register GSAP plugins (REQUIRED for ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 // Function to update the glowing background elements positions
 function glowEffect(event) {
@@ -37,12 +38,12 @@ function copyToClipboard(button) {
     }
 }
 
-
-// Unified Function to reveal elements on scroll using IntersectionObserver
-function initScrollAnimations() {
+// Unified Function to reveal elements on scroll (for 2D animations)
+function initIntersectionObserverAnimations() {
   const revealElements = document.querySelectorAll(
     // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
-    ".reveal-item, .reveal-stagger, .about-heading-animation, .about-content-animation, .service-item, .tool-card" 
+    // Note: .services-remaining-grid .service-item is specific for the 2D grid items
+    ".reveal-item, .reveal-stagger, .about-heading-animation, .about-content-animation, .services-items-container .service-item, .tool-card" 
   );
 
   const observerOptions = {
@@ -56,61 +57,147 @@ function initScrollAnimations() {
       if (entry.isIntersecting) {
         entry.target.classList.add("visible"); 
 
-        // Specific stagger logic for .profile-card-wrapper (about left content)
-        if (entry.target.classList.contains("profile-card-wrapper")) { 
-            const children = entry.target.querySelectorAll(".reveal-child");
-            children.forEach((child, index) => {
-                child.style.transitionDelay = `${index * 0.1}s`;
-                child.classList.add("visible"); 
-            });
+        // Specific stagger logic for .reveal-stagger-container (like footer buttons)
+        if (entry.target.classList.contains("reveal-stagger-container")) {
+          const children = entry.target.querySelectorAll(".reveal-stagger");
+          children.forEach((child, index) => {
+            child.style.transitionDelay = `${index * 0.1}s`;
+            child.classList.add("visible"); 
+          });
         }
-        // Specific stagger logic for .contact-buttons (footer buttons)
-        else if (entry.target.classList.contains("contact-buttons")) { 
-            const children = entry.target.querySelectorAll(".contact-button"); 
-            children.forEach((child, index) => {
-                child.style.transitionDelay = `${index * 0.1}s`;
-                child.classList.add("visible"); 
-            });
-        }
-        // Specific stagger for .about-content-wrapper (paragraphs/blockquote in about right)
-        else if (entry.target.classList.contains("about-content-wrapper")) {
+        // Specific stagger logic for .about-content-wrapper (like paragraphs/blockquote)
+        if (entry.target.classList.contains("about-content-wrapper")) {
             const children = entry.target.querySelectorAll(".about-content-animation");
             children.forEach((child, index) => {
-                child.style.transitionDelay = `${index * 0.2}s`; // Add a delay for content items
+                // CSS nth-child already handles stagger delay, but this ensures it's applied.
                 child.classList.add("visible"); 
             });
         }
-        // Specific stagger for .services-items-container (for the 8 service cards)
-        else if (entry.target.classList.contains("services-items-container")) {
-            const children = entry.target.querySelectorAll(".service-item");
-            children.forEach((child, index) => {
-                child.style.transitionDelay = `${index * 0.1}s`; // Use CSS nth-child if that's preferred, or this
-                child.classList.add("visible");
-            });
-        }
-        // No explicit JS stagger needed for .tool-card, as CSS transition and IO will handle it.
+        // No explicit JS stagger needed for .services-items-container .service-item or .tool-card, as CSS nth-child / their own transitions handle it.
 
         observer.unobserve(entry.target); // Stop observing once revealed
       }
     });
   }, observerOptions);
 
-  // Observe all elements selected, including containers for staggering
   revealElements.forEach(el => observer.observe(el));
-  
-  // Explicitly observe containers that manage staggered children, if not covered by a reveal-item itself
-  const aboutWrapper = document.querySelector('.profile-card-wrapper');
-  if (aboutWrapper) observer.observe(aboutWrapper);
-
-  const footerButtonsContainer = document.querySelector('.contact-buttons');
-  if (footerButtonsContainer) observer.observe(footerButtonsContainer);
-
-  const servicesItemsContainer = document.querySelector('.services-items-container');
-  if (servicesItemsContainer) observer.observe(servicesItemsContainer);
 }
 
 
-// Scroll Spy for section title
+// GSAP Scroll Animations for Services Cube
+function initServicesCubeAnimation() {
+    const servicesSection = document.getElementById('services');
+    const servicesCube = document.getElementById('servicesCube');
+    const servicesScrollArea = document.querySelector('.services-scroll-trigger-area');
+    const servicesMainTitle = document.querySelector('.services-main-title');
+
+    // Check if all necessary elements exist before proceeding
+    if (!servicesSection || !servicesCube || !servicesScrollArea || !servicesMainTitle) {
+        console.warn("Required elements for services cube animation not found. Skipping GSAP services setup.");
+        return;
+    } else {
+        console.log("All services cube elements found:", { servicesSection, servicesCube, servicesScrollArea, servicesMainTitle });
+    }
+
+    // Function to get current cube width based on screen size (for dynamic resizing)
+    function getCubeWidth() {
+        const width = window.innerWidth;
+        if (width >= 1024) return 900;
+        else if (width >= 768) return 640;
+        else return 300;
+    }
+
+    // 1. Cube entry animation (GSAP FROM)
+    // Cube starts invisible and then animates to its visible state.
+    gsap.from(servicesCube, {
+        opacity: 0,
+        y: 100, // Starts below and invisible
+        duration: 1,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: servicesSection, // Trigger when the services section is reached
+            start: 'top center+=100', // When the top of services section hits 100px below center of viewport
+            toggleActions: 'play none none reverse', // Play on scroll down, reverse on scroll up past trigger
+            // markers: true, // Uncomment for debugging
+            onEnter: () => {
+                console.log("Services Cube entry animation triggered!");
+                servicesCube.style.width = `${getCubeWidth()}px`; // Ensure width is correct on entry
+            },
+            onLeaveBack: () => {
+                console.log("Services Cube entry animation reversed - leaving back!");
+                gsap.to(servicesCube, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+            }
+        }
+    });
+
+    // 2. Cube rotation animation (GSAP TO)
+    // This animation runs while the user scrolls through the `servicesScrollArea`.
+    gsap.to(servicesCube, {
+        rotateX: 270, // Rotate by 270 degrees (3 full faces + another 90 deg)
+        ease: "none", // Linear rotation tied directly to scroll
+        scrollTrigger: {
+            trigger: servicesScrollArea, // Use the dedicated scroll area for the cube
+            start: "top top", // When the top of the scroll area hits the top of the viewport
+            end: "bottom bottom", // When the bottom of the scroll area leaves the bottom of the viewport
+            scrub: true, // Smoothly link animation to scroll
+            // markers: true, // Uncomment for debugging. Will show markers for this ScrollTrigger.
+            onUpdate: self => {
+                // Console log to check scrubbing action (uncomment locally)
+                // console.log("Services Cube rotation scrubbing:", self.progress);
+            },
+            onLeave: () => {
+                console.log("Services Cube rotation area left - leaving down!");
+                // Ensure the cube fades out after its main rotation scroll area is left
+                gsap.to(servicesCube, {
+                    y: -200, // Move up and out of view
+                    autoAlpha: 0, // Fade out (opacity and visibility)
+                    duration: 0.5,
+                    ease: "power2.out",
+                });
+            },
+            onEnterBack: () => {
+                console.log("Services Cube rotation area entered back!");
+                 // Animate back in when re-entering the scroll area from below
+                 gsap.fromTo(servicesCube, {
+                    y: -200, autoAlpha: 0, // Start from invisible, above
+                }, {
+                    y: 0, // Move to original position
+                    autoAlpha: 1, // Fade in
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            }
+        },
+    });
+
+    // 3. Main Services title pinning and fade out (GSAP TO)
+    gsap.to(servicesMainTitle, {
+        autoAlpha: 0, // Fades out (opacity and visibility)
+        ease: "power1.out",
+        scrollTrigger: {
+            trigger: servicesSection, // Trigger on the main services section
+            start: "top top+=150", // Start fading when section top is 150px from viewport top
+            end: "bottom top", // End fading when section bottom hits viewport top
+            toggleActions: "play reverse play reverse",
+            pin: true, // Pin the title during this animation
+            scrub: true,
+            pinSpacing: false // Prevent extra space from pinning
+        }
+    });
+
+    // Handle cube width on resize dynamically
+    function handleCubeResize() {
+        if (servicesCube) {
+            servicesCube.style.width = `${getCubeWidth()}px`;
+        }
+    }
+    window.addEventListener('resize', handleCubeResize);
+    // Initial call to set correct cube width on load
+    handleCubeResize(); 
+}
+
+
+// Scroll Spy for section title (existing logic)
 const sections = document.querySelectorAll("section[id], footer[id]"); 
 const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for updating text
 
@@ -119,9 +206,8 @@ window.addEventListener("scroll", () => {
   sections.forEach(section => {
     // Adjust offset based on desired trigger point for the scroll spy.
     const sectionTop = section.offsetTop - 150; // Change when section is 150px from viewport top
-    const sectionHeight = section.offsetHeight;
-
-    if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+    
+    if (window.scrollY >= sectionTop && window.scrollY < sectionTop + section.offsetHeight) {
       current = section.getAttribute("id");
     }
   });
@@ -134,7 +220,8 @@ window.addEventListener("scroll", () => {
       
     navIndicator.textContent = formattedTitle;
   } else if (navIndicator && current === "") {
-      // If no specific section is in view, default to 'HERO' if near top
+      // If no specific section is in view (e.g., at the very top of the page), set a default title
+      // Check if scroll is near the top and set 'HERO'
       if (window.scrollY < 200 && navIndicator.textContent !== "HERO") { 
           navIndicator.textContent = "HERO";
       }
@@ -142,7 +229,7 @@ window.addEventListener("scroll", () => {
 });
 
 
-// Initialize all functionalities when the DOM is ready
+// Initialize all animations when the DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize contact button copy functionality
     const contactButtons = document.querySelectorAll('.contact-button');
@@ -150,9 +237,12 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => copyToClipboard(button));
     });
 
-    // Initialize all scroll-based animations (About section, Services 8 points, Tools)
-    initScrollAnimations(); 
+    // Initialize IntersectionObserver-based animations (for About section, 2D services, Tools)
+    initIntersectionObserverAnimations(); 
     
+    // Initialize GSAP-based Services Cube animation
+    initServicesCubeAnimation();
+
     // Trigger a scroll event immediately to set the initial scroll spy title
     window.dispatchEvent(new Event('scroll'));
 });
