@@ -55,7 +55,7 @@ body {
     inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
     z-index: -2; /* Above body's background-color, but below other overlays */
     pointer-events: none;
-    opacity: 0.078; /* Adjusted opacity to 7.8% */
+    opacity: 0.079; /* Adjusted opacity to 7.9% */
     background-image: url('./71976 (1).jpg'); /* Your specified image, explicit current directory */
     background-repeat: repeat; /* To stack */
     background-size: 400px auto; /* A tile size that creates visible repetition (roughly 4-5 times horizontally) */
@@ -201,14 +201,12 @@ html::before {
     justify-content: center;
     max-width: 1920px;
     margin: 0 auto;
-    /* REDUCED OUTER PADDING to bring content closer to screen edges */
-    padding: 0 100px; /* Adjusted from 180px */
+    padding: 0 180px;
     min-height: 100vh;
     position: relative;
     z-index: 1;
     padding-top: 20px; /* Reduced from 50px */
-    /* REDUCED GAP between columns (approximately half of 180px) */
-    gap: 100px; /* Reduced from 180px */
+    gap: 180px;
 }
 
 /* Left Column (Sticky) */
@@ -429,7 +427,7 @@ html::before {
 .hero-description {
     font-size: 1em;
     line-height: 1.7;
-    margin-bottom: 80px;
+    margin-bottom: 80px; /* Reduced from 100px */
     max-width: 800px;
     color: var(--text-medium);
 }
@@ -793,9 +791,8 @@ footer h2 {
 /* Responsive Design */
 @media (max-width: 1200px) {
     .main-layout-container {
-        /* Adjusted for smaller screens */
-        padding: 0 40px; /* Kept 40px */
-        gap: 40px; /* Reduced further from 60px */
+        padding: 0 40px;
+        gap: 40px;
     }
     .left-column-sticky {
         width: 100%;
