@@ -1,24 +1,5 @@
-// Register GSAP plugins (REQUIRED for ScrollTrigger)
-// Note: GSAP is registered but not strictly used by current animations
-gsap.registerPlugin(ScrollTrigger);
-
-// Function to update the glowing background elements positions
-function glowEffect(event) {
-    const glows = document.querySelectorAll('body::before, body::after');
-    const x = event.clientX;
-    const y = event.clientY;
-
-    glows.forEach((glow, index) => {
-        const moveX = (x / window.innerWidth - 0.5) * 60; 
-        const moveY = (y / window.innerHeight - 0.5) * 60; 
-        const rotate = (x / window.innerWidth - 0.5) * 10; 
-
-        glow.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
-    });
-}
-
-// Attach the glow effect to mouse movement (uncomment if you want this feature)
-// document.addEventListener('mousemove', glowEffect); 
+// GSAP library is no longer used for animations, removing its registration.
+// If you add GSAP-based animations later, you'll need to re-add the CDN and registration.
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
@@ -84,7 +65,7 @@ function initIntersectionObserverAnimations() {
 }
 
 
-// Scroll Spy for section title (existing logic)
+// Scroll Spy for section title
 const sections = document.querySelectorAll("section[id], footer[id]"); 
 const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for updating text
 
@@ -106,18 +87,25 @@ window.addEventListener("scroll", () => {
       .join(' '); 
       
     navIndicator.textContent = formattedTitle;
-  } else if (navIndicator && current === "") {
-      // If no specific section is in view (e.g., at the very top of the page), set a default title
-      // Check if scroll is near the top and set 'HERO'
-      if (window.scrollY < 200 && navIndicator.textContent !== "HERO") { 
-          navIndicator.textContent = "HERO";
+  } else if (navIndicator) { // If no specific section is in view
+      // Set to "ABOUT" if scroll is near the top (not "HERO")
+      if (window.scrollY < 200 && navIndicator.textContent !== "ABOUT") { 
+          navIndicator.textContent = "ABOUT"; // Changed from "HERO"
       }
   }
 });
 
 
-// Initialize all animations when the DOM is ready
+// Mouse Follower Glow (new implementation)
 document.addEventListener('DOMContentLoaded', () => {
+    const mouseFollowerGlow = document.querySelector('.mouse-follower-glow');
+    if (mouseFollowerGlow) { // Ensure the element exists before attaching listener
+        document.addEventListener('mousemove', (event) => {
+            // Center the glow element on the mouse cursor
+            mouseFollowerGlow.style.transform = `translate(-50%, -50%) translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+        });
+    }
+
     // Initialize contact button copy functionality
     const contactButtons = document.querySelectorAll('.contact-button');
     contactButtons.forEach(button => {
