@@ -202,13 +202,13 @@ html::before {
     max-width: 1920px;
     margin: 0 auto;
     /* REDUCED OUTER PADDING to bring content closer to screen edges */
-    padding: 0 60px; /* Reduced from 100px */
+    padding: 0 60px; /* Adjusted from 180px */
     min-height: 100vh;
     position: relative;
     z-index: 1;
     padding-top: 20px; /* Reduced from 50px */
     /* REDUCED GAP between columns (approximately one-third of 180px) */
-    gap: 60px; /* Reduced from 100px */
+    gap: 60px; /* Adjusted from 180px */
 }
 
 /* Left Column (Sticky) */
@@ -223,8 +223,8 @@ html::before {
     height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: center; /* Ensures content inside is centered horizontally */
+    text-align: center; /* Ensures text inside is centered */
     z-index: 2;
 }
 
