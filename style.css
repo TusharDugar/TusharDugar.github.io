@@ -28,7 +28,8 @@
     --tool-name-color: var(--text-light); /* White for tool names */
     --tool-category-color: var(--text-medium); /* Gray for categories */
 
-    /* Removed: --text-dark-grey-heading: #232323; */
+    /* New color for grey headings (re-introduced) */
+    --text-sub-heading-grey: #666666; /* Distinct grey color for headings */
 }
 
 /* Universal Box-Sizing for easier layout management */
@@ -54,7 +55,7 @@ body {
     inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
     z-index: -2; /* Above body's background-color, but below other overlays */
     pointer-events: none;
-    opacity: 0.08; /* Adjusted opacity to 8% */
+    opacity: 0.075; /* Adjusted opacity to 7.5% */
     background-image: url('./71976 (1).jpg'); /* Your specified image, explicit current directory */
     background-repeat: repeat; /* To stack */
     background-size: 400px auto; /* A tile size that creates visible repetition (roughly 4-5 times horizontally) */
@@ -200,12 +201,14 @@ html::before {
     justify-content: center;
     max-width: 1920px;
     margin: 0 auto;
-    padding: 0 180px;
+    /* REDUCED OUTER PADDING to bring content closer to screen edges */
+    padding: 0 100px; /* Further reduced from 180px, to 100px */
     min-height: 100vh;
     position: relative;
     z-index: 1;
     padding-top: 20px; /* Reduced from 50px */
-    gap: 180px;
+    /* REDUCED GAP between columns */
+    gap: 100px; /* Reduced from 180px, to 100px */
 }
 
 /* Left Column (Sticky) */
@@ -419,14 +422,14 @@ html::before {
 }
 
 .hero-heading .digital {
-  color: var(--text-dark-grey-heading); /* Applied new dark grey color */
+  color: var(--text-sub-heading-grey); /* Applied specific sub-heading grey color */
 }
 
 /* HERO DESCRIPTION ADJUSTMENTS */
 .hero-description {
     font-size: 1em;
     line-height: 1.7;
-    margin-bottom: 80px; /* Reduced from 100px */
+    margin-bottom: 80px;
     max-width: 800px;
     color: var(--text-medium);
 }
@@ -457,7 +460,7 @@ html::before {
     z-index: 4;
 }
 .services-heading .text-white { color: var(--text-light); display: block; }
-.services-heading .text-gray { color: var(--text-dark-grey-heading); display: block; } /* Applied new dark grey color */
+.services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
 
 /* Services Flat Grid (2D animation) */
@@ -557,7 +560,7 @@ html::before {
     display: block;
 }
 
-.tools-heading .text-gray { color: var(--text-dark-grey-heading); display: block; } /* Applied new dark grey color */
+.tools-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
 /* TOOLS GRID ALIGNMENT */
 .tools-grid {
