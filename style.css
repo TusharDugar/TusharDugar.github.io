@@ -76,6 +76,7 @@ body {
 
 
 /* Subtle Background Glowing Elements (Mimicking Sawad's subtle ambient light) */
+/* These are the fixed, large, subtle glows in the background, not mouse-following */
 body::before, body::after {
     content: '';
     position: fixed;
@@ -149,6 +150,23 @@ html::before {
 
     mask-repeat: repeat;
     -webkit-mask-repeat: repeat;
+}
+
+/* Mouse Follower Glow Element (new implementation for mouse tracking) */
+.mouse-follower-glow {
+    position: fixed;
+    top: 0; /* Will be dynamically set by JS */
+    left: 0; /* Will be dynamically set by JS */
+    width: 80px; /* Size of the glow */
+    height: 80px; /* Size of the glow */
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, transparent 60%); /* Subtle orange glow */
+    filter: blur(50px); /* Soft blur */
+    z-index: 100; /* Ensure it's above all content */
+    pointer-events: none; /* Crucial so it doesn't block clicks/interactions */
+    /* Add a small transition for smoothness when mouse moves */
+    transition: transform 0.1s ease-out; /* Smooth transition for position updates */
+    will-change: transform; /* Performance hint */
 }
 
 
