@@ -50,12 +50,30 @@ body {
 .site-background-image {
     position: fixed;
     inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
-    z-index: -2; /* Above body's background-color, but below other overlays */
+    z-index: -3; /* Lowest background layer (above body's base color) */
     pointer-events: none;
-    opacity: 0.3; /* Adjusted opacity to 30% */
+    opacity: 0.3; /* User requested 30% opacity */
     background-image: url('./71976 (1).jpg'); /* Your specified image, explicit current directory */
     background-repeat: repeat; /* To stack */
     background-size: 400px auto; /* A tile size that creates visible repetition (roughly 4-5 times horizontally) */
+}
+
+/* NEW: Animated Color Gradient Overlay */
+.background-color-gradient {
+    position: fixed;
+    inset: 0;
+    z-index: -2; /* Above .site-background-image, below color glows */
+    pointer-events: none;
+    opacity: 0.4; /* User requested 40% opacity */
+    background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); /* New gradient */
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite; /* New animation */
+}
+
+/* Keyframes for the new animated colorful gradient */
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 
@@ -70,7 +88,7 @@ body::before, body::after {
     border-radius: 50%;
     filter: blur(400px); /* FURTHER INCREASED BLUR */
     opacity: 0.03; /* FURTHER DECREASED OPACITY */
-    z-index: -1; /* Above .site-background-image, below html::before (grid) */
+    z-index: -1; /* Above .background-color-gradient, below html::before (grid) */
     pointer-events: none;
     will-change: transform, opacity;
 }
@@ -102,7 +120,7 @@ body::after {
 }
 
 
-/* Animated Background Grid Pattern */
+/* Animated Background Grid Pattern (now only the mask, gradient moved to new div) */
 html::before {
     content: '';
     position: fixed;
@@ -111,10 +129,8 @@ html::before {
     pointer-events: none;
     opacity: 0.008; /* EXTREMELY SUBTLE */
 
-    background-image: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
-
+    /* REMOVED background-image, background-size, animation properties from here */
+    
     /* TWEAKED LINE THICKNESS & SEGMENTATION */
     mask-image:
         linear-gradient(to right, transparent 99.85%, white 0.15%), /* Even thinner vertical lines */
@@ -160,8 +176,7 @@ html::before {
   margin: 0 auto;
   position: relative;
   z-index: 1;
-  /* REDUCED VERTICAL PADDING for tighter sections */
-  padding: 80px 40px; /* Further reduced from 120px for very tight spacing */
+  padding: 80px 40px; /* Reduced from 200px for tighter spacing */
 }
 
 /* Reveal Animation Base */
@@ -187,7 +202,6 @@ html::before {
     min-height: 100vh;
     position: relative;
     z-index: 1;
-    /* REDUCED TOP PADDING for initial content, to match tighter section spacing */
     padding-top: 20px; /* Reduced from 50px */
     gap: 180px;
 }
@@ -388,8 +402,7 @@ html::before {
     font-size: 8em;
     line-height: 0.75em;
     font-weight: 900;
-    /* REDUCED MARGIN-BOTTOM for tighter spacing */
-    margin-bottom: 20px; /* Reduced from 30px */
+    margin-bottom: 20px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -411,7 +424,6 @@ html::before {
 .hero-description {
     font-size: 1em;
     line-height: 1.7;
-    /* REDUCED MARGIN-BOTTOM for tighter spacing */
     margin-bottom: 80px; /* Reduced from 100px */
     max-width: 800px;
     color: var(--text-medium);
@@ -421,8 +433,7 @@ html::before {
 /* Services Section Styles */
 .services-section {
   position: relative;
-  /* REDUCED PADDING for tighter sections, consistent with global .section */
-  padding: 80px 40px; /* Reduced from 120px */
+  padding: 80px 40px;
   text-align: left;
   z-index: 2;
   background-color: transparent;
@@ -436,8 +447,7 @@ html::before {
     font-size: 8em;
     line-height: 0.75em;
     font-weight: 800;
-    /* REDUCED MARGIN-BOTTOM for tighter spacing */
-    margin-bottom: 40px; /* Reduced from 50px */
+    margin-bottom: 40px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -521,8 +531,7 @@ html::before {
 /* Tools Section */
 .tools-section {
   text-align: left;
-  /* REDUCED PADDING for tighter sections, consistent with global .section */
-  padding: 80px 40px; /* Reduced from 120px */
+  padding: 80px 40px;
   margin-top: 0;
   margin-bottom: 0;
   position: relative;
@@ -535,8 +544,7 @@ html::before {
     font-size: 7.5em;
     line-height: 0.8em;
     font-weight: 800;
-    /* REDUCED MARGIN-BOTTOM for tighter spacing */
-    margin-bottom: 40px; /* Reduced from 50px */
+    margin-bottom: 40px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -634,7 +642,6 @@ footer {
     background-color: var(--bg-main);
     color: var(--text-light);
     text-align: center;
-    /* REDUCED PADDING for a more compact footer */
     padding: 60px 0; /* Reduced from 80px */
     position: relative;
     z-index: 1;
@@ -802,7 +809,7 @@ footer h2 {
         text-align: center;
     }
     .section { /* General section padding */
-        padding: 80px 40px; /* Reduced for medium screens */
+        padding: 80px 40px; /* Consistent for medium screens */
     }
 
     /* Specific adjustments for profile card on 1200px screens */
@@ -852,7 +859,7 @@ footer h2 {
 
     /* Adjustments for hero content */
     .hero-heading {
-        font-size: 6em; /* Scale down heading */
+        font-size: 6em;
         line-height: 0.85em;
         margin-bottom: 25px;
     }
