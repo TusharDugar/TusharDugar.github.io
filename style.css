@@ -504,19 +504,19 @@ section {
 }
 
 
-/* Services Section Styles (Modified for 3D Cube) */
+/* Services Section Styles (Flat 2D Grid) */
 .services-section {
   position: relative;
-  padding: 100px 40px 100px 60px; /* Adjusted padding, matches global section */
+  padding: 100px 40px 100px 60px; /* Matches global section padding */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  background-color: transparent; /* Set to transparent as requested */
+  background-color: var(--bg-main); /* Restored black background */
   margin-top: 100px; 
   margin-bottom: 100px; 
 }
 
-/* Services Main Title (will pin and fade out via GSAP) */
-.services-main-title {
+/* Services Main Title */
+.services-heading {
     font-family: 'Poppins', sans-serif;
     font-size: 5em; 
     line-height: 0.9;
@@ -526,125 +526,25 @@ section {
     text-align: left;
     margin-left: 20px; 
     position: relative; 
-    z-index: 4; /* Higher than services-remaining-grid to be on top of it */
-    /* GSAP will control opacity and pinning */
+    z-index: 4; 
 }
-.services-main-title .text-white { color: var(--text-light); display: block; }
-.services-main-title .text-gray { color: var(--text-medium); display: block; }
+.services-heading .text-white { color: var(--text-light); display: block; }
+.services-heading .text-gray { color: var(--text-medium); display: block; }
 
 
-/* Services 3D Cube Structure */
-.services-scroll-trigger-area {
-    /* This needs enough height to allow for the scrubbing animation */
-    height: 400vh; /* This needs to be tall enough to allow the cube to fully animate */
-    margin-top: -100px; /* Pull it up to hide the cube initially */
-}
-
-.services-sticky-container {
-    position: sticky;
-    top: 0; /* Pins the cube wrapper to the top of the viewport */
-    height: 100vh; /* Make it full viewport height when pinned */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    perspective: 1000px; /* Essential for 3D effect */
-    overflow: hidden; /* Ensures content outside cube boundaries is clipped */
-    z-index: 10; /* Ensures cube and its content are above pinned titles/other elements */
-}
-
-.services-cube {
-    position: relative;
-    width: 300px; /* Default width for cube */
-    height: 250px; /* Fixed height for cube faces */
-    transform-style: preserve-3d; /* Crucial for child elements to be 3D */
-    transition: transform 0.3s; /* Smooth transition for GSAP controlled transforms */
-    visibility: hidden; /* FIX: Added visibility: hidden to hide initially until GSAP animates autoAlpha */
-}
-
-/* Responsive cube width adjustments */
-@media (min-width: 768px) {
-    .services-cube {
-        width: 640px;
-    }
-}
-@media (min-width: 1024px) {
-    .services-cube {
-        width: 900px;
-    }
-}
-
-
-.services-face {
-    position: absolute;
-    height: 250px; /* Match services-cube height */
-    width: 100%; /* Take full width of cube container */
-    border: 1px solid #CCCCCC; /* Border from design-cube example */
-    background-color: #000; /* Black background for faces */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align text to start */
-    justify-content: space-between; /* Space out title/desc and number */
-    padding: 28px; /* Padding for content inside face */
-    font-weight: bold;
-    backface-visibility: hidden; /* Hide back of the face when rotated away */
-    overflow: hidden; /* Prevent content overflow */
-}
-
-/* Transforms for each face to form a 4-sided prism (like design-cube with rotateX) */
-.services-face.face-1 { transform: translateZ(125px); } /* Front face */
-.services-face.face-2 { transform: rotateX(90deg) translateZ(125px); } /* Top face */
-.services-face.face-3 { transform: rotateX(180deg) translateZ(125px); } /* Back face */
-.services-face.face-4 { transform: rotateX(270deg) translateZ(125px); } /* Bottom face */
-
-/* Content styling for faces - **Reverted to match your general text aesthetic** */
-.services-face .service-details {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    width: 100%;
-    position: relative; /* Ensure text is above background number */
-    z-index: 1; /* Ensure text is above background number */
-}
-.services-face .service-title {
-    font-size: 1.5em; /* This size is visually balanced for the cube faces */
-    font-weight: 700; /* Standard bold, matching your general headings */
-    color: var(--accent-primary-sawad); /* Your primary accent orange */
-    margin: 0 0 8px 0;
-    line-height: 1.2;
-}
-.services-face .service-description {
-    font-size: 1em; /* Standard paragraph size */
-    font-weight: 400; /* Regular weight */
-    color: var(--text-medium); /* Your medium gray for secondary text */
-    margin: 0;
-    line-height: 1.6;
-    word-break: break-word;
-}
-/* Subtitle number on faces (larger, more transparent) - **Matches design-cube style for this specific effect** */
-.services-face .subtitle-number {
-  position: absolute;
-  top: 50%;
-  right: 20px; /* Positioned to the right of the face */
-  transform: translateY(-50%);
-  font-size: 8em; /* Large for 3D background effect */
-  opacity: 0.1; /* Transparent */
-  color: #CCCCCC; /* Light gray for subtle background effect */
-  z-index: 0; /* Ensures it's behind .service-details text */
-  pointer-events: none;
-}
-
-
-/* Remaining Services Grid (2D animation) */
-.services-remaining-grid {
+/* Services Grid Container (Flat 2D) */
+.services-items-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 40px;
-    justify-items: center;
-    margin-top: 100px; /* Space from the 3D cube above */
+    gap: 40px; /* Space between cards */
+    justify-items: center; /* Center cards within their grid cells */
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto; /* Center the grid container */
+    padding-left: 20px; /* Ensures items are not stuck to the left edge */
 }
 
-/* Service Item for 2D Grid (Animations) */
+/* Service Item (Animations: Fade + Slide from Left, Staggered) */
 .service-item {
   background-color: #111; 
   border-radius: 12px; 
@@ -676,25 +576,38 @@ section {
 
 
 /* Service item children styling */
-.service-item .service-title,
+.service-item .service-title {
+    font-size: 1.5em; /* Your desired font size */
+    font-weight: 700; /* Your desired font weight */
+    color: var(--accent-primary-sawad); /* Your desired orange color */
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+    font-style: normal;
+    text-transform: none;
+}
 .service-item .service-description {
-    position: relative; 
-    z-index: 1; 
+    font-size: 1em; /* Your desired font size */
+    font-weight: 400; /* Your desired font weight */
+    color: var(--text-medium); /* Your desired medium text color */
+    margin: 0;
+    line-height: 1.6;
+    font-style: normal;
+    word-break: break-word;
 }
 
 /* Subtitle background numbers visibility for 2D cards */
 .subtitle-number { 
   position: absolute;
   top: 50%;
-  left: 0; /* Corrected to left: 0 as you requested */
+  left: 0; /* FIX: Positioned to the left as requested */
   transform: translateY(-50%); 
-  font-size: 4rem; 
-  opacity: 0.1; 
-  color: rgba(255, 255, 255, 0.08); /* Reverted to your specified RGBA value */
+  font-size: 4rem; /* As per prompt */
+  opacity: 0.1; /* As per prompt */
+  color: rgba(255, 255, 255, 0.08); /* As per prompt's specific RGBA */
   z-index: 0; 
   pointer-events: none;
 }
-.subtitle-text { 
+.subtitle-text { /* Container for title/description to ensure they are above numbers */
   position: relative;
   z-index: 1; 
 }
@@ -705,7 +618,6 @@ section {
   text-align: center; 
   margin-top: 100px; 
   margin-bottom: 80px; 
-  
   padding-top: 80px;
   padding-bottom: 80px;
   position: relative;
