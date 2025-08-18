@@ -1,5 +1,6 @@
 // GSAP library is no longer used for animations, removing its registration.
 // If you add GSAP-based animations later, you'll need to re-add the CDN and registration.
+// gsap.registerPlugin(ScrollTrigger); // REMOVED THIS LINE
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
@@ -88,9 +89,9 @@ window.addEventListener("scroll", () => {
       
     navIndicator.textContent = formattedTitle;
   } else if (navIndicator) { // If no specific section is in view
-      // Set to "ABOUT" if scroll is near the top (not "HERO")
+      // Set to "ABOUT" if scroll is near the top (more intuitive than "HERO")
       if (window.scrollY < 200 && navIndicator.textContent !== "ABOUT") { 
-          navIndicator.textContent = "ABOUT"; // Changed from "HERO"
+          navIndicator.textContent = "ABOUT";
       }
   }
 });
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mouseFollowerGlow = document.querySelector('.mouse-follower-glow');
     if (mouseFollowerGlow) { // Ensure the element exists before attaching listener
         document.addEventListener('mousemove', (event) => {
-            // Center the glow element on the mouse cursor
+            // Use translate3d for hardware acceleration, good for performance
             mouseFollowerGlow.style.transform = `translate(-50%, -50%) translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
         });
     }
