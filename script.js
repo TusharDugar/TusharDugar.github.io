@@ -91,6 +91,7 @@ function initServicesCubeAnimation() {
     const servicesScrollArea = document.querySelector('.services-scroll-trigger-area');
     const servicesMainTitle = document.querySelector('.services-main-title');
 
+    // Check if all necessary elements exist before proceeding
     if (!servicesSection || !servicesCube || !servicesScrollArea || !servicesMainTitle) {
         console.warn("Required elements for services cube animation not found. Skipping GSAP services setup.");
         return;
@@ -105,42 +106,48 @@ function initServicesCubeAnimation() {
     }
 
     // 1. Cube entry animation (GSAP FROM)
-    // Cube starts invisible and slightly below, then animates to its visible state.
+    // Cube starts invisible and then animates to its visible state.
+    // Removed initial Y translation in GSAP to let CSS positioning handle the start.
     gsap.from(servicesCube, {
         opacity: 0,
-        y: 100, // Starts below and invisible
         duration: 1,
         ease: 'power2.out',
         scrollTrigger: {
             trigger: servicesSection, // Trigger when the services section is reached
             start: 'top center+=100', // When the top of services section hits 100px below center of viewport
             toggleActions: 'play none none reverse', // Play on scroll down, reverse on scroll up past trigger
-            // Add markers for debugging (uncomment locally)
-            // markers: true, 
+            // markers: true, // Uncomment for debugging
             onEnter: () => {
                 console.log("Services Cube entry animation triggered!");
-            },
-            onStart: () => { // On animation start, set cube width
+                // Set cube width here to ensure it's correct when animation starts
                 servicesCube.style.width = `${getCubeWidth()}px`;
+            },
+            onLeaveBack: () => {
+                console.log("Services Cube entry animation reversed!");
+                // Ensure it fully fades out if scrolling back up quickly
+                gsap.to(servicesCube, { opacity: 0, duration: 0.3, ease: 'power2.out' });
             }
         }
     });
 
     // 2. Cube rotation animation (GSAP TO)
+    // This animation runs while the user scrolls through the `servicesScrollArea`.
     gsap.to(servicesCube, {
         rotateX: 270, // Rotate by 270 degrees (3 full faces + another 90 deg)
-        ease: "none",
+        ease: "none", // Linear rotation tied directly to scroll
         scrollTrigger: {
             trigger: servicesScrollArea, // Use the dedicated scroll area for the cube
             start: "top top", // When the top of the scroll area hits the top of the viewport
             end: "bottom bottom", // When the bottom of the scroll area leaves the bottom of the viewport
             scrub: true, // Smoothly link animation to scroll
+            // markers: true, // Uncomment for debugging
             onUpdate: self => {
-                // Optional: dynamically update cube width if needed during scrubbing,
-                // but CSS media queries handle this usually.
-                // servicesCube.style.width = `${getCubeWidth()}px`;
+                // Console log to check scrubbing action (uncomment locally)
+                // console.log("Services Cube rotation scrubbing:", self.progress);
             },
             onLeave: () => {
+                console.log("Services Cube rotation area left.");
+                // Ensure the cube fades out after its main rotation scroll area is left
                 gsap.to(servicesCube, {
                     y: -200, // Move up and out of view
                     autoAlpha: 0, // Fade out (opacity and visibility)
@@ -149,6 +156,8 @@ function initServicesCubeAnimation() {
                 });
             },
             onEnterBack: () => {
+                console.log("Services Cube rotation area entered back.");
+                 // Animate back in when re-entering the scroll area from below
                  gsap.fromTo(servicesCube, {
                     y: -200, autoAlpha: 0, // Start from invisible, above
                 }, {
@@ -183,6 +192,8 @@ function initServicesCubeAnimation() {
         }
     }
     window.addEventListener('resize', handleCubeResize);
+    // Initial call to set correct cube width on load
+    handleCubeResize(); 
 }
 
 
