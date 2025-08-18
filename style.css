@@ -641,7 +641,7 @@ section {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 40px;
     justify-items: center;
-    margin-top: 100px; /* Space from the 3D cube above */
+    /* Removed margin-top, will be handled by overall timeline positioning now */
 }
 
 /* Service Item for 2D Grid (Animations) */
@@ -656,15 +656,16 @@ section {
   will-change: transform, opacity; 
 
   /* ANIMATION PROPERTIES: Slide in from left */
-  opacity: 0;
-  transform: translateX(-80px);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  opacity: 0; /* Start hidden */
+  transform: translateX(-80px); /* Start off-left */
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Controlled by master timeline */
 }
-.service-item.visible {
+.service-item.visible { /* Will be added by JS via the master timeline */
   opacity: 1;
   transform: translateX(0);
 }
-/* Stagger effect for service items in the 2D grid */
+/* Stagger effect for service items in the 2D grid - will be managed by JS timeline */
+/* These CSS rules remain, but JS will apply 'visible' class and manage delays */
 .services-remaining-grid .service-item:nth-child(1) { transition-delay: 0.1s; }
 .services-remaining-grid .service-item:nth-child(2) { transition-delay: 0.2s; }
 .services-remaining-grid .service-item:nth-child(3) { transition-delay: 0.3s; }
