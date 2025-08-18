@@ -73,38 +73,38 @@ body::before, body::after {
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    /* INCREASED BLUR and DECREASED OPACITY for more subtle glows, closer to Sawad */
-    filter: blur(250px); /* Increased from 200px */
-    opacity: 0.08; /* Decreased from 0.15 */
+    /* FURTHER INCREASED BLUR and DECREASED OPACITY */
+    filter: blur(300px); /* Increased from 250px */
+    opacity: 0.05; /* Decreased from 0.08 */
     z-index: -2;
     pointer-events: none;
     will-change: transform, opacity;
 }
 
 body::before {
-    width: 1000px; /* Slightly larger */
-    height: 1000px; /* Slightly larger */
+    width: 1100px; /* Larger */
+    height: 1100px; /* Larger */
     background: radial-gradient(circle at center, var(--accent-primary-sawad) 0%, transparent 60%);
     animation: glow1 25s infinite alternate ease-in-out;
 }
 
 body::after {
-    width: 900px; /* Slightly larger */
-    height: 900px; /* Slightly larger */
+    width: 1000px; /* Larger */
+    height: 1000px; /* Larger */
     background: radial-gradient(circle at center, var(--accent-secondary-sawad) 0%, transparent 60%);
     animation: glow2 28s infinite alternate-reverse ease-in-out;
 }
 
 @keyframes glow1 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.08; }
-    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.12; } /* Adjusted max opacity */
-    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.08; }
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.05; }
+    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.08; } /* Adjusted max opacity */
+    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.05; }
 }
 
 @keyframes glow2 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.08; }
-    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.12; } /* Adjusted max opacity */
-    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.08; }
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.05; }
+    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.08; } /* Adjusted max opacity */
+    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.05; }
 }
 
 
@@ -115,28 +115,29 @@ html::before {
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    /* FURTHER DECREASED OPACITY and TWEAKED MASK SIZE for extreme subtlety */
-    opacity: 0.03; /* Significantly reduced from 0.06 */
+    /* EVEN FURTHER DECREASED OPACITY and TWEAKED MASK SIZE for ultimate subtlety */
+    opacity: 0.015; /* Significantly reduced from 0.03, very very subtle */
 
     background-image: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
 
+    /* TWEAKED LINE THICKNESS */
     mask-image:
-        linear-gradient(to right, transparent 99.5%, white 0.5%), /* Thinner vertical lines */
-        linear-gradient(to bottom, transparent 99.5%, white 0.5%), /* Thinner horizontal lines */
-        linear-gradient(45deg, transparent 75%, white 75.2%, white 75.8%, transparent 76%), /* Thinner diagonal grid 1 */
-        linear-gradient(-45deg, transparent 75%, white 75.2%, white 75.8%, transparent 76%); /* Thinner diagonal grid 2 */
+        linear-gradient(to right, transparent 99.7%, white 0.3%), /* Thinner vertical lines */
+        linear-gradient(to bottom, transparent 99.7%, white 0.3%), /* Thinner horizontal lines */
+        linear-gradient(45deg, transparent 75%, white 75.1%, white 75.4%, transparent 75.5%), /* Thinner diagonal grid 1 */
+        linear-gradient(-45deg, transparent 75%, white 75.1%, white 75.4%, transparent 75.5%); /* Thinner diagonal grid 2 */
 
     -webkit-mask-image:
-        linear-gradient(to right, transparent 99.5%, white 0.5%),
-        linear-gradient(to bottom, transparent 99.5%, white 0.5%),
-        linear-gradient(45deg, transparent 75%, white 75.2%, white 75.8%, transparent 76%),
-        linear-gradient(-45deg, transparent 75%, white 75.2%, white 75.8%, transparent 76%);
+        linear-gradient(to right, transparent 99.7%, white 0.3%),
+        linear-gradient(to bottom, transparent 99.7%, white 0.3%),
+        linear-gradient(45deg, transparent 75%, white 75.1%, white 75.4%, transparent 75.5%),
+        linear-gradient(-45deg, transparent 75%, white 75.1%, white 75.4%, transparent 75.5%);
 
-    /* ADJUSTED MASK SIZES for slightly denser pattern if needed, or maintain grid scale */
-    mask-size: 80px 80px, 80px 80px, 80px 80px, 80px 80px; /* Adjusted from 100px */
-    -webkit-mask-size: 80px 80px, 80px 80px, 80px 80px, 80px 80px;
+    /* ADJUSTED MASK SIZES for even denser pattern */
+    mask-size: 60px 60px, 60px 60px, 60px 60px, 60px 60px; /* Adjusted from 80px */
+    -webkit-mask-size: 60px 60px, 60px 60px, 60px 60px, 60px 60px;
 
     mask-repeat: repeat;
     -webkit-mask-repeat: repeat;
@@ -149,8 +150,8 @@ section {
   margin: 0 auto;
   position: relative;
   z-index: 1;
-  /* ADJUSTED VERTICAL PADDING for more space */
-  padding: 150px 40px; /* Increased from 120px to match Sawad's vertical rhythm better */
+  /* ADJUSTED VERTICAL PADDING for more space, closer to Sawad's rhythm */
+  padding: 180px 40px; /* Increased from 150px */
 }
 
 /* Reveal Animation Base for general elements (used by footer buttons etc.) */
@@ -220,13 +221,13 @@ section {
     max-width: 1920px;
     margin: 0 auto;
     /* ADJUSTED HORIZONTAL PADDING to match Sawad's wider content area */
-    padding: 0 120px; /* Increased from 100px */
+    padding: 0 140px; /* Increased from 120px */
     min-height: 100vh;
     position: relative;
     z-index: 1;
     padding-top: 50px;
     /* INCREASED GAP between columns significantly */
-    gap: 120px; /* Increased from 100px */
+    gap: 140px; /* Increased from 120px */
 }
 
 /* Left Column (Sticky) */
@@ -405,9 +406,7 @@ section {
 /* Right Column (Scrolling) */
 .right-column-scroll {
     flex-grow: 1;
-    /* ADJUSTED PADDINGS for right column content, narrower */
-    padding-left: 0px; /* Removed left padding, let main-layout-container handle overall padding */
-    padding-right: 0px; /* Removed right padding */
+    /* Removed padding-left/right here, rely on main-layout-container's padding */
     padding-bottom: 100px; /* Kept for bottom section spacing */
     box-sizing: border-box;
     min-height: 150vh;
@@ -429,11 +428,12 @@ section {
 .hero-heading {
     font-family: 'Poppins', sans-serif;
     /* FONT SIZE Adjusted to match Sawad's visual scale */
-    font-size: 5.5em; /* Increased from 5em */
-    line-height: 0.9em; /* Tighter line-height */
+    font-size: 6.5em; /* Increased significantly from 5.5em for more impact */
+    /* LINE-HEIGHT Adjusted for ultra-condensed look */
+    line-height: 0.85em; /* Tighter line-height */
     font-weight: 900;
     /* MARGIN-BOTTOM Adjusted */
-    margin-bottom: 30px; /* Adjusted from 40px */
+    margin-bottom: 40px; /* Adjusted from 30px */
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -454,11 +454,12 @@ section {
 /* HERO DESCRIPTION ADJUSTMENTS */
 .hero-description {
     /* FONT SIZE Adjusted */
-    font-size: 1.15em; /* Adjusted from 1.25em */
+    font-size: 1.05em; /* Slightly smaller for lighter feel */
     line-height: 1.7;
     /* MARGIN-BOTTOM Adjusted */
-    margin-bottom: 120px; /* Increased from 80px for more separation */
-    max-width: 800px; /* Added max-width for better line length, matching Sawad */
+    margin-bottom: 140px; /* Increased from 120px for more separation */
+    max-width: 800px; /* Kept max-width for better line length */
+    color: var(--text-medium); /* Use text-medium for a slightly softer look */
 }
 
 
@@ -466,23 +467,24 @@ section {
 .services-section {
   position: relative;
   /* PADDING Adjusted */
-  padding: 150px 40px; /* Consistent with global section padding, removed left 60px as it's handled by main container */
+  padding: 180px 40px; /* Consistent with global section padding */
   text-align: left;
   z-index: 2;
   background-color: transparent;
-  margin-top: 0; /* Removed explicit margin-top as section padding should handle spacing */
-  margin-bottom: 0; /* Removed explicit margin-bottom */
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 /* Services Main Title */
 .services-heading {
     font-family: 'Poppins', sans-serif;
     /* FONT SIZE Adjusted */
-    font-size: 5.5em; /* Increased from 5em */
-    line-height: 0.9em; /* Tighter line-height */
+    font-size: 6.5em; /* Increased significantly from 5.5em for more impact */
+    /* LINE-HEIGHT Adjusted for ultra-condensed look */
+    line-height: 0.85em; /* Tighter line-height */
     font-weight: 800;
     /* MARGIN-BOTTOM Adjusted */
-    margin-bottom: 60px; /* Increased from 40px for more separation */
+    margin-bottom: 70px; /* Increased from 60px for more separation */
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -497,23 +499,22 @@ section {
 .services-items-container {
     display: grid;
     /* GRID TEMPLATE COLUMNS ADJUSTED for better layout on wider screens */
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Min-width increased from 280px */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Min-width increased from 320px */
     /* GAP Adjusted */
-    gap: 30px; /* Adjusted from 40px */
-    justify-items: stretch; /* Changed from center to stretch */
-    /* MARGIN-TOP Adjusted */
-    margin-top: 0; /* Removed explicit margin-top as heading margin should handle spacing */
+    gap: 25px; /* Tighter gap */
+    justify-items: stretch;
+    margin-top: 0;
 }
 
 /* Service Item for 2D Grid (Animations) */
 .service-item {
   background-color: #111;
   border-radius: 12px;
-  /* PADDING Adjusted */
-  padding: 50px; /* Unified padding for a squarer look, matching Sawad */
+  /* PADDING Adjusted for larger cards */
+  padding: 55px; /* Increased from 50px */
   position: relative;
   z-index: 1;
-  overflow: hidden; /* Changed from visible to hidden for number clipping */
+  overflow: hidden;
   text-align: left;
   will-change: transform, opacity;
 
@@ -526,14 +527,14 @@ section {
   transform: translateY(0);
 }
 /* Stagger effect for service items in the 2D grid */
-.services-items-container .service-item:nth-child(1) { transition-delay: 0.1s; }
-.services-items-container .service-item:nth-child(2) { transition-delay: 0.15s; } /* Tighter stagger */
-.services-items-container .service-item:nth-child(3) { transition-delay: 0.2s; }
-.services-items-container .service-item:nth-child(4) { transition-delay: 0.25s; }
-.services-items-container .service-item:nth-child(5) { transition-delay: 0.3s; }
-.services-items-container .service-item:nth-child(6) { transition-delay: 0.35s; }
-.services-items-container .service-item:nth-child(7) { transition-delay: 0.4s; }
-.services-items-container .service-item:nth-child(8) { transition-delay: 0.45s; }
+.services-items-container .service-item:nth-child(1) { transition-delay: 0.08s; } /* Tighter stagger */
+.services-items-container .service-item:nth-child(2) { transition-delay: 0.16s; }
+.services-items-container .service-item:nth-child(3) { transition-delay: 0.24s; }
+.services-items-container .service-item:nth-child(4) { transition-delay: 0.32s; }
+.services-items-container .service-item:nth-child(5) { transition-delay: 0.4s; }
+.services-items-container .service-item:nth-child(6) { transition-delay: 0.48s; }
+.services-items-container .service-item:nth-child(7) { transition-delay: 0.56s; }
+.services-items-container .service-item:nth-child(8) { transition-delay: 0.64s; }
 
 
 /* Service item children styling */
@@ -541,17 +542,17 @@ section {
     position: relative;
     z-index: 1;
     /* FONT SIZE Adjusted */
-    font-size: 1.6em; /* Adjusted from 1.8em, Sawad is slightly smaller here */
-    font-weight: 700; /* Ensuring bold */
-    margin-bottom: 10px; /* Added margin-bottom */
+    font-size: 1.7em; /* Adjusted again */
+    font-weight: 700;
+    margin-bottom: 12px; /* Increased margin-bottom */
     line-height: 1.2;
 }
 .service-item .service-description {
     position: relative;
     z-index: 1;
     /* FONT SIZE Adjusted */
-    font-size: 1em; /* Adjusted from 1.1em, Sawad uses slightly smaller body text */
-    color: var(--text-medium); /* Ensure it's the medium gray */
+    font-size: 0.95em; /* Adjusted again for a finer look */
+    color: var(--text-medium);
     line-height: 1.6;
 }
 
@@ -559,12 +560,12 @@ section {
 .service-item .subtitle-number {
   position: absolute;
   top: 50%;
-  right: 0px; /* Adjusted to right side instead of left, as seen on Sawad */
+  right: 0px;
   transform: translateY(-50%);
-  /* FONT SIZE and OPACITY Adjusted */
-  font-size: 8.5em; /* Slightly larger than before, huge on Sawad */
-  opacity: 0.04; /* EVEN MORE TRANSPARENT */
-  color: #FFFFFF; /* Using white, then opacity makes it subtle */
+  /* FONT SIZE and OPACITY Adjusted to match Sawad's huge, faded numbers */
+  font-size: 12em; /* Significantly larger */
+  opacity: 0.02; /* Extremely transparent */
+  color: #FFFFFF;
   z-index: 0;
   pointer-events: none;
 }
@@ -572,11 +573,11 @@ section {
 
 /* Tools Section */
 .tools-section {
-  text-align: left; /* Kept left aligned as Sawad */
-  padding-top: 150px; /* Consistent with section padding */
-  padding-bottom: 150px; /* Consistent with section padding */
-  margin-top: 0; /* Remove explicit margin, let padding handle it */
-  margin-bottom: 0; /* Remove explicit margin */
+  text-align: left;
+  padding-top: 180px; /* Consistent with section padding */
+  padding-bottom: 180px; /* Consistent with section padding */
+  margin-top: 0;
+  margin-bottom: 0;
   position: relative;
   z-index: 1;
   background: none;
@@ -585,11 +586,11 @@ section {
 .tools-heading {
     font-family: 'Poppins', sans-serif;
     /* FONT SIZE Adjusted */
-    font-size: 5.5em; /* Increased from 5em */
-    line-height: 0.9em; /* Tighter line-height */
+    font-size: 6.5em; /* Increased significantly from 5.5em */
+    line-height: 0.85em; /* Tighter line-height */
     font-weight: 800;
     /* MARGIN-BOTTOM Adjusted */
-    margin-bottom: 60px; /* Increased from 50px */
+    margin-bottom: 70px; /* Increased from 60px */
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
@@ -609,9 +610,9 @@ section {
 .tools-grid {
     display: grid;
     /* GRID TEMPLATE COLUMNS ADJUSTED for more items per row on large screens */
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted minmax for more items */
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Adjusted minmax for closer fit */
     /* GAP Adjusted */
-    gap: 20px; /* Tighter gap */
+    gap: 15px; /* Tighter gap */
     margin-left: 0;
     margin-right: 0;
     justify-items: stretch;
@@ -622,11 +623,11 @@ section {
     background-color: var(--bg-tool-card);
     border-radius: 15px;
     /* PADDING Adjusted */
-    padding: 22px; /* Slightly larger padding */
+    padding: 20px; /* Adjusted to 20px */
     display: flex;
     align-items: center;
     /* GAP Adjusted */
-    gap: 18px; /* Slightly larger gap */
+    gap: 15px; /* Adjusted to 15px */
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out;
     cursor: pointer;
@@ -648,8 +649,8 @@ section {
 
 .tool-icon-wrapper {
     /* DIMENSIONS Adjusted */
-    width: 55px; /* Larger */
-    height: 55px; /* Larger */
+    width: 50px; /* Adjusted to 50px */
+    height: 50px; /* Adjusted to 50px */
     background-color: var(--tool-icon-bg); /* Use the slightly off-white variable */
     border-radius: 10px;
     display: flex;
@@ -673,7 +674,7 @@ section {
 
 .tool-name {
     /* FONT SIZE Adjusted */
-    font-size: 1.15em; /* Slightly larger */
+    font-size: 1.1em; /* Adjusted to 1.1em */
     font-weight: 600;
     color: var(--tool-name-color);
     margin: 0 0 5px 0;
@@ -682,7 +683,7 @@ section {
 
 .tool-category {
     /* FONT SIZE Adjusted */
-    font-size: 0.8em; /* Slightly smaller */
+    font-size: 0.85em; /* Adjusted to 0.85em */
     color: var(--tool-category-color);
     margin: 0;
     line-height: 1.2;
@@ -695,7 +696,7 @@ footer {
     color: var(--text-light);
     text-align: center;
     /* PADDING Adjusted for more vertical space */
-    padding: 100px 0; /* Increased from 80px */
+    padding: 120px 0; /* Increased from 100px */
     position: relative;
     z-index: 1;
 }
@@ -722,8 +723,7 @@ footer h2 {
 }
 
 .contact-tagline {
-    /* FONT SIZE Adjusted */
-    font-size: 1.1em; /* Kept at 1.1em */
+    font-size: 1.1em;
     margin-bottom: 40px;
     max-width: 700px;
     margin-left: auto;
@@ -738,14 +738,14 @@ footer h2 {
     flex-wrap: wrap;
     justify-content: center;
     /* GAP Adjusted */
-    gap: 20px; /* Tighter gap, matching Sawad */
+    gap: 20px; /* Tighter gap */
     margin-bottom: 40px;
 }
 
 .contact-button {
     /* BACKGROUND and BORDER Adjusted for subtlety */
-    background-color: rgba(255, 255, 255, 0.03); /* More transparent */
-    border: 1px solid rgba(255, 255, 255, 0.08); /* More transparent border */
+    background-color: rgba(255, 255, 255, 0.01); /* Even more transparent */
+    border: 1px solid rgba(255, 255, 255, 0.03); /* Even more transparent border */
     border-radius: 12px;
     padding: 0;
     font-size: 1.2em;
@@ -753,9 +753,9 @@ footer h2 {
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    /* DIMENSIONS Adjusted */
-    width: 250px; /* Slightly narrower */
-    height: 120px; /* Slightly shorter */
+    /* DIMENSIONS Adjusted to be more rectangular like Sawad */
+    width: 260px; /* Adjusted from 250px */
+    height: 110px; /* Adjusted from 120px */
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     text-align: center;
 }
@@ -807,8 +807,7 @@ footer h2 {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* BACKGROUND Adjusted to be more solid orange like Sawad */
-    background: var(--accent-primary-sawad); /* Changed from gradient */
+    background: var(--accent-primary-sawad);
     color: var(--text-light);
     font-size: 1.5em;
     font-weight: bold;
@@ -896,48 +895,48 @@ footer h2 {
     }
 
     .right-column-scroll {
-        padding-right: 0px; /* Removed, handled by section padding */
-        padding-left: 0px; /* Removed, handled by section padding */
+        padding-right: 0px;
+        padding-left: 0px;
     }
     .hero-heading {
-        font-size: 4.5em;
-        margin-bottom: 25px;
+        font-size: 5.5em; /* Adjusted hero heading font size */
+        margin-bottom: 30px;
     }
     .hero-description {
-        font-size: 1.1em;
-        margin-bottom: 60px;
+        font-size: 1em; /* Adjusted */
+        margin-bottom: 80px; /* Adjusted */
     }
 
     .services-section {
-        padding: 100px 40px; /* Adjusted section padding for medium screens */
+        padding: 120px 40px; /* Adjusted section padding for medium screens */
     }
     .services-heading {
-        font-size: 4.5em;
-        margin-bottom: 40px;
+        font-size: 5.5em; /* Adjusted */
+        margin-bottom: 50px; /* Adjusted */
     }
     .services-items-container {
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted min-width */
-        gap: 25px;
+        gap: 20px; /* Adjusted */
     }
     .service-item {
-        padding: 40px; /* Adjusted padding */
+        padding: 45px; /* Adjusted padding */
     }
     .service-item .subtitle-number {
-        font-size: 7em;
+        font-size: 9em; /* Adjusted */
     }
     .service-item .service-title {
         font-size: 1.4em;
     }
     .service-item .service-description {
-        font-size: 0.95em;
+        font-size: 0.9em;
     }
 
     .tools-section {
-        padding: 100px 40px; /* Adjusted section padding for medium screens */
+        padding: 120px 40px; /* Adjusted section padding for medium screens */
     }
     .tools-heading {
-        font-size: 4.5em;
-        margin-bottom: 40px;
+        font-size: 5.5em; /* Adjusted */
+        margin-bottom: 50px; /* Adjusted */
     }
     .tools-grid {
         gap: 15px;
@@ -958,11 +957,12 @@ footer h2 {
     }
 
     footer {
-        padding: 80px 0;
+        padding: 100px 0;
     }
     .contact-button {
-        width: 220px; /* Adjusted width */
-        height: 100px; /* Adjusted height */
+        width: 220px;
+        height: 100px;
+        font-size: 1em;
     }
 }
 
@@ -1046,39 +1046,39 @@ footer h2 {
         margin-bottom: 20px;
     }
     .hero-description {
-        font-size: 1.1em;
+        font-size: 1em;
         line-height: 1.6;
         max-width: 100%;
         margin-bottom: 40px;
     }
 
     .services-section {
-        padding: 80px 20px; /* Adjusted section padding for small screens */
+        padding: 80px 20px;
     }
     .services-heading {
         font-size: 3.5em;
         margin-bottom: 30px;
     }
     .services-items-container {
-        grid-template-columns: 1fr; /* Single column on very small screens */
+        grid-template-columns: 1fr;
         gap: 20px;
     }
     .service-item {
-        padding: 30px; /* Adjusted padding */
+        padding: 35px; /* Adjusted padding */
     }
     .service-item .subtitle-number {
-        font-size: 6em;
-        right: 10px; /* Adjusted right position */
+        font-size: 7em; /* Adjusted */
+        right: 10px;
     }
     .service-item .service-title {
-        font-size: 1.2em;
+        font-size: 1.3em;
     }
     .service-item .service-description {
         font-size: 0.9em;
     }
 
     .tools-section {
-        padding: 80px 20px; /* Adjusted section padding for small screens */
+        padding: 80px 20px;
     }
     .tools-heading {
         font-size: 3.5em;
@@ -1109,18 +1109,18 @@ footer h2 {
         gap: 15px;
     }
     .contact-button {
-        width: 180px; /* Adjusted width */
-        height: 90px; /* Adjusted height */
+        width: 200px; /* Adjusted width */
+        height: 95px; /* Adjusted height */
         font-size: 1em;
     }
     .contact-button i {
-        font-size: 2em;
+        font-size: 2.2em; /* Adjusted */
     }
     .contact-button .button-value {
-        font-size: 0.7em;
+        font-size: 0.8em; /* Adjusted */
     }
     .contact-button .copied-text {
-        font-size: 1.2em;
+        font-size: 1.3em; /* Adjusted */
     }
 }
 
@@ -1134,28 +1134,28 @@ footer h2 {
         margin-bottom: 30px;
     }
     .hero-heading {
-        font-size: clamp(2.5em, 8vw, 3em); /* Adjusted clamp for slightly larger minimum on very small screens */
+        font-size: clamp(2.8em, 9vw, 3.5em); /* Adjusted clamp for slightly larger minimum on very small screens */
         margin-bottom: 15px;
     }
     .hero-description {
-        font-size: 0.95em;
+        font-size: 0.9em; /* Smaller */
         line-height: 1.5;
         margin-bottom: 30px;
     }
 
     .services-section {
-        padding: 60px 15px; /* Further adjusted padding for very small screens */
+        padding: 60px 15px;
     }
     .services-heading {
         font-size: 2.8em;
         margin-bottom: 25px;
     }
     .service-item {
-        padding: 25px; /* Adjusted padding */
+        padding: 30px; /* Adjusted padding */
     }
     .service-item .subtitle-number {
-        font-size: 5em;
-        right: 5px; /* Adjusted right position */
+        font-size: 6em; /* Adjusted */
+        right: 5px;
     }
     .service-item .service-title {
         font-size: 1.1em;
@@ -1165,14 +1165,14 @@ footer h2 {
     }
 
     .tools-section {
-        padding: 60px 15px; /* Further adjusted padding for very small screens */
+        padding: 60px 15px;
     }
     .tools-heading {
         font-size: 2.8em;
         margin-bottom: 25px;
     }
     .tool-card {
-        padding: 12px; /* Adjusted padding */
+        padding: 12px;
         gap: 8px;
     }
     .tool-icon-wrapper {
@@ -1187,14 +1187,14 @@ footer h2 {
     }
 
     .contact-buttons {
-        max-width: 100%; /* Allow buttons to take full width */
-        flex-direction: column; /* Stack buttons vertically */
-        align-items: center; /* Center stacked buttons */
-        gap: 10px; /* Tighter gap when stacked */
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
     }
     .contact-button {
-        width: 90%; /* Take most of the width */
-        height: 70px; /* Shorter height */
+        width: 90%;
+        height: 70px;
         font-size: 0.9em;
     }
     .contact-button i {
