@@ -52,7 +52,7 @@ body {
     inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
     z-index: -2; /* Above body's background-color, but below other overlays */
     pointer-events: none;
-    opacity: 0.3; /* Adjusted opacity to 30% */
+    opacity: 0.07; /* Adjusted opacity to 7% */
     background-image: url('./71976 (1).jpg'); /* Your specified image, explicit current directory */
     background-repeat: repeat; /* To stack */
     background-size: 400px auto; /* A tile size that creates visible repetition (roughly 4-5 times horizontally) */
