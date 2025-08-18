@@ -120,7 +120,8 @@ html::before {
     inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
     z-index: -1;
     pointer-events: none;
-    opacity: 0.1799375; /* Increased opacity by 5% as requested */
+    /* REDUCED OPACITY for a more subtle grid, closer to Sawad */
+    opacity: 0.06; /* Significantly reduced from 0.1799375 */
 
     /* Animated colorful gradient as the base background */
     background-image: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
@@ -157,8 +158,8 @@ section {
   margin: 0 auto; /* Center sections horizontally */
   position: relative;
   z-index: 1; /* Ensure sections are above background elements */
-  /* Consistent left/right spacing for all main sections: padding: Top Right Bottom Left */
-  padding: 100px 40px 100px 60px; 
+  /* INCREASED VERTICAL PADDING for more space, closer to Sawad */
+  padding: 120px 40px 120px 60px; /* Top Right Bottom Left */
 }
 
 /* Reveal Animation Base for general elements (used by footer buttons etc.) */
@@ -234,12 +235,14 @@ section {
     justify-content: center;
     max-width: 1920px;
     margin: 0 auto;
-    padding: 0 80px; /* Overall padding for the container */
+    /* ADJUSTED PADDING to expand overall layout slightly */
+    padding: 0 100px; /* Increased from 80px */
     min-height: 100vh;
     position: relative;
     z-index: 1; /* Keep main container above background elements */
     padding-top: 50px;
-    gap: 80px; /* NEW: Defines the gap between the flex items (columns) */
+    /* INCREASED GAP between columns */
+    gap: 100px; /* Increased from 80px */
 }
 
 /* Left Column (Sticky) */
@@ -457,8 +460,9 @@ section {
 /* Right Column (Scrolling) */
 .right-column-scroll {
     flex-grow: 1;
-    padding-left: 0;
-    padding-right: 80px; /* Keep this for padding on the right edge of the content */
+    /* ADJUSTED PADDINGS for right column content */
+    padding-left: 20px; /* Added left padding */
+    padding-right: 80px; /* Kept existing right padding */
     padding-bottom: 100px;
     box-sizing: border-box;
     min-height: 150vh;
@@ -480,13 +484,14 @@ section {
 .hero-heading {
     font-family: 'Poppins', sans-serif;
     font-size: 5em; /* As per prompt */
-    line-height: 1.1;
+    /* ADJUSTED LINE-HEIGHT to be tighter */
+    line-height: 0.95; /* Tighter line-height, closer to Sawad */
     font-weight: 900; /* As per prompt */
     margin-bottom: 40px; /* Consistent spacing */
     text-transform: uppercase;
     text-align: left;
-    /* FIX: Margin-left for hero heading specifically */
-    margin-left: 20px; /* Extra push away from left edge */
+    /* REMOVED explicit margin-left; let padding on parent handle it */
+    margin-left: 0; 
     /* Removed gradient background properties as per prompt's new color classes */
     background: none; 
     -webkit-background-clip: unset; 
@@ -503,11 +508,17 @@ section {
   color: #888888; /* grey */
 }
 
+/* HERO DESCRIPTION ADJUSTMENTS */
+.hero-description {
+    font-size: 1.25em; /* Slightly larger */
+    line-height: 1.7; /* Increased for readability */
+    margin-bottom: 80px; /* More space below */
+}
 
 /* Services Section Styles (Modified for Flat Grid) */
 .services-section {
   position: relative;
-  padding: 100px 40px 100px 60px; /* Adjusted padding, matches global section */
+  padding: 120px 40px 120px 60px; /* Adjusted padding, matches global section */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
   background-color: transparent; /* Changed to transparent as requested */
@@ -519,12 +530,14 @@ section {
 .services-heading {
     font-family: 'Poppins', sans-serif;
     font-size: 5em; 
-    line-height: 0.9;
+    /* ADJUSTED LINE-HEIGHT to be tighter */
+    line-height: 0.95; /* Tighter line-height, closer to Sawad */
     font-weight: 800;
     margin-bottom: 40px; 
     text-transform: uppercase;
     text-align: left;
-    margin-left: 20px; 
+    /* REMOVED explicit margin-left; let padding on parent handle it */
+    margin-left: 0; 
     position: relative; 
     z-index: 4; /* Higher than services-remaining-grid to be on top of it */
 }
@@ -545,7 +558,8 @@ section {
 .service-item {
   background-color: #111; 
   border-radius: 12px; 
-  padding: 40px 60px; 
+  /* INCREASED PADDING for larger cards, closer to Sawad */
+  padding: 50px 70px; /* Increased from 40px 60px */
   position: relative; 
   z-index: 1; 
   overflow: visible; 
@@ -554,7 +568,7 @@ section {
 
   /* ANIMATION PROPERTIES: Slide in from bottom */
   opacity: 0;
-  transform: translateY(60px);
+  transform: translateY(60px); 
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 .service-item.visible {
@@ -566,28 +580,34 @@ section {
 .services-items-container .service-item:nth-child(2) { transition-delay: 0.2s; }
 .services-items-container .service-item:nth-child(3) { transition-delay: 0.3s; }
 .services-items-container .service-item:nth-child(4) { transition-delay: 0.4s; }
-.services-items-container .service-item:nth-child(5) { transition-delay: 0.5s; }
-.services-items-container .service-item:nth-child(6) { transition-delay: 0.6s; }
-.services-items-container .service-item:nth-child(7) { transition-delay: 0.7s; }
-.services-items-container .service-item:nth-child(8) { transition-delay: 0.8s; }
+.services-items-container .service-item:nth-child(5) { transition-delay: 0.5s; } 
+.services-items-container .service-item:nth-child(6) { transition-delay: 0.6s; } 
+.services-items-container .service-item:nth-child(7) { transition-delay: 0.7s; } 
+.services-items-container .service-item:nth-child(8) { transition-delay: 0.8s; } 
 
 
 /* Service item children styling */
-.service-item .service-title,
-.service-item .service-description {
+.service-item .service-title {
     position: relative; 
     z-index: 1; 
+    font-size: 1.8em; /* Slightly larger */
+}
+.service-item .service-description {
+    position: relative;
+    z-index: 1;
+    font-size: 1.1em; /* Slightly larger */
 }
 
 /* Subtitle background numbers visibility for 2D cards */
 .service-item .subtitle-number { 
   position: absolute;
   top: 50%;
-  left: 0; /* Corrected to left: 0 */
+  left: 0; 
   transform: translateY(-50%); 
-  font-size: 4rem; 
-  opacity: 0.1; 
-  color: rgba(255, 255, 255, 0.08); 
+  /* INCREASED FONT-SIZE and DECREASED OPACITY for watermark effect */
+  font-size: 8em; /* Much larger */
+  opacity: 0.05; /* Much more transparent */
+  color: #CCCCCC; /* Use #CCCCCC for consistency, or var(--text-medium) */
   z-index: 0; 
   pointer-events: none;
 }
@@ -613,11 +633,13 @@ section {
 .tools-heading {
     font-family: 'Poppins', sans-serif;
     font-size: 5em;
-    line-height: 0.9;
+    /* ADJUSTED LINE-HEIGHT to be tighter */
+    line-height: 0.95; /* Tighter line-height, closer to Sawad */
     font-weight: 800;
     margin-bottom: 50px;
-    /* FIX: Left align tools heading */
+    /* REMOVED explicit margin-left; let padding on parent handle it */
     text-align: left; 
+    margin-left: 0;
 }
 
 .tools-heading .text-white {
@@ -650,7 +672,7 @@ section {
     gap: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     /* Combined existing hover transition with new reveal animation */
-    transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out; /* Added box-shadow to transition */
     cursor: pointer;
     will-change: transform, opacity; 
 
@@ -666,6 +688,7 @@ section {
 .tool-card:hover {
     transform: translateY(-5px);
     background-color: rgba(26, 26, 26, 0.9);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5); /* Enhanced shadow on hover */
 }
 
 .tool-icon-wrapper {
@@ -708,7 +731,7 @@ section {
 }
 
 
-/* Subtitles Section (this section is not present in the provided HTML) */
+/* Subtitles Section */
 .subtitles-section {
   position: relative;
   padding: 120px 60px;
@@ -740,7 +763,8 @@ footer {
     background-color: var(--bg-main);
     color: var(--text-light);
     text-align: center;
-    padding: 60px 0;
+    /* ADJUSTED FOOTER PADDING for more vertical space */
+    padding: 80px 0; /* Increased from 60px */
     position: relative;
     z-index: 1; 
 }
@@ -767,7 +791,7 @@ footer h2 {
 }
 
 .contact-tagline {
-    font-size: 1.25em;
+    font-size: 1.1em; /* Slightly smaller for better fit */
     margin-bottom: 40px;
     max-width: 700px;
     margin-left: auto;
@@ -951,6 +975,7 @@ footer h2 {
 
     .right-column-scroll {
         padding-right: 40px; /* Adjusted padding */
+        padding-left: 20px; /* Consistent left padding */
     }
     .hero-heading {
         font-size: 4.5em; /* Adjusted hero heading font size */
@@ -967,11 +992,20 @@ footer h2 {
         padding-bottom: 80px;
         z-index: 2; /* Maintain z-index */
     }
-    .services-heading {
+    .services-heading { 
         font-size: 4.5em; /* Adjusted for consistency */
     }
-    .services-items-container .service-item {
-        padding: 15px;
+    .services-items-container .service-item { 
+        padding: 40px 50px; /* Adjusted padding for medium screens */
+    }
+    .service-item .subtitle-number {
+        font-size: 7em; /* Adjusted for medium screens */
+    }
+    .service-item .service-title {
+        font-size: 1.6em;
+    }
+    .service-item .service-description {
+        font-size: 1em;
     }
 
     .tools-section {
@@ -1119,11 +1153,20 @@ footer h2 {
         padding-bottom: 60px;
         z-index: 2; /* Maintain z-index */
     }
-    .services-heading {
+    .services-heading { 
         font-size: 3.5em; /* Adjusted for consistency */
     }
-    .services-items-container .service-item {
-        padding: 10px;
+    .services-items-container .service-item { 
+        padding: 30px 40px; /* Adjusted padding for smaller screens */
+    }
+    .service-item .subtitle-number {
+        font-size: 6em; /* Adjusted for smaller screens */
+    }
+    .service-item .service-title {
+        font-size: 1.4em;
+    }
+    .service-item .service-description {
+        font-size: 0.95em;
     }
 
     .tools-section {
@@ -1292,7 +1335,16 @@ footer h2 {
         font-size: 2.5em; /* Adjusted for consistency */
     }
     .services-items-container .service-item {
-        padding: 12px;
+        padding: 25px 30px; /* Adjusted padding for very small screens */
+    }
+    .service-item .subtitle-number {
+        font-size: 5em; /* Adjusted for very small screens */
+    }
+    .service-item .service-title {
+        font-size: 1.2em;
+    }
+    .service-item .service-description {
+        font-size: 0.85em;
     }
 
     .tools-section {
