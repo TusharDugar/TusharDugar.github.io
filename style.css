@@ -510,7 +510,7 @@ section {
   padding: 100px 40px 100px 60px; /* Adjusted padding, matches global section */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  background-color: transparent; /* Changed to transparent as requested */
+  background-color: transparent; /* Set to transparent as requested */
   margin-top: 100px; 
   margin-bottom: 100px; 
 }
@@ -548,8 +548,8 @@ section {
     align-items: center;
     justify-content: center;
     perspective: 1000px; /* Essential for 3D effect */
-    overflow: hidden; /* FIX: Changed to hidden to ensure proper clipping */
-    z-index: 10; /* FIX: Increased z-index to ensure cube is above other elements */
+    overflow: hidden; /* Ensures content outside cube boundaries is clipped */
+    z-index: 10; /* Ensures cube and its content are above pinned titles/other elements */
 }
 
 .services-cube {
@@ -558,7 +558,8 @@ section {
     height: 250px; /* Fixed height for cube faces */
     transform-style: preserve-3d; /* Crucial for child elements to be 3D */
     transition: transform 0.3s; /* Smooth transition for GSAP controlled transforms */
-    /* FIX: Removed initial opacity/transform from CSS; GSAP will set and animate */
+    /* FIX: Added visibility: hidden to hide initially until GSAP animates autoAlpha */
+    visibility: hidden; 
 }
 
 /* Responsive cube width adjustments */
@@ -596,41 +597,41 @@ section {
 .services-face.face-3 { transform: rotateX(180deg) translateZ(125px); } /* Back face */
 .services-face.face-4 { transform: rotateX(270deg) translateZ(125px); } /* Bottom face */
 
-/* Content styling for faces */
+/* Content styling for faces - **Reverted to match your general text aesthetic** */
 .services-face .service-details {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
-    position: relative; 
-    z-index: 1; 
+    position: relative; /* Ensure text is above background number */
+    z-index: 1; /* Ensure text is above background number */
 }
 .services-face .service-title {
-    font-size: 1.5em; 
-    font-weight: 700; 
-    color: var(--accent-primary-sawad); 
+    font-size: 1.5em; /* This size is visually balanced for the cube faces */
+    font-weight: 700; /* Standard bold, matching your general headings */
+    color: var(--accent-primary-sawad); /* Your primary accent orange */
     margin: 0 0 8px 0;
     line-height: 1.2;
 }
 .services-face .service-description {
-    font-size: 1em; 
-    font-weight: 400; 
-    color: var(--text-medium); 
+    font-size: 1em; /* Standard paragraph size */
+    font-weight: 400; /* Regular weight */
+    color: var(--text-medium); /* Your medium gray for secondary text */
     margin: 0;
     line-height: 1.6;
     word-break: break-word;
 }
-/* Subtitle number on faces (larger, more transparent) */
+/* Subtitle number on faces (larger, more transparent) - **Matches design-cube style for this specific effect** */
 .services-face .subtitle-number {
   position: absolute;
   top: 50%;
-  right: 20px;
+  right: 20px; /* Positioned to the right of the face */
   transform: translateY(-50%);
-  font-size: 8em; 
-  opacity: 0.1; 
-  color: #CCCCCC; 
-  z-index: 0; 
+  font-size: 8em; /* Large for 3D background effect */
+  opacity: 0.1; /* Transparent */
+  color: #CCCCCC; /* Light gray for subtle background effect */
+  z-index: 0; /* Ensures it's behind .service-details text */
   pointer-events: none;
 }
 
@@ -678,15 +679,15 @@ section {
     z-index: 1; 
 }
 
-/* Subtitle background numbers visibility for 2D cards */
+/* Subtitle background numbers visibility for 2D cards - **Reverted to your specific request** */
 .service-item .subtitle-number { 
   position: absolute;
   top: 50%;
-  left: 0; /* Corrected to left: 0 as you requested */
+  left: 0; /* Changed from right: 20px to left: 0 as you requested */
   transform: translateY(-50%); 
   font-size: 4rem; 
   opacity: 0.1; 
-  color: rgba(255, 255, 255, 0.08); 
+  color: rgba(255, 255, 255, 0.08); /* Reverted to your specified RGBA value */
   z-index: 0; 
   pointer-events: none;
 }
@@ -1413,7 +1414,7 @@ footer h2 {
     .tools-heading {
         font-size: 2.8em;
         margin-bottom: 25px;
-        text-align: left; /* FIX: Left align tools heading */
+        text-align: left; /* Fix: Left align tools heading */
     }
     .tools-grid {
         display: grid;
@@ -1458,6 +1459,7 @@ footer h2 {
         transform: none !important;
         opacity: 1 !important;
         animation: none !important; /* Ensure CSS animations are also removed */
+        visibility: visible !important; /* Ensure visibility is forced on */
     }
     /* For staggered items, display only the first one if motion is reduced */
     .services-remaining-grid .service-item:not(:first-child) { 
