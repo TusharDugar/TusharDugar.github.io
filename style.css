@@ -50,9 +50,9 @@ body {
 .site-background-image {
     position: fixed;
     inset: 0; /* Shorthand for top:0; right:0; bottom:0; left:0; */
-    z-index: -3; /* Lowest background layer (above body's base color) */
+    z-index: -2; /* Above body's background-color, but below other overlays */
     pointer-events: none;
-    opacity: 0.3; /* User requested 30% opacity */
+    opacity: 0.2; /* Adjusted opacity to 20% */
     background-image: url('./71976 (1).jpg'); /* Your specified image, explicit current directory */
     background-repeat: repeat; /* To stack */
     background-size: 400px auto; /* A tile size that creates visible repetition (roughly 4-5 times horizontally) */
@@ -64,7 +64,7 @@ body {
     inset: 0;
     z-index: -2; /* Above .site-background-image, below color glows */
     pointer-events: none;
-    opacity: 0.4; /* User requested 40% opacity */
+    opacity: 0.2; /* Adjusted opacity to 20% */
     background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); /* New gradient */
     background-size: 400% 400%;
     animation: gradient 15s ease infinite; /* New animation */
@@ -642,7 +642,7 @@ footer {
     background-color: var(--bg-main);
     color: var(--text-light);
     text-align: center;
-    padding: 60px 0; /* Reduced from 80px */
+    padding: 60px 0;
     position: relative;
     z-index: 1;
 }
