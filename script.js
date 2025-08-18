@@ -96,10 +96,7 @@ function initServicesCubeAnimation() {
         return;
     }
 
-    // Set initial state for the cube for the entry animation
-    gsap.set(servicesCube, { opacity: 0, y: 100 });
-
-    // Function to get current cube width based on screen size
+    // Function to get current cube width based on screen size (for dynamic resizing)
     function getCubeWidth() {
         const width = window.innerWidth;
         if (width >= 1024) return 900;
@@ -107,25 +104,29 @@ function initServicesCubeAnimation() {
         else return 300;
     }
 
-    // GSAP Timeline for Services Section Entry
-    const tlServicesEnter = gsap.timeline({
-        scrollTrigger: {
-            trigger: servicesSection,
-            start: 'top 30%', // When top of services section is 30% from viewport top
-            toggleActions: 'play none none reverse', // Play on enter, reverse on leave back
-        }
-    });
-    tlServicesEnter.to(servicesCube, {
-        opacity: 1,
-        y: 0,
+    // 1. Cube entry animation (GSAP FROM)
+    // Cube starts invisible and slightly below, then animates to its visible state.
+    gsap.from(servicesCube, {
+        opacity: 0,
+        y: 100, // Starts below and invisible
         duration: 1,
-        ease: 'power2.in',
-        onStart: () => { // On animation start, set cube width
-            servicesCube.style.width = `${getCubeWidth()}px`;
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: servicesSection, // Trigger when the services section is reached
+            start: 'top center+=100', // When the top of services section hits 100px below center of viewport
+            toggleActions: 'play none none reverse', // Play on scroll down, reverse on scroll up past trigger
+            // Add markers for debugging (uncomment locally)
+            // markers: true, 
+            onEnter: () => {
+                console.log("Services Cube entry animation triggered!");
+            },
+            onStart: () => { // On animation start, set cube width
+                servicesCube.style.width = `${getCubeWidth()}px`;
+            }
         }
     });
 
-    // Cube rotation animation
+    // 2. Cube rotation animation (GSAP TO)
     gsap.to(servicesCube, {
         rotateX: 270, // Rotate by 270 degrees (3 full faces + another 90 deg)
         ease: "none",
@@ -142,7 +143,7 @@ function initServicesCubeAnimation() {
             onLeave: () => {
                 gsap.to(servicesCube, {
                     y: -200, // Move up and out of view
-                    autoAlpha: 0, // Fade out
+                    autoAlpha: 0, // Fade out (opacity and visibility)
                     duration: 0.5,
                     ease: "power2.out",
                 });
@@ -160,7 +161,7 @@ function initServicesCubeAnimation() {
         },
     });
 
-    // Main Services title pinning and fade out
+    // 3. Main Services title pinning and fade out (GSAP TO)
     gsap.to(servicesMainTitle, {
         autoAlpha: 0, // Fades out (opacity and visibility)
         ease: "power1.out",
@@ -185,8 +186,7 @@ function initServicesCubeAnimation() {
 }
 
 
-// Scroll Spy for section title
-// Selects sections and footer with an ID. Ensure your HTML elements have these IDs!
+// Scroll Spy for section title (existing logic)
 const sections = document.querySelectorAll("section[id], footer[id]"); 
 const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for updating text
 
