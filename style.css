@@ -201,12 +201,14 @@ html::before {
     justify-content: center;
     max-width: 1920px;
     margin: 0 auto;
-    padding: 0 180px;
+    /* REDUCED OUTER PADDING to bring content closer to screen edges */
+    padding: 0 100px; /* Adjusted from 180px */
     min-height: 100vh;
     position: relative;
     z-index: 1;
     padding-top: 20px; /* Reduced from 50px */
-    gap: 180px;
+    /* REDUCED GAP between columns (approximately half of 180px) */
+    gap: 100px; /* Reduced from 180px */
 }
 
 /* Left Column (Sticky) */
@@ -427,7 +429,7 @@ html::before {
 .hero-description {
     font-size: 1em;
     line-height: 1.7;
-    margin-bottom: 80px; /* Reduced from 100px */
+    margin-bottom: 80px;
     max-width: 800px;
     color: var(--text-medium);
 }
@@ -524,8 +526,8 @@ html::before {
   right: 0px;
   transform: translateY(-50%);
   font-size: 16em;
-  opacity: 0.01;
-  color: #CACACA; /* Changed color to #CACACA */
+  /* Removed opacity here; relying solely on rgba for transparency */
+  color: rgba(255, 255, 255, 0.05); /* White with 5% opacity - lighter than grey text */
   z-index: 0;
   pointer-events: none;
 }
@@ -791,8 +793,9 @@ footer h2 {
 /* Responsive Design */
 @media (max-width: 1200px) {
     .main-layout-container {
-        padding: 0 40px;
-        gap: 40px;
+        /* Adjusted for smaller screens */
+        padding: 0 40px; /* Kept 40px */
+        gap: 40px; /* Reduced further from 60px */
     }
     .left-column-sticky {
         width: 100%;
