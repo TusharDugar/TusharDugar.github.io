@@ -192,24 +192,40 @@ section {
 }
 
 
-/* --- Left Column Sticky Card Specific Animations --- */
-/* About Left Content children reveal */
-.profile-card-wrapper .reveal-child {
+/* --- About Section Specific Animations (matching Design Cube style) --- */
+/* About Heading: Slides down from top */
+.about-heading-animation {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    transform: translateY(-50px); /* Start above */
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform, opacity;
 }
-.profile-card-wrapper .reveal-child.visible {
+.about-heading-animation.visible {
     opacity: 1;
     transform: translateY(0);
 }
-/* Stagger for these children */
-.profile-card-wrapper .reveal-child:nth-child(1) { transition-delay: 0.1s; } /* Image container */
-.profile-card-wrapper .reveal-child:nth-child(2) { transition-delay: 0.2s; } /* Name */
-.profile-card-wrapper .reveal-child:nth-child(3) { transition-delay: 0.3s; } /* Fire icon line */
-.profile-card-wrapper .reveal-child:nth-child(4) { transition-delay: 0.4s; } /* Short desc */
-.profile-card-wrapper .reveal-child:nth-child(5) { transition-delay: 0.5s; } /* Social icons */
+
+/* About Content (Paragraphs, Blockquotes): Slides up from bottom */
+.about-content-animation {
+    opacity: 0;
+    transform: translateY(100px); /* Start below */
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+    /* Ensure font styles are from your main body/paragraph styles, or define here if specific */
+    color: var(--text-light); /* Assuming this is your general paragraph text color */
+    line-height: 1.7;
+    font-size: 1.1em;
+}
+.about-content-animation.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Stagger for multiple about content items (if any, like p and blockquote) */
+/* Adjust these delays based on how many .about-content-animation elements you have */
+/* For a single p and single blockquote, they will both animate up with these delays */
+.about-content-wrapper .about-content-animation:nth-child(1) { transition-delay: 0.2s; }
+.about-content-wrapper .about-content-animation:nth-child(2) { transition-delay: 0.4s; }
+/* Add more if you have more content items */
 
 
 /* Main Layout Container */
@@ -488,180 +504,18 @@ section {
 }
 
 
-/* --- ABOUT CUBE SECTION STYLES (Matching Sawad) --- */
-.about-cube-section {
-    position: relative;
-    padding: 100px 40px 100px 60px; /* Consistent with other sections */
-    text-align: left;
-    z-index: 2;
-    background-color: transparent; /* Transparent background as per Sawad */
-    margin-top: 100px;
-    margin-bottom: 100px;
-}
-
-/* About Cube Main Title (will pin and fade out via GSAP) */
-.about-cube-main-title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 5em;
-    line-height: 0.9;
-    font-weight: 800;
-    margin-bottom: 40px;
-    text-transform: uppercase;
-    text-align: left;
-    margin-left: 20px;
-    position: relative;
-    z-index: 4; /* Higher than cube */
-    /* GSAP will control autoAlpha and pinning */
-}
-.about-cube-main-title .text-white { color: var(--text-light); display: block; }
-.about-cube-main-title .text-gray { color: var(--text-medium); display: block; }
-
-/* About Cube Scroll Area */
-.about-scroll-trigger-area {
-    height: 400vh; /* Provides scroll space for the cube animation */
-    margin-top: -100px; /* Pulls it up to start the cube hidden */
-}
-
-/* About Cube Sticky Container */
-.about-sticky-container {
-    position: sticky;
-    top: 0; /* Pins the cube wrapper to the top of the viewport */
-    height: 100vh; /* Takes full viewport height when pinned */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    perspective: 1000px; /* Essential for 3D effect */
-    overflow: hidden; /* Clips elements outside the cube boundary */
-    z-index: 10; /* Ensures cube is above other content when pinned */
-}
-
-/* About Cube Element */
-.about-cube {
-    position: relative;
-    width: 300px; /* Default width for cube (responsive sizes set below) */
-    height: 250px; /* Fixed height for cube faces */
-    transform-style: preserve-3d; /* Crucial for child elements to be 3D */
-    transition: transform 0.3s; /* Smooth transition for GSAP-controlled transforms */
-    visibility: hidden; /* Hidden initially, GSAP will control autoAlpha */
-}
-
-/* Responsive cube width adjustments */
-@media (min-width: 768px) {
-    .about-cube {
-        width: 640px;
-    }
-}
-@media (min-width: 1024px) {
-    .about-cube {
-        width: 900px;
-    }
-}
-
-/* About Cube Face Styling */
-.about-face {
-    position: absolute;
-    height: 250px; /* Match cube height */
-    width: 100%; /* Take full width of cube container */
-    border: 1px solid #CCCCCC; /* Border from design-cube example */
-    background-color: #000; /* Black background for faces */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 28px;
-    font-weight: bold;
-    backface-visibility: hidden; /* Hide back of the face when rotated away */
-    overflow: hidden;
-}
-
-/* Transforms for each face to form a 4-sided prism (like design-cube with rotateX) */
-.about-face.face-1 { transform: translateZ(125px); } /* Front face */
-.about-face.face-2 { transform: rotateX(90deg) translateZ(125px); } /* Top face */
-.about-face.face-3 { transform: rotateX(180deg) translateZ(125px); } /* Back face */
-.about-face.face-4 { transform: rotateX(270deg) translateZ(125px); } /* Bottom face */
-
-/* Content styling for faces (matching your general text aesthetic) */
-.about-face .about-face-details {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-}
-.about-face .about-face-title {
-    font-size: 1.5em;
-    font-weight: 700;
-    color: var(--accent-primary-sawad); /* Your primary accent orange */
-    margin: 0 0 8px 0;
-    line-height: 1.2;
-}
-.about-face .about-face-description {
-    font-size: 1em;
-    font-weight: 400;
-    color: var(--text-medium); /* Your medium gray for secondary text */
-    margin: 0;
-    line-height: 1.6;
-    word-break: break-word;
-}
-/* Subtitle number on faces (larger, more transparent) - Matches design-cube style for this specific effect */
-.about-face .about-face-number {
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  font-size: 8em;
-  opacity: 0.1;
-  color: #CCCCCC;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Additional About Me content below the cube (standard 2D sections) */
-.about-additional-content {
-    margin-top: 100px; /* Space it out from the cube section */
-    /* Add any other general styling for this section */
-}
-/* Styles for paragraphs/blockquote within about-additional-content */
-.about-additional-content p {
-    color: var(--text-light);
-    line-height: 1.7;
-    font-size: 1.1em;
-    margin-bottom: 20px; /* Space between paragraphs */
-}
-.about-additional-content blockquote {
-    background: var(--bg-tool-card);
-    border-left: 5px solid var(--accent-primary-sawad);
-    padding: 20px;
-    border-radius: 8px;
-    font-style: italic;
-    color: var(--text-light);
-    margin: 20px 0; /* Adjust margin as needed */
-}
-.about-additional-content blockquote p {
-    margin-bottom: 10px; /* Space between quote text and cite */
-}
-.about-additional-content blockquote cite {
-    display: block;
-    text-align: right;
-    margin-top: 10px;
-    color: var(--text-medium);
-}
-
-
-/* --- MY SERVICES Section Styles (Flat 2D Grid) --- */
+/* Services Section Styles (Modified for Flat Grid) */
 .services-section {
   position: relative;
-  padding: 100px 40px 100px 60px; /* Matches global section padding */
+  padding: 100px 40px 100px 60px; /* Adjusted padding, matches global section */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  background-color: var(--bg-main); /* Restored black background */
+  background-color: transparent; /* Changed to transparent as requested */
   margin-top: 100px; 
   margin-bottom: 100px; 
 }
 
-/* Services Main Title (same as before) */
+/* Services Main Title */
 .services-heading {
     font-family: 'Poppins', sans-serif;
     font-size: 5em; 
@@ -672,25 +526,22 @@ section {
     text-align: left;
     margin-left: 20px; 
     position: relative; 
-    z-index: 4; 
+    z-index: 4; /* Higher than services-remaining-grid to be on top of it */
 }
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-medium); display: block; }
 
 
-/* Services Grid Container (Flat 2D) */
+/* Services Flat Grid (2D animation) */
 .services-items-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 40px; /* Space between cards */
-    justify-items: center; /* Center cards within their grid cells */
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto; /* Center the grid container */
-    padding-left: 20px; /* Ensures items are not stuck to the left edge */
+    gap: 40px;
+    justify-items: center;
+    margin-top: 100px; /* Space from the title above */
 }
 
-/* Service Item (Animations: Fade + Slide from Left, Staggered) */
+/* Service Item for 2D Grid (Animations) */
 .service-item {
   background-color: #111; 
   border-radius: 12px; 
@@ -701,16 +552,16 @@ section {
   text-align: left; 
   will-change: transform, opacity; 
 
-  /* ANIMATION PROPERTIES: Slide in from left */
+  /* ANIMATION PROPERTIES: Slide in from bottom */
   opacity: 0;
-  transform: translateX(-80px);
+  transform: translateY(60px);
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 .service-item.visible {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
 }
-/* Stagger effect for individual service items */
+/* Stagger effect for service items in the 2D grid */
 .services-items-container .service-item:nth-child(1) { transition-delay: 0.1s; }
 .services-items-container .service-item:nth-child(2) { transition-delay: 0.2s; }
 .services-items-container .service-item:nth-child(3) { transition-delay: 0.3s; }
@@ -722,38 +573,25 @@ section {
 
 
 /* Service item children styling */
-.service-item .service-title {
-    font-size: 1.5em; /* Your desired font size */
-    font-weight: 700; /* Your desired font weight */
-    color: var(--accent-primary-sawad); /* Your desired orange color */
-    margin: 0 0 8px 0;
-    line-height: 1.2;
-    font-style: normal;
-    text-transform: none;
-}
+.service-item .service-title,
 .service-item .service-description {
-    font-size: 1em; /* Your desired font size */
-    font-weight: 400; /* Your desired font weight */
-    color: var(--text-medium); /* Your desired medium text color */
-    margin: 0;
-    line-height: 1.6;
-    font-style: normal;
-    word-break: break-word;
+    position: relative; 
+    z-index: 1; 
 }
 
 /* Subtitle background numbers visibility for 2D cards */
-.subtitle-number { 
+.service-item .subtitle-number { 
   position: absolute;
   top: 50%;
-  left: 0; /* FIX: Positioned to the left as requested */
+  left: 0; /* Corrected to left: 0 */
   transform: translateY(-50%); 
-  font-size: 4rem; /* As per prompt */
-  opacity: 0.1; /* As per prompt */
-  color: rgba(255, 255, 255, 0.08); /* As per prompt's specific RGBA */
+  font-size: 4rem; 
+  opacity: 0.1; 
+  color: rgba(255, 255, 255, 0.08); 
   z-index: 0; 
   pointer-events: none;
 }
-.subtitle-text { /* Container for title/description to ensure they are above numbers */
+.service-item .subtitle-text { 
   position: relative;
   z-index: 1; 
 }
@@ -764,6 +602,7 @@ section {
   text-align: center; 
   margin-top: 100px; 
   margin-bottom: 80px; 
+  
   padding-top: 80px;
   padding-bottom: 80px;
   position: relative;
@@ -777,7 +616,6 @@ section {
     line-height: 0.9;
     font-weight: 800;
     margin-bottom: 50px;
-    text-transform: uppercase;
     /* FIX: Left align tools heading */
     text-align: left; 
 }
@@ -802,7 +640,7 @@ section {
     justify-items: stretch; 
 }
 
-/* Tool Card (Animations: Fade + Slide Up) */
+/* Tool Card (Animations) */
 .tool-card {
     background-color: var(--bg-tool-card);
     border-radius: 15px;
@@ -811,6 +649,7 @@ section {
     align-items: center;
     gap: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    /* Combined existing hover transition with new reveal animation */
     transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out;
     cursor: pointer;
     will-change: transform, opacity; 
@@ -869,7 +708,7 @@ section {
 }
 
 
-/* Subtitles Section */
+/* Subtitles Section (this section is not present in the provided HTML) */
 .subtitles-section {
   position: relative;
   padding: 120px 60px;
@@ -1122,20 +961,6 @@ footer h2 {
         margin-bottom: 60px;
     }
 
-    /* About cube section adjustments for responsiveness */
-    .about-cube-section {
-        padding-top: 60px;
-        padding-bottom: 80px;
-    }
-    .about-cube-main-title {
-        font-size: 4.5em; /* Adjusted for consistency */
-    }
-    .about-cube {
-        width: 640px; /* Adjusted cube size */
-    }
-    .about-additional-content {
-        margin-top: 80px;
-    }
     /* Services section adjustments for responsiveness */
     .services-section {
         padding-top: 60px;
@@ -1145,10 +970,7 @@ footer h2 {
     .services-heading {
         font-size: 4.5em; /* Adjusted for consistency */
     }
-    .services-items-container {
-        padding-left: 0; /* Adjust for smaller screens */
-    }
-    .service-item {
+    .services-items-container .service-item {
         padding: 15px;
     }
 
@@ -1166,7 +988,6 @@ footer h2 {
         margin: 0 auto; /* Center the grid */
         max-width: 500px; /* Constrain width when centered */
     }
-    /* END NEW */
     .tool-card {
         padding: 18px;
         gap: 12px;
@@ -1292,22 +1113,6 @@ footer h2 {
         margin-bottom: 40px;
     }
 
-    /* About cube section adjustments for responsiveness */
-    .about-cube-section {
-        padding-top: 40px;
-        padding-bottom: 60px;
-    }
-    .about-cube-main-title {
-        font-size: 3.5em; /* Adjusted for consistency */
-    }
-    .about-cube {
-        width: 300px; /* Adjusted cube size for smaller screens */
-        height: 250px;
-    }
-    .about-additional-content {
-        margin-top: 60px;
-    }
-
     /* Services section adjustments for responsiveness */
     .services-section {
         padding-top: 40px;
@@ -1317,10 +1122,7 @@ footer h2 {
     .services-heading {
         font-size: 3.5em; /* Adjusted for consistency */
     }
-    .services-items-container {
-        padding-left: 0; /* Adjust for smaller screens */
-    }
-    .service-item {
+    .services-items-container .service-item {
         padding: 10px;
     }
 
@@ -1366,7 +1168,7 @@ footer h2 {
     .main-layout-container {
         padding: 0 15px;
     }
-    .section h2 {
+    .section h2 { /* This rule is too general, better to use specific classes */
         font-size: 2.8em;
         letter-spacing: 0.5px;
         margin-bottom: 30px;
@@ -1480,21 +1282,6 @@ footer h2 {
         margin-bottom: 30px;
     }
 
-    /* About cube section adjustments for responsiveness */
-    .about-cube-section {
-        padding-top: 30px;
-        padding-bottom: 50px;
-    }
-    .about-cube-main-title {
-        font-size: 2.5em; /* Adjusted for consistency */
-    }
-    .about-cube {
-        width: 300px; /* Kept default cube size */
-    }
-    .about-additional-content {
-        margin-top: 50px;
-    }
-
     /* Services section adjustments for responsiveness */
     .services-section {
         padding-top: 30px;
@@ -1504,10 +1291,7 @@ footer h2 {
     .services-heading {
         font-size: 2.5em; /* Adjusted for consistency */
     }
-    .services-items-container {
-        padding-left: 0; /* Adjust for smaller screens */
-    }
-    .service-item {
+    .services-items-container .service-item {
         padding: 12px;
     }
 
@@ -1556,28 +1340,16 @@ footer h2 {
     .about-heading-animation,
     .about-content-animation,
     .service-item,
-    .tool-card,
-    .about-cube-main-title, /* Added for About cube elements */
-    .about-cube /* Added for About cube elements */
+    .tool-card
     {
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
         animation: none !important; /* Ensure CSS animations are also removed */
-        visibility: visible !important; /* Ensure visibility is forced on */
     }
-    /* For staggered items, display only the first one if motion is reduced */
-    .services-items-container .service-item:not(:first-child) { 
-        opacity: 0 !important; /* Only first item visible in services */
-    }
+    
     /* For about content, if there are multiple elements, ensure they are all visible */
     .about-content-wrapper .about-content-animation {
         transition-delay: 0s !important; /* No stagger */
-    }
-    /* Ensure all faces of the cube are immediately visible if motion is reduced */
-    .about-face {
-        opacity: 1 !important;
-        transform: none !important;
-        backface-visibility: visible !important;
     }
 }
