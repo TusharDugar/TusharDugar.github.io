@@ -558,8 +558,7 @@ section {
     height: 250px; /* Fixed height for cube faces */
     transform-style: preserve-3d; /* Crucial for child elements to be 3D */
     transition: transform 0.3s; /* Smooth transition for GSAP controlled transforms */
-    /* FIX: Added visibility: hidden to hide initially until GSAP animates autoAlpha */
-    visibility: hidden; 
+    visibility: hidden; /* FIX: Added visibility: hidden to hide initially until GSAP animates autoAlpha */
 }
 
 /* Responsive cube width adjustments */
@@ -683,7 +682,7 @@ section {
 .service-item .subtitle-number { 
   position: absolute;
   top: 50%;
-  left: 0; /* Changed from right: 20px to left: 0 as you requested */
+  left: 0; /* Corrected to left: 0 as you requested */
   transform: translateY(-50%); 
   font-size: 4rem; 
   opacity: 0.1; 
@@ -1414,7 +1413,7 @@ footer h2 {
     .tools-heading {
         font-size: 2.8em;
         margin-bottom: 25px;
-        text-align: left; /* Fix: Left align tools heading */
+        text-align: left; /* FIX: Left align tools heading */
     }
     .tools-grid {
         display: grid;
