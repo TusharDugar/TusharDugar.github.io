@@ -42,6 +42,7 @@ function copyToClipboard(button) {
 function initIntersectionObserverAnimations() {
   const revealElements = document.querySelectorAll(
     // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
+    // Note: .services-remaining-grid .service-item is specific for the 2D grid items
     ".reveal-item, .reveal-stagger, .about-heading-animation, .about-content-animation, .services-remaining-grid .service-item, .tool-card" 
   );
 
@@ -83,7 +84,7 @@ function initIntersectionObserverAnimations() {
 }
 
 
-// GSAP Scroll Animations for Services Cube (NEW)
+// GSAP Scroll Animations for Services Cube
 function initServicesCubeAnimation() {
     const servicesSection = document.getElementById('services');
     const servicesCube = document.getElementById('servicesCube');
@@ -91,27 +92,40 @@ function initServicesCubeAnimation() {
     const servicesMainTitle = document.querySelector('.services-main-title');
 
     if (!servicesSection || !servicesCube || !servicesScrollArea || !servicesMainTitle) {
-        console.warn("Required elements for services cube animation not found.");
+        console.warn("Required elements for services cube animation not found. Skipping GSAP services setup.");
         return;
     }
 
     // Set initial state for the cube for the entry animation
     gsap.set(servicesCube, { opacity: 0, y: 100 });
 
-    // 1. Cube entry animation (from opacity 0, y 100 to visible, y 0)
-    gsap.to(servicesCube, {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: 'power2.in',
+    // Function to get current cube width based on screen size
+    function getCubeWidth() {
+        const width = window.innerWidth;
+        if (width >= 1024) return 900;
+        else if (width >= 768) return 640;
+        else return 300;
+    }
+
+    // GSAP Timeline for Services Section Entry
+    const tlServicesEnter = gsap.timeline({
         scrollTrigger: {
             trigger: servicesSection,
             start: 'top 30%', // When top of services section is 30% from viewport top
             toggleActions: 'play none none reverse', // Play on enter, reverse on leave back
         }
     });
+    tlServicesEnter.to(servicesCube, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power2.in',
+        onStart: () => { // On animation start, set cube width
+            servicesCube.style.width = `${getCubeWidth()}px`;
+        }
+    });
 
-    // 2. Cube rotation animation
+    // Cube rotation animation
     gsap.to(servicesCube, {
         rotateX: 270, // Rotate by 270 degrees (3 full faces + another 90 deg)
         ease: "none",
@@ -120,10 +134,33 @@ function initServicesCubeAnimation() {
             start: "top top", // When the top of the scroll area hits the top of the viewport
             end: "bottom bottom", // When the bottom of the scroll area leaves the bottom of the viewport
             scrub: true, // Smoothly link animation to scroll
+            onUpdate: self => {
+                // Optional: dynamically update cube width if needed during scrubbing,
+                // but CSS media queries handle this usually.
+                // servicesCube.style.width = `${getCubeWidth()}px`;
+            },
+            onLeave: () => {
+                gsap.to(servicesCube, {
+                    y: -200, // Move up and out of view
+                    autoAlpha: 0, // Fade out
+                    duration: 0.5,
+                    ease: "power2.out",
+                });
+            },
+            onEnterBack: () => {
+                 gsap.fromTo(servicesCube, {
+                    y: -200, autoAlpha: 0, // Start from invisible, above
+                }, {
+                    y: 0, // Move to original position
+                    autoAlpha: 1, // Fade in
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            }
         },
     });
 
-    // 3. Main Services title pinning and fade out
+    // Main Services title pinning and fade out
     gsap.to(servicesMainTitle, {
         autoAlpha: 0, // Fades out (opacity and visibility)
         ease: "power1.out",
@@ -137,18 +174,27 @@ function initServicesCubeAnimation() {
             pinSpacing: false // Prevent extra space from pinning
         }
     });
+
+    // Handle cube width on resize dynamically
+    function handleCubeResize() {
+        if (servicesCube) {
+            servicesCube.style.width = `${getCubeWidth()}px`;
+        }
+    }
+    window.addEventListener('resize', handleCubeResize);
 }
 
 
-// Scroll Spy for section title (existing logic)
+// Scroll Spy for section title
+// Selects sections and footer with an ID. Ensure your HTML elements have these IDs!
 const sections = document.querySelectorAll("section[id], footer[id]"); 
-const navIndicator = document.querySelector(".left-column-sticky h3"); 
+const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for updating text
 
 window.addEventListener("scroll", () => {
   let current = "";
   sections.forEach(section => {
     // Adjust offset based on desired trigger point for the scroll spy.
-    const sectionTop = section.offsetTop - 150; 
+    const sectionTop = section.offsetTop - 150; // Change when section is 150px from viewport top
     
     if (window.scrollY >= sectionTop && window.scrollY < sectionTop + section.offsetHeight) {
       current = section.getAttribute("id");
@@ -164,7 +210,8 @@ window.addEventListener("scroll", () => {
     navIndicator.textContent = formattedTitle;
   } else if (navIndicator && current === "") {
       // If no specific section is in view (e.g., at the very top of the page), set a default title
-      if (window.scrollY < 200 && (navIndicator.textContent === "" || navIndicator.textContent === "ABOUT")) { 
+      // Check if scroll is near the top and set 'HERO'
+      if (window.scrollY < 200 && navIndicator.textContent !== "HERO") { 
           navIndicator.textContent = "HERO";
       }
   }
