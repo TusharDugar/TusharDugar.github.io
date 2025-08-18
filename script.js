@@ -73,8 +73,7 @@ window.addEventListener("scroll", () => {
   // but it no longer changes navIndicator.textContent.
   // The navIndicator will retain its original HTML text ("Tushar Dugar").
   
-  // You can still use 'current' for other purposes if you re-introduce navigation highlights, etc.
-  let current = "";
+  let current = ""; // Still calculate 'current' section if you want to log it or use it for other non-text-changing purposes.
   sections.forEach(section => {
     const sectionTop = section.offsetTop - 150; 
     
@@ -83,9 +82,7 @@ window.addEventListener("scroll", () => {
     }
   });
 
-  // REMOVED: navIndicator.textContent = formattedTitle;
-  // REMOVED: else if (navIndicator && current === "") { ... }
-  // This ensures the h3 tag in left-column-sticky always shows "Tushar Dugar"
+  // Removed all textContent assignments to navIndicator to keep name static.
 });
 
 
