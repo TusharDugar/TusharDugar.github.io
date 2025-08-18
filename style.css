@@ -510,8 +510,7 @@ section {
   padding: 100px 40px 100px 60px; /* Adjusted padding, matches global section */
   text-align: left;
   z-index: 2; /* Ensures services section stays on top of 'tools' section when pinned */
-  /* --- FIX: Removed background-color to make it transparent as requested --- */
-  background-color: transparent; 
+  background-color: transparent; /* Changed to transparent as requested */
   margin-top: 100px; 
   margin-bottom: 100px; 
 }
@@ -538,7 +537,6 @@ section {
 .services-scroll-trigger-area {
     /* This needs enough height to allow for the scrubbing animation */
     height: 400vh; /* This needs to be tall enough to allow the cube to fully animate */
-    /* overflow: clip; Removed this from here, moved to services-sticky-container */
     margin-top: -100px; /* Pull it up to hide the cube initially */
 }
 
@@ -550,9 +548,8 @@ section {
     align-items: center;
     justify-content: center;
     perspective: 1000px; /* Essential for 3D effect */
-    /* --- FIX: Changed overflow to hidden and set higher z-index --- */
-    overflow: hidden; /* Hide any overflow from cube as it rotates */
-    z-index: 10; /* Make sure cube and its content are above pinned titles/other elements */
+    overflow: hidden; /* FIX: Changed to hidden to ensure proper clipping */
+    z-index: 10; /* FIX: Increased z-index to ensure cube is above other elements */
 }
 
 .services-cube {
@@ -561,8 +558,7 @@ section {
     height: 250px; /* Fixed height for cube faces */
     transform-style: preserve-3d; /* Crucial for child elements to be 3D */
     transition: transform 0.3s; /* Smooth transition for GSAP controlled transforms */
-    /* --- FIX: Removed initial transform: translateY(100px) from CSS --- */
-    opacity: 0; /* Set initial opacity to 0, GSAP will animate to 1 */
+    /* FIX: Removed initial opacity/transform from CSS; GSAP will set and animate */
 }
 
 /* Responsive cube width adjustments */
@@ -607,21 +603,20 @@ section {
     align-items: flex-start;
     justify-content: flex-start;
     width: 100%;
-    /* Ensure text is above background number */
     position: relative; 
     z-index: 1; 
 }
 .services-face .service-title {
-    font-size: 1.5em; /* Adjust as needed */
-    font-weight: 200; /* As per design-cube example */
-    color: var(--accent-secondary-sawad); /* Green color from example */
+    font-size: 1.5em; 
+    font-weight: 700; 
+    color: var(--accent-primary-sawad); 
     margin: 0 0 8px 0;
     line-height: 1.2;
 }
 .services-face .service-description {
-    font-size: 1.1em; /* Adjust as needed */
-    font-weight: medium;
-    color: var(--text-light); /* White/light text */
+    font-size: 1em; 
+    font-weight: 400; 
+    color: var(--text-medium); 
     margin: 0;
     line-height: 1.6;
     word-break: break-word;
@@ -632,10 +627,10 @@ section {
   top: 50%;
   right: 20px;
   transform: translateY(-50%);
-  font-size: 8em; /* Much larger for 3D cube effect */
-  opacity: 0.1; /* More transparent */
-  color: #CCCCCC; /* Light gray for subtle background effect */
-  z-index: 0; /* Ensures it's behind .service-details */
+  font-size: 8em; 
+  opacity: 0.1; 
+  color: #CCCCCC; 
+  z-index: 0; 
   pointer-events: none;
 }
 
@@ -670,7 +665,6 @@ section {
   transform: translateX(0);
 }
 /* Stagger effect for service items in the 2D grid */
-/* These delays start from 0.1s after the main .services-remaining-grid is visible */
 .services-remaining-grid .service-item:nth-child(1) { transition-delay: 0.1s; }
 .services-remaining-grid .service-item:nth-child(2) { transition-delay: 0.2s; }
 .services-remaining-grid .service-item:nth-child(3) { transition-delay: 0.3s; }
@@ -688,11 +682,11 @@ section {
 .service-item .subtitle-number { 
   position: absolute;
   top: 50%;
-  left: 0; /* Changed from right: 20px to left: 0 as you requested */
+  left: 0; /* Corrected to left: 0 as you requested */
   transform: translateY(-50%); 
-  font-size: 4rem; /* As per prompt */
-  opacity: 0.1; /* As per prompt */
-  color: rgba(255, 255, 255, 0.08); /* Fallback to original rgba value for 2D cards */
+  font-size: 4rem; 
+  opacity: 0.1; 
+  color: rgba(255, 255, 255, 0.08); 
   z-index: 0; 
   pointer-events: none;
 }
@@ -721,7 +715,8 @@ section {
     line-height: 0.9;
     font-weight: 800;
     margin-bottom: 50px;
-    text-transform: uppercase;
+    /* FIX: Left align tools heading */
+    text-align: left; 
 }
 
 .tools-heading .text-white {
@@ -1089,8 +1084,7 @@ footer h2 {
     .tools-heading {
         font-size: 5em; /* Kept original size for tools heading */
         margin-bottom: 40px;
-        /* NEW: Consistent alignment for tools section at this breakpoint */
-        text-align: center; /* Center the heading to match grid */
+        text-align: left; /* FIX: Left align tools heading */
     }
     .tools-grid {
         margin: 0 auto; /* Center the grid */
@@ -1247,6 +1241,7 @@ footer h2 {
     .tools-heading {
         font-size: 3.5em;
         margin-bottom: 30px;
+        text-align: left; /* FIX: Left align tools heading */
     }
     .tools-grid {
         display: grid;
@@ -1418,6 +1413,7 @@ footer h2 {
     .tools-heading {
         font-size: 2.8em;
         margin-bottom: 25px;
+        text-align: left; /* FIX: Left align tools heading */
     }
     .tools-grid {
         display: grid;
