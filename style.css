@@ -233,45 +233,49 @@ html::before {
 .main-layout-container {
     display: flex;
     justify-content: center;
-    align-items: center; /* ADDED: Vertically centers items in the container (desktop) */
+    align-items: center; /* FIXED: Vertically centers columns relative to each other */
     max-width: 1920px;
     margin: 0 auto;
-    /* REDUCED OUTER PADDING to bring content closer to screen edges */
-    padding: 0 60px; /* Adjusted from 180px */
+    padding: 0 60px;
     min-height: 100vh;
     position: relative;
     z-index: 1;
-    padding-top: 20px; /* Reduced from 50px */
-    /* REDUCED GAP between columns (approximately one-third of 180px) */
-    gap: 60px; /* Adjusted from 180px */
+    padding-top: 20px;
+    gap: 60px;
 }
 
-/* RESTORED: Original Left Column Styling */
+/* Left Column Styling */
 .left-column-sticky {
     flex-shrink: 0;
     flex-basis: 370px;
     padding-right: 0;
     box-sizing: border-box;
-    position: relative !important; /* FIXED: Override sticky positioning on initial load */
-    top: 0 !important; /* FIXED: Override sticky positioning on initial load */
-    margin-top: 50px; /* FIXED: Add margin to center it */
-    align-self: flex-start; /* Kept for overall layout, but overridden by main-layout-container align-items:center for desktop */
-    height: calc(100vh - 50px);
+    position: sticky; /* Sticky by default for desktop */
+    top: 50px; /* Position for sticky behavior */
+    height: calc(100vh - 50px); /* Gives it a defined height for internal centering when sticky */
     display: flex;
     flex-direction: column;
-    align-items: center; /* Ensures content inside is centered horizontally */
-    justify-content: center; /* ADDED: Vertically centers content within the sticky column (important when not sticky) */
-    text-align: center; /* Ensures text inside is centered */
+    align-items: center; /* Centers content horizontally within the column */
+    justify-content: center; /* FIXED: Centers content vertically within the column's height for all views */
+    text-align: center;
     z-index: 2;
 }
 
-/* Only apply sticky positioning on desktop */
-@media (min-width: 1024px) {
-  .left-column-sticky {
-    position: sticky !important;
-    top: 50px;
-    margin-top: 0;
-  }
+/* Override sticky for smaller screens (tablets/mobile) and center it correctly */
+@media (max-width: 1023px) { /* Adjust breakpoint as needed for when it stops being sticky */
+    .left-column-sticky {
+        position: relative; /* Not sticky on mobile */
+        top: auto; /* Remove sticky top positioning */
+        height: auto; /* Allow natural height, content dictates size */
+        margin: 50px auto 0 auto; /* FIXED: Add top margin, then horizontally center the block itself */
+        width: 100%; /* Ensure it takes full width of its parent */
+        max-width: 400px; /* Cap width on smaller screens */
+    }
+    /* Ensure main-layout-container also helps centering for mobile */
+    .main-layout-container {
+        flex-direction: column;
+        align-items: center; /* This centers the left-column-sticky horizontally */
+    }
 }
 
 /* About Left Content (White Card) */
@@ -406,7 +410,6 @@ html::before {
     line-height: 1.8 !important; /* FIXED: Better line spacing */
     word-spacing: 1px !important; /* FIXED: Better word spacing */
     font-size: 0.9em;
-    /* line-height: 1.6;  Overridden by !important above */
     color: var(--text-medium-card);
     margin-bottom: 25px;
     padding: 0 5px;
@@ -482,23 +485,20 @@ html::before {
     line-height: 1.8 !important; /* FIXED: Better line spacing */
     word-spacing: 1px !important; /* FIXED: Better word spacing */
     font-size: 1em;
-    /* line-height: 1.7; Overridden by !important above */
-    margin-bottom: 40px !important; /* FIXED: Fix hero text spacing */
-    max-width: 90% !important; /* FIXED: Fix hero text spacing */
+    margin-bottom: 40px !important; /* FIXED: Adjust hero text spacing */
+    max-width: 90% !important; /* FIXED: Adjust hero text spacing */
     color: var(--text-medium);
 }
 
 
 /* Services Section Styles */
 .services-section {
-  padding: 80px 40px !important; /* FIXED: Fix the services section positioning */
-  margin-top: 0 !important; /* FIXED: Fix the services section positioning */
+  padding: 80px 40px; /* Reverted to original, removed !important */
+  margin-top: 0; /* Reverted to original, removed !important */
   position: relative;
-  /* padding: 80px 40px; Overridden by !important above */
   text-align: left;
   z-index: 2;
   background-color: transparent;
-  /* margin-top: 0; Overridden by !important above */
   margin-bottom: 0;
   display: flex;
   flex-direction: column;
@@ -544,14 +544,11 @@ html::before {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.5s ease; /* Transition for cube rotation */
-    transform: rotateY(0deg); /* Initial state, controlled by JS */
+    transform: rotateX(-25deg) rotateY(0deg); /* FIXED: Added initial isometric tilt */
     will-change: transform;
 }
 
 .face {
-    text-align: left !important; /* FIXED: Ensure proper text alignment in services */
-    opacity: 1 !important; /* FIXED: Ensure services are visible */
-    transform: none !important; /* FIXED: Ensure services are visible */
     position: absolute;
     width: 100%;
     height: 100%;
@@ -565,8 +562,9 @@ html::before {
     backface-visibility: hidden;
     will-change: transform, opacity;
     transition: opacity 0.3s ease-out; /* For fading in/out */
-    /* opacity: 0; Overridden by !important above */
-    /* visibility: hidden; Overridden by JS setting 'visible' */
+    opacity: 0; /* Managed by JS, starts hidden */
+    visibility: hidden; /* Managed by JS, starts hidden */
+    text-align: left; /* FIXED: Ensure text alignment for face content */
 }
 
 /* Active face (managed by JS) */
@@ -594,11 +592,9 @@ html::before {
     text-align: justify !important; /* FIXED: Justify text */
     line-height: 1.8 !important; /* FIXED: Better line spacing */
     word-spacing: 1px !important; /* FIXED: Better word spacing */
-    color: var(--text-light); /* FIXED: Make sure text is visible */
-    opacity: 1 !important; /* FIXED: Make sure text is visible */
+    color: var(--text-medium); /* RESTORED: Original color, opacity managed by JS */
+    opacity: 1; /* Ensure text itself is always opaque within the face */
     font-size: 1em;
-    /* color: var(--text-medium); Overridden by !important above */
-    /* line-height: 1.6; Overridden by !important above */
     max-width: 90%;
 }
 
@@ -866,7 +862,7 @@ footer h2 {
         width: 100%;
         padding-right: 0;
         max-width: 400px;
-        margin: 0 auto;
+        /* margin: 0 auto; Handled by specific mobile media query */
     }
     .right-column-scroll {
         flex-grow: 1;
@@ -936,9 +932,6 @@ footer h2 {
     }
     .hero-description {
         font-size: 1em;
-        /* line-height: 1.7; Overridden by !important above */
-        /* margin-bottom: 80px; Overridden by !important above */
-        /* max-width: 700px; Overridden by !important above */
         margin-left: auto;
         margin-right: auto;
     }
@@ -1012,17 +1005,15 @@ footer h2 {
         padding: 0 20px;
         padding-top: 20px;
         gap: 0;
-        align-items: flex-start; /* ADJUSTED: For mobile, align to start to prevent sticky column issues */
+        align-items: center; /* FIXED: Centers the left-column-sticky horizontally when in column mode */
     }
     .left-column-sticky {
-        width: 100%;
         position: relative; /* Not sticky on mobile */
-        top: 0;
-        min-height: unset;
-        padding-bottom: 50px;
-        padding-top: 0;
-        flex-basis: auto;
-        justify-content: flex-start; /* ADJUSTED: When not sticky, align content to top in column */
+        top: auto;
+        height: auto; /* Allow natural height */
+        margin: 50px auto 0 auto; /* Push down, center horizontally as a block */
+        width: 100%; /* Ensure it takes full width */
+        max-width: 400px; /* Cap width on smaller screens */
     }
     .section {
         padding: 60px 20px; /* Reduced for small screens */
@@ -1094,9 +1085,7 @@ footer h2 {
     }
     .hero-description {
         font-size: 0.95em;
-        /* line-height: 1.6; Overridden by !important above */
         max-width: 100%;
-        /* margin-bottom: 40px; Overridden by !important above */
     }
 
     /* Adjustments for services section */
@@ -1107,7 +1096,7 @@ footer h2 {
     }
     /* Cube container adjustments */
     .cube-container {
-        max-width: 100%; /* ADJUSTED: allow full width on mobile for better sizing */
+        max-width: 100%; /* Ensure full width usage on mobile */
         height: 289px; /* Reduced by 15% from 340px */
     }
     .face {
@@ -1180,8 +1169,6 @@ footer h2 {
     }
     .hero-description {
         font-size: 0.85em;
-        /* line-height: 1.5; Overridden by !important above */
-        /* margin-bottom: 30px; Overridden by !important above */
     }
 
     /* Adjustments for services section */
