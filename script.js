@@ -38,12 +38,13 @@ function initIntersectionObserverAnimations() {
         if (entry.target.classList.contains("reveal-item")) {
           entry.target.classList.add("visible");
         }
-        // Handle reveal-parent (for staggered children like About section and Services section)
+        // Handle reveal-parent (for About section staggered children)
         else if (entry.target.classList.contains("reveal-parent")) {
-          // For services, children have inline delays, so just add visible class
-          const children = entry.target.querySelectorAll(".reveal-item"); 
-          children.forEach(child => {
-            child.classList.add("visible");
+          const children = entry.target.querySelectorAll(".reveal-child"); 
+          children.forEach((child, index) => {
+            setTimeout(() => {
+              child.classList.add("visible");
+            }, index * 100); // Apply stagger delay (100ms)
           });
         }
         // Handle reveal-stagger-container (for staggered children like Tools and Contact buttons)
@@ -127,11 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const faceWidth = cubeContainer.offsetWidth; 
         // R = (W/2) / tan(PI/N) formula for a regular N-sided polygon.
-        // For N=8, PI/8 = 22.5 degrees. tan(22.5deg) is approx 0.414.
         const calculatedOffset = (faceWidth / 2) / Math.tan(Math.PI / SERVICES_COUNT);
         
-        // Use your provided 450px as default if calculated value is invalid or too small,
-        // otherwise use the calculation for correct geometry.
+        // Return the calculated offset, with a reasonable fallback.
+        // The user provided 450px, which we'll use if the calculated value is problematic.
         return isNaN(calculatedOffset) || calculatedOffset === 0 ? 450 : calculatedOffset; 
     }
 
@@ -147,17 +147,14 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.opacity = 0;
             face.style.visibility = 'hidden';
 
-            // Each face is statically positioned relative to the cube's origin
-            const actualIndex = i; // Array index 0-7 corresponds to logical face position
-            const angleForFace = actualIndex * ROTATION_INCREMENT_DEG; // 0, 45, 90...
-
-            // Apply transforms based on the desired geometry (rotateY as per your CSS snippet)
+            const angleForFace = i * ROTATION_INCREMENT_DEG;
+            // Apply transforms (rotateY and translateZ) dynamically
             face.style.transform = `rotateY(${angleForFace}deg) translateZ(${faceOffset}px)`;
         });
 
         // Ensure the cube itself is at the current logical rotation state
         cube.style.transition = 'none'; // No transition for initial setup of cube's transform
-        cube.style.transform = `rotateY(${-currentRotationAngle}deg)`; // Use rotateY as per your CSS snippet
+        cube.style.transform = `rotateY(${-currentRotationAngle}deg)`; 
 
         updateFaceVisibility(); // Set initial visibility for activeFaceIndex
     }
@@ -169,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.transition = 'opacity 0.3s ease-out'; // Default transition for visibility changes
 
             // Calculate the face's effective current angle relative to the viewport's front (0deg)
-            // It's the face's static setup angle minus the cube's current rotation.
             let effectiveAngle = (i * ROTATION_INCREMENT_DEG - currentRotationAngle) % 360;
 
             // Normalize angle to be within -180 to 180 for consistent checks
@@ -213,10 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
         activeFaceIndex = newActiveFaceIndex;
 
         // Update cube's rotation (negative for scroll-down visual effect, as per DesignCube)
-        // If scrolling down (direction=1), we want the cube to rotate to the LEFT (negative Y-rotation)
-        // so the next face comes into view from the RIGHT.
-        // If scrolling up (direction=-1), we want the cube to rotate to the RIGHT (positive Y-rotation)
-        // so the previous face comes into view from the LEFT.
+        // If scrolling down (direction=1), rotate cube LEFT (negative Y-rotation)
+        // If scrolling up (direction=-1), rotate cube RIGHT (positive Y-rotation)
         currentRotationAngle += direction * ROTATION_INCREMENT_DEG; // Accumulate rotation
         cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms ease`; // Re-apply transition for smooth animation
         cube.style.transform = `rotateY(${-currentRotationAngle}deg)`; // Apply to cube (negative for natural scroll direction)
@@ -249,84 +243,3 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = Date.now();
         if (now - lastWheelTime < SCROLL_DEBOUNCE_TIME_MS) {
             event.preventDefault(); // Temporarily prevent if too fast
-            return;
-        }
-        lastWheelTime = now;
-
-        // Determine scroll direction
-        const direction = event.deltaY > 0 ? 1 : -1; // 1 for scroll down, -1 for scroll up
-
-        // Attempt to animate the cube
-        const didAnimate = animateCube(direction);
-
-        if (didAnimate) {
-            event.preventDefault(); // ONLY prevent default if the cube actually animated
-        } else {
-            // Cube did not animate (hit boundary), allow normal page scroll.
-            // No preventDefault here means the browser will scroll the page.
-        }
-    };
-
-    // Handles touch start (mobile)
-    const handleTouchStart = (event) => {
-        const rect = cubeContainer.getBoundingClientRect();
-        const isCubeInView = rect.top < window.innerHeight && rect.bottom > 0; // Simply in viewport
-        if (!isCubeInView) return;
-
-        touchStartX = event.touches[0].clientX;
-        touchStartY = event.touches[0].clientY;
-        touchDeltaY = 0; // Reset cumulative delta
-    };
-
-    const handleTouchMove = (event) => {
-        const rect = cubeContainer.getBoundingClientRect();
-        const isCubeInView = rect.top < window.innerHeight && rect.bottom > 0;
-        if (!isCubeInView) {
-            // If not in view, and touch is still moving, let page scroll.
-            return;
-        }
-
-        const currentTouchY = event.touches[0].clientY;
-        const currentTouchX = event.touches[0].clientX;
-        const deltaY = currentTouchY - touchStartY;
-        const deltaX = currentTouchX - touchStartX;
-
-        // Only consider vertical scroll for cube animation
-        if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) { // 10px threshold for meaningful swipe
-            event.preventDefault(); // Prevent page scroll during vertical swipe in cube's area
-            touchDeltaY = deltaY; // Accumulate for `touchend` decision
-        } else {
-            // If horizontal swipe or minor movement, don't preventDefault, allow native scroll (e.g., horizontal swipe on page)
-        }
-    };
-
-    // Handles touch end (mobile)
-    const handleTouchEnd = (event) => {
-        const rect = cubeContainer.getBoundingClientRect();
-        const isCubeInView = rect.top < window.innerHeight && rect.bottom > 0;
-        if (!isCubeInView) return;
-
-        // Only trigger animate if a significant vertical swipe occurred
-        if (Math.abs(touchDeltaY) > SCROLL_THRESHOLD_PX) {
-            const direction = touchDeltaY < 0 ? 1 : -1; // 1 for swipe up (scroll down visual), -1 for swipe down (scroll up visual)
-            animateCube(direction);
-        }
-        touchDeltaY = 0; // Reset
-    };
-
-    // --- Initialization and Event Listeners ---
-    
-    // Initial setup when DOM is ready
-    setupCubeFaces();
-
-    // Re-calculate dimensions on window resize (important for responsive cube)
-    window.addEventListener('resize', () => {
-        setupCubeFaces(); // Re-initialize positions and states based on new sizes
-    });
-    
-    // Attach global event listeners
-    window.addEventListener('wheel', handleGlobalScroll, { passive: false });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true }); // passive:true for start, performance gain
-    window.addEventListener('touchmove', handleTouchMove, { passive: false }); // passive:false, needed for preventDefault
-    window.addEventListener('touchend', handleTouchEnd, { passive: true }); // passive:true, interaction finished.
-});
