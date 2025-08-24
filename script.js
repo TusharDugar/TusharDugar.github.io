@@ -23,7 +23,7 @@ function copyToClipboard(button) {
 function initIntersectionObserverAnimations() {
   const revealElements = document.querySelectorAll(
     // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
-    ".reveal-item, .reveal-stagger-container" 
+    ".reveal-item, .reveal-stagger-container, .reveal-stagger" 
   );
 
   const observerOptions = {
@@ -44,7 +44,8 @@ function initIntersectionObserverAnimations() {
           });
         }
         // Handle regular reveal items
-        else if (entry.target.classList.contains("reveal-item")) { // Simplified condition
+        else if (entry.target.classList.contains("reveal-item") || 
+                entry.target.classList.contains("reveal-stagger")) {
           entry.target.classList.add("visible"); 
         }
 
