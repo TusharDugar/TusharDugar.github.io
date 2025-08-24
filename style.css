@@ -478,8 +478,91 @@ html::before {
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
+/* --- NEW 3D SERVICES CAROUSEL STYLES --- */
 
-/* Services Flat Grid (2D animation) */
+/* Container for the 3D carousel effect */
+.services-3d-carousel-container {
+    width: 100%;
+    max-width: 600px; /* Adjust as needed */
+    height: 300px; /* Fixed height for the visible carousel area */
+    margin: 60px auto;
+    position: relative;
+    perspective: 1000px; /* Gives the 3D depth effect */
+    overflow: hidden; /* Hides parts of faces that are out of the viewport */
+    will-change: transform;
+}
+
+/* The wrapper that will perform the 3D rotation */
+.services-3d-carousel-wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d; /* Crucial for child elements to be in 3D space */
+    transform: rotateX(0deg); /* Initial rotation, controlled by JS */
+    transform-origin: center center; /* Rotation happens around the center */
+    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1); /* Easing as per prompt */
+    will-change: transform;
+}
+
+/* Each individual service card / face */
+.services-carousel-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-tool-card); /* Consistent dark background */
+    color: var(--text-light);
+    border-radius: 12px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    backface-visibility: hidden; /* Prevents back of face from showing when rotated */
+    opacity: 0; /* Hidden by default, JS controls visibility and opacity */
+    visibility: hidden;
+    transition: opacity 0.4s ease-out, visibility 0s 0.4s; /* Default fade out, then hide */
+    will-change: transform, opacity;
+}
+
+/* Specific styles for active/visible faces during transition */
+.services-carousel-face.is-active,
+.services-carousel-face.is-next,
+.services-carousel-face.is-prev {
+    visibility: visible;
+    transition: opacity 0.4s ease-in, transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.services-carousel-face.is-active {
+    opacity: 1;
+}
+
+/* Face content styling */
+.services-carousel-face .service-title {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 15px;
+    line-height: 1.2;
+    color: var(--text-light);
+}
+
+.services-carousel-face .service-description {
+    font-size: 1em;
+    color: var(--text-medium);
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+
+/* --- END NEW 3D SERVICES CAROUSEL STYLES --- */
+
+
+/* Original .services-items-container and .service-item styles are now irrelevant,
+   as they've been replaced by the 3D carousel structure. */
+/*
 .services-items-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
@@ -488,9 +571,8 @@ html::before {
     margin-top: 0;
 }
 
-/* Service Item for 2D Grid (Animations) */
 .service-item {
-  background-color: var(--bg-tool-card); /* Changed to match tool card background */
+  background-color: var(--bg-tool-card);
   border-radius: 12px;
   padding: 60px;
   position: relative;
@@ -499,28 +581,15 @@ html::before {
   text-align: left;
   will-change: transform, opacity;
 
-  /* These opacity and transform properties are now controlled by .reveal-stagger */
-  /* opacity: 0; */
-  /* transform: translateY(60px); */
-  /* transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); */
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* .service-item.visible { */
-/*   opacity: 1; */
-/*   transform: translateY(0); */
-/* } */
+.service-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-/* REMOVED: Stagger effect for service items in the 2D grid (now handled by JS) */
-/* .services-items-container .service-item:nth-child(1) { transition-delay: 0.08s; } */
-/* .services-items-container .service-item:nth-child(2) { transition-delay: 0.16s; } */
-/* .services-items-container .service-item:nth-child(3) { transition-delay: 0.24s; } */
-/* .services-items-container .service-item:nth-child(4) { transition-delay: 0.32s; } */
-/* .services-items-container .service-item:nth-child(5) { transition-delay: 0.4s; } */
-/* .services-items-container .service-item:nth-child(6) { transition-delay: 0.48s; } */
-/* .services-items-container .service-item:nth-child(7) { transition-delay: 0.56s; } */
-/* .services-items-container .service-item:nth-child(8) { transition-delay: 0.64s; } */
-
-
-/* Service item children styling */
 .service-item .service-title {
     position: relative;
     z-index: 1;
@@ -537,17 +606,17 @@ html::before {
     line-height: 1.6;
 }
 
-/* Subtitle background numbers visibility for 2D cards */
 .service-item .subtitle-number {
   position: absolute;
   top: 50%;
   right: 0px;
   transform: translateY(-50%);
   font-size: 16em;
-  color: rgba(255, 255, 255, 0.05); /* White with 5% opacity - lighter than grey text */
+  color: rgba(255, 255, 255, 0.05);
   z-index: 0;
   pointer-events: none;
 }
+*/
 
 
 /* Tools Section */
@@ -602,15 +671,14 @@ html::before {
     cursor: pointer;
     will-change: transform, opacity;
 
-    /* These opacity and transform properties are now controlled by .reveal-stagger */
-    /* opacity: 0; */
-    /* transform: translateY(60px); */
-    /* transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); */
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); /* Added transition for reveal */
 }
-/* .tool-card.visible { */
-/*   opacity: 1; */
-/*   transform: translateY(0); */
-/* } */
+.tool-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 .tool-card:hover {
     transform: translateY(-5px);
@@ -899,22 +967,18 @@ footer h2 {
         line-height: 0.85em;
         margin-bottom: 50px;
     }
-    .services-items-container {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
+    /* New Carousel specific adjustments */
+    .services-3d-carousel-container {
+        height: 250px; /* Smaller height */
+        margin-top: 40px;
     }
-    .service-item {
-        padding: 50px;
+    .services-carousel-face .service-title {
+        font-size: 1.8em;
     }
-    .service-item .subtitle-number {
-        font-size: 11em;
-    }
-    .service-item .service-title {
-        font-size: 1.5em;
-    }
-    .service-item .service-description {
+    .services-carousel-face .service-description {
         font-size: 0.9em;
     }
+
 
     /* Adjustments for tools section */
     .tools-heading {
@@ -1048,23 +1112,21 @@ footer h2 {
         line-height: 0.9em;
         margin-bottom: 30px;
     }
-    .services-items-container {
-        grid-template-columns: 1fr;
-        gap: 20px;
+    /* New Carousel specific adjustments */
+    .services-3d-carousel-container {
+        height: 220px; /* Smaller height for mobile */
+        margin-top: 30px;
     }
-    .service-item {
-        padding: 35px;
+    .services-carousel-face {
+        padding: 30px;
     }
-    .service-item .subtitle-number {
-        font-size: 8em;
-        right: 10px;
+    .services-carousel-face .service-title {
+        font-size: 1.5em;
     }
-    .service-item .service-title {
-        font-size: 1.2em;
+    .services-carousel-face .service-description {
+        font-size: 0.85em;
     }
-    .service-item .service-description {
-        font-size: 0.9em;
-    }
+
 
     /* Adjustments for tools section */
     .tools-heading {
@@ -1141,18 +1203,19 @@ footer h2 {
         line-height: 0.9em;
         margin-bottom: 25px;
     }
-    .service-item {
-        padding: 30px;
+    /* New Carousel specific adjustments */
+    .services-3d-carousel-container {
+        height: 200px; /* Even smaller height for small mobile */
+        margin-top: 20px;
     }
-    .service-item .subtitle-number {
-        font-size: 6em;
-        right: 5px;
+    .services-carousel-face {
+        padding: 20px;
     }
-    .service-item .service-title {
-        font-size: 1.1em;
+    .services-carousel-face .service-title {
+        font-size: 1.3em;
     }
-    .service-item .service-description {
-        font-size: 0.85em;
+    .services-carousel-face .service-description {
+        font-size: 0.8em;
     }
 
     .tools-section {
@@ -1162,6 +1225,10 @@ footer h2 {
         font-size: 2.8em;
         line-height: 0.9em;
         margin-bottom: 25px;
+    }
+    .tools-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
     .tool-card {
         padding: 12px;
@@ -1178,6 +1245,9 @@ footer h2 {
         font-size: 0.7em;
     }
 
+    footer {
+        padding: 60px 0;
+    }
     .contact-buttons {
         max-width: 100%;
         flex-direction: column;
@@ -1203,24 +1273,14 @@ footer h2 {
 /* Accessibility: Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
     .reveal-item,
-    .reveal-stagger-container .reveal-stagger, /* Targeted the children explicitly */
-    .about-heading-animation,
-    .about-content-animation,
-    .service-item, /* Now using .reveal-stagger, but keeping this for safety */
-    .tool-card /* Now using .reveal-stagger, but keeping this for safety */
-    {
+    .reveal-stagger-container .reveal-stagger,
+    .services-3d-carousel-wrapper,
+    .services-carousel-face {
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
         animation: none !important;
-    }
-
-    /* Specific .reveal-stagger class for reducing motion */
-    .reveal-stagger {
-        transition: none !important;
-        transform: none !important;
-        opacity: 1 !important;
-        animation: none !important;
+        visibility: visible !important; /* Ensure content is visible */
     }
 
     .about-content-wrapper .about-content-animation {
