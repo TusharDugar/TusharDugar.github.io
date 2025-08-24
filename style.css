@@ -1190,7 +1190,7 @@ footer h2 {
         margin-bottom: 30px;
     }
     .hero-heading {
-        font-size: clamp(2.744em, 8.82vw, 3.43em); /* FIXED: Reduced by 2% */
+        font-size: clamp(2.744em, 8.82vw, 3.43em); /* FIXED: Reduced by 2% from clamp(2.8em, 9vw, 3.5em) */
         line-height: 0.9em;
         margin-bottom: 15px;
     }
