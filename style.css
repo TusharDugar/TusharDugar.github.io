@@ -483,9 +483,9 @@ html::before {
 /* Container for the 3D carousel effect */
 .services-3d-carousel-container {
     width: 100%;
-    max-width: 600px; /* Adjust as needed */
+    max-width: 720px; /* Increased for wider cards */
     height: 300px; /* Fixed height for the visible carousel area */
-    margin: 60px auto;
+    margin: 60px auto; /* Centers horizontally */
     position: relative;
     perspective: 1000px; /* Gives the 3D depth effect */
     overflow: hidden; /* Hides parts of faces that are out of the viewport */
@@ -523,24 +523,19 @@ html::before {
     box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     backface-visibility: hidden; /* Prevents back of face from showing when rotated */
     
-    /* Importantly, these properties are NOT set here by default.
-       They are managed by JavaScript and state classes for precise control. */
-    /* opacity: 0; */
-    /* visibility: hidden; */
+    /* These properties are now exclusively managed by JavaScript and state classes */
     transition: none; /* Important: Clear any default transitions on base state */
     
     will-change: transform, opacity;
 }
 
 /* State for the currently visible (active) face */
-/* This is the face that is at 0 rotation, fully visible */
 .services-carousel-face.is-current {
     opacity: 1;
     visibility: visible;
 }
 
 /* State for the faces just before/after the current one (e.g., at +90deg or -90deg) */
-/* These are visible but transparent, ready to fade in/out */
 .services-carousel-face.is-next-face,
 .services-carousel-face.is-prev-face {
     opacity: 0; 
@@ -567,6 +562,8 @@ html::before {
     margin-bottom: 15px;
     line-height: 1.2;
     color: var(--text-light);
+    position: relative; /* To be above the number */
+    z-index: 1;
 }
 
 .services-carousel-face .service-description {
@@ -574,330 +571,28 @@ html::before {
     color: var(--text-medium);
     line-height: 1.6;
     max-width: 90%;
+    position: relative; /* To be above the number */
+    z-index: 1;
 }
 
+/* Styling for the background numbers */
+.services-carousel-face .service-bg-number {
+    position: absolute;
+    top: 50%;
+    right: 20px; /* Adjust positioning as needed */
+    transform: translateY(-50%);
+    font-size: 16em; /* Large size */
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.05); /* Very transparent white */
+    pointer-events: none; /* Don't block interactions */
+    z-index: 0; /* Behind text content */
+    line-height: 1; /* Prevent extra spacing */
+}
 
 /* --- END NEW 3D SERVICES CAROUSEL STYLES --- */
 
 
-/* Original .services-items-container and .service-item styles are now irrelevant,
-   as they've been replaced by the 3D carousel structure. */
-/*
-.services-items-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    gap: 25px;
-    justify-items: stretch;
-    margin-top: 0;
-}
-
-.service-item {
-  background-color: var(--bg-tool-card);
-  border-radius: 12px;
-  padding: 60px;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  text-align: left;
-  will-change: transform, opacity;
-
-  opacity: 0;
-  transform: translateY(60px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.service-item.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.service-item .service-title {
-    position: relative;
-    z-index: 1;
-    font-size: 1.7em;
-    font-weight: 700;
-    margin-bottom: 12px;
-    line-height: 1.2;
-}
-.service-item .service-description {
-    position: relative;
-    z-index: 1;
-    font-size: 0.95em;
-    color: var(--text-medium);
-    line-height: 1.6;
-}
-
-.service-item .subtitle-number {
-  position: absolute;
-  top: 50%;
-  right: 0px;
-  transform: translateY(-50%);
-  font-size: 16em;
-  color: rgba(255, 255, 255, 0.05);
-  z-index: 0;
-  pointer-events: none;
-}
-*/
-
-
-/* Tools Section */
-.tools-section {
-  text-align: left;
-  padding: 80px 40px;
-  margin-top: 0;
-  margin-bottom: 0;
-  position: relative;
-  z-index: 1;
-  background: none;
-}
-
-.tools-heading {
-    font-family: 'Poppins', sans-serif;
-    font-size: 7.5em;
-    line-height: 0.8em;
-    font-weight: 800;
-    margin-bottom: 40px;
-    text-transform: uppercase;
-    text-align: left;
-    margin-left: 0;
-}
-
-.tools-heading .text-white {
-    color: var(--text-light);
-    display: block;
-}
-
-.tools-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
-
-/* TOOLS GRID ALIGNMENT */
-.tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 15px;
-    margin-left: 0;
-    margin-right: 0;
-    justify-items: stretch;
-}
-
-/* Tool Card (Animations) */
-.tool-card {
-    background-color: var(--bg-tool-card);
-    border-radius: 15px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    cursor: pointer;
-    will-change: transform, opacity;
-
-    opacity: 0;
-    transform: translateY(60px);
-    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); /* Added transition for reveal */
-}
-.tool-card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.tool-card:hover {
-    transform: translateY(-5px);
-    background-color: rgba(26, 26, 26, 0.9);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-}
-
-.tool-icon-wrapper {
-    width: 50px;
-    height: 50px;
-    background-color: var(--tool-icon-bg);
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    overflow: hidden;
-}
-
-.tool-logo {
-    max-width: 70%;
-    max-height: 70%;
-    object-fit: contain;
-    filter: brightness(0.01);
-}
-
-.tool-info {
-    flex-grow: 1;
-    text-align: left;
-}
-
-.tool-name {
-    font-size: 1.1em;
-    font-weight: 600;
-    color: var(--tool-name-color);
-    margin: 0 0 5px 0;
-    line-height: 1.2;
-}
-
-.tool-category {
-    font-size: 0.85em;
-    color: var(--tool-category-color);
-    margin: 0;
-    line-height: 1.2;
-}
-
-
-/* Footer (Contact Section) */
-footer {
-    background-color: var(--bg-main);
-    color: var(--text-light);
-    text-align: center;
-    padding: 60px 0;
-    position: relative;
-    z-index: 1;
-}
-
-footer a {
-    color: var(--accent-secondary-sawad);
-    text-decoration: none;
-    transition: text-decoration 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-
-footer h2 {
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 3.2em;
-    color: var(--primary-heading-color);
-    font-weight: 700;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-    letter-spacing: 1.5px;
-}
-
-.contact-tagline {
-    font-size: 1.1em;
-    margin-bottom: 40px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0.95;
-    line-height: 1.8;
-    color: var(--text-light);
-}
-
-.contact-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 40px;
-}
-
-.contact-button {
-    background-color: rgba(255, 255, 255, 0.005); /* Very very transparent */
-    border: 1px solid rgba(255, 255, 255, 0.01); /* Very very transparent border */
-    border-radius: 12px;
-    padding: 0;
-    font-size: 1.2em;
-    font-weight: 600;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    width: 280px;
-    height: 120px;
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    text-align: center;
-}
-
-.contact-button:hover {
-    transform: translateY(-8px);
-    background-color: rgba(26, 26, 26, 0.9);
-    box-shadow: 0 10px 25px var(--shadow-color-dark), 0 0 15px var(--accent-secondary-sawad);
-}
-
-.contact-button .button-content-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-.contact-button i {
-    font-size: 2.8em;
-    color: var(--accent-primary-sawad);
-}
-
-.contact-button .button-value {
-    font-size: 15px;
-    font-weight: bold;
-    opacity: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding: 0 5px;
-    max-width: 90%;
-    color: var(--text-light);
-    margin-top: 5px;
-}
-
-.contact-button .copied-text {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--accent-primary-sawad); /* Solid orange, not gradient */
-    color: var(--text-light);
-    font-size: 1.5em;
-    font-weight: bold;
-    border-radius: 12px;
-    opacity: 0;
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    z-index: 3;
-}
-
-/* States when button is 'copied' */
-.contact-button.copied .button-content-main {
-    transform: translateY(-100%) !important;
-    opacity: 0 !important;
-}
-
-.contact-button.copied .copied-text {
-    transform: translateY(0) !important;
-    opacity: 1 !important;
-}
-
-.social-links {
-    margin-top: 30px;
-}
-.social-links a {
-    color: var(--text-light);
-    margin: 0 20px;
-    transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.social-links a:hover {
-    color: var(--accent-secondary-sawad);
-    transform: scale(1.3);
-}
-
-
-/* Responsive Design */
+/* Responsive Design Adjustments for Carousel */
 @media (max-width: 1200px) {
     .main-layout-container {
         padding: 0 40px;
@@ -989,6 +684,7 @@ footer h2 {
     }
     /* New Carousel specific adjustments */
     .services-3d-carousel-container {
+        max-width: 600px; /* Adjust for medium screens */
         height: 250px; /* Smaller height */
         margin-top: 40px;
     }
@@ -997,6 +693,10 @@ footer h2 {
     }
     .services-carousel-face .service-description {
         font-size: 0.9em;
+    }
+    .services-carousel-face .service-bg-number {
+        font-size: 12em;
+        right: 15px;
     }
 
 
@@ -1134,6 +834,7 @@ footer h2 {
     }
     /* New Carousel specific adjustments */
     .services-3d-carousel-container {
+        max-width: 90%; /* Adjust for smaller screens */
         height: 220px; /* Smaller height for mobile */
         margin-top: 30px;
     }
@@ -1145,6 +846,10 @@ footer h2 {
     }
     .services-carousel-face .service-description {
         font-size: 0.85em;
+    }
+    .services-carousel-face .service-bg-number {
+        font-size: 10em;
+        right: 10px;
     }
 
 
@@ -1215,9 +920,7 @@ footer h2 {
         margin-bottom: 30px;
     }
 
-    .services-section {
-        padding: 40px 15px; /* Further reduced */
-    }
+    /* Adjustments for services section */
     .services-heading {
         font-size: 2.8em;
         line-height: 0.9em;
@@ -1237,10 +940,12 @@ footer h2 {
     .services-carousel-face .service-description {
         font-size: 0.8em;
     }
-
-    .tools-section {
-        padding: 40px 15px; /* Further reduced */
+    .services-carousel-face .service-bg-number {
+        font-size: 8em;
+        right: 5px;
     }
+
+    /* Adjustments for tools section */
     .tools-heading {
         font-size: 2.8em;
         line-height: 0.9em;
