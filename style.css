@@ -506,19 +506,16 @@ html::before {
 .cube-container {
     width: 100%;
     max-width: 900px; /* Wider cards */
-    height: 400px; /* Base height for the cube. This will be reduced. */
+    height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
     perspective: 1000px; /* Perspective for 3D effect */
-    position: sticky; /* Make container sticky to enable scroll-driven effect */
-    top: 50%; /* Center vertically in viewport */
-    transform: translateY(-50%); /* Adjust for perfect centering */
+    position: relative; /* Changed from sticky for discrete steps */
+    /* top: 50%; */ /* Removed sticky behavior */
+    /* transform: translateY(-50%); */ /* Removed sticky behavior */
     overflow: hidden; /* Hide faces that are out of view */
     will-change: transform;
-}
-/* Reduce height of cards by 15% (400px * 0.85 = 340px) */
-/* The final visual height of the card will be set by the .face padding */
-.cube-container {
-    height: 340px; /* Reduced by 15% from 400px base */
+    /* Custom property for face offset calculation (set by JS) */
+    --face-offset: 450px; /* Default, will be overridden by JS */
 }
 
 .cube {
@@ -527,7 +524,7 @@ html::before {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.5s ease; /* Transition for cube rotation */
-    transform: rotateY(0deg); /* Initial state */
+    transform: rotateX(0deg); /* Initial state, controlled by JS */
     will-change: transform;
 }
 
@@ -551,19 +548,7 @@ html::before {
     visibility: hidden; /* Managed by JS */
 }
 
-/* Specific Face Rotations (8 faces, 45 degrees apart) */
-/* translateZ value derived from cube-container width and 8 sides (R = (W/2) / tan(PI/N))
-   For width 900px, N=8, R = (450) / tan(22.5deg) = ~1086px.
-   The user's snippet used translateZ(450px) which means faces overlap.
-   We will use the calculated `R` to make them meet perfectly,
-   but use `var(--face-offset)` which JS sets. */
-.face {
-    transform-origin: center center;
-    /* Transform values will be set by JS dynamically for initial positioning.
-       The inline styles in HTML snippets are just initial placeholders,
-       JS dynamically calculates `translateZ` */
-}
-
+/* Active face (managed by JS) */
 .face.is-active {
     opacity: 1;
     visibility: visible;
@@ -632,7 +617,9 @@ html::before {
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
     will-change: transform; 
-    /* .reveal-stagger applies opacity and transform for animation */
+    /* .reveal-stagger applies opacity and transform for animation,
+       but also explicitly adding the transition here for clarity as requested */
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .tool-card:hover {
