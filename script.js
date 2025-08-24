@@ -25,7 +25,8 @@ function copyToClipboard(button) {
 function initIntersectionObserverAnimations() {
   const revealElements = document.querySelectorAll(
     // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
-    ".reveal-item, .reveal-stagger-container, .reveal-stagger"
+    // Now explicitly targeting .reveal-item for tools and contact as per revert
+    ".reveal-item, .reveal-stagger-container, .reveal-stagger" 
   );
 
   const observerOptions = {
@@ -37,7 +38,7 @@ function initIntersectionObserverAnimations() {
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        // Handle stagger container
+        // Handle stagger container (for elements like the About section's children, or if used elsewhere)
         if (entry.target.classList.contains("reveal-stagger-container")) {
           const children = entry.target.querySelectorAll(".reveal-stagger");
           children.forEach((child, index) => {
@@ -45,9 +46,8 @@ function initIntersectionObserverAnimations() {
             child.classList.add("visible");
           });
         }
-        // Handle regular reveal items
-        else if (entry.target.classList.contains("reveal-item") ||
-                entry.target.classList.contains("reveal-stagger")) {
+        // Handle regular reveal items (now includes tool cards and contact buttons)
+        else if (entry.target.classList.contains("reveal-item")) { // Simplified condition
           entry.target.classList.add("visible");
         }
 
@@ -138,8 +138,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
              // Fallback if initial height isn't computed (e.g., due to responsive changes or complex CSS)
              console.warn("Could not determine faceOffset dynamically. Using fallback height.");
-             faceOffset = servicesCarouselContainer.offsetHeight / 2; // Use container height as fallback
-             if (faceOffset === 0) faceOffset = 150; // Absolute fallback if container is also 0
+             // Try to get height from wrapper or container as a last resort
+             faceOffset = servicesWrapper ? servicesWrapper.offsetHeight / 2 : servicesCarouselContainer.offsetHeight / 2;
+             if (faceOffset === 0 || isNaN(faceOffset)) faceOffset = 150; // Absolute fallback if all else fails
         }
        
         servicesFaces.forEach((face, i) => {
@@ -199,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check for boundary conditions (non-looping)
         if ((direction === 1 && currentIndex === SERVICES_COUNT - 1) ||
             (direction === -1 && currentIndex === 0)) {
+            // Do not animate, allow normal page scroll to resume
             isAnimating = false; // Ensure it's not locked if attempted to scroll past boundary
             return false; // Indicate that carousel did not animate
         }
@@ -245,7 +247,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 isAnimating = false;
                 if (scrollTimeout) clearTimeout(scrollTimeout);
                 // Also, re-setup faces to clear any lingering animation states if scrolled away mid-transition
+                // Call setupFaces to re-initialize positions and states, essential after resize or visibility change
                 setupFaces(); 
+            }
+            // If it becomes visible while not animating, ensure its state is correct
+            if (isServicesCarouselVisible && !isAnimating) {
+                updateActiveFaceState(); // Ensures current face is correctly visible
             }
         });
     }, { threshold: 0.5 }); // Trigger when 50% of the carousel container is visible
@@ -309,6 +316,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize faces when the DOM is ready
     setupFaces();
+
+    // Re-calculate faceOffset on window resize (important for responsive carousel)
+    window.addEventListener('resize', () => {
+        // Debounce resize events to prevent excessive recalculations
+        clearTimeout(scrollTimeout); 
+        scrollTimeout = setTimeout(() => {
+            setupFaces(); 
+        }, 200); 
+    });
     
     // Start observing the services carousel container for scroll interaction
     if (servicesCarouselContainer) {
