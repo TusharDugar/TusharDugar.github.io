@@ -195,18 +195,18 @@ html::before {
 }
 
 /* Stagger Container */
-.reveal-stagger-container {
+.reveal-parent { /* Renamed for clarity as it's the parent that triggers stagger for its children */
     position: relative;
 }
 
 /* Stagger Child */
-.reveal-stagger {
+.reveal-child {
     opacity: 0;
     transform: translateY(60px);
     transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform, opacity;
 }
-.reveal-stagger.visible {
+.reveal-child.visible {
     opacity: 1;
     transform: translateY(0);
 }
@@ -906,7 +906,7 @@ footer h2 {
     }
     /* New Carousel specific adjustments */
     .services-3d-carousel-container {
-        max-width: 700px; /* Further adjusted for medium screens */
+        max-width: 700px; /* Adjusted for medium screens */
         height: 250px; /* Smaller height */
         margin-top: 40px;
     }
@@ -1219,7 +1219,7 @@ footer h2 {
 /* Accessibility: Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
     .reveal-item,
-    .reveal-stagger-container .reveal-stagger,
+    .reveal-parent .reveal-child, /* Corrected for direct child relationship */
     .services-3d-carousel-wrapper,
     .services-carousel-face {
         transition: none !important;
@@ -1229,7 +1229,5 @@ footer h2 {
         visibility: visible !important; /* Ensure content is visible */
     }
 
-    .about-content-wrapper .about-content-animation {
-        transition-delay: 0s !important;
-    }
+    /* Removed previous non-existent classes, keeping relevant ones for reduce motion */
 }
