@@ -499,15 +499,25 @@ html::before {
   text-align: left;
   will-change: transform, opacity;
 
-  opacity: 0;
-  transform: translateY(60px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  /* These opacity and transform properties are now controlled by .reveal-stagger */
+  /* opacity: 0; */
+  /* transform: translateY(60px); */
+  /* transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); */
 }
-.service-item.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-/* No explicit CSS stagger here, controlled by JS in initIntersectionObserverAnimations */
+/* .service-item.visible { */
+/*   opacity: 1; */
+/*   transform: translateY(0); */
+/* } */
+
+/* REMOVED: Stagger effect for service items in the 2D grid (now handled by JS) */
+/* .services-items-container .service-item:nth-child(1) { transition-delay: 0.08s; } */
+/* .services-items-container .service-item:nth-child(2) { transition-delay: 0.16s; } */
+/* .services-items-container .service-item:nth-child(3) { transition-delay: 0.24s; } */
+/* .services-items-container .service-item:nth-child(4) { transition-delay: 0.32s; } */
+/* .services-items-container .service-item:nth-child(5) { transition-delay: 0.4s; } */
+/* .services-items-container .service-item:nth-child(6) { transition-delay: 0.48s; } */
+/* .services-items-container .service-item:nth-child(7) { transition-delay: 0.56s; } */
+/* .services-items-container .service-item:nth-child(8) { transition-delay: 0.64s; } */
 
 
 /* Service item children styling */
@@ -592,14 +602,15 @@ html::before {
     cursor: pointer;
     will-change: transform, opacity;
 
-    opacity: 0;
-    transform: translateY(60px);
-    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); /* Added transition for reveal */
+    /* These opacity and transform properties are now controlled by .reveal-stagger */
+    /* opacity: 0; */
+    /* transform: translateY(60px); */
+    /* transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); */
 }
-.tool-card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+/* .tool-card.visible { */
+/*   opacity: 1; */
+/*   transform: translateY(0); */
+/* } */
 
 .tool-card:hover {
     transform: translateY(-5px);
@@ -1195,9 +1206,17 @@ footer h2 {
     .reveal-stagger-container .reveal-stagger, /* Targeted the children explicitly */
     .about-heading-animation,
     .about-content-animation,
-    .service-item,
-    .tool-card
+    .service-item, /* Now using .reveal-stagger, but keeping this for safety */
+    .tool-card /* Now using .reveal-stagger, but keeping this for safety */
     {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+        animation: none !important;
+    }
+
+    /* Specific .reveal-stagger class for reducing motion */
+    .reveal-stagger {
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
@@ -1207,3 +1226,4 @@ footer h2 {
     .about-content-wrapper .about-content-animation {
         transition-delay: 0s !important;
     }
+}
