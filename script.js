@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const SERVICES_COUNT = faces.length; // Should be 8
 
     let currentRotationAngle = 0; // Tracks the current rotation of the cube element
-    let activeFaceIndex = 0; // Which face is currently active/front-facing
+    let activeFaceIndex = 0; // Which face is currently active/front-facing (0 to 7)
     let isAnimatingCube = false; // Flag to lock interaction during a cube flip
 
     // Calculates the `translateZ` distance for faces to form a seamless octagon
@@ -132,7 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Here, 'W' is cubeContainer.offsetWidth
         const faceWidth = cubeContainer.offsetWidth; 
         const calculatedOffset = (faceWidth / 2) / Math.tan(Math.PI / SERVICES_COUNT);
-        return isNaN(calculatedOffset) || calculatedOffset === 0 ? (faceWidth / 2) * 1.2 : calculatedOffset; // Fallback if calculation is bad, provide enough depth
+        // Use user's provided 450px as default/fallback, but JS will still set it.
+        return isNaN(calculatedOffset) || calculatedOffset === 0 ? 450 : calculatedOffset; 
     }
 
     // Sets up the initial 3D positioning of each face
@@ -148,8 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.visibility = 'hidden';
 
             // Each face is statically positioned relative to the cube's origin
-            // Index 0 is front, index 1 is 45deg down, etc.
-            const angleForFace = i * ROTATION_INCREMENT_DEG;
+            // For faces numbered 1-8, map to 0-7 for calculations
+            const actualIndex = i; // data-index "1" is faces[0], "2" is faces[1] etc.
+            const angleForFace = actualIndex * ROTATION_INCREMENT_DEG; // 0, 45, 90...
+
             face.style.transform = `rotateX(${angleForFace}deg) translateZ(${faceOffset}px)`;
         });
 
@@ -211,11 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
         activeFaceIndex = newActiveFaceIndex;
 
         // Update cube's rotation (negative for scroll-down visual effect, as per DesignCube)
-        // DesignCube: scrolling down (deltaY > 0) means rotateX becomes more negative, visually rotates "down"
-        // Here, direction=1 means we want to show the next card. This means rotating the cube such that the next card
-        // comes from below. A positive rotateX on the cube makes elements "below" come up.
-        // If direction is 1 (scroll down): rotateX by -45 degrees.
-        // If direction is -1 (scroll up): rotateX by +45 degrees.
         currentRotationAngle += direction * ROTATION_INCREMENT_DEG; // Accumulate rotation
         cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms ease`; // Re-apply transition for smooth animation
         cube.style.transform = `rotateX(${-currentRotationAngle}deg)`; // Apply to cube
@@ -240,7 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleGlobalScroll = (event) => {
         // Check if the cube container is in the active viewport area for interaction
         const rect = cubeContainer.getBoundingClientRect();
-        const isCubeInView = rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2; // Roughly centered in viewport
+        // The cube is "active" for scroll interaction when it's roughly centered in the viewport
+        const isCubeInView = rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2; 
 
         if (!isCubeInView) return; // Not in view, let page scroll normally
 
@@ -291,9 +290,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const deltaY = currentTouchY - touchStartY;
         const deltaX = currentTouchX - touchStartX;
 
-        // Only consider vertical scroll for cube animation
+        // Only consider vertical scroll for cube animation, and prevent default
+        // if a significant vertical swipe is happening within the cube's area
         if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) { // 10px threshold for meaningful swipe
-            event.preventDefault(); // Prevent page scroll during vertical swipe in cube's area
+            event.preventDefault(); 
             touchDeltaY = deltaY; // Accumulate for `touchend` decision
         } else {
             // If horizontal swipe or minor movement, don't preventDefault, allow native scroll (e.g., horizontal swipe on page)
