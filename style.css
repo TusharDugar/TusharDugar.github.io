@@ -231,7 +231,6 @@ html::before {
 .main-layout-container {
     display: flex;
     justify-content: center; /* Center the entire two-column layout */
-    align-items: flex-start; /* Aligns items to the top initially, to allow sticky to work properly */
     max-width: 1920px; /* Overall max width of the site */
     margin: 0 auto; /* Center the main layout container itself */
     padding: 0 60px; /* Overall padding for the site */
@@ -266,14 +265,14 @@ html::before {
 /* FIXED: Desktop-specific rules for left column (fixed and centrally aligned within its allocated space) */
 @media (min-width: 1024px) {
     .main-layout-container {
-        align-items: flex-start; /* Ensure columns align to top so sticky can work relative to its parent */
+        align-items: flex-start; /* Align to top to allow sticky to work properly */
     }
     .left-column-sticky {
         position: sticky; /* Make it sticky */
         top: 50%; /* Start sticky behavior from the middle of the viewport */
         transform: translateY(-50%); /* Adjust upwards by half its height for true vertical centering */
         height: calc(100vh - 100px); /* Give it a defined height so justify-content: center has room to work */
-        margin: 0; /* Remove auto margins, as top/transform now control vertical position, flexbox controls horizontal */
+        margin: 0; /* Remove auto margins */
         align-self: flex-start; /* It needs to be flex-start in the parent for sticky to work correctly with top property */
     }
 }
@@ -539,8 +538,7 @@ html::before {
     position: relative;
     transform-style: preserve-3d; /* IMPORTANT: Ensures children are positioned in 3D space */
     transition: transform 0.5s ease; /* Transition for cube rotation */
-    /* FIXED: Base isometric tilt added here in CSS. JS will update rotateY, but rotateX should persist. */
-    transform: rotateX(-25deg) rotateY(0deg); 
+    transform: rotateX(-25deg) rotateY(0deg); /* FIXED: Base isometric tilt added here in CSS. JS will update rotateY, but rotateX should persist. */
     will-change: transform;
 }
 
