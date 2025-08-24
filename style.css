@@ -145,7 +145,7 @@ html::before {
         linear-gradient(to right, transparent 99.85%, white 0.15%),
         linear-gradient(to bottom, transparent 99.85%, white 0.15%),
         linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
-        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
+        linear-linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
 
     /* ADJUSTED MASK SIZES for even denser pattern */
     mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px; /* Adjusted from 50px */
@@ -455,7 +455,6 @@ html::before {
 .services-section {
   position: relative;
   /* Min height will be set by JS to create scroll space */
-  /* padding: 80px 40px; */ /* Padding will be part of the sticky container instead */
   z-index: 2;
   background-color: transparent;
   margin-top: 0;
@@ -490,7 +489,7 @@ html::before {
 .services-3d-carousel-container {
     width: 100%;
     max-width: 800px; /* Wider cards */
-    height: 300px; /* Fixed height for the visible card */
+    height: 255px; /* Reduced height by 15% (300 * 0.85) */
     position: sticky; /* Key for scroll-driven effect */
     top: 50%; /* Center vertically in viewport */
     transform: translateY(-50%); /* Adjust for perfect centering */
@@ -899,7 +898,7 @@ footer h2 {
     /* New Carousel specific adjustments */
     .services-3d-carousel-container {
         max-width: 700px; /* Adjusted for medium screens */
-        height: 250px; /* Smaller height */
+        height: 216px; /* 255px * 0.85 */
         margin-top: 40px;
         padding: 0 40px 80px 40px;
     }
@@ -1052,7 +1051,7 @@ footer h2 {
     /* New Carousel specific adjustments */
     .services-3d-carousel-container {
         max-width: 90%; /* Adjust for smaller screens */
-        height: 220px; /* Smaller height for mobile */
+        height: 187px; /* 220px * 0.85 */
         margin-top: 30px;
         padding: 0 20px 60px 20px;
     }
@@ -1137,7 +1136,7 @@ footer h2 {
     }
     /* New Carousel specific adjustments */
     .services-3d-carousel-container {
-        height: 200px; /* Even smaller height for small mobile */
+        height: 170px; /* 200px * 0.85 */
         margin-top: 20px;
         padding: 0 15px 40px 15px;
     }
