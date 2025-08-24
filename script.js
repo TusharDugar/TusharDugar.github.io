@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ensure the cube itself is at the current logical rotation state
         cube.style.transition = 'none'; // No transition for initial setup of cube's transform
-        cube.style.transform = `rotateY(${-currentRotationAngle}deg)`; 
+        cube.style.transform = `rotateY(${-currentRotationAngle}deg)`; // Use rotateY as per your CSS snippet
 
         updateFaceVisibility(); // Set initial visibility for activeFaceIndex
     }
