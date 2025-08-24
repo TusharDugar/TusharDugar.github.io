@@ -515,30 +515,49 @@ html::before {
     color: var(--text-light);
     border-radius: 12px;
     padding: 40px;
-    display: flex;
+    display: flex; /* Use flexbox to center content */
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     backface-visibility: hidden; /* Prevents back of face from showing when rotated */
-    opacity: 0; /* Hidden by default, JS controls visibility and opacity */
-    visibility: hidden;
-    transition: opacity 0.4s ease-out, visibility 0s 0.4s; /* Default fade out, then hide */
+    
+    /* Managed by JS initially and during transitions */
+    opacity: 0; /* Default hidden */
+    visibility: hidden; /* Default hidden */
+    transition: none; /* Important: Clear any default transitions on base state */
+    
     will-change: transform, opacity;
 }
 
-/* Specific styles for active/visible faces during transition */
-.services-carousel-face.is-active,
-.services-carousel-face.is-next,
-.services-carousel-face.is-prev {
+/* State for the currently visible (active) face */
+/* This is the face that is at 0 rotation, fully visible */
+.services-carousel-face.is-current {
+    opacity: 1;
     visibility: visible;
-    transition: opacity 0.4s ease-in, transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1);
 }
 
-.services-carousel-face.is-active {
-    opacity: 1;
+/* State for the faces just before/after the current one (e.g., at +90deg or -90deg) */
+/* These are visible but transparent, ready to fade in/out */
+.services-carousel-face.is-next-face,
+.services-carousel-face.is-prev-face {
+    opacity: 0; 
+    visibility: visible;
 }
+
+/* DURING ANIMATION: Outgoing face fades out (0-40% of 1.2s = 0.48s) */
+.services-carousel-face.is-outgoing {
+    opacity: 0;
+    transition: opacity 0.48s ease-out; /* Only opacity for fade out, transform is on wrapper */
+}
+
+/* DURING ANIMATION: Incoming face fades in (60-100% of 1.2s = 0.48s, with 0.72s delay) */
+.services-carousel-face.is-incoming {
+    opacity: 1;
+    transition: opacity 0.48s ease-in 0.72s; /* 0.72s = 1.2s * 0.6 */
+}
+
 
 /* Face content styling */
 .services-carousel-face .service-title {
