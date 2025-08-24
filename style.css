@@ -505,7 +505,7 @@ html::before {
 /* --- 3D Cube Animation Styles --- */
 .cube-container {
     width: 100%;
-    max-width: 900px;
+    max-width: 900px; /* Wider cards */
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
     perspective: 1000px;
