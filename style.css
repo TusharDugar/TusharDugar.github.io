@@ -194,12 +194,12 @@ html::before {
     transform: translateY(0);
 }
 
-/* Stagger Container */
-.reveal-parent { /* Renamed for clarity as it's the parent that triggers stagger for its children */
+/* Stagger Parent (for elements like About section) */
+.reveal-parent {
     position: relative;
 }
 
-/* Stagger Child */
+/* Stagger Child (for elements inside About section) */
 .reveal-child {
     opacity: 0;
     transform: translateY(60px);
@@ -478,29 +478,33 @@ html::before {
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
-/* --- NEW 3D SERVICES CAROUSEL STYLES --- */
+/* --- NEW 3D SERVICES CAROUSEL STYLES (DesignCube Flip) --- */
 
-/* Container for the 3D carousel effect */
+/* Container for the 3D flip effect */
 .services-3d-carousel-container {
     width: 100%;
     max-width: 800px; /* Increased for wider cards */
-    height: 300px; /* Fixed height for the visible carousel area */
+    height: 300px; /* Fixed height for the visible card */
     margin: 60px auto; /* Centers horizontally */
     position: relative;
     perspective: 1000px; /* Gives the 3D depth effect */
-    overflow: hidden; /* Hides parts of faces that are out of the viewport */
+    overflow: hidden; /* Hides parts of cards that are out of the viewport */
     will-change: transform;
+    /* Optional: background color for debugging, remove later */
+    /* background: rgba(255, 255, 255, 0.05); */ 
 }
 
-/* The wrapper that will perform the 3D rotation */
+/* The wrapper holds the cards, but doesn't rotate itself in this flip style */
 .services-3d-carousel-wrapper {
     width: 100%;
     height: 100%;
     position: absolute;
     transform-style: preserve-3d; /* Crucial for child elements to be in 3D space */
-    transform: rotateX(0deg); /* Initial rotation, controlled by JS */
-    transform-origin: center center; /* Rotation happens around the center */
-    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1); /* Easing as per prompt */
+    /* No transform on wrapper, its children move */
+    transform: none; 
+    transform-origin: center center;
+    /* No transition on wrapper, its children transition */
+    transition: none; 
     will-change: transform;
 }
 
@@ -523,35 +527,51 @@ html::before {
     box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     backface-visibility: hidden; /* Prevents back of face from showing when rotated */
     
-    /* These properties are now exclusively managed by JavaScript and state classes */
-    transition: none; /* Important: Clear any default transitions on base state */
+    /* Initial state set by JS and animation classes */
+    opacity: 0;
+    visibility: hidden;
+    transform-origin: center center; /* Important for local card rotation */
+    /* Only transform and opacity transition on the cards themselves */
+    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1), opacity 0.48s ease-out; 
     
     will-change: transform, opacity;
 }
 
-/* State for the currently visible (active) face */
+/* Base states for cards positioned relative to the viewport (managed by JS via inline styles initially) */
+/* The JS will set specific rotateX and translateZ values directly based on calculated faceOffset */
+
+/* State for the currently visible (active) card */
 .services-carousel-face.is-current {
     opacity: 1;
     visibility: visible;
+    transform: rotateX(0deg) translateZ(0); /* Ensure it's flat in front */
+    /* Reapply transform transition for smooth entry */
+    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1), opacity 0.48s ease-in 0.72s; /* Fade in later in rotation */
 }
 
-/* State for the faces just before/after the current one (e.g., at +90deg or -90deg) */
-.services-carousel-face.is-next-face,
-.services-carousel-face.is-prev-face {
-    opacity: 0; 
-    visibility: visible;
-}
-
-/* DURING ANIMATION: Outgoing face fades out (0-40% of 1.2s = 0.48s) */
-.services-carousel-face.is-outgoing {
+/* State for a card that is leaving the view (flips up or down) */
+.services-carousel-face.is-leaving.up { /* Leaving upwards */
     opacity: 0;
-    transition: opacity 0.48s ease-out; /* Only opacity for fade out, transform is on wrapper */
+    transform: rotateX(-90deg) translateZ(calc(var(--face-offset, 150px) * 1));
+    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1), opacity 0.48s ease-out;
+}
+.services-carousel-face.is-leaving.down { /* Leaving downwards */
+    opacity: 0;
+    transform: rotateX(90deg) translateZ(calc(var(--face-offset, 150px) * 1));
+    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1), opacity 0.48s ease-out;
 }
 
-/* DURING ANIMATION: Incoming face fades in (60-100% of 1.2s = 0.48s, with 0.72s delay) */
-.services-carousel-face.is-incoming {
+
+/* State for a card that is entering the view (flips up or down) */
+.services-carousel-face.is-entering.up { /* Entering from top */
     opacity: 1;
-    transition: opacity 0.48s ease-in 0.72s; /* 0.72s = 1.2s * 0.6 */
+    transform: rotateX(0deg) translateZ(0);
+    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1), opacity 0.48s ease-in 0.72s; /* Fade in delayed */
+}
+.services-carousel-face.is-entering.down { /* Entering from bottom */
+    opacity: 1;
+    transform: rotateX(0deg) translateZ(0);
+    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1), opacity 0.48s ease-in 0.72s; /* Fade in delayed */
 }
 
 
@@ -1101,9 +1121,6 @@ footer h2 {
 
     footer {
         padding: 60px 0;
-    }
-    .contact-buttons {
-        gap: 15px;
     }
     .contact-button {
         width: 200px;
