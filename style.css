@@ -30,7 +30,7 @@
 
     /* New color for grey headings (re-introduced) */
     --text-sub-heading-grey: #666666; /* Distinct grey color for headings */
-} /* FIXED: Added missing closing brace for :root */
+}
 
 /* Universal Box-Sizing for easier layout management */
 *, *::before, *::after {
@@ -131,8 +131,6 @@ html::before {
     z-index: 0; /* Above color glows, below main content */
     pointer-events: none;
     opacity: 0.008; /* EXTREMELY SUBTLE */
-
-    /* REMOVED background-image, background-size, animation properties from here */
     
     /* TWEAKED LINE THICKNESS & SEGMENTATION */
     mask-image:
@@ -233,7 +231,7 @@ html::before {
 .main-layout-container {
     display: flex;
     justify-content: center;
-    align-items: center; /* FIXED: Vertically centers columns relative to each other */
+    align-items: center; /* FIXED: Vertically centers columns relative to each other for desktop */
     max-width: 1920px;
     margin: 0 auto;
     padding: 0 60px;
@@ -250,33 +248,48 @@ html::before {
     flex-basis: 370px;
     padding-right: 0;
     box-sizing: border-box;
-    position: sticky; /* Sticky by default for desktop */
-    top: 50px; /* Position for sticky behavior */
-    height: calc(100vh - 50px); /* Gives it a defined height for internal centering when sticky */
     display: flex;
     flex-direction: column;
     align-items: center; /* Centers content horizontally within the column */
-    justify-content: center; /* FIXED: Centers content vertically within the column's height for all views */
+    justify-content: center; /* FIXED: Centers content vertically within the column's height */
     text-align: center;
     z-index: 2;
+    
+    /* FIXED: Robust centering for initial load on all devices */
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 auto; /* Horizontally center if it becomes a block */
+    height: auto; /* Allow natural height for initial centering */
 }
 
-/* Override sticky for smaller screens (tablets/mobile) and center it correctly */
-@media (max-width: 1023px) { /* Adjust breakpoint as needed for when it stops being sticky */
+/* Media query to re-apply sticky for desktop (min-width: 1024px is a common breakpoint) */
+@media (min-width: 1024px) {
     .left-column-sticky {
-        position: relative; /* Not sticky on mobile */
+        position: sticky;
+        top: 50px;
+        transform: none; /* Remove translateY when sticky */
+        margin: 0; /* Remove auto margins when sticky */
+        height: calc(100vh - 50px); /* Restore fixed height for sticky behavior */
+    }
+}
+
+/* Media query for smaller devices (e.g., tablets down to mobile) */
+@media (max-width: 1023px) { 
+    .main-layout-container {
+        flex-direction: column; /* Stack columns vertically */
+        align-items: center; /* Center the left column block horizontally */
+    }
+    .left-column-sticky {
+        position: relative; /* Ensure it's not sticky */
         top: auto; /* Remove sticky top positioning */
         height: auto; /* Allow natural height, content dictates size */
-        margin: 50px auto 0 auto; /* FIXED: Add top margin, then horizontally center the block itself */
+        margin: 50px auto 0 auto; /* Add top margin, then horizontally center as a block */
         width: 100%; /* Ensure it takes full width of its parent */
         max-width: 400px; /* Cap width on smaller screens */
     }
-    /* Ensure main-layout-container also helps centering for mobile */
-    .main-layout-container {
-        flex-direction: column;
-        align-items: center; /* This centers the left-column-sticky horizontally */
-    }
 }
+
 
 /* About Left Content (White Card) */
 .about-left-content {
@@ -544,7 +557,8 @@ html::before {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.5s ease; /* Transition for cube rotation */
-    transform: rotateX(-25deg) rotateY(0deg); /* FIXED: Added initial isometric tilt */
+    /* REMOVED static rotateX here, now purely controlled by JS for consistency */
+    transform: rotateY(0deg); 
     will-change: transform;
 }
 
@@ -575,7 +589,6 @@ html::before {
 
 /* Styling for content within the face */
 .service-content {
-    /* flex-grow: 1; */ /* Allow content to take available space */
     width: auto; /* Allow content to size naturally */
     max-width: 80%; /* Prevent content from pushing number off */
 }
@@ -650,8 +663,6 @@ html::before {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     cursor: pointer;
     will-change: transform; 
-    /* .reveal-stagger applies opacity and transform for animation,
-       also explicitly adding the transition here for clarity as requested */
     transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1007,14 +1018,8 @@ footer h2 {
         gap: 0;
         align-items: center; /* FIXED: Centers the left-column-sticky horizontally when in column mode */
     }
-    .left-column-sticky {
-        position: relative; /* Not sticky on mobile */
-        top: auto;
-        height: auto; /* Allow natural height */
-        margin: 50px auto 0 auto; /* Push down, center horizontally as a block */
-        width: 100%; /* Ensure it takes full width */
-        max-width: 400px; /* Cap width on smaller screens */
-    }
+    /* .left-column-sticky media query rules handled by general rules above or specific min-width: 1024px */
+
     .section {
         padding: 60px 20px; /* Reduced for small screens */
     }
