@@ -231,7 +231,7 @@ html::before {
 .main-layout-container {
     display: flex;
     justify-content: center; /* Center the entire two-column layout */
-    align-items: flex-start; /* Aligns items to the top initially, to allow sticky to work */
+    align-items: flex-start; /* Aligns items to the top initially, to allow sticky to work properly */
     max-width: 1920px; /* Overall max width of the site */
     margin: 0 auto; /* Center the main layout container itself */
     padding: 0 60px; /* Overall padding for the site */
@@ -257,27 +257,24 @@ html::before {
     /* Default (Mobile/Tablet) positioning */
     position: relative;
     top: auto;
-    transform: none;
-    margin: 50px auto 0 auto; /* Push down, center horizontally */
+    transform: none; /* No vertical translate by default */
+    margin: 50px auto 0 auto; /* Horizontally center as a block, push down a bit */
     height: auto; /* Content dictates height */
     padding-right: 0; /* Remove unnecessary padding */
 }
 
-/* FIXED: Desktop-specific rules for left column (fixed and centrally aligned within its space) */
+/* FIXED: Desktop-specific rules for left column (fixed and centrally aligned within its allocated space) */
 @media (min-width: 1024px) {
-    .left-column-sticky {
-        position: sticky; /* Sticky is essential for it to stay in its flow but also "fix" */
-        top: 50%; /* Start sticky behavior from the middle of the viewport */
-        transform: translateY(-50%); /* Adjust upwards by half its height for true centering */
-        /* height: auto; Removed specific height for sticky, it takes height from its content + padding */
-        height: calc(100vh - 100px); /* Adjust height for optimal vertical centering within viewport */
-        margin: 0; /* Remove auto margins, as top/transform now control position */
-        align-self: center; /* Important to keep it centered vertically within its flex container */
-    }
-
-    /* Adjust main-layout-container alignment for desktop to support sticky */
     .main-layout-container {
-        align-items: center; /* This will make the entire flex container (with both columns) center vertically */
+        align-items: flex-start; /* Ensure columns align to top so sticky can work relative to its parent */
+    }
+    .left-column-sticky {
+        position: sticky; /* Make it sticky */
+        top: 50%; /* Start sticky behavior from the middle of the viewport */
+        transform: translateY(-50%); /* Adjust upwards by half its height for true vertical centering */
+        height: calc(100vh - 100px); /* Give it a defined height so justify-content: center has room to work */
+        margin: 0; /* Remove auto margins, as top/transform now control vertical position, flexbox controls horizontal */
+        align-self: flex-start; /* It needs to be flex-start in the parent for sticky to work correctly with top property */
     }
 }
 
@@ -293,7 +290,7 @@ html::before {
     max-width: 370px;
     height: auto;
     box-sizing: border-box;
-    transition: none; /* No reveal transition on the card itself, only its children */
+    transition: none;
 
     display: flex;
     flex-direction: column;
@@ -391,7 +388,7 @@ html::before {
     height: 150px;
     top: -50px;
     left: -50px;
-    /* Flipped to show right and bottom borders, making it curve inwards */
+    /* FIXED: Flipped to show right and bottom borders, making it curve inwards */
     border-top-color: transparent; 
     border-left-color: transparent;
     transform: rotate(-10deg);
@@ -402,7 +399,7 @@ html::before {
     height: 150px;
     bottom: -50px;
     right: -50px;
-    /* Flipped to show top and left borders, making it curve inwards */
+    /* FIXED: Flipped to show top and left borders, making it curve inwards */
     border-bottom-color: transparent;
     border-right-color: transparent;
     transform: rotate(10deg);
@@ -497,16 +494,13 @@ html::before {
 
 /* Services Section Styles */
 .services-section {
-  padding: 80px 40px; 
-  margin-top: 0; 
   position: relative;
+  padding: 80px 40px;
   text-align: left;
   z-index: 2;
   background-color: transparent;
+  margin-top: 0;
   margin-bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center the heading and cards */
 }
 
 /* Services Main Title */
@@ -515,15 +509,12 @@ html::before {
     font-size: 8em;
     line-height: 0.75em;
     font-weight: 800;
-    margin-bottom: 40px; /* Space below heading */
+    margin-bottom: 40px;
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
     position: relative;
     z-index: 4;
-    padding: 0; /* Padding is now part of the section */
-    width: 100%;
-    max-width: 1200px; /* Match section max-width */
 }
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
@@ -534,7 +525,7 @@ html::before {
     max-width: 900px;
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
-    perspective: 1000px;
+    perspective: 1000px; /* IMPORTANT: Defines the 3D space */
     position: relative; 
     overflow: hidden;
     will-change: transform;
@@ -546,9 +537,10 @@ html::before {
     width: 100%;
     height: 100%;
     position: relative;
-    transform-style: preserve-3d;
+    transform-style: preserve-3d; /* IMPORTANT: Ensures children are positioned in 3D space */
     transition: transform 0.5s ease; /* Transition for cube rotation */
-    transform: rotateX(-25deg) rotateY(0deg); /* FIXED: Base isometric tilt added here */
+    /* FIXED: Base isometric tilt added here in CSS. JS will update rotateY, but rotateX should persist. */
+    transform: rotateX(-25deg) rotateY(0deg); 
     will-change: transform;
 }
 
@@ -563,7 +555,7 @@ html::before {
     display: flex;
     justify-content: space-between; /* To align content left, number right */
     align-items: center;
-    backface-visibility: hidden;
+    backface-visibility: hidden; /* Hide back of faces when rotated away */
     will-change: transform, opacity;
     transition: opacity 0.3s ease-out; /* For fading in/out */
     opacity: 0; /* Managed by JS, starts hidden */
@@ -595,7 +587,7 @@ html::before {
     text-align: justify; /* FIXED: Justify text */
     line-height: 1.8; /* FIXED: Better line spacing */
     word-spacing: 1px; /* FIXED: Better word spacing */
-    color: var(--text-medium); /* RESTORED: Original color, opacity managed by JS */
+    color: var(--text-medium); /* RESTORED: Original color */
     opacity: 1; /* Ensure text itself is always opaque within the face */
     font-size: 1em;
     max-width: 90%;
@@ -636,13 +628,9 @@ html::before {
     margin-left: 0;
     margin-right: 0;
     justify-items: stretch;
-    width: 100%; /* Ensure it takes full width of its parent */
-    max-width: 650px; /* Optional: constrain width for centering on larger screens */
-    margin-left: auto;
-    margin-right: auto;
 }
 
-/* Tool Card (Now uses .reveal-stagger) */
+/* Tool Card (Animations) */
 .tool-card {
     background-color: var(--bg-tool-card);
     border-radius: 15px;
@@ -651,9 +639,16 @@ html::before {
     align-items: center;
     gap: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
-    will-change: transform; 
-    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+
+    opacity: 0; /* Default hidden for reveal animation */
+    transform: translateY(60px); /* Default position for reveal animation */
+}
+.tool-card.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .tool-card:hover {
@@ -702,7 +697,7 @@ html::before {
 }
 
 
-/* Footer (Contact Section) - Restored with Stagger */
+/* Footer (Contact Section) */
 footer {
     background-color: var(--bg-main);
     color: var(--text-light);
@@ -875,9 +870,6 @@ footer h2 {
     .section { /* General section padding */
         padding: 80px 40px; /* Consistent for medium screens */
     }
-    .services-heading {
-        padding: 0; /* Already centered with parent */
-    }
 
     /* Specific adjustments for profile card on 1200px screens */
     .about-left-content {
@@ -932,6 +924,9 @@ footer h2 {
     }
     .hero-description {
         font-size: 1em;
+        line-height: 1.7;
+        margin-bottom: 80px;
+        max-width: 700px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -1005,15 +1000,18 @@ footer h2 {
         padding: 0 20px;
         padding-top: 20px;
         gap: 0;
-        align-items: center; /* FIXED: Centers the left-column-sticky horizontally when in column mode */
     }
-    /* .left-column-sticky media query rules handled by general rules above or specific min-width: 1024px */
-
+    .left-column-sticky {
+        width: 100%;
+        position: relative;
+        top: 0;
+        min-height: unset;
+        padding-bottom: 50px;
+        padding-top: 0;
+        flex-basis: auto;
+    }
     .section {
         padding: 60px 20px; /* Reduced for small screens */
-    }
-    .services-heading {
-        padding: 0;
     }
 
     /* Specific adjustments for profile card on 768px screens */
@@ -1047,6 +1045,7 @@ footer h2 {
     .about-short-desc {
         font-size: 0.8em;
         margin-bottom: 15px;
+        padding: 0 2px;
     }
     .about-social-icons a {
         font-size: 1.3em;
@@ -1079,7 +1078,9 @@ footer h2 {
     }
     .hero-description {
         font-size: 0.95em;
+        line-height: 1.6;
         max-width: 100%;
+        margin-bottom: 40px;
     }
 
     /* Adjustments for services section */
@@ -1116,7 +1117,6 @@ footer h2 {
     }
     .tools-grid {
         grid-template-columns: 1fr;
-        max-width: 100%;
         gap: 15px;
     }
     .tool-card {
@@ -1138,24 +1138,21 @@ footer h2 {
         padding: 60px 0;
     }
     .contact-buttons {
-        max-width: 100%;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
+        gap: 15px;
     }
     .contact-button {
-        width: 90%;
-        height: 70px;
-        font-size: 0.9em;
+        width: 200px;
+        height: 95px;
+        font-size: 1em;
     }
     .contact-button i {
-        font-size: 1.8em;
+        font-size: 2.2em;
     }
     .contact-button .button-value {
-        font-size: 0.7em;
+        font-size: 0.8em;
     }
     .contact-button .copied-text {
-        font-size: 1em;
+        font-size: 1.3em;
     }
 }
 
@@ -1168,9 +1165,6 @@ footer h2 {
         letter-spacing: 0.5px;
         margin-bottom: 30px;
     }
-    .services-heading {
-        padding: 0;
-    }
     .hero-heading {
         font-size: clamp(2.8em, 9vw, 3.5em);
         line-height: 0.9em;
@@ -1178,37 +1172,37 @@ footer h2 {
     }
     .hero-description {
         font-size: 0.85em;
+        line-height: 1.5;
+        margin-bottom: 30px;
     }
 
-    /* Adjustments for services section */
+    .services-section {
+        padding: 40px 15px; /* Further reduced */
+    }
     .services-heading {
         font-size: 2.8em;
         line-height: 0.9em;
         margin-bottom: 25px;
     }
-    /* Cube container adjustments */
-    .cube-container {
-        height: 246px; /* Reduced by 15% from 290px */
-    }
-    .face {
-        padding: 20px;
+    .face { /* Service items in cube */
+        padding: 30px;
     }
     .service-title {
-        font-size: 1.3em;
+        font-size: 1.1em;
     }
     .service-description {
-        font-size: 0.8em;
+        font-size: 0.85em;
     }
     .face-number {
         font-size: 6em;
         right: 5px;
     }
 
-    /* Adjustments for tools section */
+    .tools-section {
+        padding: 40px 15px; /* Further reduced */
+    }
     .tools-heading {
         font-size: 2.8em;
-        line-height: 0.9em;
-        margin-bottom: 25px;
     }
     .tools-grid {
         grid-template-columns: 1fr;
@@ -1258,11 +1252,28 @@ footer h2 {
 @media (prefers-reduced-motion: reduce) {
     .reveal-item,
     .reveal-parent .reveal-child,
-    .reveal-stagger-container .reveal-stagger { /* Combined rules for all reveal items */
+    .reveal-stagger-container .reveal-stagger,
+    .tool-card
+    {
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
         animation: none !important;
         visibility: visible !important; /* Ensure content is visible */
+    }
+    /* For the 3D cube faces, ensure they are visible if motion is reduced */
+    .cube .face {
+        transition: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important; /* Remove any 3D transforms */
+    }
+    /* For the cube container itself, flatten it */
+    .cube-container {
+        perspective: none !important;
+    }
+    .cube {
+        transform-style: flat !important;
+        transform: none !important; /* Remove any 3D transforms */
     }
 }
