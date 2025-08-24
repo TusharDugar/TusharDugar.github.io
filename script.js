@@ -1,5 +1,5 @@
 // Global constants for animation timing
-const ROTATE_INCREMENT = 90; // Degrees for a 90-degree card flip (like a cube face)
+const ROTATE_INCREMENT = 45; // Degrees for an 8-sided prism (360 / 8 = 45)
 const SCROLL_FACTOR_PER_CARD = 1.0; // Multiplier for viewport height per card scroll (e.g., 1.0 means 100vh per card)
 
 // Function to copy text to clipboard for contact buttons
@@ -118,76 +118,49 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateDynamicDimensions() {
         if (!servicesSection || !servicesCarouselContainer || SERVICES_COUNT === 0) return;
 
-        // 1. Determine `faceOffset` (half height of card for `translateZ`)
-        faceOffset = servicesFaces[0].offsetHeight / 2;
+        // 1. Determine `faceOffset` (radius of the octagon for `translateZ`)
+        // The side length of the octagon is the width of the card.
+        // Radius R = (side_length / 2) / tan(PI / N)
+        // Here, side_length = servicesCarouselContainer.offsetWidth
+        faceOffset = (servicesCarouselContainer.offsetWidth / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+        
         if (faceOffset === 0 || isNaN(faceOffset)) {
-            console.warn("Could not determine faceOffset dynamically. Using fallback height.");
-            faceOffset = servicesCarouselContainer.offsetHeight / 2;
-            if (faceOffset === 0 || isNaN(faceOffset)) faceOffset = 150; // Absolute fallback
+            console.warn("Could not determine faceOffset dynamically. Using fallback value.");
+            faceOffset = 300; // Absolute fallback if calculation fails
         }
-        servicesCarouselContainer.style.setProperty('--face-offset', `${faceOffset}px`);
+        servicesCarouselContainer.style.setProperty('--face-offset', `${faceOffset}px`); // Set CSS variable
 
-        // 2. Position each face statically within the wrapper for the cube effect
+        // 2. Position each face statically within the wrapper to form the octagonal prism
         servicesFaces.forEach((face, i) => {
-            // Cards are positioned such that index 0 is front, index 1 is below, index SERVICES_COUNT-1 is above, etc.
-            // This is a static setup relative to the wrapper. The wrapper itself then rotates.
             face.style.transition = 'none'; // Clear transitions for setup
-            face.style.opacity = 0; // Start hidden, JS will control visibility
+            face.style.opacity = 0; // Start hidden
             face.style.visibility = 'hidden';
 
-            // For a 90-degree flip setup, faces can be positioned like this:
-            // 0: front-facing (rotateX(0), translateZ(0))
-            // 1: bottom-facing (rotateX(90), translateZ(faceOffset))
-            // 2: back-facing (rotateX(180), translateZ(0)) - or just push it back
-            // 3: top-facing (rotateX(-90), translateZ(faceOffset))
-            // The others are placed to allow a smooth transition sequence.
-            
-            // For a single "cube" with 8 faces on its perimeter rotating,
-            // the faces need to be "around" the rotation axis.
-            // Let's go for a simpler "card stack" flip where current goes up/down, next comes in.
-            // Face positions:
-            // current (0deg, 0px)
-            // next (90deg, faceOffset)
-            // prev (-90deg, faceOffset)
-            // other faces (180deg, 0)
-            
-            // Ensure cards are far enough in Z-space to not intersect on flip if backface is shown
-            // A more robust setup: all faces flat, wrapper just rotates.
-            
-            // Re-think: The DesignCube reference works by the *wrapper* rotating, and the *content itself*
-            // is drawn on the sides of that rotating wrapper. The cards are essentially fixed "textures" on the cube's sides.
-            // My current face positioning logic needs to reflect this for 8 "sides".
-
-            // Corrected static positioning of faces relative to the rotating wrapper:
-            // Each face is conceptually a side of an 8-sided prism that rotates.
-            // The distance from the center of rotation to the plane of the face (translateZ) needs to be calculated
-            // so that all 8 faces form a seamless octagonal prism.
-            const angleForFace = i * ROTATE_INCREMENT; // Total angle for this face if it were visible
+            const angleForFace = i * ROTATE_INCREMENT; // Each face is rotated by 45deg from the next/prev
             face.style.transform = `rotateX(${angleForFace}deg) translateZ(${faceOffset}px)`;
-            face.style.transition = 'none'; // Ensure no transitions during setup
         });
 
-
         // 3. Define the scrollable height for the services section
-        // We want (SERVICES_COUNT - 1) full screen heights dedicated to the animation
+        // We want (SERVICES_COUNT) full viewport heights dedicated to the animation for a smooth scrub.
         const viewportHeight = window.innerHeight;
-        totalAnimationScrollHeight = (SERVICES_COUNT - 1) * viewportHeight * SCROLL_FACTOR_PER_CARD;
-        
-        // Add additional height to the section itself for the scroll-driven animation
-        // This makes the `services-section` element vertically "stretch" in the document.
-        servicesSection.style.minHeight = `${servicesCarouselContainer.offsetHeight + totalAnimationScrollHeight + viewportHeight}px`; 
-        // Additional viewportHeight added for "buffer" above/below the interactive zone
+        // Total scroll needed to flip through all cards
+        totalAnimationScrollHeight = SERVICES_COUNT * viewportHeight * SCROLL_FACTOR_PER_CARD; // One full viewport height per card transition
 
         // 4. Calculate the precise scroll range for the carousel animation
-        const sectionTop = servicesSection.offsetTop;
-        const sectionBottom = sectionTop + servicesSection.offsetHeight;
-        
-        // The carousel animation starts when the sticky container is in view and has scrolled enough
-        // We want the carousel to activate when its sticky container is roughly in the middle of the viewport
-        scrollRangeStart = sectionTop + (viewportHeight / 2) - (servicesCarouselContainer.offsetHeight / 2);
+        const sectionRect = servicesSection.getBoundingClientRect();
+        const sectionTopAbsolute = sectionRect.top + window.scrollY;
+
+        // The carousel animation starts when the section itself is just entering the viewport
+        scrollRangeStart = sectionTopAbsolute;
         
         // The carousel animation ends after the scrollable height for all cards has been traversed
+        // Adding container.offsetHeight as buffer to ensure it stays in view during last scroll portion
         scrollRangeEnd = scrollRangeStart + totalAnimationScrollHeight;
+
+        // Ensure the services section has enough height to allow scrolling through the animation
+        // This makes the `services-section` element vertically "stretch" in the document.
+        servicesSection.style.minHeight = `${totalAnimationScrollHeight + servicesCarouselContainer.offsetHeight + viewportHeight * 0.5}px`; 
+        // Added buffer for scroll before/after the interactive zone.
 
         // Ensure current scroll progress is updated after recalculating boundaries
         updateCarouselAnimation();
@@ -209,10 +182,13 @@ document.addEventListener('DOMContentLoaded', () => {
             progress = (currentWindowScrollY - scrollRangeStart) / totalAnimationScrollHeight;
         }
 
-        // Calculate the total rotation based on progress (from 0 to (SERVICES_COUNT-1)*ROTATE_INCREMENT degrees)
-        const totalRotationDegrees = progress * (SERVICES_COUNT - 1) * ROTATE_INCREMENT;
+        // Calculate the total rotation based on progress (from 0 to (SERVICES_COUNT)*ROTATE_INCREMENT degrees)
+        // Multiply by SERVICES_COUNT, not (SERVICES_COUNT - 1), because we are mapping scroll to rotation of the *wrapper*,
+        // which will rotate 360 degrees if we were looping through all 8 faces in an 8-sided prism.
+        // For non-looping, we stop after 7 full 45-degree rotations.
+        const totalRotationDegrees = progress * SERVICES_COUNT * ROTATE_INCREMENT; // 8 * 45 = 360 degrees for full cycle
 
-        // Apply rotation to the wrapper. Negative rotation for visually scrolling down.
+        // Apply rotation to the wrapper. Negative rotation visually scrolls down as scrollY increases.
         servicesWrapper.style.transform = `rotateX(${-totalRotationDegrees}deg)`;
 
         // Update face visibility/opacity based on the current rotation angle
@@ -222,54 +198,61 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dynamically update opacity and visibility of faces based on the wrapper's current rotation
     function updateFaceVisibility(currentTotalRotationDegrees) {
         servicesFaces.forEach((face, i) => {
-            // Get the face's static angle (where it is physically placed in the 3D space)
-            const faceStaticAngle = i * ROTATE_INCREMENT;
+            const faceIndex = parseInt(face.dataset.index, 10); // Get actual index from data-index attribute
 
             // Calculate the face's effective current angle relative to the viewport's front (0deg)
-            // It's the static angle minus the wrapper's current rotation.
-            let effectiveAngle = (faceStaticAngle - currentTotalRotationDegrees) % 360;
+            // It's the face's static position angle minus the wrapper's current total rotation.
+            let effectiveAngle = (faceIndex * ROTATE_INCREMENT - currentTotalRotationDegrees) % 360;
 
-            // Normalize angle to be within -180 to 180 for easier logic
+            // Normalize angle to be within -180 to 180 for easier logic (front is 0, top -90, bottom 90, back 180/-180)
             if (effectiveAngle > 180) effectiveAngle -= 360;
             if (effectiveAngle < -180) effectiveAngle += 360;
 
-            // Define angles for visibility:
-            // - Front: -ROTATE_INCREMENT/2 to +ROTATE_INCREMENT/2 (e.g., -45 to 45)
-            // - Adjacent (top/bottom): Covers the ranges like 45 to 135 and -45 to -135
-            const tolerance = ROTATE_INCREMENT / 2 + 5; // A little buffer
-            const isFrontFacing = Math.abs(effectiveAngle) < tolerance;
-            const isNearAdjacent = Math.abs(effectiveAngle) < (ROTATE_INCREMENT * 1.5) + 5; // Covers front and immediate adjacent
-            
-            // Opacity calculation for fading
+            // Opacity calculation for fading:
+            // - Fully opaque when directly front-facing (effectiveAngle ~0)
+            // - Fades out as it rotates towards +/-90 degrees (top/bottom)
+            // - Fully transparent when beyond +/-90 degrees (going to back or from back)
             let opacity = 0;
-            if (isFrontFacing) {
-                // Fully visible when directly front-facing
-                opacity = 1;
-            } else if (isNearAdjacent) {
-                // Fade out/in for faces rotating in/out
-                // Closer to 0 (front) means higher opacity
-                // Closer to +/-90 (top/bottom) means lower opacity
-                const angleFromCenter = Math.abs(effectiveAngle);
-                // Linear fade between 0 and 90 degrees of rotation (half the ROTATE_INCREMENT as center)
-                opacity = 1 - (angleFromCenter / ROTATE_INCREMENT); // Fades from 1 at 0deg to 0 at 90deg
+            const thresholdAngle = ROTATE_INCREMENT / 2; // e.g., 22.5 degrees for 45deg increment
+
+            if (Math.abs(effectiveAngle) < ROTATE_INCREMENT) { // If it's rotating through the front +/- 45 deg or so
+                // Linear fade: 1 at 0deg, 0 at +/-45deg
+                opacity = 1 - (Math.abs(effectiveAngle) / ROTATE_INCREMENT);
                 opacity = Math.max(0, Math.min(1, opacity)); // Clamp between 0 and 1
+            } else if (Math.abs(effectiveAngle) > 360 - ROTATE_INCREMENT) { // For wrap-around when nearing 360 or 0
+                // Handle wrap-around effect if needed, but the basic rotation takes care of it
+                // For a simpler approach, only consider angles around the front
             }
 
             // Apply opacity and visibility
             face.style.opacity = opacity;
-            face.style.visibility = (opacity > 0) ? 'visible' : 'hidden';
+            face.style.visibility = (opacity > 0.01) ? 'visible' : 'hidden'; // Keep visible if even slightly opaque
             face.style.transition = `opacity 0.15s ease-out`; // Smooth opacity changes
         });
     }
 
     // --- Event Handlers ---
+    
+    // Observer for the services section to know when it's in view
+    const servicesSectionObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            // This flag is crucial for conditional scroll handling
+            isServicesCarouselVisible = entry.isIntersecting;
+            if (isServicesCarouselVisible) {
+                // When section becomes visible, ensure dimensions are recalculated
+                calculateDynamicDimensions();
+                updateCarouselAnimation(); // Update animation immediately to current scroll position
+            }
+        });
+    }, { threshold: 0.1 }); // Trigger when 10% of the section is visible
+
+    // Global scroll handler (desktop)
     const handleGlobalScroll = (event) => {
-        // Only prevent default if we are within the carousel's active scroll range
-        // This allows normal page scroll outside the carousel.
+        // Prevent default only if scroll is within the carousel's active range AND it's visible
         const currentWindowScrollY = window.scrollY;
         const isActiveScrollRange = currentWindowScrollY >= scrollRangeStart && currentWindowScrollY <= scrollRangeEnd;
 
-        if (isActiveScrollRange) {
+        if (isServicesCarouselVisible && isActiveScrollRange) {
             event.preventDefault(); // Block normal page scroll
         }
         
@@ -279,63 +262,68 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Touch event handlers (mobile)
     let initialTouchY = 0;
-    let initialScrollYOnTouchStart = 0; // The window.scrollY when touch begins
+    let initialScrollYOnTouchStart = 0; // window.scrollY when touch started
 
     const handleTouchStart = (event) => {
+        if (!isServicesCarouselVisible) return;
         initialTouchY = event.touches[0].clientY;
         initialScrollYOnTouchStart = window.scrollY; // Capture scroll position at touch start
     };
 
     const handleTouchMove = (event) => {
+        if (!isServicesCarouselVisible) return;
+
         const currentTouchY = event.touches[0].clientY;
         const deltaTouchY = currentTouchY - initialTouchY;
 
-        // Calculate a "target scroll Y" based on touch movement.
-        // The touch input directly translates to how much we want the page to conceptually scroll.
+        // Map touch delta to a virtual scroll position
+        // This is a direct simulation of scroll, so we calculate a new window.scrollY equivalent
         const newVirtualScrollY = initialScrollYOnTouchStart - deltaTouchY;
 
-        // Determine if this touch event is within or pushing into the carousel's scroll range
-        const currentWindowScrollY = window.scrollY;
-        const isTouchingCarouselActiveRange = currentWindowScrollY >= scrollRangeStart && currentWindowScrollY <= scrollRangeEnd;
-
-        if (isTouchingCarouselActiveRange) {
-            event.preventDefault(); // Prevent default page scroll within the carousel range
-
-            // Manually set window.scrollY to move the page, which then triggers our carousel animation via the scroll listener
-            // This is the common vanilla JS pattern to synchronize touch-scroll with an internal scroll-driven animation.
+        // Clamp the virtual scroll to the carousel's actual scroll range to ensure non-looping at boundaries
+        const clampedVirtualScrollY = Math.max(scrollRangeStart, Math.min(scrollRangeEnd, newVirtualScrollY));
+        
+        // Only prevent default if we are within or trying to enter the carousel's active scroll range
+        const isTouchingCarouselActiveRange = window.scrollY >= scrollRangeStart && window.scrollY <= scrollRangeEnd;
+        
+        if (isTouchingCarouselActiveRange || (newVirtualScrollY >= scrollRangeStart && newVirtualScrollY <= scrollRangeEnd)) {
+            event.preventDefault(); // Prevent default page scroll
+            // Manually scroll the window to the new virtual position.
+            // This then triggers our `handleGlobalScroll` via the browser's native scroll event.
             window.scrollTo({
-                top: newVirtualScrollY,
-                behavior: 'auto' // Don't animate window scroll, let touch be immediate
+                top: clampedVirtualScrollY,
+                behavior: 'auto' // Crucial: 'auto' for immediate scroll response to touch
             });
-            
-            // Request animation frame to update carousel animation
-            if (!animationFrameId) {
-                animationFrameId = requestAnimationFrame(updateCarouselAnimation);
-            }
         }
-        // If outside the active range, allow default touch-scroll to take over (no preventDefault)
     };
 
     // --- Initialization and Event Listeners ---
     
     // Initial setup of faces and calculation of dimensions/scroll ranges
-    setupFaces();
+    calculateDynamicDimensions(); // Call once initially
 
     // Re-calculate dimensions and scroll boundaries on window resize
     window.addEventListener('resize', () => {
-        // Debounce resize events to prevent excessive recalculations
         if (animationFrameId) cancelAnimationFrame(animationFrameId); // Cancel any pending animation frame
         animationFrameId = requestAnimationFrame(() => {
-            setupFaces(); // Recalculate everything
+            calculateDynamicDimensions(); // Recalculate everything
             updateCarouselAnimation(); // Apply new state immediately
             animationFrameId = null;
         });
     });
     
+    // Start observing the services section for scroll interaction
+    if (servicesSection) {
+        servicesSectionObserver.observe(servicesSection);
+    }
+
     // Attach global scroll/touch listeners
+    // Wheel event to control desktop scrolling
     window.addEventListener('scroll', handleGlobalScroll, { passive: false }); // Needs to be non-passive for preventDefault
-    window.addEventListener('touchstart', handleTouchStart, { passive: true }); // passive:true for start is fine for performance
+    // Touch events for mobile swiping
+    window.addEventListener('touchstart', handleTouchStart, { passive: true }); 
     window.addEventListener('touchmove', handleTouchMove, { passive: false }); // Needs to be non-passive to call preventDefault
     window.addEventListener('touchend', handleTouchEnd, { passive: true }); // No preventDefault needed here
 
