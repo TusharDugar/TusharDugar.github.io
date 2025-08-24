@@ -509,9 +509,7 @@ html::before {
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
     perspective: 1000px; /* Perspective for 3D effect */
-    position: relative; /* Changed from sticky for discrete steps */
-    /* top: 50%; */ /* Removed sticky behavior */
-    /* transform: translateY(-50%); */ /* Removed sticky behavior */
+    position: relative; 
     overflow: hidden; /* Hide faces that are out of view */
     will-change: transform;
     /* Custom property for face offset calculation (set by JS) */
@@ -558,6 +556,7 @@ html::before {
 .service-content {
     position: relative;
     z-index: 1;
+    width: 100%; /* Take full width for content */
 }
 
 .service-title {
@@ -614,11 +613,10 @@ html::before {
     align-items: center;
     gap: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
     will-change: transform; 
     /* .reveal-stagger applies opacity and transform for animation,
-       but also explicitly adding the transition here for clarity as requested */
+       also explicitly adding the transition here for clarity as requested */
     transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
