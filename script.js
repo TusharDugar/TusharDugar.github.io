@@ -40,11 +40,9 @@ function initIntersectionObserverAnimations() {
         }
         // Handle reveal-parent (for staggered children like About section and Services section)
         else if (entry.target.classList.contains("reveal-parent")) {
-          const children = entry.target.querySelectorAll(".reveal-item"); // Changed from .reveal-child to .reveal-item
-          children.forEach((child, index) => {
-            // No need for setTimeout here if inline transition-delay is used in HTML.
-            // If the parent is .reveal-parent, its children are expected to be .reveal-child.
-            // But for Services, we now use .reveal-item with inline delay.
+          // For services, children have inline delays, so just add visible class
+          const children = entry.target.querySelectorAll(".reveal-item"); 
+          children.forEach(child => {
             child.classList.add("visible");
           });
         }
@@ -150,11 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.visibility = 'hidden';
 
             // Each face is statically positioned relative to the cube's origin
-            // For faces numbered 1-8, map to 0-7 for calculations
             const actualIndex = i; // Array index 0-7 corresponds to logical face position
             const angleForFace = actualIndex * ROTATION_INCREMENT_DEG; // 0, 45, 90...
 
-            // Apply transforms based on the desired geometry
+            // Apply transforms based on the desired geometry (rotateY as per your CSS snippet)
             face.style.transform = `rotateY(${angleForFace}deg) translateZ(${faceOffset}px)`;
         });
 
@@ -281,7 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
         touchDeltaY = 0; // Reset cumulative delta
     };
 
-    // Handles touch move (mobile)
     const handleTouchMove = (event) => {
         const rect = cubeContainer.getBoundingClientRect();
         const isCubeInView = rect.top < window.innerHeight && rect.bottom > 0;
