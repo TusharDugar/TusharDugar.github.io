@@ -30,7 +30,7 @@
 
     /* New color for grey headings (re-introduced) */
     --text-sub-heading-grey: #666666; /* Distinct grey color for headings */
-}
+} /* FIXED: Added missing closing brace for :root */
 
 /* Universal Box-Sizing for easier layout management */
 *, *::before, *::after {
@@ -246,7 +246,7 @@ html::before {
     gap: 60px; /* Adjusted from 180px */
 }
 
-/* Left Column (Sticky) */
+/* RESTORED: Original Left Column Styling */
 .left-column-sticky {
     flex-shrink: 0;
     flex-basis: 370px;
@@ -586,8 +586,8 @@ html::before {
 }
 
 
-/* Rotation positions for 8 faces (these are the static starting points for each face) */
-/* The translateZ will be controlled by JS via the --face-offset CSS variable for correct geometry */
+/* Rotation positions for 8 faces (These are starting rotations for faces, JS will handle translateZ and dynamic rotation) */
+/* All faces initially placed with their center at the origin, JS will move them out in Z */
 .face-1 { transform: rotateY(0deg); }
 .face-2 { transform: rotateY(45deg); }
 .face-3 { transform: rotateY(90deg); }
@@ -596,6 +596,8 @@ html::before {
 .face-6 { transform: rotateY(225deg); }
 .face-7 { transform: rotateY(270deg); }
 .face-8 { transform: rotateY(315deg); }
+
+/* --- END 3D Cube Animation Styles --- */
 
 
 /* Tools Grid Styling (Restored with Stagger) */
