@@ -458,7 +458,7 @@ html::before {
 /* HERO TEXT ADJUSTMENTS */
 .hero-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 8em;
+    font-size: 7.84em; /* FIXED: Reduced by 2% from 8em (8 * 0.98 = 7.84) */
     line-height: 0.75em;
     font-weight: 900;
     margin-bottom: 20px;
@@ -514,6 +514,9 @@ html::before {
     margin-left: 0;
     position: relative;
     z-index: 4;
+    padding: 0;
+    width: 100%;
+    max-width: 1200px;
 }
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
@@ -521,7 +524,7 @@ html::before {
 /* --- 3D Cube Animation Styles --- */
 .cube-container {
     width: 100%;
-    max-width: 900px;
+    max-width: 900px; /* Wider cards */
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
     perspective: 1000px; /* IMPORTANT: Defines the 3D space */
@@ -917,7 +920,7 @@ footer h2 {
 
     /* Adjustments for hero content */
     .hero-heading {
-        font-size: 6em;
+        font-size: 5.88em; /* FIXED: Reduced by 2% from 6em (6 * 0.98 = 5.88) */
         line-height: 0.85em;
         margin-bottom: 25px;
     }
@@ -957,9 +960,11 @@ footer h2 {
 
 
     /* Adjustments for tools section */
+    /* FIXED: Tools heading now matches services heading */
     .tools-heading {
-        font-size: 6em;
-        line-height: 0.85em;
+        font-family: 'Poppins', sans-serif;
+        font-size: 6em; /* Matching services heading */
+        line-height: 0.85em; /* Matching services heading */
         font-weight: 800; /* Matching services heading */
         margin-bottom: 50px; /* Matching services heading */
         text-transform: uppercase; /* Matching services heading */
@@ -1080,7 +1085,7 @@ footer h2 {
         text-align: center;
     }
     .hero-heading {
-        font-size: 4.5em;
+        font-size: 4.41em; /* FIXED: Reduced by 2% from 4.5em (4.5 * 0.98 = 4.41) */
         line-height: 0.9em;
         margin-bottom: 20px;
     }
@@ -1118,9 +1123,11 @@ footer h2 {
 
 
     /* Adjustments for tools section */
+    /* FIXED: Tools heading now matches services heading */
     .tools-heading {
-        font-size: 4.5em;
-        line-height: 0.9em;
+        font-family: 'Poppins', sans-serif;
+        font-size: 4.5em; /* Matching services heading */
+        line-height: 0.9em; /* Matching services heading */
         font-weight: 800; /* Matching services heading */
         margin-bottom: 30px; /* Matching services heading */
         text-transform: uppercase; /* Matching services heading */
@@ -1183,7 +1190,7 @@ footer h2 {
         margin-bottom: 30px;
     }
     .hero-heading {
-        font-size: clamp(2.8em, 9vw, 3.5em);
+        font-size: clamp(2.744em, 8.82vw, 3.43em); /* FIXED: Reduced by 2% */
         line-height: 0.9em;
         margin-bottom: 15px;
     }
@@ -1218,8 +1225,10 @@ footer h2 {
     .tools-section {
         padding: 40px 15px; /* Further reduced */
     }
+    /* FIXED: Tools heading now matches services heading */
     .tools-heading {
-        font-size: 2.8em;
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.8em; /* Matching services heading */
         line-height: 0.9em; /* Matching services heading */
         font-weight: 800; /* Matching services heading */
         margin-bottom: 25px; /* Matching services heading */
