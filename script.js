@@ -132,8 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.top = '0';
             face.style.left = '0';
             face.style.backfaceVisibility = 'hidden';
-            face.style.opacity = 0; // Start hidden
-            face.style.visibility = 'hidden'; // Start hidden
             face.style.transition = 'none'; // Clear any CSS transition during setup
 
             // Position each face around the center of the wrapper
@@ -151,22 +149,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // This function runs on setup and after each animation completes.
     function updateActiveFaceState() {
         servicesFaces.forEach((face, i) => {
-            // Clear all animation/state classes and transitions
+            // Clear all animation/state classes
             face.classList.remove('is-current', 'is-next-face', 'is-prev-face', 'is-outgoing', 'is-incoming');
             face.style.transition = 'none'; // Remove transition for state update
-            
+
             // Calculate rotational difference from current view
             const diff = (i - currentIndex + SERVICES_COUNT) % SERVICES_COUNT;
 
             if (diff === 0) { // This is the current, active face
                 face.classList.add('is-current');
-                // Opacity/visibility handled by .is-current class in CSS
-            } else if (diff === 1) { // This is the next face (below current)
+                face.style.opacity = 1;
+                face.style.visibility = 'visible';
+            } else if (diff === 1) { // This is the next face (below current for scrolling down)
                 face.classList.add('is-next-face');
-                // Opacity/visibility handled by .is-next-face class in CSS
-            } else if (diff === SERVICES_COUNT - 1) { // This is the previous face (above current)
+                face.style.opacity = 0;
+                face.style.visibility = 'visible';
+            } else if (diff === SERVICES_COUNT - 1) { // This is the previous face (above current for scrolling up)
                 face.classList.add('is-prev-face');
-                // Opacity/visibility handled by .is-prev-face class in CSS
+                face.style.opacity = 0;
+                face.style.visibility = 'visible';
             } else { // All other faces are fully hidden
                 face.style.opacity = 0;
                 face.style.visibility = 'hidden';
@@ -176,7 +177,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Main animation function
     function animateServices(direction) {
+        // Prevent animation if already animating
         if (isAnimating) return;
+
+        // Check for boundary conditions (non-looping)
+        if ((direction === 1 && currentIndex === SERVICES_COUNT - 1) ||
+            (direction === -1 && currentIndex === 0)) {
+            // Do not animate, allow normal page scroll to resume
+            isAnimating = false; // Ensure it's not locked if attempted to scroll past boundary
+            return false; // Indicate that carousel did not animate
+        }
+
         isAnimating = true;
 
         const outgoingFaceIndex = currentIndex;
@@ -204,6 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             isAnimating = false;
         }, ANIMATION_DURATION);
+
+        return true; // Indicate that carousel successfully animated
     }
 
     // --- Scroll Event Handling ---
@@ -228,13 +241,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Debounce scroll events
     const handleScroll = (event) => {
-        event.preventDefault(); // Prevent default page scroll
-        if (isAnimating) return;
+        if (isAnimating) {
+            event.preventDefault(); // Keep preventing if still animating a slide
+            return;
+        }
 
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
             const direction = event.deltaY > 0 ? 1 : -1; // 1 for scroll down, -1 for scroll up
-            animateServices(direction);
+            const didAnimate = animateServices(direction);
+            
+            if (didAnimate) {
+                event.preventDefault(); // Prevent default page scroll ONLY if carousel animated
+            } else {
+                // If carousel didn't animate (hit boundary), allow default page scroll
+                // No need to explicitly preventDefault here, as it wasn't prevented for this event
+            }
         }, 100); // Debounce time (adjust as needed for responsiveness)
     };
 
@@ -244,15 +266,24 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleTouchEnd = (event) => {
-        if (isAnimating) return;
+        if (isAnimating) {
+            event.preventDefault(); // Prevent page scroll if still animating
+            return;
+        }
 
         const endY = event.changedTouches[0].clientY;
         const deltaY = endY - startY;
 
-        if (Math.abs(deltaY) < 50) return; // Ignore small swipes
+        if (Math.abs(deltaY) < 50) { // Ignore small swipes
+            return;
+        }
 
         const direction = deltaY < 0 ? 1 : -1; // 1 for swipe up (scroll down), -1 for swipe down (scroll up)
-        animateServices(direction);
+        const didAnimate = animateServices(direction);
+
+        if (didAnimate) {
+            event.preventDefault(); // Prevent default page scroll ONLY if carousel animated
+        }
     };
 
     // Initialize faces when the DOM is ready
