@@ -40,11 +40,12 @@ function initIntersectionObserverAnimations() {
         }
         // Handle reveal-parent (for staggered children like About section and Services section)
         else if (entry.target.classList.contains("reveal-parent")) {
-          const children = entry.target.querySelectorAll(".reveal-child");
+          const children = entry.target.querySelectorAll(".reveal-item"); // Changed from .reveal-child to .reveal-item
           children.forEach((child, index) => {
-            setTimeout(() => {
-              child.classList.add("visible");
-            }, index * 100); // Apply stagger delay (100ms)
+            // No need for setTimeout here if inline transition-delay is used in HTML.
+            // If the parent is .reveal-parent, its children are expected to be .reveal-child.
+            // But for Services, we now use .reveal-item with inline delay.
+            child.classList.add("visible");
           });
         }
         // Handle reveal-stagger-container (for staggered children like Tools and Contact buttons)
@@ -56,7 +57,6 @@ function initIntersectionObserverAnimations() {
             }, index * 100); // Apply stagger delay (100ms)
           });
         }
-        // No explicit handling for .reveal-child or .reveal-stagger directly, as their parents trigger them.
         
         observer.unobserve(entry.target); // Stop observing once revealed
       }
