@@ -30,7 +30,7 @@
 
     /* New color for grey headings (re-introduced) */
     --text-sub-heading-grey: #666666; /* Distinct grey color for headings */
-} /* <-- FIXED: Added missing closing brace for :root */
+}
 
 /* Universal Box-Sizing for easier layout management */
 *, *::before, *::after {
@@ -200,6 +200,7 @@ html::before {
 }
 
 /* Stagger Child (for elements inside About section) */
+/* The Services items use `reveal-item` with inline delays, so this isn't strictly needed for Services */
 .reveal-child {
     opacity: 0;
     transform: translateY(60px);
@@ -245,7 +246,7 @@ html::before {
     gap: 60px; /* Adjusted from 180px */
 }
 
-/* RESTORED: Original Left Column Styling */
+/* Left Column (Sticky) */
 .left-column-sticky {
     flex-shrink: 0;
     flex-basis: 370px;
@@ -413,7 +414,6 @@ html::before {
     color: var(--accent-primary-sawad);
     transform: translateY(-2px) scale(1.05);
 }
-/* END RESTORED: Original Left Column Styling */
 
 
 /* Right Column (Scrolling) */
@@ -503,72 +503,99 @@ html::before {
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
-/* --- RESTORED 2D SERVICES GRID STYLES WITH STAGGER --- */
-
-/* Services Grid Container (now reveal-parent) */
-.services-items-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); /* Allow cards to be wider */
-    gap: 25px;
-    justify-items: stretch;
-    margin-top: 0;
-    position: relative; /* From reveal-parent */
+/* --- 3D Cube Animation Styles --- */
+.cube-container {
     width: 100%;
-    max-width: 800px; /* Control max width for centering */
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 900px; /* Wider cards */
+    height: 340px; /* Reduced by 15% from 400px base */
+    margin: 60px auto;
+    perspective: 1000px;
+    position: relative; 
+    overflow: hidden;
+    will-change: transform;
+    /* Custom property for face offset calculation (set by JS) */
+    --face-offset: 450px; /* Default from user's snippet, will be overridden by JS for correctness */
 }
 
-/* Service Item (now reveal-item) */
-.service-item {
-  background-color: var(--bg-tool-card); /* Consistent dark background */
-  border-radius: 12px;
-  padding: 35px; /* Reduced padding for ~15% height reduction from initial 40px */
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  text-align: left;
-  will-change: transform, opacity;
-
-  /* These opacity and transform properties are now controlled by .reveal-item */
-  opacity: 0;
-  transform: translateY(60px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-  /* transition-delay is set inline in HTML */
+.cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease; /* Transition for cube rotation */
+    transform: rotateY(0deg); /* Initial state, controlled by JS */
+    will-change: transform;
 }
 
-/* Service item children styling */
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #CCCCCC; /* From user's snippet */
+    background-color: var(--bg-tool-card);
+    color: var(--text-light);
+    padding: 30px; /* Controls internal spacing, helps reduce visual height */
+    display: flex;
+    justify-content: space-between; /* To align content left, number right */
+    align-items: center;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+    transition: opacity 0.3s ease-out; /* For fading in/out */
+    opacity: 0; /* Managed by JS */
+    visibility: hidden; /* Managed by JS */
+}
+
+/* Active face (managed by JS) */
+.face.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Styling for content within the face */
+.service-content {
+    /* flex-grow: 1; */ /* Allow content to take available space */
+    width: auto; /* Allow content to size naturally */
+    max-width: 80%; /* Prevent content from pushing number off */
+}
+
 .service-title {
-    position: relative;
-    z-index: 1;
-    font-size: 1.7em;
+    font-size: 2em;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     line-height: 1.2;
+    color: var(--text-light);
 }
+
 .service-description {
-    position: relative;
-    z-index: 1;
-    font-size: 0.95em;
+    font-size: 1em;
     color: var(--text-medium);
     line-height: 1.6;
+    max-width: 90%;
 }
 
-/* Subtitle background numbers styling (restored) */
-.service-bg-number {
-  position: absolute;
-  top: 50%;
-  right: 15px; /* Adjusted positioning for wider cards */
-  transform: translateY(-50%);
-  font-size: 11em; /* Adjusted size */
-  font-weight: 500; /* Adjusted for less bold */
-  color: rgba(255, 255, 255, 0.05); /* Very transparent white */
-  z-index: 0;
-  pointer-events: none;
-  line-height: 1;
+.face-number {
+    position: relative; /* Position relative to flex container */
+    flex-shrink: 0; /* Prevent number from shrinking */
+    font-size: 11em; /* Adjusted for smaller size */
+    font-weight: 500; /* Adjusted for less bold */
+    color: rgba(255, 255, 255, 0.05); /* Very transparent white */
+    pointer-events: none; /* Don't block interactions */
+    z-index: 0; /* Behind text content */
+    line-height: 1; /* Prevent extra spacing */
+    margin-left: 20px; /* Space between content and number */
 }
 
-/* --- END RESTORED 2D SERVICES GRID STYLES --- */
+
+/* Rotation positions for 8 faces (these are the static starting points for each face) */
+/* The translateZ will be controlled by JS via the --face-offset CSS variable for correct geometry */
+.face-1 { transform: rotateY(0deg); }
+.face-2 { transform: rotateY(45deg); }
+.face-3 { transform: rotateY(90deg); }
+.face-4 { transform: rotateY(135deg); }
+.face-5 { transform: rotateY(180deg); }
+.face-6 { transform: rotateY(225deg); }
+.face-7 { transform: rotateY(270deg); }
+.face-8 { transform: rotateY(315deg); }
 
 
 /* Tools Grid Styling (Restored with Stagger) */
@@ -798,7 +825,7 @@ footer h2 {
 }
 
 
-/* Responsive Design Adjustments */
+/* Responsive Design */
 @media (max-width: 1200px) {
     .main-layout-container {
         padding: 0 40px;
