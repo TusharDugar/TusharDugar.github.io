@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Services Section 3D Cube Animation (Discrete Step) ---
     const servicesSection = document.getElementById('services');
-    const cubeContainer = document.querySelector('.cube-container'); // The sticky container
+    const cubeContainer = document.querySelector('.cube-container'); // The containing element for the cube
     const cube = document.getElementById('services-cube'); // The rotating cube element
     const faces = document.querySelectorAll('.face');
     const SERVICES_COUNT = faces.length; // Should be 8
@@ -291,9 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const deltaY = currentTouchY - touchStartY;
         const deltaX = currentTouchX - touchStartX;
 
-        // If a vertical swipe is dominant and significant
+        // Only consider vertical scroll for cube animation
         if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) { // 10px threshold for meaningful swipe
-            event.preventDefault(); // Prevent page scroll during vertical swipe in carousel area
+            event.preventDefault(); // Prevent page scroll during vertical swipe in cube's area
             touchDeltaY = deltaY; // Accumulate for `touchend` decision
         } else {
             // If horizontal swipe or minor movement, don't preventDefault, allow native scroll (e.g., horizontal swipe on page)
