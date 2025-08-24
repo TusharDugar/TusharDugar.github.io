@@ -359,7 +359,7 @@ html::before {
 /* Decorative background dashed lines */
 .dashed-decoration {
     position: absolute;
-    border: 2px dashed var(--accent-primary-sawad);
+    border: 2px dashed var(--accent-primary-sawad); /* RESTORED: Orange color */
     border-radius: 50%;
     box-sizing: border-box;
     pointer-events: none;
@@ -371,8 +371,9 @@ html::before {
     height: 150px;
     top: -50px;
     left: -50px;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
+    /* Flipped to show right and bottom borders, making it curve inwards */
+    border-top-color: transparent; 
+    border-left-color: transparent;
     transform: rotate(-10deg);
 }
 
@@ -381,8 +382,9 @@ html::before {
     height: 150px;
     bottom: -50px;
     right: -50px;
-    border-left-color: transparent;
-    border-top-color: transparent;
+    /* Flipped to show top and left borders, making it curve inwards */
+    border-bottom-color: transparent;
+    border-right-color: transparent;
     transform: rotate(10deg);
 }
 
