@@ -26,7 +26,7 @@ function initIntersectionObserverAnimations() {
   const revealElements = document.querySelectorAll(
     // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
     // Now explicitly targeting .reveal-item for tools and contact as per revert
-    ".reveal-item, .reveal-stagger-container, .reveal-stagger" 
+    ".reveal-item, .reveal-stagger-container, .reveal-child" // Kept .reveal-child for existing about section
   );
 
   const observerOptions = {
@@ -38,16 +38,18 @@ function initIntersectionObserverAnimations() {
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        // Handle stagger container (for elements like the About section's children, or if used elsewhere)
-        if (entry.target.classList.contains("reveal-stagger-container")) {
-          const children = entry.target.querySelectorAll(".reveal-stagger");
+        // Handle stagger container (for elements like the About section's children)
+        if (entry.target.classList.contains("reveal-parent")) { // Targeting reveal-parent which contains reveal-child
+          const children = entry.target.querySelectorAll(".reveal-child");
           children.forEach((child, index) => {
-            child.style.transitionDelay = `${index * 0.1}s`;
-            child.classList.add("visible");
+            // Apply delay directly to visible class add for stagger
+            setTimeout(() => {
+                child.classList.add("visible");
+            }, index * 200); // 200ms stagger delay
           });
         }
         // Handle regular reveal items (now includes tool cards and contact buttons)
-        else if (entry.target.classList.contains("reveal-item")) { // Simplified condition
+        else if (entry.target.classList.contains("reveal-item")) {
           entry.target.classList.add("visible");
         }
 
@@ -56,7 +58,15 @@ function initIntersectionObserverAnimations() {
     });
   }, observerOptions);
 
-  revealElements.forEach(el => observer.observe(el));
+  // For `reveal-parent` to trigger stagger on its children
+  document.querySelectorAll('.reveal-parent').forEach(el => observer.observe(el));
+  // For `reveal-item` elements directly
+  document.querySelectorAll('.reveal-item').forEach(el => observer.observe(el));
+
+  // The original query was ".reveal-item, .reveal-stagger-container, .reveal-stagger"
+  // It's better to explicitly observe containers or items.
+  // .reveal-stagger-container is currently not used outside of an implicitly defined parent.
+  // The services carousel is `reveal-item` and its children are managed by its own JS.
 }
 
 
@@ -198,8 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isAnimating) return false;
 
         // Check for boundary conditions (non-looping)
-        if ((direction === 1 && currentIndex === SERVICES_COUNT - 1) ||
-            (direction === -1 && currentIndex === 0)) {
+        if ((direction === 1 && currentIndex === SERVICES_COUNT - 1) || // Scrolling down at last card
+            (direction === -1 && currentIndex === 0)) { // Scrolling up at first card
             // Do not animate, allow normal page scroll to resume
             isAnimating = false; // Ensure it's not locked if attempted to scroll past boundary
             return false; // Indicate that carousel did not animate
@@ -218,7 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
         incomingFace.classList.add('is-incoming'); // Triggers fade-in (with delay)
 
         // 2. Apply the global wrapper rotation
-        currentRotation -= direction * ROTATE_INCREMENT; // Decrement for scroll down, increment for scroll up
+        // Corrected direction:
+        // Scrolling down (direction 1): currentRotation should increase (e.g., 0 to 90), visually moving content down
+        // Scrolling up (direction -1): currentRotation should decrease (e.g., 0 to -90), visually moving content up
+        currentRotation += direction * ROTATE_INCREMENT; 
         servicesWrapper.style.transition = `transform ${ANIMATION_DURATION}ms cubic-bezier(0.65, 0.05, 0.36, 1)`;
         servicesWrapper.style.transform = `rotateX(${currentRotation}deg)`;
 
@@ -264,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Prevent default if an animation is currently in progress
         if (isAnimating) {
-            event.preventDefault();
+            event.preventDefault(); // Crucial: Stop page scroll if carousel is animating
             return;
         }
 
@@ -277,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.preventDefault(); // Prevent default page scroll ONLY if carousel animated
             } else {
                 // If carousel didn't animate (hit boundary), allow default page scroll
-                // This means the default scroll behavior will proceed, taking the user to the next section
+                // No need to explicitly preventDefault here as we want normal page scroll.
             }
         }, 100); // Debounce time (adjust as needed for responsiveness)
     };
@@ -295,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isServicesCarouselVisible) return;
 
         if (isAnimating) {
-            event.preventDefault(); // Prevent page scroll if still animating
+            event.preventDefault(); // Crucial: Stop page scroll if carousel is animating
             return;
         }
 
@@ -333,7 +346,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Attach global scroll listeners (they will check `isServicesCarouselVisible`)
     window.addEventListener('wheel', handleScroll, { passive: false });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: false });
+    // Corrected passive property for touch events to allow preventDefault
+    window.addEventListener('touchstart', handleTouchStart, { passive: true }); // passive:true for start is fine for performance
+    window.addEventListener('touchend', handleTouchEnd, { passive: false }); // passive:false for end to allow preventDefault
     // --- END NEW 3D SERVICES CAROUSEL JAVASCRIPT ---
 });
