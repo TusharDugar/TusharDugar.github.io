@@ -1,6 +1,6 @@
 // Global constants for animation timing
 const ANIMATION_DURATION = 1200; // 1.2s in milliseconds
-const ROTATE_INCREMENT = 90; // Degrees per transition step (for a cube-like rotation)
+const ROTATE_INCREMENT = 45; // Degrees per transition step for an 8-sided prism (360/8 = 45)
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
@@ -23,50 +23,36 @@ function copyToClipboard(button) {
 
 // Unified Function to reveal elements on scroll (for 2D animations)
 function initIntersectionObserverAnimations() {
-  const revealElements = document.querySelectorAll(
-    // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
-    // Now explicitly targeting .reveal-item for tools and contact as per revert
-    ".reveal-item, .reveal-stagger-container, .reveal-child" // Kept .reveal-child for existing about section
-  );
-
-  const observerOptions = {
-    root: null, // relative to the viewport
-    rootMargin: "0px",
-    threshold: 0.1 // show when 10% of the element is visible
-  };
-
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        // Handle stagger container (for elements like the About section's children)
-        if (entry.target.classList.contains("reveal-parent")) { // Targeting reveal-parent which contains reveal-child
-          const children = entry.target.querySelectorAll(".reveal-child");
-          children.forEach((child, index) => {
-            // Apply delay directly to visible class add for stagger
-            setTimeout(() => {
-                child.classList.add("visible");
-            }, index * 200); // 200ms stagger delay
-          });
-        }
-        // Handle regular reveal items (now includes tool cards and contact buttons)
-        else if (entry.target.classList.contains("reveal-item")) {
+  // Observe .reveal-item directly for non-staggered reveals (like headers, tool cards, contact buttons)
+  document.querySelectorAll(".reveal-item").forEach(el => {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
           entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
         }
+      });
+    }, { root: null, rootMargin: "0px", threshold: 0.1 });
+    observer.observe(el);
+  });
 
-        observer.unobserve(entry.target); // Stop observing once revealed
-      }
-    });
-  }, observerOptions);
-
-  // For `reveal-parent` to trigger stagger on its children
-  document.querySelectorAll('.reveal-parent').forEach(el => observer.observe(el));
-  // For `reveal-item` elements directly
-  document.querySelectorAll('.reveal-item').forEach(el => observer.observe(el));
-
-  // The original query was ".reveal-item, .reveal-stagger-container, .reveal-stagger"
-  // It's better to explicitly observe containers or items.
-  // .reveal-stagger-container is currently not used outside of an implicitly defined parent.
-  // The services carousel is `reveal-item` and its children are managed by its own JS.
+  // Observe .reveal-parent for staggered reveals of its .reveal-child elements (like About section)
+  document.querySelectorAll(".reveal-parent").forEach(parent => {
+    const children = parent.querySelectorAll(".reveal-child");
+    const parentObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          children.forEach((child, index) => {
+            setTimeout(() => {
+              child.classList.add("visible");
+            }, index * 200); // Stagger delay of 200ms
+          });
+          parentObserver.unobserve(parent);
+        }
+      });
+    }, { root: null, rootMargin: "0px", threshold: 0.1 });
+    parentObserver.observe(parent);
+  });
 }
 
 
@@ -139,20 +125,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Calculate faceOffset dynamically based on the height of a face
-        // Use an active face for height calculation to ensure it has its correct dimensions
-        // Fallback to a default if still unable to get height
-        const tempFace = servicesFaces[0];
-        if (tempFace && tempFace.offsetHeight > 0) {
-             faceOffset = tempFace.offsetHeight / 2;
+        // Calculate faceOffset for an 8-sided prism
+        // This calculates the radius from the center of the prism to the face, ensuring faces meet.
+        const containerHeight = servicesCarouselContainer.offsetHeight;
+        if (containerHeight === 0) {
+            console.warn("servicesCarouselContainer has 0 height, cannot calculate faceOffset. Using fallback.");
+            faceOffset = 150; // Absolute fallback if height is still 0
         } else {
-             // Fallback if initial height isn't computed (e.g., due to responsive changes or complex CSS)
-             console.warn("Could not determine faceOffset dynamically. Using fallback height.");
-             // Try to get height from wrapper or container as a last resort
-             faceOffset = servicesWrapper ? servicesWrapper.offsetHeight / 2 : servicesCarouselContainer.offsetHeight / 2;
-             if (faceOffset === 0 || isNaN(faceOffset)) faceOffset = 150; // Absolute fallback if all else fails
+            faceOffset = (containerHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
         }
-       
+
         servicesFaces.forEach((face, i) => {
             face.style.position = 'absolute';
             face.style.width = '100%';
@@ -162,8 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.backfaceVisibility = 'hidden';
             face.style.transition = 'none'; // Clear any CSS transition during setup
 
-            // Position each face around the center of the wrapper
-            const angle = i * ROTATE_INCREMENT; // Angle for this specific face relative to its 0 position
+            // Each face is rotated by `i * 45deg` around the X-axis and translated `faceOffset` along Z
+            // to form an 8-sided vertical prism.
+            const angle = i * ROTATE_INCREMENT; 
             face.style.transform = `rotateX(${angle}deg) translateZ(${faceOffset}px)`;
         });
 
@@ -182,19 +165,21 @@ document.addEventListener('DOMContentLoaded', () => {
             // Calculate rotational difference from current view
             const diff = (i - currentIndex + SERVICES_COUNT) % SERVICES_COUNT;
 
+            // This ensures only the active, next, and previous faces are "visible" to the eye
+            // The others are fully hidden (opacity: 0, visibility: hidden)
             if (diff === 0) { // This is the current, active face
                 face.classList.add('is-current');
                 face.style.opacity = 1;
                 face.style.visibility = 'visible';
-            } else if (diff === 1) { // This is the next face (below current for scrolling down)
+            } else if (diff === 1) { // This is the face that is "below" the current one (next when scrolling down)
                 face.classList.add('is-next-face');
                 face.style.opacity = 0;
                 face.style.visibility = 'visible';
-            } else if (diff === SERVICES_COUNT - 1) { // This is the previous face (above current for scrolling up)
+            } else if (diff === SERVICES_COUNT - 1) { // This is the face that is "above" the current one (previous when scrolling up)
                 face.classList.add('is-prev-face');
                 face.style.opacity = 0;
                 face.style.visibility = 'visible';
-            } else { // All other faces are fully hidden
+            } else { // All other faces are completely out of view
                 face.style.opacity = 0;
                 face.style.visibility = 'hidden';
             }
@@ -228,10 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
         incomingFace.classList.add('is-incoming'); // Triggers fade-in (with delay)
 
         // 2. Apply the global wrapper rotation
-        // Corrected direction:
-        // Scrolling down (direction 1): currentRotation should increase (e.g., 0 to 90), visually moving content down
-        // Scrolling up (direction -1): currentRotation should decrease (e.g., 0 to -90), visually moving content up
-        currentRotation += direction * ROTATE_INCREMENT; 
+        // Corrected direction for rotating the prism:
+        // Scrolling down (direction = 1): `currentRotation` increases, rotating the prism 'downwards' visually.
+        // Scrolling up (direction = -1): `currentRotation` decreases, rotating the prism 'upwards' visually.
+        currentRotation += direction * ROTATE_INCREMENT; // Rotate the entire prism by 45 degrees per step
         servicesWrapper.style.transition = `transform ${ANIMATION_DURATION}ms cubic-bezier(0.65, 0.05, 0.36, 1)`;
         servicesWrapper.style.transform = `rotateX(${currentRotation}deg)`;
 
@@ -260,8 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 isAnimating = false;
                 if (scrollTimeout) clearTimeout(scrollTimeout);
                 // Also, re-setup faces to clear any lingering animation states if scrolled away mid-transition
-                // Call setupFaces to re-initialize positions and states, essential after resize or visibility change
-                setupFaces(); 
+                setupFaces(); // Recalculate positions and states
             }
             // If it becomes visible while not animating, ensure its state is correct
             if (isServicesCarouselVisible && !isAnimating) {
@@ -296,16 +280,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Touch event handler for mobile swipe
+    let touchMoved = false; // Flag to track if touch has moved significantly
     const handleTouchStart = (event) => {
         // Only try to control scroll if the carousel is visible
         if (!isServicesCarouselVisible) return;
         
         startY = event.touches[0].clientY;
+        touchMoved = false; // Reset for new touch sequence
     };
 
+    const handleTouchMove = (event) => {
+        // Mark that touch has moved to potentially animate
+        if (Math.abs(event.touches[0].clientY - startY) > 10) { // Small threshold for "moved"
+            touchMoved = true;
+        }
+        // If animating, prevent scrolling the page during touchmove
+        if (isAnimating && isServicesCarouselVisible) {
+            event.preventDefault();
+        }
+    }
+
     const handleTouchEnd = (event) => {
-        // Only try to control scroll if the carousel is visible
-        if (!isServicesCarouselVisible) return;
+        // Only try to control scroll if the carousel is visible and touch actually moved
+        if (!isServicesCarouselVisible || !touchMoved) return;
 
         if (isAnimating) {
             event.preventDefault(); // Crucial: Stop page scroll if carousel is animating
@@ -348,6 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('wheel', handleScroll, { passive: false });
     // Corrected passive property for touch events to allow preventDefault
     window.addEventListener('touchstart', handleTouchStart, { passive: true }); // passive:true for start is fine for performance
+    window.addEventListener('touchmove', handleTouchMove, { passive: false }); // Needs to be non-passive to call preventDefault
     window.addEventListener('touchend', handleTouchEnd, { passive: false }); // passive:false for end to allow preventDefault
     // --- END NEW 3D SERVICES CAROUSEL JAVASCRIPT ---
 });
