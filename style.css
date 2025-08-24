@@ -406,7 +406,7 @@ html::before {
 
 /* Short Description */
 .about-short-desc {
-    text-align: justify; /* FIXED: Justify text */
+    text-align: center; /* FIXED: Centrally aligned */
     line-height: 1.8; /* FIXED: Better line spacing */
     word-spacing: 1px; /* FIXED: Better word spacing */
     font-size: 0.9em;
@@ -522,12 +522,13 @@ html::before {
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
 /* --- 3D Cube Animation Styles --- */
+/* Your provided 3D cube CSS starts here */
 .cube-container {
     width: 100%;
     max-width: 900px; /* Wider cards */
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
-    perspective: 1000px; /* IMPORTANT: Defines the 3D space */
+    perspective: 1000px;
     position: relative; 
     overflow: hidden;
     will-change: transform;
@@ -539,9 +540,10 @@ html::before {
     width: 100%;
     height: 100%;
     position: relative;
-    transform-style: preserve-3d; /* IMPORTANT: Ensures children are positioned in 3D space */
-    transition: transform 0.5s ease; /* Transition for cube rotation */
-    transform: rotateX(-25deg) rotateY(0deg); /* FIXED: Base isometric tilt added here in CSS. JS will update rotateY, but rotateX should persist. */
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+    /* FIXED: Base isometric tilt added here in CSS. JS will update rotateY, but rotateX should persist. */
+    transform: rotateX(-25deg) rotateY(0deg); /* This ensures the initial isometric perspective */
     will-change: transform;
 }
 
@@ -549,18 +551,18 @@ html::before {
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 1px solid #CCCCCC; /* From user's snippet */
+    border: 1px solid #CCCCCC;
     background-color: var(--bg-tool-card);
     color: var(--text-light);
-    padding: 30px; /* Controls internal spacing, helps reduce visual height */
+    padding: 30px;
     display: flex;
-    justify-content: space-between; /* To align content left, number right */
+    justify-content: space-between;
     align-items: center;
-    backface-visibility: hidden; /* Hide back of faces when rotated away */
+    backface-visibility: hidden;
     will-change: transform, opacity;
-    transition: opacity 0.3s ease-out; /* For fading in/out */
-    opacity: 0; /* Managed by JS, starts hidden */
-    visibility: hidden; /* Managed by JS, starts hidden */
+    transition: opacity 0.3s ease-out;
+    opacity: 0; /* Managed by JS */
+    visibility: hidden; /* Managed by JS */
     text-align: left; /* FIXED: Ensure text alignment for face content */
 }
 
@@ -572,8 +574,8 @@ html::before {
 
 /* Styling for content within the face */
 .service-content {
-    width: auto; /* Allow content to size naturally */
-    max-width: 80%; /* Prevent content from pushing number off */
+    width: auto;
+    max-width: 80%;
 }
 
 .service-title {
@@ -588,27 +590,24 @@ html::before {
     text-align: justify; /* FIXED: Justify text */
     line-height: 1.8; /* FIXED: Better line spacing */
     word-spacing: 1px; /* FIXED: Better word spacing */
-    color: var(--text-medium); /* RESTORED: Original color */
-    opacity: 1; /* Ensure text itself is always opaque within the face */
     font-size: 1em;
+    color: var(--text-medium);
     max-width: 90%;
 }
 
 .face-number {
-    position: relative; /* Position relative to flex container */
-    flex-shrink: 0; /* Prevent number from shrinking */
-    font-size: 11em; /* Adjusted for smaller size */
-    font-weight: 500; /* Adjusted for less bold */
-    color: rgba(255, 255, 255, 0.05); /* Very transparent white */
+    position: relative;
+    flex-shrink: 0;
+    font-size: 11em;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.05);
     pointer-events: none;
-    z-index: 0; /* Behind text content */
-    line-height: 1; /* Prevent extra spacing */
-    margin-left: 20px; /* Space between content and number */
+    z-index: 0;
+    line-height: 1;
+    margin-left: 20px;
 }
 
-
-/* Rotation positions for 8 faces (these define the *static base* position, JS will add translateZ) */
-/* The translateZ will be controlled dynamically by JS, so we only set rotateY here */
+/* Rotation positions for 8 faces */
 .face-1 { transform: rotateY(0deg); }
 .face-2 { transform: rotateY(45deg); }
 .face-3 { transform: rotateY(90deg); }
@@ -618,7 +617,63 @@ html::before {
 .face-7 { transform: rotateY(270deg); }
 .face-8 { transform: rotateY(315deg); }
 
-/* --- END 3D Cube Animation Styles --- */
+/* Responsive adjustments for 3D cube on different devices */
+@media (max-width: 1200px) {
+    .cube-container {
+        max-width: 640px;
+        height: 280px;
+    }
+    .face {
+        padding: 25px;
+    }
+    .service-title {
+        font-size: 1.8em;
+    }
+    .service-description {
+        font-size: 0.9em;
+    }
+    .face-number {
+        font-size: 9em;
+    }
+}
+
+@media (max-width: 768px) {
+    .cube-container {
+        max-width: 90%;
+        height: 250px;
+    }
+    .face {
+        padding: 20px;
+    }
+    .service-title {
+        font-size: 1.5em;
+    }
+    .service-description {
+        font-size: 0.85em;
+    }
+    .face-number {
+        font-size: 7em;
+    }
+}
+
+@media (max-width: 480px) {
+    .cube-container {
+        height: 200px;
+    }
+    .face {
+        padding: 15px;
+    }
+    .service-title {
+        font-size: 1.3em;
+    }
+    .service-description {
+        font-size: 0.8em;
+    }
+    .face-number {
+        font-size: 5em;
+    }
+}
+/* Your provided 3D cube CSS ends here */
 
 
 /* Tools Grid Styling (Restored with Stagger) */
@@ -1051,6 +1106,7 @@ footer h2 {
         width: calc(50% - 20px);
     }
     .about-short-desc {
+        text-align: center; /* FIXED: Centrally aligned */
         font-size: 0.8em;
         margin-bottom: 15px;
         padding: 0 2px;
