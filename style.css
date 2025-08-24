@@ -506,7 +506,7 @@ html::before {
 /* --- 3D Cube Animation Styles --- */
 .cube-container {
     width: 100%;
-    max-width: 900px; /* Wider cards */
+    max-width: 900px;
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
     perspective: 1000px;
@@ -586,16 +586,16 @@ html::before {
 }
 
 
-/* Rotation positions for 8 faces (as provided by user) */
-/* The translateZ will be overridden by JS for accurate 3D geometry */
-.face-1 { transform: rotateY(0deg) translateZ(var(--face-offset)); }
-.face-2 { transform: rotateY(45deg) translateZ(var(--face-offset)); }
-.face-3 { transform: rotateY(90deg) translateZ(var(--face-offset)); }
-.face-4 { transform: rotateY(135deg) translateZ(var(--face-offset)); }
-.face-5 { transform: rotateY(180deg) translateZ(var(--face-offset)); }
-.face-6 { transform: rotateY(225deg) translateZ(var(--face-offset)); }
-.face-7 { transform: rotateY(270deg) translateZ(var(--face-offset)); }
-.face-8 { transform: rotateY(315deg) translateZ(var(--face-offset)); }
+/* Rotation positions for 8 faces (as provided by user, but translateZ will be from JS) */
+/* These ensure the correct starting rotation for each face when the cube is at 0 rotation */
+.face-1 { transform: rotateY(0deg); }
+.face-2 { transform: rotateY(45deg); }
+.face-3 { transform: rotateY(90deg); }
+.face-4 { transform: rotateY(135deg); }
+.face-5 { transform: rotateY(180deg); }
+.face-6 { transform: rotateY(225deg); }
+.face-7 { transform: rotateY(270deg); }
+.face-8 { transform: rotateY(315deg); }
 
 /* --- END 3D Cube Animation Styles --- */
 
