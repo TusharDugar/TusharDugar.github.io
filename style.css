@@ -581,8 +581,8 @@ html::before {
     top: 50%;
     right: 20px; /* Adjust positioning as needed */
     transform: translateY(-50%);
-    font-size: 16em; /* Large size */
-    font-weight: 800;
+    font-size: 11em; /* Adjusted for smaller size */
+    font-weight: 500; /* Adjusted for less bold */
     color: rgba(255, 255, 255, 0.05); /* Very transparent white */
     pointer-events: none; /* Don't block interactions */
     z-index: 0; /* Behind text content */
@@ -602,7 +602,7 @@ html::before {
     justify-items: stretch;
 }
 
-/* Tool Card (Now uses .reveal-item directly) */
+/* Tool Card (Now uses .reveal-item directly, removed conflicting styles) */
 .tool-card {
     background-color: var(--bg-tool-card);
     border-radius: 15px;
@@ -613,12 +613,8 @@ html::before {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
-    will-change: transform, opacity;
-
-    /* .reveal-item will apply opacity and transform, remove from here */
-    /* opacity: 0; */
-    /* transform: translateY(60px); */ 
-    /* transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); */
+    will-change: transform; /* opacity handled by .reveal-item */
+    /* Removed conflicting opacity, transform, transition from here */
 }
 
 .tool-card:hover {
@@ -910,7 +906,7 @@ footer h2 {
     }
     /* New Carousel specific adjustments */
     .services-3d-carousel-container {
-        max-width: 650px; /* Adjust for medium screens */
+        max-width: 700px; /* Further adjusted for medium screens */
         height: 250px; /* Smaller height */
         margin-top: 40px;
     }
@@ -921,7 +917,7 @@ footer h2 {
         font-size: 0.9em;
     }
     .services-carousel-face .service-bg-number {
-        font-size: 12em;
+        font-size: 10em; /* Adjusted size */
         right: 15px;
     }
 
@@ -1073,7 +1069,7 @@ footer h2 {
         font-size: 0.85em;
     }
     .services-carousel-face .service-bg-number {
-        font-size: 10em;
+        font-size: 8em; /* Adjusted size */
         right: 10px;
     }
 
@@ -1166,7 +1162,7 @@ footer h2 {
         font-size: 0.8em;
     }
     .services-carousel-face .service-bg-number {
-        font-size: 8em;
+        font-size: 6em; /* Adjusted size */
         right: 5px;
     }
 
