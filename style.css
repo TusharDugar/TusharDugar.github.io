@@ -194,12 +194,13 @@ html::before {
     transform: translateY(0);
 }
 
-/* Stagger Parent (for elements like About section and now Services) */
+/* Stagger Parent (for elements like About section) */
 .reveal-parent {
     position: relative;
 }
 
-/* Stagger Child (for elements inside About/Services sections) */
+/* Stagger Child (for elements inside About section) */
+/* The Services items use `reveal-item` with inline delays, so this isn't strictly needed for Services */
 .reveal-child {
     opacity: 0;
     transform: translateY(60px);
@@ -505,7 +506,7 @@ html::before {
 /* --- 3D Cube Animation Styles --- */
 .cube-container {
     width: 100%;
-    max-width: 900px;
+    max-width: 900px; /* Wider cards */
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
     perspective: 1000px;
