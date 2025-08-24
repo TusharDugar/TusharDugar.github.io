@@ -483,7 +483,7 @@ html::before {
 /* Container for the 3D carousel effect */
 .services-3d-carousel-container {
     width: 100%;
-    max-width: 720px; /* Increased for wider cards */
+    max-width: 800px; /* Increased for wider cards */
     height: 300px; /* Fixed height for the visible carousel area */
     margin: 60px auto; /* Centers horizontally */
     position: relative;
@@ -592,6 +592,232 @@ html::before {
 /* --- END NEW 3D SERVICES CAROUSEL STYLES --- */
 
 
+/* Tools Grid Styling (Reverted for simpler reveal) */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    margin-left: 0;
+    margin-right: 0;
+    justify-items: stretch;
+}
+
+/* Tool Card (Now uses .reveal-item directly) */
+.tool-card {
+    background-color: var(--bg-tool-card);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: pointer;
+    will-change: transform, opacity;
+
+    /* .reveal-item will apply opacity and transform, remove from here */
+    /* opacity: 0; */
+    /* transform: translateY(60px); */ 
+    /* transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); */
+}
+
+.tool-card:hover {
+    transform: translateY(-5px);
+    background-color: rgba(26, 26, 26, 0.9);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.tool-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background-color: var(--tool-icon-bg);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.tool-logo {
+    max-width: 70%;
+    max-height: 70%;
+    object-fit: contain;
+    filter: brightness(0.01);
+}
+
+.tool-info {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.tool-name {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--tool-name-color);
+    margin: 0 0 5px 0;
+    line-height: 1.2;
+}
+
+.tool-category {
+    font-size: 0.85em;
+    color: var(--tool-category-color);
+    margin: 0;
+    line-height: 1.2;
+}
+
+
+/* Footer (Contact Section) - Reverted for simpler reveal */
+footer {
+    background-color: var(--bg-main);
+    color: var(--text-light);
+    text-align: center;
+    padding: 60px 0;
+    position: relative;
+    z-index: 1;
+}
+
+footer a {
+    color: var(--accent-secondary-sawad);
+    text-decoration: none;
+    transition: text-decoration 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer h2 {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 3.2em;
+    color: var(--primary-heading-color);
+    font-weight: 700;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+    letter-spacing: 1.5px;
+}
+
+.contact-tagline {
+    font-size: 1.1em;
+    margin-bottom: 40px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.95;
+    line-height: 1.8;
+    color: var(--text-light);
+}
+
+.contact-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.contact-button {
+    background-color: rgba(255, 255, 255, 0.005); /* Very very transparent */
+    border: 1px solid rgba(255, 255, 255, 0.01); /* Very very transparent border */
+    border-radius: 12px;
+    padding: 0;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 280px;
+    height: 120px;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    text-align: center;
+}
+
+.contact-button:hover {
+    transform: translateY(-8px);
+    background-color: rgba(26, 26, 26, 0.9);
+    box-shadow: 0 10px 25px var(--shadow-color-dark), 0 0 15px var(--accent-secondary-sawad);
+}
+
+.contact-button .button-content-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.contact-button i {
+    font-size: 2.8em;
+    color: var(--accent-primary-sawad);
+}
+
+.contact-button .button-value {
+    font-size: 15px;
+    font-weight: bold;
+    opacity: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 5px;
+    max-width: 90%;
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+.contact-button .copied-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--accent-primary-sawad); /* Solid orange, not gradient */
+    color: var(--text-light);
+    font-size: 1.5em;
+    font-weight: bold;
+    border-radius: 12px;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    z-index: 3;
+}
+
+/* States when button is 'copied' */
+.contact-button.copied .button-content-main {
+    transform: translateY(-100%) !important;
+    opacity: 0 !important;
+}
+
+.contact-button.copied .copied-text {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+}
+
+.social-links {
+    margin-top: 30px;
+}
+.social-links a {
+    color: var(--text-light);
+    margin: 0 20px;
+    transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.social-links a:hover {
+    color: var(--accent-secondary-sawad);
+    transform: scale(1.3);
+}
+
+
 /* Responsive Design Adjustments for Carousel */
 @media (max-width: 1200px) {
     .main-layout-container {
@@ -684,7 +910,7 @@ html::before {
     }
     /* New Carousel specific adjustments */
     .services-3d-carousel-container {
-        max-width: 600px; /* Adjust for medium screens */
+        max-width: 650px; /* Adjust for medium screens */
         height: 250px; /* Smaller height */
         margin-top: 40px;
     }
@@ -788,7 +1014,6 @@ html::before {
     .about-short-desc {
         font-size: 0.8em;
         margin-bottom: 15px;
-        padding: 0 2px;
     }
     .about-social-icons a {
         font-size: 1.3em;
