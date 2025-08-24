@@ -231,7 +231,7 @@ html::before {
 .main-layout-container {
     display: flex;
     justify-content: center;
-    align-items: center; /* FIXED: Vertically centers columns relative to each other for desktop */
+    align-items: flex-start; /* FIXED: Align to start to allow left column to position independently on desktop */
     max-width: 1920px;
     margin: 0 auto;
     padding: 0 60px;
@@ -255,38 +255,31 @@ html::before {
     text-align: center;
     z-index: 2;
     
-    /* FIXED: Robust centering for initial load on all devices */
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    margin: 0 auto; /* Horizontally center if it becomes a block */
-    height: auto; /* Allow natural height for initial centering */
+    /* DEFAULT/MOBILE: These properties will be applied unless overridden by a min-width media query */
+    position: relative; /* Not fixed/sticky by default */
+    top: auto;
+    transform: none; /* No vertical translate by default */
+    margin: 50px auto 0 auto; /* Horizontally center as a block, push down a bit */
+    height: auto; /* Content dictates height */
 }
 
-/* Media query to re-apply sticky for desktop (min-width: 1024px is a common breakpoint) */
+/* FIXED: Desktop-specific rules for left column (fixed and centered) */
 @media (min-width: 1024px) {
     .left-column-sticky {
-        position: sticky;
-        top: 50px;
-        transform: none; /* Remove translateY when sticky */
-        margin: 0; /* Remove auto margins when sticky */
-        height: calc(100vh - 50px); /* Restore fixed height for sticky behavior */
-    }
-}
-
-/* Media query for smaller devices (e.g., tablets down to mobile) */
-@media (max-width: 1023px) { 
-    .main-layout-container {
-        flex-direction: column; /* Stack columns vertically */
-        align-items: center; /* Center the left column block horizontally */
-    }
-    .left-column-sticky {
-        position: relative; /* Ensure it's not sticky */
-        top: auto; /* Remove sticky top positioning */
-        height: auto; /* Allow natural height, content dictates size */
-        margin: 50px auto 0 auto; /* Add top margin, then horizontally center as a block */
-        width: 100%; /* Ensure it takes full width of its parent */
-        max-width: 400px; /* Cap width on smaller screens */
+        position: fixed; /* Fixed for desktop */
+        top: 50%;
+        /* Calculate left position: center of the main-layout-container, minus half the layout's max-width, plus the left padding of the layout, plus half the gap. */
+        /* main-layout-container max-width: 1920px, padding: 0 60px, gap: 60px */
+        /* Left edge of content area: calc(50% - 1920px / 2 + 60px) -> calc(50% - 960px + 60px) */
+        /* This places it at the very left edge of the content flexbox. */
+        /* To center it within its own flex-basis, you'd need more complex calc or an outer wrapper. */
+        /* A simpler approach is to calculate the overall available left space and center it there. */
+        /* Let's try to align it with the left edge of where the flexible content starts relative to the main-layout-container */
+        left: calc(50% - (1200px / 2) - 60px + (370px / 2)); /* Centers it within the *available* left column space */
+        
+        transform: translateY(-50%); /* Vertically center */
+        margin: 0; /* Remove auto margins */
+        height: calc(100vh - 50px); /* Restore height for sticky-like behavior for internal centering */
     }
 }
 
@@ -419,9 +412,9 @@ html::before {
 
 /* Short Description */
 .about-short-desc {
-    text-align: justify !important; /* FIXED: Justify text */
-    line-height: 1.8 !important; /* FIXED: Better line spacing */
-    word-spacing: 1px !important; /* FIXED: Better word spacing */
+    text-align: justify; /* FIXED: Justify text */
+    line-height: 1.8; /* FIXED: Better line spacing */
+    word-spacing: 1px; /* FIXED: Better word spacing */
     font-size: 0.9em;
     color: var(--text-medium-card);
     margin-bottom: 25px;
@@ -494,20 +487,20 @@ html::before {
 
 /* HERO DESCRIPTION ADJUSTMENTS */
 .hero-description {
-    text-align: justify !important; /* FIXED: Justify text */
-    line-height: 1.8 !important; /* FIXED: Better line spacing */
-    word-spacing: 1px !important; /* FIXED: Better word spacing */
+    text-align: justify; /* FIXED: Justify text */
+    line-height: 1.8; /* FIXED: Better line spacing */
+    word-spacing: 1px; /* FIXED: Better word spacing */
     font-size: 1em;
-    margin-bottom: 40px !important; /* FIXED: Adjust hero text spacing */
-    max-width: 90% !important; /* FIXED: Adjust hero text spacing */
+    margin-bottom: 40px; /* FIXED: Adjust hero text spacing */
+    max-width: 90%; /* FIXED: Adjust hero text spacing */
     color: var(--text-medium);
 }
 
 
 /* Services Section Styles */
 .services-section {
-  padding: 80px 40px; /* Reverted to original, removed !important */
-  margin-top: 0; /* Reverted to original, removed !important */
+  padding: 80px 40px; 
+  margin-top: 0; 
   position: relative;
   text-align: left;
   z-index: 2;
@@ -557,8 +550,7 @@ html::before {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.5s ease; /* Transition for cube rotation */
-    /* REMOVED static rotateX here, now purely controlled by JS for consistency */
-    transform: rotateY(0deg); 
+    transform: rotateX(-25deg) rotateY(0deg); /* FIXED: Base isometric tilt added here */
     will-change: transform;
 }
 
@@ -602,9 +594,9 @@ html::before {
 }
 
 .service-description {
-    text-align: justify !important; /* FIXED: Justify text */
-    line-height: 1.8 !important; /* FIXED: Better line spacing */
-    word-spacing: 1px !important; /* FIXED: Better word spacing */
+    text-align: justify; /* FIXED: Justify text */
+    line-height: 1.8; /* FIXED: Better line spacing */
+    word-spacing: 1px; /* FIXED: Better word spacing */
     color: var(--text-medium); /* RESTORED: Original color, opacity managed by JS */
     opacity: 1; /* Ensure text itself is always opaque within the face */
     font-size: 1em;
@@ -873,7 +865,6 @@ footer h2 {
         width: 100%;
         padding-right: 0;
         max-width: 400px;
-        /* margin: 0 auto; Handled by specific mobile media query */
     }
     .right-column-scroll {
         flex-grow: 1;
@@ -1148,9 +1139,24 @@ footer h2 {
     footer {
         padding: 60px 0;
     }
+    .contact-buttons {
+        max-width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
     .contact-button {
-        width: 200px;
-        height: 95px;
+        width: 90%;
+        height: 70px;
+        font-size: 0.9em;
+    }
+    .contact-button i {
+        font-size: 1.8em;
+    }
+    .contact-button .button-value {
+        font-size: 0.7em;
+    }
+    .contact-button .copied-text {
         font-size: 1em;
     }
 }
