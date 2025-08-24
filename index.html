@@ -13,7 +13,9 @@
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css?v=6"> 
 
-    <!-- GSAP and ScrollTrigger CDNs removed as they are not used -->
+    <!-- GSAP and ScrollTrigger CDNs, for the About section animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 </head>
 <body>
     <!-- Background Layers -->
@@ -61,7 +63,6 @@
         <div class="right-column-scroll">
             <!-- Hero/Introduction Section -->
             <section id="hero-right" class="section hero-right-content reveal-item">
-                <!-- HERO HEADING: Updated as per prompt -->
                 <h1 class="hero-heading">
                     <span class="crafting">Crafting</span><br>
                     <span class="digital">Digital Experiences</span>
@@ -69,16 +70,16 @@
                 <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
             </section>
 
-            <!-- Services Section - Now with stagger animation -->
+            <!-- Services Section - Now a 3D Cube Animation -->
             <section id="services" class="section services-section">
-                <h2 class="services-heading reveal-item"> <!-- Heading is a separate reveal item -->
+                <h2 class="services-heading reveal-item">
                     <span class="text-white">MY</span>
                     <span class="text-gray">SERVICES</span>
                 </h2>
 
-                <div class="cube-container reveal-item">
+                <div class="cube-container">
                     <div class="cube" id="services-cube">
-                        <!-- Each service card is a face of the 3D cube -->
+                        <!-- 8 service faces -->
                         <div class="face face-1" data-index="0">
                             <div class="service-content">
                                 <h3 class="service-title">Web Design</h3>
@@ -139,7 +140,7 @@
                 </div>
             </section>
 
-            <!-- Premium Tools Section -->
+            <!-- Premium Tools Section - Now with 2D Staggered Reveal -->
             <section id="tools" class="section tools-section reveal-item">
                 <h2 class="tools-heading">
                     <span class="text-white">PREMIUM</span>
@@ -149,7 +150,6 @@
                 <div class="tools-grid reveal-stagger-container">
                     <div class="tool-card reveal-stagger">
                         <div class="tool-icon-wrapper">
-                            <!-- Using Simple Icons CDN for common brand logos -->
                             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg" alt="Google Gemini Logo" class="tool-logo">
                         </div>
                         <div class="tool-info">
@@ -168,7 +168,8 @@
                     </div>
                     <div class="tool-card reveal-stagger">
                         <div class="tool-icon-wrapper">
-                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="Figma Logo" class="tool-logo">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="Figma Logo"
+                            class="tool-logo">
                         </div>
                         <div class="tool-info">
                             <h4 class="tool-name">Figma</h4>
