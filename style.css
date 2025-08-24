@@ -505,7 +505,7 @@ html::before {
 /* --- 3D Cube Animation Styles --- */
 .cube-container {
     width: 100%;
-    max-width: 900px; /* Wider cards */
+    max-width: 900px;
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
     perspective: 1000px;
@@ -513,7 +513,7 @@ html::before {
     overflow: hidden;
     will-change: transform;
     /* Custom property for face offset calculation (set by JS) */
-    --face-offset: 450px; /* Default from user's snippet, will be overridden by JS for correctness */
+    --face-offset: 450px; /* Default, will be overridden by JS for correctness */
 }
 
 .cube {
@@ -586,6 +586,7 @@ html::before {
 
 
 /* Rotation positions for 8 faces (these define the *static base* position, JS will add translateZ) */
+/* The translateZ will be controlled by JS via the --face-offset CSS variable for correct geometry */
 .face-1 { transform: rotateY(0deg); }
 .face-2 { transform: rotateY(45deg); }
 .face-3 { transform: rotateY(90deg); }
