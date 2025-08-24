@@ -215,8 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isAnimatingCube = true;
         activeFaceIndex = newActiveFaceIndex;
 
-        // Update cube's rotation (negative for scroll-down visual effect as per DesignCube using rotateX,
-        // but here we are using rotateY as per your CSS snippet)
+        // Update cube's rotation (negative for scroll-down visual effect, as per DesignCube)
         // If scrolling down (direction=1), we want the cube to rotate to the LEFT (negative Y-rotation)
         // so the next face comes into view from the RIGHT.
         // If scrolling up (direction=-1), we want the cube to rotate to the RIGHT (positive Y-rotation)
