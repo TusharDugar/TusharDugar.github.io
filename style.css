@@ -194,6 +194,22 @@ html::before {
     transform: translateY(0);
 }
 
+/* Stagger Container */
+.reveal-stagger-container {
+    position: relative;
+}
+
+/* Stagger Child */
+.reveal-stagger {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+}
+.reveal-stagger.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
 
 /* Main Layout Container */
 .main-layout-container {
@@ -239,7 +255,7 @@ html::before {
     max-width: 370px;
     height: auto;
     box-sizing: border-box;
-    transition: none;
+    transition: none; /* No reveal transition on the card itself, only its children */
 
     display: flex;
     flex-direction: column;
@@ -491,15 +507,7 @@ html::before {
   opacity: 1;
   transform: translateY(0);
 }
-/* Stagger effect for service items in the 2D grid */
-.services-items-container .service-item:nth-child(1) { transition-delay: 0.08s; }
-.services-items-container .service-item:nth-child(2) { transition-delay: 0.16s; }
-.services-items-container .service-item:nth-child(3) { transition-delay: 0.24s; }
-.services-items-container .service-item:nth-child(4) { transition-delay: 0.32s; }
-.services-items-container .service-item:nth-child(5) { transition-delay: 0.4s; }
-.services-items-container .service-item:nth-child(6) { transition-delay: 0.48s; }
-.services-items-container .service-item:nth-child(7) { transition-delay: 0.56s; }
-.services-items-container .service-item:nth-child(8) { transition-delay: 0.64s; }
+/* No explicit CSS stagger here, controlled by JS in initIntersectionObserverAnimations */
 
 
 /* Service item children styling */
@@ -580,12 +588,13 @@ html::before {
     align-items: center;
     gap: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
     will-change: transform, opacity;
 
     opacity: 0;
     transform: translateY(60px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); /* Added transition for reveal */
 }
 .tool-card.visible {
   opacity: 1;
@@ -1183,7 +1192,7 @@ footer h2 {
 /* Accessibility: Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
     .reveal-item,
-    .reveal-stagger,
+    .reveal-stagger-container .reveal-stagger, /* Targeted the children explicitly */
     .about-heading-animation,
     .about-content-animation,
     .service-item,
