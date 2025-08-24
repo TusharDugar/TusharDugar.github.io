@@ -157,8 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ensure the cube itself is at the current logical rotation state
         cube.style.transition = 'none'; // No transition for initial setup of cube's transform
-        // FIXED: Apply isometric tilt (rotateX) consistently from JS, overriding any CSS if needed,
-        // but ensuring the isometric view is always active.
+        // FIXED: Apply isometric tilt (rotateX) consistently from JS
         cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; 
         
         updateFaceVisibility(); // Set initial visibility for activeFaceIndex
