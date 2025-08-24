@@ -23,7 +23,7 @@ function copyToClipboard(button) {
 function initIntersectionObserverAnimations() {
   const revealElements = document.querySelectorAll(
     // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
-    ".reveal-item, .reveal-stagger, .about-heading-animation, .about-content-animation, .services-items-container .service-item, .tool-card" 
+    ".reveal-item, .reveal-stagger-container" 
   );
 
   const observerOptions = {
@@ -35,9 +35,7 @@ function initIntersectionObserverAnimations() {
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add("visible"); 
-
-        // Specific stagger logic for .reveal-stagger-container (like footer buttons)
+        // Handle stagger container
         if (entry.target.classList.contains("reveal-stagger-container")) {
           const children = entry.target.querySelectorAll(".reveal-stagger");
           children.forEach((child, index) => {
@@ -45,15 +43,10 @@ function initIntersectionObserverAnimations() {
             child.classList.add("visible"); 
           });
         }
-        // Specific stagger logic for .about-content-wrapper (like paragraphs/blockquote)
-        if (entry.target.classList.contains("about-content-wrapper")) {
-            const children = entry.target.querySelectorAll(".about-content-animation");
-            children.forEach((child, index) => {
-                // CSS nth-child already handles stagger delay, but this ensures it's applied.
-                child.classList.add("visible"); 
-            });
+        // Handle regular reveal items
+        else if (entry.target.classList.contains("reveal-item")) { // Simplified condition
+          entry.target.classList.add("visible"); 
         }
-        // No explicit JS stagger needed for .services-items-container .service-item or .tool-card, as CSS nth-child / their own transitions handle it.
 
         observer.unobserve(entry.target); // Stop observing once revealed
       }
