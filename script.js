@@ -1,6 +1,6 @@
 // Global constants for animation timing
 const ANIMATION_DURATION = 1200; // 1.2s in milliseconds
-const ROTATE_INCREMENT = 45; // Degrees per transition step for an 8-sided prism (360/8 = 45)
+const ROTATE_INCREMENT = 90; // Degrees per transition step for a 90-degree card flip
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
@@ -101,40 +101,38 @@ document.addEventListener('DOMContentLoaded', () => {
     window.dispatchEvent(new Event('scroll'));
 
 
-    // --- NEW 3D SERVICES CAROUSEL JAVASCRIPT ---
-    // Target the carousel container specifically for the IntersectionObserver
+    // --- NEW 3D SERVICES CAROUSEL JAVASCRIPT (DesignCube Flip) ---
     const servicesCarouselContainer = document.querySelector('.services-3d-carousel-container');
     const servicesWrapper = document.querySelector('.services-3d-carousel-wrapper');
     const servicesFaces = document.querySelectorAll('.services-carousel-face');
     const SERVICES_COUNT = servicesFaces.length;
 
     let currentIndex = 0;
-    let currentRotation = 0; // Tracks the total rotation of the wrapper
     let isAnimating = false;
     let startY = 0; // For touch swipe
     let faceOffset = 0; // Will be calculated dynamically
     let isServicesCarouselVisible = false; // Flag for IntersectionObserver
 
-    // Function to set initial 3D positions of all faces
+    // Function to set initial 3D positions of all faces for the flip effect
     function setupFaces() {
         if (SERVICES_COUNT === 0) return;
 
-        // Ensure carousel container exists before trying to calculate offset
         if (!servicesCarouselContainer) {
             console.error("Services 3D carousel container not found.");
             return;
         }
 
-        // Calculate faceOffset for an 8-sided prism
-        // This calculates the radius from the center of the prism to the face, ensuring faces meet.
-        const containerHeight = servicesCarouselContainer.offsetHeight;
-        if (containerHeight === 0) {
-            console.warn("servicesCarouselContainer has 0 height, cannot calculate faceOffset. Using fallback.");
-            faceOffset = 150; // Absolute fallback if height is still 0
-        } else {
-            faceOffset = (containerHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+        // faceOffset is half the height of the card, used for rotateX origin and translateZ
+        faceOffset = servicesFaces[0].offsetHeight / 2;
+        if (faceOffset === 0 || isNaN(faceOffset)) {
+            console.warn("Could not determine faceOffset dynamically. Using fallback height.");
+            faceOffset = servicesCarouselContainer.offsetHeight / 2; // Fallback to container height
+            if (faceOffset === 0 || isNaN(faceOffset)) faceOffset = 150; // Absolute fallback
         }
 
+        // Set CSS variable for use in CSS transitions (for calc in translateZ)
+        servicesCarouselContainer.style.setProperty('--face-offset', `${faceOffset}px`);
+       
         servicesFaces.forEach((face, i) => {
             face.style.position = 'absolute';
             face.style.width = '100%';
@@ -143,91 +141,109 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.left = '0';
             face.style.backfaceVisibility = 'hidden';
             face.style.transition = 'none'; // Clear any CSS transition during setup
+            face.style.opacity = 0; // Default to hidden for all faces initially
+            face.style.visibility = 'hidden';
 
-            // Each face is rotated by `i * 45deg` around the X-axis and translated `faceOffset` along Z
-            // to form an 8-sided vertical prism.
-            const angle = i * ROTATE_INCREMENT; 
-            face.style.transform = `rotateX(${angle}deg) translateZ(${faceOffset}px)`;
+            // Initial positioning of cards:
+            // current (0) is flat: rotateX(0deg) translateZ(0)
+            // next (1) is below: rotateX(90deg) translateZ(faceOffset)
+            // prev (count-1) is above: rotateX(-90deg) translateZ(faceOffset)
+            // All others are explicitly rotated and translated far out of view (or kept at 0, hidden)
+            if (i === 0) {
+                face.style.transform = `rotateX(0deg) translateZ(0)`;
+            } else if (i === 1) { // The 'next' card, initially below
+                face.style.transform = `rotateX(90deg) translateZ(${faceOffset}px)`;
+            } else if (i === SERVICES_COUNT - 1) { // The 'previous' card, initially above
+                face.style.transform = `rotateX(-90deg) translateZ(${faceOffset}px)`;
+            } else {
+                // Ensure other cards are out of view, e.g., rotated completely away
+                face.style.transform = `rotateX(0deg) translateZ(-${faceOffset * 2}px)`; // Pushed back further
+            }
         });
 
-        // Set the initial current face state
+        // Set the initial current face state to make the first card visible
         updateActiveFaceState();
     }
 
-    // Update which faces are visible (is-current, is-next-face, is-prev-face)
-    // This function runs on setup and after each animation completes.
+    // Update which faces have the correct classes and inline styles (is-current, is-next-face, is-prev-face)
     function updateActiveFaceState() {
         servicesFaces.forEach((face, i) => {
             // Clear all animation/state classes
-            face.classList.remove('is-current', 'is-next-face', 'is-prev-face', 'is-outgoing', 'is-incoming');
-            face.style.transition = 'none'; // Remove transition for state update
+            face.classList.remove('is-current', 'is-entering', 'is-leaving', 'up', 'down');
+            face.style.transition = 'none'; // Remove transition for immediate style changes
 
-            // Calculate rotational difference from current view
-            const diff = (i - currentIndex + SERVICES_COUNT) % SERVICES_COUNT;
-
-            // This ensures only the active, next, and previous faces are "visible" to the eye
-            // The others are fully hidden (opacity: 0, visibility: hidden)
-            if (diff === 0) { // This is the current, active face
+            if (i === currentIndex) { // This is the current, active face
                 face.classList.add('is-current');
                 face.style.opacity = 1;
                 face.style.visibility = 'visible';
-            } else if (diff === 1) { // This is the face that is "below" the current one (next when scrolling down)
-                face.classList.add('is-next-face');
+                face.style.transform = `rotateX(0deg) translateZ(0)`;
+            } else {
                 face.style.opacity = 0;
-                face.style.visibility = 'visible';
-            } else if (diff === SERVICES_COUNT - 1) { // This is the face that is "above" the current one (previous when scrolling up)
-                face.classList.add('is-prev-face');
-                face.style.opacity = 0;
-                face.style.visibility = 'visible';
-            } else { // All other faces are completely out of view
-                face.style.opacity = 0;
-                face.style.visibility = 'hidden';
+                face.style.visibility = 'hidden'; // Default for non-current, non-adjacent
+                
+                // Position adjacent cards (next and previous) correctly for the flip effect
+                // The `transform` values here represent their "ready" state before animating
+                const nextIndex = (currentIndex + 1) % SERVICES_COUNT;
+                const prevIndex = (currentIndex - 1 + SERVICES_COUNT) % SERVICES_COUNT;
+
+                if (i === nextIndex) {
+                    face.style.visibility = 'visible'; // Keep visible to prepare for animation
+                    face.style.transform = `rotateX(90deg) translateZ(${faceOffset}px)`; // Positioned below
+                } else if (i === prevIndex) {
+                    face.style.visibility = 'visible'; // Keep visible to prepare for animation
+                    face.style.transform = `rotateX(-90deg) translateZ(${faceOffset}px)`; // Positioned above
+                } else {
+                    // Ensure all other cards are completely out of view for clean transitions
+                    face.style.transform = `rotateX(0deg) translateZ(-${faceOffset * 2}px)`;
+                }
             }
         });
     }
 
-    // Main animation function
+    // Main animation function for a single card flip (DesignCube style)
     // Returns true if animation started, false if boundary reached or already animating
     function animateServices(direction) {
-        // Prevent animation if already animating
         if (isAnimating) return false;
+
+        const nextIndex = (currentIndex + direction + SERVICES_COUNT) % SERVICES_COUNT;
 
         // Check for boundary conditions (non-looping)
         if ((direction === 1 && currentIndex === SERVICES_COUNT - 1) || // Scrolling down at last card
             (direction === -1 && currentIndex === 0)) { // Scrolling up at first card
-            // Do not animate, allow normal page scroll to resume
-            isAnimating = false; // Ensure it's not locked if attempted to scroll past boundary
-            return false; // Indicate that carousel did not animate
+            return false; // Indicate that carousel did not animate, allow page scroll
         }
 
         isAnimating = true;
 
-        const outgoingFaceIndex = currentIndex;
-        const incomingFaceIndex = (currentIndex + direction + SERVICES_COUNT) % SERVICES_COUNT;
+        const outgoingFace = servicesFaces[currentIndex];
+        const incomingFace = servicesFaces[nextIndex];
+        
+        // Remove 'is-current' from outgoing immediately
+        outgoingFace.classList.remove('is-current');
 
-        const outgoingFace = servicesFaces[outgoingFaceIndex];
-        const incomingFace = servicesFaces[incomingFaceIndex];
+        // Prepare incoming card for animation (ensure visibility before applying entering class)
+        incomingFace.style.visibility = 'visible'; 
+        incomingFace.style.transition = `transform ${ANIMATION_DURATION}ms cubic-bezier(0.65, 0.05, 0.36, 1), opacity 0.48s ease-in 0.72s`;
 
-        // 1. Apply animation classes for fade timing
-        outgoingFace.classList.add('is-outgoing'); // Triggers fade-out
-        incomingFace.classList.add('is-incoming'); // Triggers fade-in (with delay)
-
-        // 2. Apply the global wrapper rotation
-        // Corrected direction for rotating the prism:
-        // Scrolling down (direction = 1): `currentRotation` increases, rotating the prism 'downwards' visually.
-        // Scrolling up (direction = -1): `currentRotation` decreases, rotating the prism 'upwards' visually.
-        currentRotation += direction * ROTATE_INCREMENT; // Rotate the entire prism by 45 degrees per step
-        servicesWrapper.style.transition = `transform ${ANIMATION_DURATION}ms cubic-bezier(0.65, 0.05, 0.36, 1)`;
-        servicesWrapper.style.transform = `rotateX(${currentRotation}deg)`;
-
-        // 3. Clear animation classes and update state after animation completes
-        setTimeout(() => {
-            currentIndex = incomingFaceIndex; // Update current index to the newly active face
-            servicesWrapper.style.transition = 'none'; // Remove transition from wrapper after animation
-
-            // Reset all faces to their non-animating state and apply new 'is-current', 'is-next-face', etc.
-            updateActiveFaceState();
+        // Apply classes and transforms for the flip animation
+        if (direction === 1) { // Scrolling down: current flips up, next flips up from bottom
+            outgoingFace.classList.add('is-leaving', 'up'); // Outgoing flips up
+            outgoingFace.style.transform = `rotateX(-90deg) translateZ(${faceOffset}px)`; // Final transform for leaving
             
+            incomingFace.classList.add('is-entering', 'down'); // Incoming flips up (from bottom)
+            incomingFace.style.transform = `rotateX(0deg) translateZ(0)`; // Final transform for entering
+        } else { // Scrolling up: current flips down, previous flips down from top
+            outgoingFace.classList.add('is-leaving', 'down'); // Outgoing flips down
+            outgoingFace.style.transform = `rotateX(90deg) translateZ(${faceOffset}px)`; // Final transform for leaving
+
+            incomingFace.classList.add('is-entering', 'up'); // Incoming flips down (from top)
+            incomingFace.style.transform = `rotateX(0deg) translateZ(0)`; // Final transform for entering
+        }
+
+        // Update current index after animation completes
+        setTimeout(() => {
+            currentIndex = nextIndex;
+            updateActiveFaceState(); // Reset states for all faces
             isAnimating = false;
         }, ANIMATION_DURATION);
 
@@ -244,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isServicesCarouselVisible && isAnimating) {
                 isAnimating = false;
                 if (scrollTimeout) clearTimeout(scrollTimeout);
-                // Also, re-setup faces to clear any lingering animation states if scrolled away mid-transition
                 setupFaces(); // Recalculate positions and states
             }
             // If it becomes visible while not animating, ensure its state is correct
@@ -343,7 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Attach global scroll listeners (they will check `isServicesCarouselVisible`)
     window.addEventListener('wheel', handleScroll, { passive: false });
-    // Corrected passive property for touch events to allow preventDefault
     window.addEventListener('touchstart', handleTouchStart, { passive: true }); // passive:true for start is fine for performance
     window.addEventListener('touchmove', handleTouchMove, { passive: false }); // Needs to be non-passive to call preventDefault
     window.addEventListener('touchend', handleTouchEnd, { passive: false }); // passive:false for end to allow preventDefault
