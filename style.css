@@ -513,7 +513,7 @@ html::before {
     overflow: hidden; /* Hide faces that are out of view */
     will-change: transform;
     /* Custom property for face offset calculation (set by JS) */
-    --face-offset: 450px; /* Default, will be overridden by JS */
+    --face-offset: 450px; /* Default from user's snippet, will be overridden by JS for correctness */
 }
 
 .cube {
@@ -535,10 +535,8 @@ html::before {
     color: var(--text-light);
     padding: 30px; /* Controls internal spacing, helps reduce visual height */
     display: flex;
-    flex-direction: column; /* To stack title/desc */
-    justify-content: center;
-    align-items: flex-start; /* Align content to start */
-    text-align: left;
+    justify-content: space-between; /* To align content left, number right */
+    align-items: center;
     backface-visibility: hidden;
     will-change: transform, opacity;
     transition: opacity 0.3s ease-out; /* For fading in/out */
@@ -552,11 +550,11 @@ html::before {
     visibility: visible;
 }
 
-/* Service content and number styling */
+/* Styling for content within the face */
 .service-content {
-    position: relative;
-    z-index: 1;
-    width: 100%; /* Take full width for content */
+    /* flex-grow: 1; */ /* Allow content to take available space */
+    width: auto; /* Allow content to size naturally */
+    max-width: 80%; /* Prevent content from pushing number off */
 }
 
 .service-title {
@@ -575,17 +573,28 @@ html::before {
 }
 
 .face-number {
-    position: absolute;
-    top: 50%;
-    right: 20px; /* Adjust positioning as needed */
-    transform: translateY(-50%);
+    position: relative; /* Position relative to flex container */
+    flex-shrink: 0; /* Prevent number from shrinking */
     font-size: 11em; /* Adjusted for smaller size */
     font-weight: 500; /* Adjusted for less bold */
     color: rgba(255, 255, 255, 0.05); /* Very transparent white */
     pointer-events: none; /* Don't block interactions */
     z-index: 0; /* Behind text content */
     line-height: 1; /* Prevent extra spacing */
+    margin-left: 20px; /* Space between content and number */
 }
+
+
+/* Rotation positions for 8 faces (as provided by user) */
+/* The translateZ will be overridden by JS for accurate 3D geometry */
+.face-1 { transform: rotateY(0deg) translateZ(var(--face-offset)); }
+.face-2 { transform: rotateY(45deg) translateZ(var(--face-offset)); }
+.face-3 { transform: rotateY(90deg) translateZ(var(--face-offset)); }
+.face-4 { transform: rotateY(135deg) translateZ(var(--face-offset)); }
+.face-5 { transform: rotateY(180deg) translateZ(var(--face-offset)); }
+.face-6 { transform: rotateY(225deg) translateZ(var(--face-offset)); }
+.face-7 { transform: rotateY(270deg) translateZ(var(--face-offset)); }
+.face-8 { transform: rotateY(315deg) translateZ(var(--face-offset)); }
 
 /* --- END 3D Cube Animation Styles --- */
 
