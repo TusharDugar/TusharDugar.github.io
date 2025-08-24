@@ -1,4 +1,6 @@
-// GSAP library is no longer used for animations, its registration is removed.
+// Global constants for animation timing
+const ANIMATION_DURATION = 1200; // 1.2s in milliseconds
+const ROTATE_INCREMENT = 90; // Degrees per transition step (for a cube-like rotation)
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
@@ -23,7 +25,7 @@ function copyToClipboard(button) {
 function initIntersectionObserverAnimations() {
   const revealElements = document.querySelectorAll(
     // Select all elements that should animate using CSS transitions triggered by IntersectionObserver
-    ".reveal-item, .reveal-stagger-container, .reveal-stagger" 
+    ".reveal-item, .reveal-stagger-container, .reveal-stagger"
   );
 
   const observerOptions = {
@@ -40,13 +42,13 @@ function initIntersectionObserverAnimations() {
           const children = entry.target.querySelectorAll(".reveal-stagger");
           children.forEach((child, index) => {
             child.style.transitionDelay = `${index * 0.1}s`;
-            child.classList.add("visible"); 
+            child.classList.add("visible");
           });
         }
         // Handle regular reveal items
-        else if (entry.target.classList.contains("reveal-item") || 
+        else if (entry.target.classList.contains("reveal-item") ||
                 entry.target.classList.contains("reveal-stagger")) {
-          entry.target.classList.add("visible"); 
+          entry.target.classList.add("visible");
         }
 
         observer.unobserve(entry.target); // Stop observing once revealed
@@ -59,18 +61,18 @@ function initIntersectionObserverAnimations() {
 
 
 // Scroll Spy for section title (REMOVED TEXT CHANGE LOGIC)
-const sections = document.querySelectorAll("section[id], footer[id]"); 
+const sections = document.querySelectorAll("section[id], footer[id]");
 const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for your name
 
 window.addEventListener("scroll", () => {
-  // This function now only exists to trigger other events if needed, 
+  // This function now only exists to trigger other events if needed,
   // but it no longer changes navIndicator.textContent.
   // The navIndicator will retain its original HTML text ("Tushar Dugar").
-  
+
   let current = ""; // Still calculate 'current' section if you want to log it or use it for other non-text-changing purposes.
   sections.forEach(section => {
-    const sectionTop = section.offsetTop - 150; 
-    
+    const sectionTop = section.offsetTop - 150;
+
     if (window.scrollY >= sectionTop && window.scrollY < sectionTop + section.offsetHeight) {
       current = section.getAttribute("id");
     }
@@ -97,8 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initialize IntersectionObserver-based animations (for About section, Tools, and other reveal-items)
-    initIntersectionObserverAnimations(); 
-    
+    initIntersectionObserverAnimations();
+
     // Trigger a scroll event immediately to set the initial scroll spy title (though not visible now)
     window.dispatchEvent(new Event('scroll'));
 
@@ -108,8 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const servicesWrapper = document.querySelector('.services-3d-carousel-wrapper');
     const servicesFaces = document.querySelectorAll('.services-carousel-face');
     const SERVICES_COUNT = servicesFaces.length;
-    const ANIMATION_DURATION = 1200; // 1.2s as per prompt
-    const ROTATE_INCREMENT = 90; // Degrees per transition step
 
     let currentIndex = 0;
     let currentRotation = 0; // Tracks the total rotation of the wrapper
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Calculate faceOffset dynamically based on the height of a face
         // Ensure the faces have a defined height in CSS for this to work
-        faceOffset = servicesFaces[0].offsetHeight / 2;
+        faceOffset = servicesFaces[0].offsetHeight / 2; // Half height for cube perspective
 
         servicesFaces.forEach((face, i) => {
             face.style.position = 'absolute';
@@ -132,50 +132,45 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.top = '0';
             face.style.left = '0';
             face.style.backfaceVisibility = 'hidden';
+            face.style.opacity = 0; // Start hidden
+            face.style.visibility = 'hidden'; // Start hidden
+            face.style.transition = 'none'; // Clear any CSS transition during setup
 
-            // Initial positioning of faces relative to the wrapper's center
-            // Face 0 is at 0deg (front), Face 1 at 90deg (bottom), Face 7 at -90deg (top) etc.
-            // This transforms places them in a vertical stack around the wrapper's origin.
-            const angle = i * ROTATE_INCREMENT; // Each face is rotated in increments
+            // Position each face around the center of the wrapper
+            // 0deg is front, -90deg is top, 90deg is bottom, 180deg is back
+            // The translateZ pushes them out to form the cube face
+            const angle = i * ROTATE_INCREMENT; // Angle for this specific face relative to its 0 position
             face.style.transform = `rotateX(${angle}deg) translateZ(${faceOffset}px)`;
-            face.style.opacity = 0; // All hidden initially
-            face.style.visibility = 'hidden';
-            // Disable default transition during setup to prevent flicker
-            face.style.transition = 'none';
         });
-        
-        // Show the first face immediately without animation
-        updateActiveFaceVisibility();
+
+        // Set the initial current face to visible
+        updateActiveFaceState();
     }
 
-    // Update which faces are visible and their base opacity/classes based on currentIndex
-    function updateActiveFaceVisibility() {
+    // Update which faces are visible (is-current, is-next-face, is-prev-face)
+    // This function runs on setup and after each animation completes.
+    function updateActiveFaceState() {
         servicesFaces.forEach((face, i) => {
-            face.classList.remove('is-active', 'is-next', 'is-prev');
-            face.style.opacity = 0;
-            face.style.visibility = 'hidden';
-            face.style.transition = 'opacity 0.4s ease-out, visibility 0s 0.4s'; // Default transition for non-active
+            // Clear all animation/state classes and transitions
+            face.classList.remove('is-current', 'is-next-face', 'is-prev-face', 'is-outgoing', 'is-incoming');
+            face.style.transition = 'none'; // Remove transition for state update
+            
+            // Calculate rotational difference from current view
+            const diff = (i - currentIndex + SERVICES_COUNT) % SERVICES_COUNT;
 
-            // Determine if this face is the current, next, or previous for the 3D effect
-            const offset = (i - currentIndex + SERVICES_COUNT) % SERVICES_COUNT; // Offset from current index
-
-            if (offset === 0) { // Current face (front-facing)
-                face.classList.add('is-active');
-                face.style.opacity = 1;
-                face.style.visibility = 'visible';
-                face.style.transition = 'opacity 0.4s ease-in, transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1)';
-            } else if (offset === 1) { // Next face (for scrolling down, initially below)
-                face.classList.add('is-next');
-                face.style.opacity = 0; // Start hidden
-                face.style.visibility = 'visible';
-                face.style.transition = 'opacity 0.4s ease-out, transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1)';
-            } else if (offset === SERVICES_COUNT - 1) { // Previous face (for scrolling up, initially above)
-                face.classList.add('is-prev');
-                face.style.opacity = 0; // Start hidden
-                face.style.visibility = 'visible';
-                face.style.transition = 'opacity 0.4s ease-out, transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1)';
+            if (diff === 0) { // This is the current, active face
+                face.classList.add('is-current');
+                // Opacity/visibility handled by .is-current class in CSS
+            } else if (diff === 1) { // This is the next face (below current)
+                face.classList.add('is-next-face');
+                // Opacity/visibility handled by .is-next-face class in CSS
+            } else if (diff === SERVICES_COUNT - 1) { // This is the previous face (above current)
+                face.classList.add('is-prev-face');
+                // Opacity/visibility handled by .is-prev-face class in CSS
+            } else { // All other faces are fully hidden
+                face.style.opacity = 0;
+                face.style.visibility = 'hidden';
             }
-            // All other faces remain hidden
         });
     }
 
@@ -184,61 +179,63 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isAnimating) return;
         isAnimating = true;
 
-        const outgoingFace = servicesFaces[currentIndex];
-        const nextIndex = (currentIndex + direction + SERVICES_COUNT) % SERVICES_COUNT;
-        const incomingFace = servicesFaces[nextIndex];
+        const outgoingFaceIndex = currentIndex;
+        const incomingFaceIndex = (currentIndex + direction + SERVICES_COUNT) % SERVICES_COUNT;
 
-        // 1. Outgoing face starts fading immediately when rotation starts (0% to 40%)
-        outgoingFace.style.opacity = 0;
-        outgoingFace.style.transition = `opacity ${ANIMATION_DURATION * 0.4}ms ease-out, transform ${ANIMATION_DURATION}ms cubic-bezier(0.65, 0.05, 0.36, 1)`;
+        const outgoingFace = servicesFaces[outgoingFaceIndex];
+        const incomingFace = servicesFaces[incomingFaceIndex];
 
-        // 2. Incoming face needs to be visible before it starts fading in (at 60%)
-        incomingFace.style.visibility = 'visible';
-        incomingFace.style.opacity = 0; // Ensure it's transparent before fading in
-        incomingFace.style.transition = `opacity ${ANIMATION_DURATION * 0.4}ms ease-in ${ANIMATION_DURATION * 0.6}ms, transform ${ANIMATION_DURATION}ms cubic-bezier(0.65, 0.05, 0.36, 1)`; // Delay fade-in
+        // 1. Apply animation classes for fade timing
+        outgoingFace.classList.add('is-outgoing'); // Triggers fade-out
+        incomingFace.classList.add('is-incoming'); // Triggers fade-in (with delay)
 
-        // 3. Apply the global wrapper rotation
+        // 2. Apply the global wrapper rotation
         currentRotation -= direction * ROTATE_INCREMENT; // Decrement for scroll down, increment for scroll up
+        servicesWrapper.style.transition = `transform ${ANIMATION_DURATION}ms cubic-bezier(0.65, 0.05, 0.36, 1)`;
         servicesWrapper.style.transform = `rotateX(${currentRotation}deg)`;
 
-        // 4. Incoming face begins fading in at 60% of the rotation, fully visible by 100%
+        // 3. Clear animation classes and update state after animation completes
         setTimeout(() => {
-            incomingFace.style.opacity = 1;
-        }, ANIMATION_DURATION * 0.6); // Start fade-in at 60% of total duration
+            currentIndex = incomingFaceIndex; // Update current index to the newly active face
+            servicesWrapper.style.transition = 'none'; // Remove transition from wrapper after animation
 
-        // After the full animation duration
-        setTimeout(() => {
-            currentIndex = nextIndex;
-            updateActiveFaceVisibility(); // Re-apply classes and reset transitions for the new state
-
-            // Ensure non-visible faces are correctly hidden and have no transform artifacts
-            servicesFaces.forEach((face, i) => {
-                const offset = (i - currentIndex + SERVICES_COUNT) % SERVICES_COUNT;
-                if (offset !== 0 && offset !== 1 && offset !== SERVICES_COUNT - 1) {
-                    face.style.visibility = 'hidden';
-                    face.style.opacity = 0;
-                    face.style.transition = 'none'; // Clear transition after use
-                }
-            });
-
+            // Reset all faces to their non-animating state and apply new 'is-current', 'is-next-face', etc.
+            updateActiveFaceState();
+            
             isAnimating = false;
         }, ANIMATION_DURATION);
     }
 
-    // Scroll event handler for desktop
+    // --- Scroll Event Handling ---
     let scrollTimeout;
+    const servicesSectionObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Attach scroll listeners only when the services section is in view
+                window.addEventListener('wheel', handleScroll, { passive: false });
+                window.addEventListener('touchstart', handleTouchStart, { passive: true });
+                window.addEventListener('touchend', handleTouchEnd, { passive: false });
+            } else {
+                // Detach scroll listeners when the services section is out of view
+                window.removeEventListener('wheel', handleScroll);
+                window.removeEventListener('touchstart', handleTouchStart);
+                window.removeEventListener('touchend', handleTouchEnd);
+                // Also reset isAnimating if we scroll away mid-animation to prevent lock
+                isAnimating = false;
+            }
+        });
+    }, { threshold: 0.5 }); // Trigger when 50% of the section is visible
+
+    // Debounce scroll events
     const handleScroll = (event) => {
-        event.preventDefault(); // Prevent default scroll behavior
+        event.preventDefault(); // Prevent default page scroll
         if (isAnimating) return;
 
-        // Clear any previous debounce timeout
         clearTimeout(scrollTimeout);
-
-        // Set a new timeout to process the scroll after a short delay
         scrollTimeout = setTimeout(() => {
             const direction = event.deltaY > 0 ? 1 : -1; // 1 for scroll down, -1 for scroll up
             animateServices(direction);
-        }, 100); // Debounce time, adjust as needed
+        }, 100); // Debounce time (adjust as needed for responsiveness)
     };
 
     // Touch event handler for mobile swipe
@@ -258,14 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
         animateServices(direction);
     };
 
-    // Attach event listeners to the carousel container for scroll interaction
-    if (servicesSection) {
-        servicesSection.addEventListener('wheel', handleScroll, { passive: false });
-        servicesSection.addEventListener('touchstart', handleTouchStart, { passive: true });
-        servicesSection.addEventListener('touchend', handleTouchEnd, { passive: false });
-    }
-
     // Initialize faces when the DOM is ready
     setupFaces();
+    
+    // Start observing the services section for scroll interaction
+    if (servicesSection) {
+        servicesSectionObserver.observe(servicesSection);
+    }
     // --- END NEW 3D SERVICES CAROUSEL JAVASCRIPT ---
 });
