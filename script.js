@@ -106,7 +106,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- NEW 3D SERVICES CAROUSEL JAVASCRIPT ---
-    const servicesSection = document.getElementById('services');
+    // Target the carousel container specifically for the IntersectionObserver
+    const servicesCarouselContainer = document.querySelector('.services-3d-carousel-container');
     const servicesWrapper = document.querySelector('.services-3d-carousel-wrapper');
     const servicesFaces = document.querySelectorAll('.services-carousel-face');
     const SERVICES_COUNT = servicesFaces.length;
@@ -116,15 +117,31 @@ document.addEventListener('DOMContentLoaded', () => {
     let isAnimating = false;
     let startY = 0; // For touch swipe
     let faceOffset = 0; // Will be calculated dynamically
+    let isServicesCarouselVisible = false; // Flag for IntersectionObserver
 
     // Function to set initial 3D positions of all faces
     function setupFaces() {
         if (SERVICES_COUNT === 0) return;
 
-        // Calculate faceOffset dynamically based on the height of a face
-        // Ensure the faces have a defined height in CSS for this to work
-        faceOffset = servicesFaces[0].offsetHeight / 2; // Half height for cube perspective
+        // Ensure carousel container exists before trying to calculate offset
+        if (!servicesCarouselContainer) {
+            console.error("Services 3D carousel container not found.");
+            return;
+        }
 
+        // Calculate faceOffset dynamically based on the height of a face
+        // Use an active face for height calculation to ensure it has its correct dimensions
+        // Fallback to a default if still unable to get height
+        const tempFace = servicesFaces[0];
+        if (tempFace && tempFace.offsetHeight > 0) {
+             faceOffset = tempFace.offsetHeight / 2;
+        } else {
+             // Fallback if initial height isn't computed (e.g., due to responsive changes or complex CSS)
+             console.warn("Could not determine faceOffset dynamically. Using fallback height.");
+             faceOffset = servicesCarouselContainer.offsetHeight / 2; // Use container height as fallback
+             if (faceOffset === 0) faceOffset = 150; // Absolute fallback if container is also 0
+        }
+       
         servicesFaces.forEach((face, i) => {
             face.style.position = 'absolute';
             face.style.width = '100%';
@@ -135,13 +152,11 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.transition = 'none'; // Clear any CSS transition during setup
 
             // Position each face around the center of the wrapper
-            // 0deg is front, -90deg is top, 90deg is bottom, 180deg is back
-            // The translateZ pushes them out to form the cube face
             const angle = i * ROTATE_INCREMENT; // Angle for this specific face relative to its 0 position
             face.style.transform = `rotateX(${angle}deg) translateZ(${faceOffset}px)`;
         });
 
-        // Set the initial current face to visible
+        // Set the initial current face state
         updateActiveFaceState();
     }
 
@@ -176,14 +191,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Main animation function
+    // Returns true if animation started, false if boundary reached or already animating
     function animateServices(direction) {
         // Prevent animation if already animating
-        if (isAnimating) return;
+        if (isAnimating) return false;
 
         // Check for boundary conditions (non-looping)
         if ((direction === 1 && currentIndex === SERVICES_COUNT - 1) ||
             (direction === -1 && currentIndex === 0)) {
-            // Do not animate, allow normal page scroll to resume
             isAnimating = false; // Ensure it's not locked if attempted to scroll past boundary
             return false; // Indicate that carousel did not animate
         }
@@ -221,28 +236,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Scroll Event Handling ---
     let scrollTimeout;
-    const servicesSectionObserver = new IntersectionObserver(entries => {
+    // Observer for the carousel container to know when it's in view
+    const servicesCarouselObserver = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Attach scroll listeners only when the services section is in view
-                window.addEventListener('wheel', handleScroll, { passive: false });
-                window.addEventListener('touchstart', handleTouchStart, { passive: true });
-                window.addEventListener('touchend', handleTouchEnd, { passive: false });
-            } else {
-                // Detach scroll listeners when the services section is out of view
-                window.removeEventListener('wheel', handleScroll);
-                window.removeEventListener('touchstart', handleTouchStart);
-                window.removeEventListener('touchend', handleTouchEnd);
-                // Also reset isAnimating if we scroll away mid-animation to prevent lock
+            isServicesCarouselVisible = entry.isIntersecting;
+            // If it becomes invisible while animating, reset animation state
+            if (!isServicesCarouselVisible && isAnimating) {
                 isAnimating = false;
+                if (scrollTimeout) clearTimeout(scrollTimeout);
+                // Also, re-setup faces to clear any lingering animation states if scrolled away mid-transition
+                setupFaces(); 
             }
         });
-    }, { threshold: 0.5 }); // Trigger when 50% of the section is visible
+    }, { threshold: 0.5 }); // Trigger when 50% of the carousel container is visible
 
     // Debounce scroll events
     const handleScroll = (event) => {
+        // Only try to control scroll if the carousel is visible
+        if (!isServicesCarouselVisible) return;
+
+        // Prevent default if an animation is currently in progress
         if (isAnimating) {
-            event.preventDefault(); // Keep preventing if still animating a slide
+            event.preventDefault();
             return;
         }
 
@@ -255,17 +270,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.preventDefault(); // Prevent default page scroll ONLY if carousel animated
             } else {
                 // If carousel didn't animate (hit boundary), allow default page scroll
-                // No need to explicitly preventDefault here, as it wasn't prevented for this event
+                // This means the default scroll behavior will proceed, taking the user to the next section
             }
         }, 100); // Debounce time (adjust as needed for responsiveness)
     };
 
     // Touch event handler for mobile swipe
     const handleTouchStart = (event) => {
+        // Only try to control scroll if the carousel is visible
+        if (!isServicesCarouselVisible) return;
+        
         startY = event.touches[0].clientY;
     };
 
     const handleTouchEnd = (event) => {
+        // Only try to control scroll if the carousel is visible
+        if (!isServicesCarouselVisible) return;
+
         if (isAnimating) {
             event.preventDefault(); // Prevent page scroll if still animating
             return;
@@ -289,9 +310,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize faces when the DOM is ready
     setupFaces();
     
-    // Start observing the services section for scroll interaction
-    if (servicesSection) {
-        servicesSectionObserver.observe(servicesSection);
+    // Start observing the services carousel container for scroll interaction
+    if (servicesCarouselContainer) {
+        servicesCarouselObserver.observe(servicesCarouselContainer);
     }
+
+    // Attach global scroll listeners (they will check `isServicesCarouselVisible`)
+    window.addEventListener('wheel', handleScroll, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: false });
     // --- END NEW 3D SERVICES CAROUSEL JAVASCRIPT ---
 });
