@@ -502,74 +502,111 @@ html::before {
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
-/* --- RESTORED 2D SERVICES GRID STYLES WITH STAGGER --- */
-
-/* Services Grid Container (now reveal-parent) */
-.services-items-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); /* Allow cards to be wider */
-    gap: 25px;
-    justify-items: stretch;
-    margin-top: 0;
-    position: relative; /* From reveal-parent */
+/* --- 3D Cube Animation Styles --- */
+.cube-container {
     width: 100%;
-    max-width: 800px; /* Control max width for centering */
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 900px; /* Wider cards */
+    height: 400px; /* Base height for the cube. This will be reduced. */
+    margin: 60px auto;
+    perspective: 1000px; /* Perspective for 3D effect */
+    position: sticky; /* Make container sticky to enable scroll-driven effect */
+    top: 50%; /* Center vertically in viewport */
+    transform: translateY(-50%); /* Adjust for perfect centering */
+    overflow: hidden; /* Hide faces that are out of view */
+    will-change: transform;
+}
+/* Reduce height of cards by 15% (400px * 0.85 = 340px) */
+/* The final visual height of the card will be set by the .face padding */
+.cube-container {
+    height: 340px; /* Reduced by 15% from 400px base */
 }
 
-/* Service Item (now reveal-child) */
-.service-item {
-  background-color: var(--bg-tool-card); /* Consistent dark background */
-  border-radius: 12px;
-  padding: 35px; /* Reduced padding for ~15% height reduction (from 40px) */
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  text-align: left;
-  will-change: transform, opacity;
-
-  /* These opacity and transform properties are now controlled by .reveal-child */
-  /* opacity: 0; */
-  /* transform: translateY(60px); */
-  /* transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); */
+.cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease; /* Transition for cube rotation */
+    transform: rotateY(0deg); /* Initial state */
+    will-change: transform;
 }
 
-/* Service item children styling */
-.service-item .service-title {
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #CCCCCC; /* From user's snippet */
+    background-color: var(--bg-tool-card);
+    color: var(--text-light);
+    padding: 30px; /* Controls internal spacing, helps reduce visual height */
+    display: flex;
+    flex-direction: column; /* To stack title/desc */
+    justify-content: center;
+    align-items: flex-start; /* Align content to start */
+    text-align: left;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+    transition: opacity 0.3s ease-out; /* For fading in/out */
+    opacity: 0; /* Managed by JS */
+    visibility: hidden; /* Managed by JS */
+}
+
+/* Specific Face Rotations (8 faces, 45 degrees apart) */
+/* translateZ value derived from cube-container width and 8 sides (R = (W/2) / tan(PI/N))
+   For width 900px, N=8, R = (450) / tan(22.5deg) = ~1086px.
+   The user's snippet used translateZ(450px) which means faces overlap.
+   We will use the calculated `R` to make them meet perfectly,
+   but use `var(--face-offset)` which JS sets. */
+.face {
+    transform-origin: center center;
+    /* Transform values will be set by JS dynamically for initial positioning.
+       The inline styles in HTML snippets are just initial placeholders,
+       JS dynamically calculates `translateZ` */
+}
+
+.face.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Service content and number styling */
+.service-content {
     position: relative;
     z-index: 1;
-    font-size: 1.7em;
+}
+
+.service-title {
+    font-size: 2em;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     line-height: 1.2;
+    color: var(--text-light);
 }
-.service-item .service-description {
-    position: relative;
-    z-index: 1;
-    font-size: 0.95em;
+
+.service-description {
+    font-size: 1em;
     color: var(--text-medium);
     line-height: 1.6;
+    max-width: 90%;
 }
 
-/* Subtitle background numbers styling (restored) */
-.service-item .service-bg-number {
-  position: absolute;
-  top: 50%;
-  right: 15px; /* Adjusted positioning for wider cards */
-  transform: translateY(-50%);
-  font-size: 11em; /* Adjusted size */
-  font-weight: 500; /* Adjusted for less bold */
-  color: rgba(255, 255, 255, 0.05); /* Very transparent white */
-  z-index: 0;
-  pointer-events: none;
-  line-height: 1;
+.face-number {
+    position: absolute;
+    top: 50%;
+    right: 20px; /* Adjust positioning as needed */
+    transform: translateY(-50%);
+    font-size: 11em; /* Adjusted for smaller size */
+    font-weight: 500; /* Adjusted for less bold */
+    color: rgba(255, 255, 255, 0.05); /* Very transparent white */
+    pointer-events: none; /* Don't block interactions */
+    z-index: 0; /* Behind text content */
+    line-height: 1; /* Prevent extra spacing */
 }
 
-/* --- END RESTORED 2D SERVICES GRID STYLES --- */
+/* --- END 3D Cube Animation Styles --- */
 
 
-/* Tools Grid Styling (Reverted to original behavior with stagger) */
+/* Tools Grid Styling (Restored with Stagger) */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -595,7 +632,7 @@ html::before {
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
     will-change: transform; 
-    /* .reveal-stagger applies opacity and transform */
+    /* .reveal-stagger applies opacity and transform for animation */
 }
 
 .tool-card:hover {
@@ -644,7 +681,7 @@ html::before {
 }
 
 
-/* Footer (Contact Section) - Reverted to original behavior with stagger */
+/* Footer (Contact Section) - Restored with Stagger */
 footer {
     background-color: var(--bg-main);
     color: var(--text-light);
@@ -888,22 +925,22 @@ footer h2 {
         line-height: 0.85em;
         margin-bottom: 50px;
     }
-    /* Service Items adjustments */
-    .services-items-container {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Cube container adjustments */
+    .cube-container {
         max-width: 700px;
+        height: 340px; /* Reduced by 15% from 400px base */
     }
-    .service-item {
-        padding: 30px; /* Adjusted padding further for 15% reduction from initial 40px */
+    .face {
+        padding: 30px;
     }
-    .service-item .service-title {
+    .service-title {
         font-size: 1.8em;
     }
-    .service-item .service-description {
+    .service-description {
         font-size: 0.9em;
     }
-    .service-item .service-bg-number {
-        font-size: 10em; /* Adjusted size */
+    .face-number {
+        font-size: 10em;
         right: 15px;
     }
 
@@ -1042,22 +1079,22 @@ footer h2 {
         line-height: 0.9em;
         margin-bottom: 30px;
     }
-    /* Service Items adjustments */
-    .services-items-container {
-        grid-template-columns: 1fr;
+    /* Cube container adjustments */
+    .cube-container {
         max-width: 90%;
+        height: 289px; /* Reduced by 15% from 340px */
     }
-    .service-item {
-        padding: 25px; /* Adjusted padding further */
+    .face {
+        padding: 25px;
     }
-    .service-item .service-title {
+    .service-title {
         font-size: 1.5em;
     }
-    .service-item .service-description {
+    .service-description {
         font-size: 0.85em;
     }
-    .service-item .service-bg-number {
-        font-size: 8em; /* Adjusted size */
+    .face-number {
+        font-size: 8em;
         right: 10px;
     }
 
@@ -1127,21 +1164,21 @@ footer h2 {
         line-height: 0.9em;
         margin-bottom: 25px;
     }
-    /* Service Items adjustments */
-    .services-items-container {
-        max-width: 100%;
+    /* Cube container adjustments */
+    .cube-container {
+        height: 246px; /* Reduced by 15% from 290px */
     }
-    .service-item {
-        padding: 20px; /* Adjusted padding further */
+    .face {
+        padding: 20px;
     }
-    .service-item .service-title {
+    .service-title {
         font-size: 1.3em;
     }
-    .service-item .service-description {
+    .service-description {
         font-size: 0.8em;
     }
-    .service-item .service-bg-number {
-        font-size: 6em; /* Adjusted size */
+    .face-number {
+        font-size: 6em;
         right: 5px;
     }
 
