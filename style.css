@@ -505,12 +505,12 @@ html::before {
 /* --- 3D Cube Animation Styles --- */
 .cube-container {
     width: 100%;
-    max-width: 900px; /* Wider cards */
+    max-width: 900px;
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
-    perspective: 1000px; /* Perspective for 3D effect */
+    perspective: 1000px;
     position: relative; 
-    overflow: hidden; /* Hide faces that are out of view */
+    overflow: hidden;
     will-change: transform;
     /* Custom property for face offset calculation (set by JS) */
     --face-offset: 450px; /* Default from user's snippet, will be overridden by JS for correctness */
@@ -522,7 +522,7 @@ html::before {
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.5s ease; /* Transition for cube rotation */
-    transform: rotateX(0deg); /* Initial state, controlled by JS */
+    transform: rotateY(0deg); /* Initial state, controlled by JS */
     will-change: transform;
 }
 
@@ -530,7 +530,7 @@ html::before {
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 1px solid #CCCCCC; /* From user's snippet */
+    border: 1px solid #CCCCCC;
     background-color: var(--bg-tool-card);
     color: var(--text-light);
     padding: 30px; /* Controls internal spacing, helps reduce visual height */
