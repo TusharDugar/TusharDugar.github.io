@@ -523,9 +523,10 @@ html::before {
     box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     backface-visibility: hidden; /* Prevents back of face from showing when rotated */
     
-    /* Managed by JS initially and during transitions */
-    opacity: 0; /* Default hidden */
-    visibility: hidden; /* Default hidden */
+    /* Importantly, these properties are NOT set here by default.
+       They are managed by JavaScript and state classes for precise control. */
+    /* opacity: 0; */
+    /* visibility: hidden; */
     transition: none; /* Important: Clear any default transitions on base state */
     
     will-change: transform, opacity;
