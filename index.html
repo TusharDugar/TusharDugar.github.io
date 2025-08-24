@@ -69,57 +69,54 @@
                 <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
             </section>
 
-            <!-- Services Section - Updated for DesignCube-like Scroll-Driven 3D Flip -->
-            <!-- Added scroll-driven-section class -->
-            <section id="services" class="section services-section scroll-driven-section">
+            <!-- Services Section - Now a flat grid with animations -->
+            <section id="services" class="section services-section">
                 <h2 class="services-heading reveal-item">
                     <span class="text-white">MY</span>
                     <span class="text-gray">SERVICES</span>
                 </h2>
 
-                <div class="services-3d-carousel-container reveal-item">
-                    <div class="services-3d-carousel-wrapper">
-                        <!-- Each service card is a face of the 3D cube -->
-                        <div class="services-carousel-face" data-index="0">
-                            <h3 class="service-title">Web Design</h3>
-                            <p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p>
-                            <span class="service-bg-number">01</span>
-                        </div>
-                        <div class="services-carousel-face" data-index="1">
-                            <h3 class="service-title">SEO Optimization</h3>
-                            <p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p>
-                            <span class="service-bg-number">02</span>
-                        </div>
-                        <div class="services-carousel-face" data-index="2">
-                            <h3 class="service-title">UX/UI Design</h3>
-                            <p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p>
-                            <span class="service-bg-number">03</span>
-                        </div>
-                        <div class="services-carousel-face" data-index="3">
-                            <h3 class="service-title">Graphic Design</h3>
-                            <p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p>
-                            <span class="service-bg-number">04</span>
-                        </div>
-                        <div class="services-carousel-face" data-index="4">
-                            <h3 class="service-title">E-commerce Solutions</h3>
-                            <p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p>
-                            <span class="service-bg-number">05</span>
-                        </div>
-                        <div class="services-carousel-face" data-index="5">
-                            <h3 class="service-title">Digital Marketing</h3>
-                            <p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p>
-                            <span class="service-bg-number">06</span>
-                        </div>
-                        <div class="services-carousel-face" data-index="6">
-                            <h3 class="service-title">Content Creation</h3>
-                            <p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p>
-                            <span class="service-bg-number">07</span>
-                        </div>
-                        <div class="services-carousel-face" data-index="7">
-                            <h3 class="service-title">Social Media Management</h3>
-                            <p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p>
-                            <span class="service-bg-number">08</span>
-                        </div>
+                <!-- This is the flat grid container -->
+                <div class="services-items-container reveal-parent">
+                    <div class="service-item reveal-child" id="service-0" data-service-index="0">
+                        <h3 class="service-title">Web Design</h3>
+                        <p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p>
+                        <div class="service-bg-number subtitle-number">01</div>
+                    </div>
+                    <div class="service-item reveal-child" id="service-1" data-service-index="1">
+                        <h3 class="service-title">SEO Optimization</h3>
+                        <p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p>
+                        <div class="service-bg-number subtitle-number">02</div>
+                    </div>
+                    <div class="service-item reveal-child" id="service-2" data-service-index="2">
+                        <h3 class="service-title">UX/UI Design</h3>
+                        <p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p>
+                        <div class="service-bg-number subtitle-number">03</div>
+                    </div>
+                    <div class="service-item reveal-child" id="service-3" data-service-index="3">
+                        <h3 class="service-title">Graphic Design</h3>
+                        <p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p>
+                        <div class="service-bg-number subtitle-number">04</div>
+                    </div>
+                    <div class="service-item reveal-child" id="service-4" data-service-index="4">
+                        <h3 class="service-title">E-commerce Solutions</h3>
+                        <p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p>
+                        <div class="service-bg-number subtitle-number">05</div>
+                    </div>
+                    <div class="service-item reveal-child" id="service-5" data-service-index="5">
+                        <h3 class="service-title">Digital Marketing</h3>
+                        <p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p>
+                        <div class="service-bg-number subtitle-number">06</div>
+                    </div>
+                    <div class="service-item reveal-child" id="service-6" data-service-index="6">
+                        <h3 class="service-title">Content Creation</h3>
+                        <p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p>
+                        <div class="service-bg-number subtitle-number">07</div>
+                    </div>
+                    <div class="service-item reveal-child" id="service-7" data-service-index="7">
+                        <h3 class="service-title">Social Media Management</h3>
+                        <p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p>
+                        <div class="service-bg-number subtitle-number">08</div>
                     </div>
                 </div>
             </section>
@@ -131,8 +128,8 @@
                     <span class="text-gray">TOOLS</span>
                 </h2>
 
-                <div class="tools-grid">
-                    <div class="tool-card reveal-item">
+                <div class="tools-grid reveal-stagger-container">
+                    <div class="tool-card reveal-stagger">
                         <div class="tool-icon-wrapper">
                             <!-- Using Simple Icons CDN for common brand logos -->
                             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg" alt="Google Gemini Logo" class="tool-logo">
@@ -142,7 +139,7 @@
                             <p class="tool-category">AI Assistant</p>
                         </div>
                     </div>
-                    <div class="tool-card reveal-item">
+                    <div class="tool-card reveal-stagger">
                         <div class="tool-icon-wrapper">
                             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/openai.svg" alt="ChatGPT Logo" class="tool-logo">
                         </div>
@@ -151,7 +148,7 @@
                             <p class="tool-category">AI Assistant</p>
                         </div>
                     </div>
-                    <div class="tool-card reveal-item">
+                    <div class="tool-card reveal-stagger">
                         <div class="tool-icon-wrapper">
                             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="Figma Logo"
                             class="tool-logo">
@@ -161,7 +158,7 @@
                             <p class="tool-category">Design Tool</p>
                         </div>
                     </div>
-                    <div class="tool-card reveal-item">
+                    <div class="tool-card reveal-stagger">
                         <div class="tool-icon-wrapper">
                             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="Photoshop Logo" class="tool-logo">
                         </div>
@@ -170,7 +167,7 @@
                             <p class="tool-category">Image Editing</p>
                         </div>
                     </div>
-                    <div class="tool-card reveal-item">
+                    <div class="tool-card reveal-stagger">
                         <div class="tool-icon-wrapper">
                             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googleanalytics.svg" alt="Google Analytics Logo" class="tool-logo">
                         </div>
@@ -179,7 +176,7 @@
                             <p class="tool-category">Web Analytics</p>
                         </div>
                     </div>
-                    <div class="tool-card reveal-item">
+                    <div class="tool-card reveal-stagger">
                         <div class="tool-icon-wrapper">
                             <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/semrush.svg" alt="SEMrush Logo" class="tool-logo">
                         </div>
@@ -200,15 +197,15 @@
         <p class="contact-tagline">
             I am always open to discuss your project,<br>improve your online presence or help with your website.
         </p>
-        <div class="contact-buttons">
-            <button class="contact-button reveal-item" id="phone-button" data-contact="+919330077650">
+        <div class="contact-buttons reveal-stagger-container">
+            <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
                 <div class="button-content-main">
                     <i class="fas fa-phone-alt"></i> 
                     <span class="button-value">+91 9330077650</span>
                 </div>
                 <span class="copied-text">Copied!</span>
             </button>
-            <button class="contact-button reveal-item" id="email-button" data-contact="imtushar4621@gmail.com">
+            <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
                 <div class="button-content-main">
                     <i class="fas fa-envelope"></i> 
                     <span class="button-value">imtushar4621@gmail.com</span>
