@@ -127,12 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function calculateFaceOffset() {
         if (!cubeContainer || SERVICES_COUNT === 0) return 0;
         
-        // For an N-sided regular polygon where the faces have width 'W',
-        // the distance 'R' from the center to the face (translateZ) is R = (W/2) / tan(PI/N)
-        // Here, 'W' is cubeContainer.offsetWidth
         const faceWidth = cubeContainer.offsetWidth; 
+        // R = (W/2) / tan(PI/N) formula for a regular N-sided polygon.
+        // For N=8, PI/8 = 22.5 degrees. tan(22.5deg) is approx 0.414.
         const calculatedOffset = (faceWidth / 2) / Math.tan(Math.PI / SERVICES_COUNT);
-        // Use user's provided 450px as default/fallback, but JS will still set it.
+        
+        // Use your provided 450px as default if calculated value is invalid or too small,
+        // otherwise use the calculation for correct geometry.
         return isNaN(calculatedOffset) || calculatedOffset === 0 ? 450 : calculatedOffset; 
     }
 
@@ -150,15 +151,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Each face is statically positioned relative to the cube's origin
             // For faces numbered 1-8, map to 0-7 for calculations
-            const actualIndex = i; // data-index "1" is faces[0], "2" is faces[1] etc.
+            const actualIndex = i; // Array index 0-7 corresponds to logical face position
             const angleForFace = actualIndex * ROTATION_INCREMENT_DEG; // 0, 45, 90...
 
-            face.style.transform = `rotateX(${angleForFace}deg) translateZ(${faceOffset}px)`;
+            // Apply transforms based on the desired geometry
+            face.style.transform = `rotateY(${angleForFace}deg) translateZ(${faceOffset}px)`;
         });
 
         // Ensure the cube itself is at the current logical rotation state
         cube.style.transition = 'none'; // No transition for initial setup of cube's transform
-        cube.style.transform = `rotateX(${-currentRotationAngle}deg)`;
+        cube.style.transform = `rotateY(${-currentRotationAngle}deg)`; // Use rotateY as per your CSS snippet
 
         updateFaceVisibility(); // Set initial visibility for activeFaceIndex
     }
@@ -213,10 +215,15 @@ document.addEventListener('DOMContentLoaded', () => {
         isAnimatingCube = true;
         activeFaceIndex = newActiveFaceIndex;
 
-        // Update cube's rotation (negative for scroll-down visual effect, as per DesignCube)
+        // Update cube's rotation (negative for scroll-down visual effect as per DesignCube using rotateX,
+        // but here we are using rotateY as per your CSS snippet)
+        // If scrolling down (direction=1), we want the cube to rotate to the LEFT (negative Y-rotation)
+        // so the next face comes into view from the RIGHT.
+        // If scrolling up (direction=-1), we want the cube to rotate to the RIGHT (positive Y-rotation)
+        // so the previous face comes into view from the LEFT.
         currentRotationAngle += direction * ROTATION_INCREMENT_DEG; // Accumulate rotation
         cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms ease`; // Re-apply transition for smooth animation
-        cube.style.transform = `rotateX(${-currentRotationAngle}deg)`; // Apply to cube
+        cube.style.transform = `rotateY(${-currentRotationAngle}deg)`; // Apply to cube (negative for natural scroll direction)
 
         // Once animation completes, reset flag and update visibility
         setTimeout(() => {
@@ -238,8 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleGlobalScroll = (event) => {
         // Check if the cube container is in the active viewport area for interaction
         const rect = cubeContainer.getBoundingClientRect();
-        // The cube is "active" for scroll interaction when it's roughly centered in the viewport
-        const isCubeInView = rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2; 
+        const isCubeInView = rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2; // Roughly centered in viewport
 
         if (!isCubeInView) return; // Not in view, let page scroll normally
 
@@ -290,10 +296,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const deltaY = currentTouchY - touchStartY;
         const deltaX = currentTouchX - touchStartX;
 
-        // Only consider vertical scroll for cube animation, and prevent default
-        // if a significant vertical swipe is happening within the cube's area
+        // Only consider vertical scroll for cube animation
         if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) { // 10px threshold for meaningful swipe
-            event.preventDefault(); 
+            event.preventDefault(); // Prevent page scroll during vertical swipe in cube's area
             touchDeltaY = deltaY; // Accumulate for `touchend` decision
         } else {
             // If horizontal swipe or minor movement, don't preventDefault, allow native scroll (e.g., horizontal swipe on page)
