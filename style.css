@@ -538,7 +538,8 @@ html::before {
     position: relative;
     transform-style: preserve-3d; /* IMPORTANT: Ensures children are positioned in 3D space */
     transition: transform 0.5s ease; /* Transition for cube rotation */
-    transform: rotateX(-25deg) rotateY(0deg); /* FIXED: Base isometric tilt added here in CSS. JS will update rotateY, but rotateX should persist. */
+    /* FIXED: Base isometric tilt added here in CSS. JS will update rotateY, but rotateX should persist. */
+    transform: rotateX(-25deg) rotateY(0deg); 
     will-change: transform;
 }
 
@@ -959,7 +960,16 @@ footer h2 {
     .tools-heading {
         font-size: 6em;
         line-height: 0.85em;
-        margin-bottom: 50px;
+        font-weight: 800; /* Matching services heading */
+        margin-bottom: 50px; /* Matching services heading */
+        text-transform: uppercase; /* Matching services heading */
+        text-align: left; /* Matching services heading */
+        margin-left: 0; /* Matching services heading */
+        position: relative; /* Matching services heading */
+        z-index: 4; /* Matching services heading */
+        padding: 0; /* Matching services heading */
+        width: 100%; /* Matching services heading */
+        max-width: 1200px; /* Matching services heading */
     }
     .tools-grid {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1111,7 +1121,16 @@ footer h2 {
     .tools-heading {
         font-size: 4.5em;
         line-height: 0.9em;
-        margin-bottom: 30px;
+        font-weight: 800; /* Matching services heading */
+        margin-bottom: 30px; /* Matching services heading */
+        text-transform: uppercase; /* Matching services heading */
+        text-align: left; /* Matching services heading */
+        margin-left: 0; /* Matching services heading */
+        position: relative; /* Matching services heading */
+        z-index: 4; /* Matching services heading */
+        padding: 0; /* Matching services heading */
+        width: 100%; /* Matching services heading */
+        max-width: 1200px; /* Matching services heading */
     }
     .tools-grid {
         grid-template-columns: 1fr;
@@ -1201,6 +1220,17 @@ footer h2 {
     }
     .tools-heading {
         font-size: 2.8em;
+        line-height: 0.9em; /* Matching services heading */
+        font-weight: 800; /* Matching services heading */
+        margin-bottom: 25px; /* Matching services heading */
+        text-transform: uppercase; /* Matching services heading */
+        text-align: left; /* Matching services heading */
+        margin-left: 0; /* Matching services heading */
+        position: relative; /* Matching services heading */
+        z-index: 4; /* Matching services heading */
+        padding: 0; /* Matching services heading */
+        width: 100%; /* Matching services heading */
+        max-width: 1200px; /* Matching services heading */
     }
     .tools-grid {
         grid-template-columns: 1fr;
