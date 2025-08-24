@@ -230,56 +230,54 @@ html::before {
 /* Main Layout Container */
 .main-layout-container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* FIXED: Align to start to allow left column to position independently on desktop */
-    max-width: 1920px;
-    margin: 0 auto;
-    padding: 0 60px;
+    justify-content: center; /* Center the entire two-column layout */
+    align-items: flex-start; /* Aligns items to the top initially, to allow sticky to work */
+    max-width: 1920px; /* Overall max width of the site */
+    margin: 0 auto; /* Center the main layout container itself */
+    padding: 0 60px; /* Overall padding for the site */
     min-height: 100vh;
     position: relative;
     z-index: 1;
     padding-top: 20px;
-    gap: 60px;
+    gap: 60px; /* Gap between left and right columns */
 }
 
 /* Left Column Styling */
 .left-column-sticky {
     flex-shrink: 0;
-    flex-basis: 370px;
-    padding-right: 0;
+    flex-basis: 370px; /* Fixed width for the left column */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center; /* Centers content horizontally within the column */
-    justify-content: center; /* FIXED: Centers content vertically within the column's height */
+    justify-content: center; /* Centers content vertically within the column's height */
     text-align: center;
     z-index: 2;
     
-    /* DEFAULT/MOBILE: These properties will be applied unless overridden by a min-width media query */
-    position: relative; /* Not fixed/sticky by default */
+    /* Default (Mobile/Tablet) positioning */
+    position: relative;
     top: auto;
-    transform: none; /* No vertical translate by default */
-    margin: 50px auto 0 auto; /* Horizontally center as a block, push down a bit */
+    transform: none;
+    margin: 50px auto 0 auto; /* Push down, center horizontally */
     height: auto; /* Content dictates height */
+    padding-right: 0; /* Remove unnecessary padding */
 }
 
-/* FIXED: Desktop-specific rules for left column (fixed and centered) */
+/* FIXED: Desktop-specific rules for left column (fixed and centrally aligned within its space) */
 @media (min-width: 1024px) {
     .left-column-sticky {
-        position: fixed; /* Fixed for desktop */
-        top: 50%;
-        /* Calculate left position: center of the main-layout-container, minus half the layout's max-width, plus the left padding of the layout, plus half the gap. */
-        /* main-layout-container max-width: 1920px, padding: 0 60px, gap: 60px */
-        /* Left edge of content area: calc(50% - 1920px / 2 + 60px) -> calc(50% - 960px + 60px) */
-        /* This places it at the very left edge of the content flexbox. */
-        /* To center it within its own flex-basis, you'd need more complex calc or an outer wrapper. */
-        /* A simpler approach is to calculate the overall available left space and center it there. */
-        /* Let's try to align it with the left edge of where the flexible content starts relative to the main-layout-container */
-        left: calc(50% - (1200px / 2) - 60px + (370px / 2)); /* Centers it within the *available* left column space */
-        
-        transform: translateY(-50%); /* Vertically center */
-        margin: 0; /* Remove auto margins */
-        height: calc(100vh - 50px); /* Restore height for sticky-like behavior for internal centering */
+        position: sticky; /* Sticky is essential for it to stay in its flow but also "fix" */
+        top: 50%; /* Start sticky behavior from the middle of the viewport */
+        transform: translateY(-50%); /* Adjust upwards by half its height for true centering */
+        /* height: auto; Removed specific height for sticky, it takes height from its content + padding */
+        height: calc(100vh - 100px); /* Adjust height for optimal vertical centering within viewport */
+        margin: 0; /* Remove auto margins, as top/transform now control position */
+        align-self: center; /* Important to keep it centered vertically within its flex container */
+    }
+
+    /* Adjust main-layout-container alignment for desktop to support sticky */
+    .main-layout-container {
+        align-items: center; /* This will make the entire flex container (with both columns) center vertically */
     }
 }
 
