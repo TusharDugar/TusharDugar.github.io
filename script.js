@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initIntersectionObserverAnimations();
 
     // Trigger a scroll event immediately to set the initial scroll spy title (though not visible now)
+    // IMPORTANT: This also helps trigger initial IntersectionObserver checks and the cube's initial visibility.
     window.dispatchEvent(new Event('scroll'));
 
     // --- Services Section 3D Cube Animation (Discrete Step) ---
