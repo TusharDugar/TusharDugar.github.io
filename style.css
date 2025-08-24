@@ -145,7 +145,7 @@ html::before {
         linear-gradient(to right, transparent 99.85%, white 0.15%),
         linear-gradient(to bottom, transparent 99.85%, white 0.15%),
         linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
-        linear-linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
+        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
 
     /* ADJUSTED MASK SIZES for even denser pattern */
     mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px; /* Adjusted from 50px */
@@ -194,12 +194,12 @@ html::before {
     transform: translateY(0);
 }
 
-/* Stagger Parent (for elements like About section) */
+/* Stagger Parent (for elements like About section and now Services) */
 .reveal-parent {
     position: relative;
 }
 
-/* Stagger Child (for elements inside About section) */
+/* Stagger Child (for elements inside About/Services sections) */
 .reveal-child {
     opacity: 0;
     transform: translateY(60px);
@@ -210,6 +210,24 @@ html::before {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Stagger Container (for elements like Tools/Contact) */
+.reveal-stagger-container {
+    position: relative;
+}
+
+/* Stagger Item (for elements inside Tools/Contact containers) */
+.reveal-stagger {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+}
+.reveal-stagger.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 
 /* Main Layout Container */
 .main-layout-container {
@@ -451,17 +469,18 @@ html::before {
 }
 
 
-/* Services Section Styles (Scroll-driven) */
+/* Services Section Styles */
 .services-section {
   position: relative;
-  /* Min height will be set by JS to create scroll space */
+  padding: 80px 40px;
+  text-align: left;
   z-index: 2;
   background-color: transparent;
   margin-top: 0;
   margin-bottom: 0;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the heading and carousel */
+  align-items: center; /* Center the heading and cards */
 }
 
 /* Services Main Title */
@@ -476,111 +495,81 @@ html::before {
     margin-left: 0;
     position: relative;
     z-index: 4;
-    padding: 80px 40px 0 40px; /* Give padding to heading instead of section */
+    padding: 0; /* Padding is now part of the section */
     width: 100%;
     max-width: 1200px; /* Match section max-width */
 }
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
-/* --- NEW 3D SERVICES CAROUSEL STYLES (DesignCube Scroll-Scrubbing) --- */
+/* --- RESTORED 2D SERVICES GRID STYLES WITH STAGGER --- */
 
-/* The outer container which becomes sticky and holds the rotating element */
-.services-3d-carousel-container {
+/* Services Grid Container (now reveal-parent) */
+.services-items-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); /* Allow cards to be wider */
+    gap: 25px;
+    justify-items: stretch;
+    margin-top: 0;
+    position: relative; /* From reveal-parent */
     width: 100%;
-    max-width: 800px; /* Wider cards */
-    height: 255px; /* Reduced height by 15% (300 * 0.85) */
-    position: sticky; /* Key for scroll-driven effect */
-    top: 50%; /* Center vertically in viewport */
-    transform: translateY(-50%); /* Adjust for perfect centering */
-    perspective: 1000px; /* Gives the 3D depth effect */
-    overflow: hidden; /* Hides parts of faces that are out of the viewport */
-    will-change: transform;
-    /* This CSS variable is set by JS for `faceOffset` */
-    --face-offset: 150px; 
-    padding: 0 40px 80px 40px; /* Padding for the container itself */
+    max-width: 800px; /* Control max width for centering */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* The wrapper that holds all faces and performs the main scroll-driven rotateX */
-.services-3d-carousel-wrapper {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transform-style: preserve-3d; /* Crucial for child elements to be in 3D space */
-    transform: rotateX(0deg); /* Directly controlled by JS on scroll */
-    transform-origin: center center;
-    transition: none; /* NO CSS TRANSITION here for scrubbing effect */
-    will-change: transform;
+/* Service Item (now reveal-child) */
+.service-item {
+  background-color: var(--bg-tool-card); /* Consistent dark background */
+  border-radius: 12px;
+  padding: 35px; /* Reduced padding for ~15% height reduction (from 40px) */
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  text-align: left;
+  will-change: transform, opacity;
+
+  /* These opacity and transform properties are now controlled by .reveal-child */
+  /* opacity: 0; */
+  /* transform: translateY(60px); */
+  /* transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); */
 }
 
-/* Each individual service card / face */
-.services-carousel-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: var(--bg-tool-card); /* Consistent dark background */
-    color: var(--text-light);
-    border-radius: 12px;
-    padding: 40px;
-    display: flex; /* Use flexbox to center content */
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-    backface-visibility: hidden; /* Prevents back of face from showing when rotated */
-    
-    /* Opacity and visibility are dynamically controlled by JS */
-    opacity: 0; 
-    visibility: hidden; 
-    transform-origin: center center; /* Important for how the card is perceived to rotate */
-    
-    /* Opacity transition is handled by JS for specific timing, transform is handled by wrapper rotation */
-    transition: opacity 0.3s ease-out; /* Smooth opacity change */
-    
-    will-change: opacity; /* Only opacity is transitioned here, transform is on parent */
-}
-
-/* Face content styling */
-.services-carousel-face .service-title {
-    font-size: 2em;
-    font-weight: 700;
-    margin-bottom: 15px;
-    line-height: 1.2;
-    color: var(--text-light);
-    position: relative; /* To be above the number */
+/* Service item children styling */
+.service-item .service-title {
+    position: relative;
     z-index: 1;
+    font-size: 1.7em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.2;
 }
-
-.services-carousel-face .service-description {
-    font-size: 1em;
+.service-item .service-description {
+    position: relative;
+    z-index: 1;
+    font-size: 0.95em;
     color: var(--text-medium);
     line-height: 1.6;
-    max-width: 90%;
-    position: relative; /* To be above the number */
-    z-index: 1;
 }
 
-/* Styling for the background numbers */
-.services-carousel-face .service-bg-number {
-    position: absolute;
-    top: 50%;
-    right: 20px; /* Adjust positioning as needed */
-    transform: translateY(-50%);
-    font-size: 11em; /* Adjusted for smaller size */
-    font-weight: 500; /* Adjusted for less bold */
-    color: rgba(255, 255, 255, 0.05); /* Very transparent white */
-    pointer-events: none; /* Don't block interactions */
-    z-index: 0; /* Behind text content */
-    line-height: 1; /* Prevent extra spacing */
+/* Subtitle background numbers styling (restored) */
+.service-item .service-bg-number {
+  position: absolute;
+  top: 50%;
+  right: 15px; /* Adjusted positioning for wider cards */
+  transform: translateY(-50%);
+  font-size: 11em; /* Adjusted size */
+  font-weight: 500; /* Adjusted for less bold */
+  color: rgba(255, 255, 255, 0.05); /* Very transparent white */
+  z-index: 0;
+  pointer-events: none;
+  line-height: 1;
 }
 
-/* --- END NEW 3D SERVICES CAROUSEL STYLES --- */
+/* --- END RESTORED 2D SERVICES GRID STYLES --- */
 
 
-/* Tools Grid Styling (Reverted to original behavior) */
+/* Tools Grid Styling (Reverted to original behavior with stagger) */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -588,9 +577,13 @@ html::before {
     margin-left: 0;
     margin-right: 0;
     justify-items: stretch;
+    width: 100%; /* Ensure it takes full width of its parent */
+    max-width: 650px; /* Optional: constrain width for centering on larger screens */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Tool Card (Now uses .reveal-item directly, removed conflicting styles) */
+/* Tool Card (Now uses .reveal-stagger) */
 .tool-card {
     background-color: var(--bg-tool-card);
     border-radius: 15px;
@@ -602,7 +595,7 @@ html::before {
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
     will-change: transform; 
-    /* Removed conflicting opacity, transform, transition here; relies on .reveal-item for animation */
+    /* .reveal-stagger applies opacity and transform */
 }
 
 .tool-card:hover {
@@ -651,7 +644,7 @@ html::before {
 }
 
 
-/* Footer (Contact Section) - Reverted to original behavior */
+/* Footer (Contact Section) - Reverted to original behavior with stagger */
 footer {
     background-color: var(--bg-main);
     color: var(--text-light);
@@ -802,7 +795,7 @@ footer h2 {
 }
 
 
-/* Responsive Design Adjustments for Carousel */
+/* Responsive Design Adjustments */
 @media (max-width: 1200px) {
     .main-layout-container {
         padding: 0 40px;
@@ -826,7 +819,7 @@ footer h2 {
         padding: 80px 40px; /* Consistent for medium screens */
     }
     .services-heading {
-        padding: 80px 40px 0 40px;
+        padding: 0; /* Already centered with parent */
     }
 
     /* Specific adjustments for profile card on 1200px screens */
@@ -895,20 +888,21 @@ footer h2 {
         line-height: 0.85em;
         margin-bottom: 50px;
     }
-    /* New Carousel specific adjustments */
-    .services-3d-carousel-container {
-        max-width: 700px; /* Adjusted for medium screens */
-        height: 216px; /* 255px * 0.85 */
-        margin-top: 40px;
-        padding: 0 40px 80px 40px;
+    /* Service Items adjustments */
+    .services-items-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        max-width: 700px;
     }
-    .services-carousel-face .service-title {
+    .service-item {
+        padding: 30px; /* Adjusted padding further for 15% reduction from initial 40px */
+    }
+    .service-item .service-title {
         font-size: 1.8em;
     }
-    .services-carousel-face .service-description {
+    .service-item .service-description {
         font-size: 0.9em;
     }
-    .services-carousel-face .service-bg-number {
+    .service-item .service-bg-number {
         font-size: 10em; /* Adjusted size */
         right: 15px;
     }
@@ -971,7 +965,7 @@ footer h2 {
         padding: 60px 20px; /* Reduced for small screens */
     }
     .services-heading {
-        padding: 60px 20px 0 20px;
+        padding: 0;
     }
 
     /* Specific adjustments for profile card on 768px screens */
@@ -1048,23 +1042,21 @@ footer h2 {
         line-height: 0.9em;
         margin-bottom: 30px;
     }
-    /* New Carousel specific adjustments */
-    .services-3d-carousel-container {
-        max-width: 90%; /* Adjust for smaller screens */
-        height: 187px; /* 220px * 0.85 */
-        margin-top: 30px;
-        padding: 0 20px 60px 20px;
+    /* Service Items adjustments */
+    .services-items-container {
+        grid-template-columns: 1fr;
+        max-width: 90%;
     }
-    .services-carousel-face {
-        padding: 30px;
+    .service-item {
+        padding: 25px; /* Adjusted padding further */
     }
-    .services-carousel-face .service-title {
+    .service-item .service-title {
         font-size: 1.5em;
     }
-    .services-carousel-face .service-description {
+    .service-item .service-description {
         font-size: 0.85em;
     }
-    .services-carousel-face .service-bg-number {
+    .service-item .service-bg-number {
         font-size: 8em; /* Adjusted size */
         right: 10px;
     }
@@ -1078,6 +1070,7 @@ footer h2 {
     }
     .tools-grid {
         grid-template-columns: 1fr;
+        max-width: 100%;
         gap: 15px;
     }
     .tool-card {
@@ -1115,7 +1108,7 @@ footer h2 {
         margin-bottom: 30px;
     }
     .services-heading {
-        padding: 40px 15px 0 15px;
+        padding: 0;
     }
     .hero-heading {
         font-size: clamp(2.8em, 9vw, 3.5em);
@@ -1134,22 +1127,20 @@ footer h2 {
         line-height: 0.9em;
         margin-bottom: 25px;
     }
-    /* New Carousel specific adjustments */
-    .services-3d-carousel-container {
-        height: 170px; /* 200px * 0.85 */
-        margin-top: 20px;
-        padding: 0 15px 40px 15px;
+    /* Service Items adjustments */
+    .services-items-container {
+        max-width: 100%;
     }
-    .services-carousel-face {
-        padding: 20px;
+    .service-item {
+        padding: 20px; /* Adjusted padding further */
     }
-    .services-carousel-face .service-title {
+    .service-item .service-title {
         font-size: 1.3em;
     }
-    .services-carousel-face .service-description {
+    .service-item .service-description {
         font-size: 0.8em;
     }
-    .services-carousel-face .service-bg-number {
+    .service-item .service-bg-number {
         font-size: 6em; /* Adjusted size */
         right: 5px;
     }
@@ -1208,8 +1199,7 @@ footer h2 {
 @media (prefers-reduced-motion: reduce) {
     .reveal-item,
     .reveal-parent .reveal-child,
-    .services-3d-carousel-wrapper,
-    .services-carousel-face {
+    .reveal-stagger-container .reveal-stagger { /* Combined rules for all reveal items */
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
