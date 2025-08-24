@@ -157,7 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ensure the cube itself is at the current logical rotation state
         cube.style.transition = 'none'; // No transition for initial setup of cube's transform
-        cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; // COMBINED with static rotateX
+        // FIXED: Apply isometric tilt (rotateX) consistently from JS
+        cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; 
         
         updateFaceVisibility(); // Set initial visibility for activeFaceIndex
     }
@@ -213,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentRotationAngle += direction * ROTATION_INCREMENT_DEG; // Accumulate rotation
         cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms ease`; // Re-apply transition for smooth animation
-        // COMBINED with static rotateX
+        // FIXED: Apply isometric tilt (rotateX) consistently from JS
         cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; 
 
         // Once animation completes, reset flag and update visibility
