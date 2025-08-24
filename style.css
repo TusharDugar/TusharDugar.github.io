@@ -451,15 +451,18 @@ html::before {
 }
 
 
-/* Services Section Styles */
+/* Services Section Styles (Scroll-driven) */
 .services-section {
   position: relative;
-  padding: 80px 40px;
-  text-align: left;
+  /* Min height will be set by JS to create scroll space */
+  /* padding: 80px 40px; */ /* Padding will be part of the sticky container instead */
   z-index: 2;
   background-color: transparent;
   margin-top: 0;
   margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the heading and carousel */
 }
 
 /* Services Main Title */
@@ -468,41 +471,46 @@ html::before {
     font-size: 8em;
     line-height: 0.75em;
     font-weight: 800;
-    margin-bottom: 40px;
+    margin-bottom: 40px; /* Space below heading */
     text-transform: uppercase;
     text-align: left;
     margin-left: 0;
     position: relative;
     z-index: 4;
+    padding: 80px 40px 0 40px; /* Give padding to heading instead of section */
+    width: 100%;
+    max-width: 1200px; /* Match section max-width */
 }
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
-/* --- NEW 3D SERVICES CAROUSEL STYLES (DesignCube Flip) --- */
+/* --- NEW 3D SERVICES CAROUSEL STYLES (DesignCube Scroll-Scrubbing) --- */
 
-/* Container for the 3D flip effect */
+/* The outer container which becomes sticky and holds the rotating element */
 .services-3d-carousel-container {
     width: 100%;
-    max-width: 800px; /* Increased for wider cards */
+    max-width: 800px; /* Wider cards */
     height: 300px; /* Fixed height for the visible card */
-    margin: 60px auto; /* Centers horizontally */
-    position: relative;
+    position: sticky; /* Key for scroll-driven effect */
+    top: 50%; /* Center vertically in viewport */
+    transform: translateY(-50%); /* Adjust for perfect centering */
     perspective: 1000px; /* Gives the 3D depth effect */
     overflow: hidden; /* Hides parts of faces that are out of the viewport */
     will-change: transform;
     /* This CSS variable is set by JS for `faceOffset` */
     --face-offset: 150px; 
+    padding: 0 40px 80px 40px; /* Padding for the container itself */
 }
 
-/* The wrapper holds the cards, and rotates based on scroll */
+/* The wrapper that holds all faces and performs the main scroll-driven rotateX */
 .services-3d-carousel-wrapper {
     width: 100%;
     height: 100%;
     position: absolute;
     transform-style: preserve-3d; /* Crucial for child elements to be in 3D space */
-    transform: rotateX(0deg); /* Controlled by JS based on scroll */
+    transform: rotateX(0deg); /* Directly controlled by JS on scroll */
     transform-origin: center center;
-    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1); /* Main rotation transition */
+    transition: none; /* NO CSS TRANSITION here for scrubbing effect */
     will-change: transform;
 }
 
@@ -525,39 +533,15 @@ html::before {
     box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     backface-visibility: hidden; /* Prevents back of face from showing when rotated */
     
-    /* These properties are now exclusively managed by JavaScript and state classes */
-    opacity: 0; /* Hidden by default, JS/classes control visibility */
-    visibility: hidden; /* Hidden by default, JS/classes control visibility */
+    /* Opacity and visibility are dynamically controlled by JS */
+    opacity: 0; 
+    visibility: hidden; 
     transform-origin: center center; /* Important for how the card is perceived to rotate */
     
-    /* Default transition for cards, overridden by state classes for specific timing */
-    transition: transform 1.2s cubic-bezier(0.65, 0.05, 0.36, 1), opacity 0.48s ease-out; 
+    /* Opacity transition is handled by JS for specific timing, transform is handled by wrapper rotation */
+    transition: opacity 0.3s ease-out; /* Smooth opacity change */
     
-    will-change: transform, opacity;
-}
-
-/* State for the currently visible (active) card - should be fully opaque and visible */
-.services-carousel-face.is-current {
-    opacity: 1;
-    visibility: visible;
-    /* Transform set directly by JS for positioning */
-    /* Only apply opacity transition here as the card becomes fully visible */
-    transition: opacity 0.48s ease-in 0.72s; /* Fade in later in rotation */
-}
-
-/* State for a card that is leaving the view (fades out) */
-.services-carousel-face.is-leaving { 
-    opacity: 0;
-    /* Transform set directly by JS for positioning */
-    transition: opacity 0.48s ease-out; /* Fade out quickly */
-}
-
-/* State for a card that is entering the view (fades in) */
-.services-carousel-face.is-entering { 
-    opacity: 1;
-    visibility: visible;
-    /* Transform set directly by JS for positioning */
-    transition: opacity 0.48s ease-in 0.72s; /* Fade in delayed, similar to DesignCube */
+    will-change: opacity; /* Only opacity is transitioned here, transform is on parent */
 }
 
 /* Face content styling */
@@ -597,7 +581,7 @@ html::before {
 /* --- END NEW 3D SERVICES CAROUSEL STYLES --- */
 
 
-/* Tools Grid Styling (Reverted for simpler reveal) */
+/* Tools Grid Styling (Reverted to original behavior) */
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -618,8 +602,8 @@ html::before {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     cursor: pointer;
-    will-change: transform; /* opacity handled by .reveal-item */
-    /* Removed conflicting opacity, transform, transition from here, relies on .reveal-item for animation */
+    will-change: transform; 
+    /* Removed conflicting opacity, transform, transition here; relies on .reveal-item for animation */
 }
 
 .tool-card:hover {
@@ -668,7 +652,7 @@ html::before {
 }
 
 
-/* Footer (Contact Section) - Reverted for simpler reveal */
+/* Footer (Contact Section) - Reverted to original behavior */
 footer {
     background-color: var(--bg-main);
     color: var(--text-light);
@@ -842,6 +826,9 @@ footer h2 {
     .section { /* General section padding */
         padding: 80px 40px; /* Consistent for medium screens */
     }
+    .services-heading {
+        padding: 80px 40px 0 40px;
+    }
 
     /* Specific adjustments for profile card on 1200px screens */
     .about-left-content {
@@ -914,6 +901,7 @@ footer h2 {
         max-width: 700px; /* Adjusted for medium screens */
         height: 250px; /* Smaller height */
         margin-top: 40px;
+        padding: 0 40px 80px 40px;
     }
     .services-carousel-face .service-title {
         font-size: 1.8em;
@@ -982,6 +970,9 @@ footer h2 {
     }
     .section {
         padding: 60px 20px; /* Reduced for small screens */
+    }
+    .services-heading {
+        padding: 60px 20px 0 20px;
     }
 
     /* Specific adjustments for profile card on 768px screens */
@@ -1063,6 +1054,7 @@ footer h2 {
         max-width: 90%; /* Adjust for smaller screens */
         height: 220px; /* Smaller height for mobile */
         margin-top: 30px;
+        padding: 0 20px 60px 20px;
     }
     .services-carousel-face {
         padding: 30px;
@@ -1112,15 +1104,6 @@ footer h2 {
         height: 95px;
         font-size: 1em;
     }
-    .contact-button i {
-        font-size: 2.2em;
-    }
-    .contact-button .button-value {
-        font-size: 0.8em;
-    }
-    .contact-button .copied-text {
-        font-size: 1.3em;
-    }
 }
 
 @media (max-width: 480px) {
@@ -1131,6 +1114,9 @@ footer h2 {
         font-size: 2.8em;
         letter-spacing: 0.5px;
         margin-bottom: 30px;
+    }
+    .services-heading {
+        padding: 40px 15px 0 15px;
     }
     .hero-heading {
         font-size: clamp(2.8em, 9vw, 3.5em);
@@ -1153,6 +1139,7 @@ footer h2 {
     .services-3d-carousel-container {
         height: 200px; /* Even smaller height for small mobile */
         margin-top: 20px;
+        padding: 0 15px 40px 15px;
     }
     .services-carousel-face {
         padding: 20px;
@@ -1221,7 +1208,7 @@ footer h2 {
 /* Accessibility: Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
     .reveal-item,
-    .reveal-parent .reveal-child, /* Corrected for direct child relationship */
+    .reveal-parent .reveal-child,
     .services-3d-carousel-wrapper,
     .services-carousel-face {
         transition: none !important;
@@ -1230,6 +1217,4 @@ footer h2 {
         animation: none !important;
         visibility: visible !important; /* Ensure content is visible */
     }
-
-    /* Removed previous non-existent classes, keeping relevant ones for reduce motion */
 }
