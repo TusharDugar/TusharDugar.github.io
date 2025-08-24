@@ -26,6 +26,7 @@
     <!-- The background is now purely CSS on the html and body elements -->
     
     <div class="main-layout-container"> <!-- Main container for the two columns -->
+        <!-- RESTORED: Original Left Column HTML -->
         <div class="left-column-sticky">
             <section id="about" class="section about-left-content reveal-item">
                 <div class="profile-card-wrapper reveal-parent">
@@ -57,6 +58,7 @@
                 </div>
             </section>
         </div>
+        <!-- END RESTORED: Original Left Column HTML -->
 
         <div class="right-column-scroll">
             <!-- Hero/Introduction Section -->
@@ -68,72 +70,54 @@
                 <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
             </section>
 
-            <!-- Services Section - Now a 3D Cube Animation -->
+            <!-- Services Section - Now a 2D staggered reveal as per user's final decision -->
             <section id="services" class="section services-section">
-                <h2 class="services-heading">
+                <h2 class="services-heading reveal-item">
                     <span class="text-white">MY</span>
                     <span class="text-gray">SERVICES</span>
                 </h2>
 
-                <div class="cube-container">
-                    <div class="cube" id="services-cube">
-                        <!-- 8 service faces -->
-                        <div class="face face-1" data-index="1">
-                            <div class="service-content">
-                                <h3 class="service-title">Web Design</h3>
-                                <p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p>
-                            </div>
-                            <div class="face-number">01</div>
-                        </div>
-                        <div class="face face-2" data-index="2">
-                            <div class="service-content">
-                                <h3 class="service-title">SEO Optimization</h3>
-                                <p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p>
-                            </div>
-                            <div class="face-number">02</div>
-                        </div>
-                        <div class="face face-3" data-index="3">
-                            <div class="service-content">
-                                <h3 class="service-title">UX/UI Design</h3>
-                                <p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p>
-                            </div>
-                            <div class="face-number">03</div>
-                        </div>
-                        <div class="face face-4" data-index="4">
-                            <div class="service-content">
-                                <h3 class="service-title">Graphic Design</h3>
-                                <p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p>
-                            </div>
-                            <div class="face-number">04</div>
-                        </div>
-                        <div class="face face-5" data-index="5">
-                            <div class="service-content">
-                                <h3 class="service-title">E-commerce Solutions</h3>
-                                <p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p>
-                            </div>
-                            <div class="face-number">05</div>
-                        </div>
-                        <div class="face face-6" data-index="6">
-                            <div class="service-content">
-                                <h3 class="service-title">Digital Marketing</h3>
-                                <p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p>
-                            </div>
-                            <div class="face-number">06</div>
-                        </div>
-                        <div class="face face-7" data-index="7">
-                            <div class="service-content">
-                                <h3 class="service-title">Content Creation</h3>
-                                <p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p>
-                            </div>
-                            <div class="face-number">07</div>
-                        </div>
-                        <div class="face face-8" data-index="8">
-                            <div class="service-content">
-                                <h3 class="service-title">Social Media Management</h3>
-                                <p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p>
-                            </div>
-                            <div class="face-number">08</div>
-                        </div>
+                <!-- This is the flat grid container with reveal-parent and reveal-item children -->
+                <div class="services-items-container reveal-parent">
+                    <div class="service-item reveal-item" style="transition-delay: 0.1s">
+                        <h3 class="service-title">Web Design</h3>
+                        <p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p>
+                        <div class="service-bg-number subtitle-number">01</div>
+                    </div>
+                    <div class="service-item reveal-item" style="transition-delay: 0.2s">
+                        <h3 class="service-title">SEO Optimization</h3>
+                        <p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p>
+                        <div class="service-bg-number subtitle-number">02</div>
+                    </div>
+                    <div class="service-item reveal-item" style="transition-delay: 0.3s">
+                        <h3 class="service-title">UX/UI Design</h3>
+                        <p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p>
+                        <div class="service-bg-number subtitle-number">03</div>
+                    </div>
+                    <div class="service-item reveal-item" style="transition-delay: 0.4s">
+                        <h3 class="service-title">Graphic Design</h3>
+                        <p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p>
+                        <div class="service-bg-number subtitle-number">04</div>
+                    </div>
+                    <div class="service-item reveal-item" style="transition-delay: 0.5s">
+                        <h3 class="service-title">E-commerce Solutions</h3>
+                        <p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p>
+                        <div class="service-bg-number subtitle-number">05</div>
+                    </div>
+                    <div class="service-item reveal-item" style="transition-delay: 0.6s">
+                        <h3 class="service-title">Digital Marketing</h3>
+                        <p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p>
+                        <div class="service-bg-number subtitle-number">06</div>
+                    </div>
+                    <div class="service-item reveal-item" style="transition-delay: 0.7s">
+                        <h3 class="service-title">Content Creation</h3>
+                        <p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p>
+                        <div class="service-bg-number subtitle-number">07</div>
+                    </div>
+                    <div class="service-item reveal-item" style="transition-delay: 0.8s">
+                        <h3 class="service-title">Social Media Management</h3>
+                        <p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p>
+                        <div class="service-bg-number subtitle-number">08</div>
                     </div>
                 </div>
             </section>
