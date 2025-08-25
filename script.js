@@ -127,34 +127,89 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize IntersectionObserver-based animations (for About section, Tools, Contact, and the 3D cube container itself)
     initIntersectionObserverAnimations();
 
-    window.dispatchEvent(new Event('scroll'));
-
     // --- Services Section 3D Cube Animation (Discrete Step) ---
+    const servicesSection = document.getElementById('services');
+    const servicesTriggerStart = document.querySelector('.services-trigger-start');
+    const servicesSpacer = document.querySelector('.services-spacer');
     const cubeContainer = document.querySelector('.cube-container');
     const cube = document.getElementById('services-cube');
-    if (!cube) {
-        console.error("services-cube element not found. 3D cube animation cannot initialize.");
+    
+    if (!servicesSection || !servicesTriggerStart || !servicesSpacer || !cubeContainer || !cube) {
+        console.error("One or more required elements for Services 3D cube animation not found.");
         return;
     }
     
     const faces = document.querySelectorAll('.face');
-    const SERVICES_COUNT = faces.length;
+    const SERVICES_COUNT = faces.length; // Should be 8.
 
     let currentRotationAngle = 0; 
     let activeFaceIndex = 0; 
     let isAnimatingCube = false; 
+    let isServicesSectionPinned = false; // New flag for pinning state
     
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Pinning duration and behavior for the Services section
+    const PIN_DURATION_HEIGHT = window.innerHeight * SERVICES_COUNT; // Example: pin for 8 full viewport heights
+    servicesSpacer.style.height = `${PIN_DURATION_HEIGHT}px`; // Set initial spacer height
+
+    // Adjust services section height/padding for different devices
+    function adjustPinnedSectionHeight() {
+        if (servicesSection.classList.contains('is-pinned') || servicesSection.classList.contains('is-active-relative')) {
+            let paddingVertical = 80; // Default desktop padding
+            if (window.innerWidth <= 1200) paddingVertical = 60;
+            if (window.innerWidth <= 768) paddingVertical = 40;
+            if (window.innerWidth <= 480) paddingVertical = 30;
+            servicesSection.style.height = `calc(100vh - ${paddingVertical * 2}px)`; // Dynamically adjust CSS height
+        }
+        servicesSpacer.style.height = `${PIN_DURATION_HEIGHT}px`; // Recalculate spacer height too
+    }
+
+    // IntersectionObserver to handle pinning/unpinning of the services section
+    const servicesPinObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!prefersReducedMotion) {
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) { // Pin when trigger is halfway in view
+                    if (!isServicesSectionPinned) {
+                        servicesSection.classList.add('is-pinned');
+                        servicesSection.classList.remove('is-active-relative');
+                        isServicesSectionPinned = true;
+                    }
+                } else if (isServicesSectionPinned && entry.boundingClientRect.top > 0 && entry.rootBounds.top < 0) {
+                    // Unpin when scrolling up and trigger leaves top of viewport
+                    servicesSection.classList.remove('is-pinned');
+                    servicesSection.classList.add('is-active-relative');
+                    isServicesSectionPinned = false;
+                } else if (isServicesSectionPinned && entry.boundingClientRect.bottom < 0 && entry.rootBounds.bottom > 0) {
+                     // Unpin when scrolling down and trigger leaves bottom of viewport
+                    servicesSection.classList.remove('is-pinned');
+                    servicesSection.classList.add('is-active-relative');
+                    isServicesSectionPinned = false;
+                }
+            } else {
+                // In reduced motion, ensure section is never fixed and behaves normally
+                servicesSection.classList.remove('is-pinned');
+                servicesSection.classList.add('is-active-relative');
+                isServicesSectionPinned = false;
+                servicesSpacer.style.height = '0px'; // No spacer needed
+            }
+        });
+    }, {
+        root: null, // viewport
+        rootMargin: '0px',
+        threshold: [0, 0.5, 1] // Observe when 0%, 50%, 100% of trigger is visible
+    });
+
+    servicesPinObserver.observe(servicesTriggerStart);
+
 
     // Calculates the `translateZ` distance for faces to form an 8-sided prism based on height for X-axis rotation
     function calculateFaceOffset() {
         if (!cubeContainer || SERVICES_COUNT === 0) return 0;
         
         const faceHeight = cubeContainer.offsetHeight; // Use height for X-axis rotation
-        // R = (H/2) / tan(PI/N) formula for a regular N-sided polygon, where H is the dimension along the rotation plane.
         const calculatedOffset = (faceHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
         
-        // Return a sensible fallback if calculated value is invalid or too small/large
         return isNaN(calculatedOffset) || calculatedOffset === 0 ? 300 : calculatedOffset; // Default to 300px if calculation fails
     }
 
@@ -169,7 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.opacity = 0; // Set opacity to 0
 
             const angleForFace = i * ROTATION_INCREMENT_DEG;
-            // Position faces around the X-axis for a vertical prism
             face.style.transform = `rotateX(${angleForFace}deg) translateZ(${faceOffset}px)`;
         });
 
@@ -187,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateFaceOpacityAndVisibility(progress, prevActiveFaceIndex, newActiveFaceIndex) {
         if (prefersReducedMotion) {
             // In reduced motion, CSS handles the flattened layout and visibility.
-            // No complex JS opacity/visibility needed here.
             return; 
         }
 
@@ -222,18 +275,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function animateCube(direction) {
         if (isAnimatingCube || prefersReducedMotion) return false;
 
-        const prevActiveFaceIndex = activeFaceIndex; 
-        let newActiveFaceIndex = activeFaceIndex + direction;
+        let targetActiveFaceIndex = activeFaceIndex + direction;
 
-        // Loop around for seamless carousel
-        if (newActiveFaceIndex < 0) {
-            newActiveFaceIndex = SERVICES_COUNT - 1;
-        } else if (newActiveFaceIndex >= SERVICES_COUNT) {
-            newActiveFaceIndex = 0;
+        // Check if we are at a boundary (Service 01 or Service 08)
+        const atStartBoundary = activeFaceIndex === 0 && direction === -1; // Trying to scroll up from 01
+        const atEndBoundary = activeFaceIndex === SERVICES_COUNT - 1 && direction === 1; // Trying to scroll down from 08
+
+        if (atStartBoundary || atEndBoundary) {
+            return false; // Allow page to scroll, do not animate cube
         }
 
+        const prevActiveFaceIndex = activeFaceIndex; 
+        activeFaceIndex = targetActiveFaceIndex; // Update active index immediately (no looping here, handled by boundary check above)
+
         isAnimatingCube = true;
-        activeFaceIndex = newActiveFaceIndex; // Update active index immediately
 
         currentRotationAngle += direction * ROTATION_INCREMENT_DEG;
         cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.65, 0.05, 0.36, 1)`; // Re-apply transition with easing
@@ -270,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         requestAnimationFrame(animateFade); // Start the fade animation alongside transform
         
-        return true;
+        return true; // Cube animation started
     }
 
     // --- Scroll & Touch Event Handlers for 3D Cube ---
@@ -281,14 +336,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handles global scroll events (desktop wheel)
     window.addEventListener('wheel', (event) => { 
-        // Only proceed if 3D animation is enabled
-        if (prefersReducedMotion) return;
-
-        const rect = cubeContainer.getBoundingClientRect();
-        // Check if the cube container is in a reasonable active viewport area for interaction
-        const isCubeInView = rect.top < window.innerHeight - 100 && rect.bottom > 100; // Visible almost fully
-
-        if (!isCubeInView) return; // Not in view, let page scroll normally
+        // Only proceed if 3D animation is enabled and section is pinned
+        if (prefersReducedMotion || !isServicesSectionPinned) {
+            // Allow page scroll if not pinned or reduced motion
+            return;
+        }
 
         // Prevent rapid-fire wheel events (debounce)
         const now = Date.now();
@@ -298,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         lastWheelTime = now;
 
-        // Determine scroll direction
         const direction = event.deltaY > 0 ? 1 : -1; // 1 for scroll down, -1 for scroll up
 
         // Attempt to animate the cube
@@ -307,13 +358,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (didAnimate) {
             event.preventDefault(); // ONLY prevent default if the cube actually animated
         } else {
-            // Cube did not animate (hit boundary, e.g., if there were non-looping logic), allow normal page scroll.
+            // If cube didn't animate (hit boundary), and section is pinned, prevent default to ensure
+            // the section stays fixed until an unpinning condition is met by the pinning observer.
+            event.preventDefault(); 
         }
     }, { passive: false }); // Needs to be passive: false to allow preventDefault
 
     // Handles touch start (mobile)
     cubeContainer.addEventListener('touchstart', (e) => {
-        if (prefersReducedMotion) return;
+        if (prefersReducedMotion || !isServicesSectionPinned) return;
         touchStartX = e.touches[0].clientX; 
         touchStartY = e.touches[0].clientY;
         touchDeltaY = 0; // Reset cumulative delta
@@ -321,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handles touch move (mobile)
     cubeContainer.addEventListener('touchmove', (e) => {
-        if (prefersReducedMotion) return;
+        if (prefersReducedMotion || !isServicesSectionPinned) return;
         const deltaY = touchStartY - e.touches[0].clientY;
         const deltaX = touchStartX - e.touches[0].clientX; // Check horizontal swipe
         
@@ -336,15 +389,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handles touch end (mobile)
     cubeContainer.addEventListener('touchend', () => {
-        if (isAnimatingCube || prefersReducedMotion) return; 
+        if (isAnimatingCube || prefersReducedMotion || !isServicesSectionPinned) return; 
 
-        const rect = cubeContainer.getBoundingClientRect();
-        const isCubeInView = rect.top < window.innerHeight && rect.bottom > 0;
-
-        if (isCubeInView && Math.abs(touchDeltaY) > SCROLL_THRESHOLD_PX) {
-            const direction = touchDeltaY > 0 ? 1 : -1; // Swipe up means scroll down (direction 1)
-            animateCube(direction);
-        }
+        const direction = touchDeltaY > 0 ? 1 : -1; // Swipe up means scroll down (direction 1)
+        animateCube(direction);
+        
         touchStartX = 0; // Reset
         touchStartY = 0; // Reset
         touchDeltaY = 0; // Reset
@@ -354,10 +403,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial setup when DOM is ready
     setTimeout(() => {
         setupCubeFaces(); 
+        adjustPinnedSectionHeight(); // Set initial height for the section
+
         // If reduced motion is preferred, immediately update visibility to show all faces flat
         if (prefersReducedMotion) {
-            // In reduced motion, CSS is configured to show all faces as relative blocks.
-            // We just ensure this state is fully applied on load/resize.
             faces.forEach(face => {
                 face.style.transition = 'none';
                 face.style.opacity = 1;
@@ -368,8 +417,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Re-calculate dimensions on window resize (important for responsive cube)
         window.addEventListener('resize', () => {
             setupCubeFaces(); // Re-initialize positions and states based on new sizes
+            adjustPinnedSectionHeight(); // Adjust pinned height on resize
             if (prefersReducedMotion) {
-                // For reduced motion on resize, re-apply flattened view explicitly
                 faces.forEach(face => {
                     face.style.transition = 'none';
                     face.style.opacity = 1;
