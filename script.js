@@ -197,23 +197,23 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.opacity = 0; // Default transparent
         });
 
-        // Outgoing face snaps to opacity: 0 at 40% progress
-        if (faces[prevActiveFaceIndex]) {
+        // Outgoing face snaps to opacity: 0 at 50% progress
+        if (faces[prevActiveFaceIndex]) { // The old face
             faces[prevActiveFaceIndex].style.visibility = 'visible';
-            if (progress < 0.4) { // Still visible until just before 40%
+            if (progress < 0.5) { // Visible until just before 50%
                 faces[prevActiveFaceIndex].style.opacity = 1;
-            } else { // Instant snap to 0 at 40% and beyond
+            } else { // Instantly hidden at 50% and beyond
                 faces[prevActiveFaceIndex].style.opacity = 0;
             }
         }
 
-        // Incoming face snaps to opacity: 1 at 60% progress
-        if (faces[newActiveFaceIndex]) {
+        // Incoming face snaps to opacity: 1 at 50% progress
+        if (faces[newActiveFaceIndex]) { // The new face
             faces[newActiveFaceIndex].style.visibility = 'visible';
-            if (progress >= 0.6) { // Instantly visible at 60% and beyond
-                faces[newActiveFaceIndex].style.opacity = 1;
-            } else { // Still hidden until 60%
+            if (progress < 0.5) { // Hidden until just before 50%
                 faces[newActiveFaceIndex].style.opacity = 0;
+            } else { // Instantly visible at 50% and beyond
+                faces[newActiveFaceIndex].style.opacity = 1;
             }
         }
     }
