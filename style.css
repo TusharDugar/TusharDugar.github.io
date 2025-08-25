@@ -458,7 +458,7 @@ html::before {
 /* HERO TEXT ADJUSTMENTS */
 .hero-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 7.84em; /* FIXED: Reduced by 2% from 8em (8 * 0.98 = 7.84) */
+    font-size: 7.76em; /* FIXED: Reduced by 3% from 8em (8 * 0.97 = 7.76) */
     line-height: 0.75em;
     font-weight: 900;
     margin-bottom: 20px;
@@ -804,13 +804,13 @@ footer h2 {
     border: 1px solid rgba(255, 255, 255, 0.01); /* Very very transparent border */
     border-radius: 12px;
     padding: 0;
-    font-size: 1.2em;
+    font-size: 1.2em; /* Adjusted default font size */
     font-weight: 600;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     width: 280px;
-    height: 120px;
+    height: 120px; /* Adjusted default height */
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     text-align: center;
 }
@@ -842,12 +842,12 @@ footer h2 {
 }
 
 .contact-button .button-value {
-    font-size: 15px;
+    font-size: 0.9em; /* FIXED: Reduced font size for better fit */
     font-weight: bold;
     opacity: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal; /* FIXED: Allow text to wrap */
+    overflow: hidden; /* Keep hidden if it overflows after wrap */
+    text-overflow: ellipsis; /* Keep ellipsis for long single words if needed */
     padding: 0 5px;
     max-width: 90%;
     color: var(--text-light);
@@ -970,7 +970,7 @@ footer h2 {
 
     /* Adjustments for hero content */
     .hero-heading {
-        font-size: 5.88em; /* FIXED: Reduced by 2% from 6em (6 * 0.98 = 5.88) */
+        font-size: 5.82em; /* FIXED: Reduced by 3% from 6em (6 * 0.97 = 5.82) */
         line-height: 0.85em;
         margin-bottom: 25px;
     }
@@ -1061,8 +1061,14 @@ footer h2 {
     }
     .contact-button {
         width: 220px;
-        height: 100px;
-        font-size: 1em;
+        height: 100px; /* FIXED: Adjusted height */
+        font-size: 0.9em; /* FIXED: Adjusted font size */
+    }
+    .contact-button .button-value {
+        font-size: 0.8em; /* FIXED: Adjusted font size */
+    }
+    .contact-button .copied-text {
+        font-size: 1.1em; /* FIXED: Adjusted font size */
     }
 }
 
@@ -1145,7 +1151,7 @@ footer h2 {
         text-align: center;
     }
     .hero-heading {
-        font-size: 4.41em; /* FIXED: Reduced by 2% from 4.5em (4.5 * 0.98 = 4.41) */
+        font-size: 4.365em; /* FIXED: Reduced by 3% from 4.5em (4.5 * 0.97 = 4.365) */
         line-height: 0.9em;
         margin-bottom: 20px;
     }
@@ -1235,17 +1241,14 @@ footer h2 {
     }
     .contact-button {
         width: 200px;
-        height: 95px;
-        font-size: 1em;
-    }
-    .contact-button i {
-        font-size: 2.2em;
+        height: 95px; /* FIXED: Adjusted height */
+        font-size: 0.85em; /* FIXED: Adjusted font size */
     }
     .contact-button .button-value {
-        font-size: 0.8em;
+        font-size: 0.7em; /* FIXED: Adjusted font size */
     }
     .contact-button .copied-text {
-        font-size: 1.3em;
+        font-size: 1.1em; /* FIXED: Adjusted font size */
     }
 }
 
@@ -1259,7 +1262,7 @@ footer h2 {
         margin-bottom: 30px;
     }
     .hero-heading {
-        font-size: clamp(2.744em, 8.82vw, 3.43em); /* FIXED: Reduced by 2% from clamp(2.8em, 9vw, 3.5em) */
+        font-size: clamp(2.716em, 8.73vw, 3.395em); /* FIXED: Reduced by 3% from clamp(2.8em, 9vw, 3.5em) */
         line-height: 0.9em;
         margin-bottom: 15px;
     }
@@ -1275,7 +1278,16 @@ footer h2 {
     .services-heading {
         font-size: 2.8em;
         line-height: 0.9em;
-        margin-bottom: 25px;
+        font-weight: 800; /* Ensuring match */
+        margin-bottom: 25px; /* Ensuring match */
+        text-transform: uppercase; /* Ensuring match */
+        text-align: left; /* Ensuring match */
+        margin-left: 0; /* Ensuring match */
+        position: relative; /* Ensuring match */
+        z-index: 4; /* Ensuring match */
+        padding: 0; /* Ensuring match */
+        width: 100%; /* Ensuring match */
+        max-width: 1200px; /* Ensuring match */
     }
     .face { /* Service items in cube */
         padding: 30px;
@@ -1340,17 +1352,14 @@ footer h2 {
     }
     .contact-button {
         width: 90%;
-        height: 70px;
-        font-size: 0.9em;
-    }
-    .contact-button i {
-        font-size: 1.8em;
+        height: 70px; /* FIXED: Adjusted height */
+        font-size: 0.8em; /* FIXED: Adjusted font size */
     }
     .contact-button .button-value {
-        font-size: 0.7em;
+        font-size: 0.6em; /* FIXED: Adjusted font size */
     }
     .contact-button .copied-text {
-        font-size: 1em;
+        font-size: 0.9em; /* FIXED: Adjusted font size */
     }
 }
 
