@@ -1,13 +1,14 @@
+// script.js
 // Global constants for animation timing
 const ROTATION_INCREMENT_DEG = 45; // Degrees for an 8-sided prism (360 / 8 = 45)
-const ANIMATION_DURATION_MS = 500; // Match CSS transition duration for .cube
+const ANIMATION_DURATION_MS = 1200; // UPDATED: Changed from 500ms to 1200ms
 const SCROLL_THRESHOLD_PX = 30; // Minimum scroll pixels to trigger a flip
 const SCROLL_DEBOUNCE_TIME_MS = 50; // Prevent rapid-fire wheel events from stacking
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
     const valueElement = button.querySelector('.button-value');
-    const value = valueElement ? valueElement.textContent : '';
+    const value = valueElement ? valueElement.textContent.trim() : ''; // Trim whitespace
 
     if (value) {
         navigator.clipboard.writeText(value)
@@ -19,6 +20,22 @@ function copyToClipboard(button) {
             })
             .catch(err => {
                 console.error('Failed to copy: ', err);
+                // Fallback for older browsers or if clipboard API fails (e.g., execCommand)
+                const textarea = document.createElement('textarea');
+                textarea.value = value;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    button.classList.add('copied');
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                    }, 2000);
+                } catch (ex) {
+                    console.error('Failed to copy using execCommand: ', ex);
+                } finally {
+                    document.body.removeChild(textarea);
+                }
             });
     }
 }
@@ -34,6 +51,13 @@ function initIntersectionObserverAnimations() {
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
+        // Check for reduced motion preference
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+            return;
+        }
+
         // Handle reveal-item (single item reveal like headers, individual cards)
         if (entry.target.classList.contains("reveal-item")) {
           entry.target.classList.add("visible");
@@ -72,11 +96,7 @@ const sections = document.querySelectorAll("section[id], footer[id]");
 const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for your name
 
 window.addEventListener("scroll", () => {
-  // This function now only exists to trigger other events if needed,
-  // but it no longer changes navIndicator.textContent.
-  // The navIndicator will retain its original HTML text ("Tushar Dugar").
-
-  let current = ""; // Still calculate 'current' section if you want to log it or use it for other non-text-changing purposes.
+  let current = ""; 
   sections.forEach(section => {
     const sectionTop = section.offsetTop - 150;
 
@@ -84,17 +104,14 @@ window.addEventListener("scroll", () => {
       current = section.getAttribute("id");
     }
   });
-
-  // Removed all textContent assignments to navIndicator to keep name static.
 });
 
 
 // Mouse Follower Glow (implementation)
 document.addEventListener('DOMContentLoaded', () => {
     const mouseFollowerGlow = document.querySelector('.mouse-follower-glow');
-    if (mouseFollowerGlow) { // Ensure the element exists before attaching listener
+    if (mouseFollowerGlow) {
         document.addEventListener('mousemove', (event) => {
-            // Use translate3d for hardware acceleration, good for performance
             mouseFollowerGlow.style.transform = `translate(-50%, -50%) translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
         });
     }
@@ -108,36 +125,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize IntersectionObserver-based animations (for About section, Tools, and other reveal-items)
     initIntersectionObserverAnimations();
 
-    // Trigger a scroll event immediately to set the initial scroll spy title (though not visible now)
-    // IMPORTANT: This also helps trigger initial IntersectionObserver checks.
     window.dispatchEvent(new Event('scroll'));
 
     // --- Services Section 3D Cube Animation (Discrete Step) ---
-    // The servicesSection variable is not directly used in this specific cube logic, but kept for context.
-    // const servicesSection = document.getElementById('services'); 
-    const cubeContainer = document.querySelector('.cube-container'); // This is the container for the 3D effect.
-    const cube = document.getElementById('services-cube'); // The actual rotating element.
-    if (!cube) { // Exit if element doesn't exist
+    const cubeContainer = document.querySelector('.cube-container');
+    const cube = document.getElementById('services-cube');
+    if (!cube) {
         console.error("services-cube element not found. 3D cube animation cannot initialize.");
         return;
     }
     
-    const faces = document.querySelectorAll('.face'); // The individual service cards.
-    const SERVICES_COUNT = faces.length; // Should be 8.
+    const faces = document.querySelectorAll('.face');
+    const SERVICES_COUNT = faces.length;
 
-    let currentRotationAngle = 0; // Tracks the current rotation of the cube element.
-    let activeFaceIndex = 0; // Which face is currently active/front-facing (0 to 7).
-    let isAnimatingCube = false; // Flag to lock interaction during a cube flip.
+    let currentRotationAngle = 0; 
+    let activeFaceIndex = 0; 
+    let isAnimatingCube = false; 
+    
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Calculates the `translateZ` distance for faces to form a seamless octagon
     function calculateFaceOffset() {
         if (!cubeContainer || SERVICES_COUNT === 0) return 0;
         
         const faceWidth = cubeContainer.offsetWidth; 
-        // R = (W/2) / tan(PI/N) formula for a regular N-sided polygon.
         const calculatedOffset = (faceWidth / 2) / Math.tan(Math.PI / SERVICES_COUNT);
         
-        // Use 450px as default/fallback if calculated value is invalid or too small
         return isNaN(calculatedOffset) || calculatedOffset === 0 ? 450 : calculatedOffset; 
     }
 
@@ -147,99 +160,130 @@ document.addEventListener('DOMContentLoaded', () => {
         const faceOffset = calculateFaceOffset();
         faces.forEach((face, i) => {
             face.style.transition = 'none'; // Clear transitions for setup
-            face.style.opacity = 0;
             face.style.visibility = 'hidden';
+            face.style.opacity = 0; // Default hidden
 
             const angleForFace = i * ROTATION_INCREMENT_DEG; // 0, 45, 90...
-            // Apply transforms (rotateY and translateZ) dynamically
             face.style.transform = `rotateY(${angleForFace}deg) translateZ(${faceOffset}px)`;
         });
 
-        // Ensure the cube itself is at the current logical rotation state
         cube.style.transition = 'none'; // No transition for initial setup of cube's transform
-        // CRITICAL FIX: Always include rotateX for isometric tilt in JS transform.
         cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; 
         
-        updateFaceVisibility(); // Set initial visibility for activeFaceIndex
+        // Initial visibility: only the first face is active
+        if (faces[activeFaceIndex]) {
+            faces[activeFaceIndex].style.visibility = 'visible';
+            faces[activeFaceIndex].style.opacity = 1;
+            faces[activeFaceIndex].style.transition = 'none'; // No transition initially
+        }
     }
 
-    // Updates the visibility (opacity/display) of faces based on cube's rotation
-    function updateFaceVisibility() {
+    // Enhanced updateFaceOpacityAndVisibility for two-face rule and fade timing during animation
+    function updateFaceOpacityAndVisibility(progress, prevActiveFaceIndex, newActiveFaceIndex) {
+        if (prefersReducedMotion) {
+            // For reduced motion, all faces are visible via CSS.
+            // Ensure the active face is instantly brought to front/visible by JS.
+            faces.forEach((face, i) => {
+                face.style.visibility = 'visible'; // Ensure visibility if JS removed it
+                face.style.opacity = (i === newActiveFaceIndex) ? 1 : 0; // Only the active face is fully opaque
+                face.style.transition = 'none';
+            });
+            return;
+        }
+
         faces.forEach((face, i) => {
-            face.classList.remove('is-active'); // Clear active class first
-            face.style.transition = 'opacity 0.3s ease-out'; // Default transition for visibility changes
-
-            // Calculate the face's effective current angle relative to the viewport's front (0deg)
-            let effectiveAngle = (i * ROTATION_INCREMENT_DEG - currentRotationAngle) % 360;
-
-            // Normalize angle to be within -180 to 180 for consistent checks
-            if (effectiveAngle > 180) effectiveAngle -= 360;
-            if (effectiveAngle < -180) effectiveAngle += 360;
-
-            // Define tolerance for "front-facing"
-            const frontFacingTolerance = ROTATION_INCREMENT_DEG / 2; // e.g., +/- 22.5 degrees for 45deg increment
-
-            if (Math.abs(effectiveAngle) < frontFacingTolerance) {
-                // This face is currently visible (or nearly so)
-                face.classList.add('is-active');
-                face.style.opacity = 1;
-                face.style.visibility = 'visible';
-            } else {
-                // This face is rotated away
-                face.style.opacity = 0;
-                face.style.visibility = 'hidden';
-            }
+            face.style.transition = 'opacity 0.01s linear'; // Very short transition for JS to control opacity
+            face.style.visibility = 'hidden'; // Default hidden
+            face.style.opacity = 0; // Default transparent
         });
+
+        // Outgoing face fade out (from 0% to 40% of transition)
+        if (faces[prevActiveFaceIndex]) {
+            faces[prevActiveFaceIndex].style.visibility = 'visible';
+            if (progress <= 0.4) {
+                faces[prevActiveFaceIndex].style.opacity = 1 - (progress / 0.4);
+            } else {
+                faces[prevActiveFaceIndex].style.opacity = 0;
+            }
+        }
+
+        // Incoming face fade in (from 60% to 100% of transition)
+        if (faces[newActiveFaceIndex]) {
+            faces[newActiveFaceIndex].style.visibility = 'visible';
+            if (progress >= 0.6) {
+                faces[newActiveFaceIndex].style.opacity = (progress - 0.6) / 0.4;
+            } else {
+                faces[newActiveFaceIndex].style.opacity = 0;
+            }
+        }
     }
 
     // Animates the cube to the next/previous face
-    // Returns true if animation started, false if at boundary or already animating
     function animateCube(direction) {
-        if (isAnimatingCube) return false;
+        if (isAnimatingCube || prefersReducedMotion) return false;
 
+        const prevActiveFaceIndex = activeFaceIndex; 
         let newActiveFaceIndex = activeFaceIndex + direction;
 
-        // Boundary check for non-looping
+        // Loop around for seamless carousel
         if (newActiveFaceIndex < 0) {
-            newActiveFaceIndex = 0; // Clamp at first card
-            return false; // Allows page to scroll up
-        }
-        if (newActiveFaceIndex >= SERVICES_COUNT) {
-            newActiveFaceIndex = SERVICES_COUNT - 1; // Clamp at last card
-            return false; // Allows page to scroll down
+            newActiveFaceIndex = SERVICES_COUNT - 1;
+        } else if (newActiveFaceIndex >= SERVICES_COUNT) {
+            newActiveFaceIndex = 0;
         }
 
         isAnimatingCube = true;
         activeFaceIndex = newActiveFaceIndex;
 
-        currentRotationAngle += direction * ROTATION_INCREMENT_DEG; // Accumulate rotation
-        cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms ease`; // Re-apply transition for smooth animation
-        // CRITICAL FIX: Always include rotateX for isometric tilt in JS transform.
+        currentRotationAngle += direction * ROTATION_INCREMENT_DEG;
+        cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.65, 0.05, 0.36, 1)`; // Re-apply transition with easing
         cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; 
+        
+        let startTime = null;
 
-        // Once animation completes, reset flag and update visibility
-        setTimeout(() => {
-            isAnimatingCube = false;
-            updateFaceVisibility(); // Refresh visibility after the transition is settled
-            cube.style.transition = 'none'; // Remove transition for discrete control
-        }, ANIMATION_DURATION_MS); // Match CSS transition duration
+        function animateFade(currentTime) {
+            if (!startTime) startTime = currentTime;
+            const elapsed = currentTime - startTime;
+            let progress = Math.min(elapsed / ANIMATION_DURATION_MS, 1); // Animation progress from 0 to 1
 
+            updateFaceOpacityAndVisibility(progress, prevActiveFaceIndex, activeFaceIndex);
+
+            if (progress < 1) {
+                requestAnimationFrame(animateFade);
+            } else {
+                // Animation complete
+                isAnimatingCube = false;
+                cube.style.transition = 'none'; // Remove transition for discrete control post-animation
+                
+                // Final state after animation: only the new active face is visible
+                faces.forEach((face, i) => {
+                    face.style.visibility = 'hidden';
+                    face.style.opacity = 0;
+                });
+                if (faces[activeFaceIndex]) {
+                    faces[activeFaceIndex].style.visibility = 'visible';
+                    faces[activeFaceIndex].style.opacity = 1;
+                    faces[activeFaceIndex].style.transition = 'none'; // Clear transition after final state
+                }
+            }
+        }
+
+        requestAnimationFrame(animateFade); // Start the fade animation alongside transform
+        
         return true;
     }
 
     // --- Scroll & Touch Event Handlers ---
-    let lastWheelTime = 0; // For debounce on wheel events
-    // touchStartX and touchStartY are declared outside the event listener to retain state.
+    let lastWheelTime = 0; 
     let touchStartX = 0;
     let touchStartY = 0;
     let touchDeltaY = 0; // Cumulative vertical touch movement
 
     // Handles global scroll events (desktop wheel)
-    // IMPORTANT: 'event' parameter explicitly passed here
     window.addEventListener('wheel', (event) => { 
-        // Check if the cube container is in the active viewport area for interaction
         const rect = cubeContainer.getBoundingClientRect();
-        const isCubeInView = rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2; // Roughly centered in viewport
+        // Check if the cube container is in a reasonable active viewport area for interaction
+        const isCubeInView = rect.top < window.innerHeight - 100 && rect.bottom > 100; // Visible almost fully
 
         if (!isCubeInView) return; // Not in view, let page scroll normally
 
@@ -288,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handles touch end (mobile)
     cubeContainer.addEventListener('touchend', () => {
-        if (isAnimatingCube) return; // Prevent new animation if one is in progress
+        if (isAnimatingCube || prefersReducedMotion) return; // Prevent new animation if one is in progress
 
         const rect = cubeContainer.getBoundingClientRect();
         const isCubeInView = rect.top < window.innerHeight && rect.bottom > 0;
