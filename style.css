@@ -121,7 +121,7 @@ body::after {
 @keyframes glow2 {
     0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
     50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; } /* Adjusted max opacity */
-    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; }
+    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; }
 }
 
 
@@ -555,8 +555,8 @@ html::before {
     padding: 20px; /* UPDATED: Reduced base padding for more content room */
     display: flex;
     flex-direction: column; /* Changed to column to stack title/description */
-    justify-content: center; /* Center content vertically within face */
-    align-items: flex-start; /* Align content to the start (left) */
+    justify-content: center; /* UPDATED: Vertically centers content block */
+    align-items: center; /* UPDATED: Horizontally centers content block */
     backface-visibility: hidden;
     will-change: transform, opacity;
     box-sizing: border-box; /* Ensure padding is included in height */
@@ -580,7 +580,7 @@ html::before {
 
 .service-description {
     text-align: justify;
-    line-height: 1.8;
+    line-height: 1.2; /* UPDATED: Tighter line spacing */
     word-spacing: 1px;
     font-size: 1em;
     color: var(--text-medium);
@@ -592,13 +592,12 @@ html::before {
     bottom: 10px;      /* UPDATED: Positioned from bottom */
     right: 10px;       /* UPDATED: Positioned from right */
     flex-shrink: 0;
-    font-size: 11em;
+    font-size: 8em; /* UPDATED: Reduced base font size */
     font-weight: 500;
     color: rgba(255, 255, 255, 0.05);
     pointer-events: none;
     z-index: 0;
     line-height: 1;
-    /* margin-left: 20px; -- REMOVED as absolute position makes it redundant */
 }
 
 /* Responsive adjustments for 3D cube on different devices */
@@ -608,7 +607,7 @@ html::before {
         height: 280px;
     }
     .face {
-        padding: 20px; /* UPDATED: Reduced padding */
+        padding: 15px; /* UPDATED: Reduced padding */
     }
     .service-title {
         font-size: 1.8em;
@@ -617,9 +616,9 @@ html::before {
         font-size: 0.9em;
     }
     .face-number {
-        font-size: 9em;
-        bottom: 5px; /* UPDATED: Adjusted position */
-        right: 5px;  /* UPDATED: Adjusted position */
+        font-size: 7em; /* UPDATED */
+        bottom: 5px; /* UPDATED */
+        right: 5px;  /* UPDATED */
     }
 }
 
@@ -629,7 +628,7 @@ html::before {
         height: 250px;
     }
     .face {
-        padding: 15px; /* UPDATED: Reduced padding */
+        padding: 10px; /* UPDATED: Reduced padding */
     }
     .service-title {
         font-size: 1.5em;
@@ -638,9 +637,9 @@ html::before {
         font-size: 0.85em;
     }
     .face-number {
-        font-size: 7em;
-        bottom: 5px; /* UPDATED: Adjusted position */
-        right: 5px;  /* UPDATED: Adjusted position */
+        font-size: 6em; /* UPDATED */
+        bottom: 5px; /* UPDATED */
+        right: 5px;  /* UPDATED */
     }
 }
 
@@ -649,7 +648,7 @@ html::before {
         height: 200px;
     }
     .face {
-        padding: 10px; /* UPDATED: Reduced padding for smallest screen */
+        padding: 8px; /* UPDATED: Reduced padding for smallest screen */
     }
     .service-title {
         font-size: 1.3em;
@@ -658,9 +657,9 @@ html::before {
         font-size: 0.8em;
     }
     .face-number {
-        font-size: 5em;
-        bottom: 0px; /* UPDATED: Adjusted position more aggressively */
-        right: 0px;  /* UPDATED: Adjusted position more aggressively */
+        font-size: 4em; /* UPDATED */
+        bottom: 0px; /* UPDATED */
+        right: 0px;  /* UPDATED */
     }
 }
 
@@ -1021,7 +1020,7 @@ footer h2 {
         height: 340px; 
     }
     .face {
-        padding: 20px; /* UPDATED */
+        padding: 15px; /* UPDATED */
     }
     .service-title {
         font-size: 1.8em;
@@ -1030,7 +1029,7 @@ footer h2 {
         font-size: 0.9em;
     }
     .face-number {
-        font-size: 10em;
+        font-size: 7em; /* UPDATED */
         bottom: 5px; /* UPDATED */
         right: 5px;  /* UPDATED */
     }
@@ -1205,7 +1204,7 @@ footer h2 {
         height: 289px; 
     }
     .face {
-        padding: 15px; /* UPDATED */
+        padding: 10px; /* UPDATED */
     }
     .service-title {
         font-size: 1.5em;
@@ -1214,7 +1213,7 @@ footer h2 {
         font-size: 0.85em;
     }
     .face-number {
-        font-size: 8em;
+        font-size: 6em; /* UPDATED */
         bottom: 5px; /* UPDATED */
         right: 5px;  /* UPDATED */
     }
@@ -1322,7 +1321,7 @@ footer h2 {
         height: 200px;
     }
     .face { 
-        padding: 10px; /* UPDATED */
+        padding: 5px; /* UPDATED: Reduced padding for smallest screen */
     }
     .service-title {
         font-size: 1.3em;
@@ -1331,7 +1330,7 @@ footer h2 {
         font-size: 0.8em;
     }
     .face-number {
-        font-size: 5em;
+        font-size: 4em; /* UPDATED */
         bottom: 0px; /* UPDATED */
         right: 0px;  /* UPDATED */
     }
