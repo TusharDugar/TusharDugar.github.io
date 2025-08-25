@@ -289,7 +289,8 @@ html::before {
     max-width: 370px;
     height: auto;
     box-sizing: border-box;
-    transition: none;
+    /* transition: none; This element itself does not animate, its children do via .reveal-parent/.reveal-child */
+    /* FIXED: The .reveal-item directly on this section handles its own animation */
 
     display: flex;
     flex-direction: column;
@@ -972,7 +973,16 @@ footer h2 {
     .hero-heading {
         font-size: 5.82em; /* FIXED: Reduced by 3% from 6em (6 * 0.97 = 5.82) */
         line-height: 0.85em;
+        font-weight: 900; /* Ensuring match with services */
         margin-bottom: 25px;
+        text-transform: uppercase; /* Ensuring match with services */
+        text-align: left; /* Ensuring match with services */
+        margin-left: 0; /* Ensuring match with services */
+        position: relative; /* Ensuring match with services */
+        z-index: 4; /* Ensuring match with services */
+        padding: 0; /* Ensuring match with services */
+        width: 100%; /* Ensuring match with services */
+        max-width: 1200px; /* Ensuring match with services */
     }
     .hero-description {
         font-size: 1em;
@@ -985,7 +995,7 @@ footer h2 {
 
     /* Adjustments for services section */
     .services-heading {
-        font-family: 'Poppins', sans-serif; /* FIXED: Ensuring font-family is set for smaller breakpoints as well */
+        font-family: 'Poppins', sans-serif; /* Ensuring font-family is set for smaller breakpoints as well */
         font-size: 6em;
         line-height: 0.85em;
         font-weight: 800; /* Ensuring match */
@@ -1122,7 +1132,6 @@ footer h2 {
         width: calc(50% - 20px);
     }
     .about-short-desc {
-        text-align: center; /* FIXED: Centrally aligned */
         font-size: 0.8em;
         margin-bottom: 15px;
         padding: 0 2px;
@@ -1154,7 +1163,16 @@ footer h2 {
     .hero-heading {
         font-size: 4.365em; /* FIXED: Reduced by 3% from 4.5em (4.5 * 0.97 = 4.365) */
         line-height: 0.9em;
+        font-weight: 900; /* Ensuring match with services */
         margin-bottom: 20px;
+        text-transform: uppercase; /* Ensuring match with services */
+        text-align: left; /* Ensuring match with services */
+        margin-left: 0; /* Ensuring match with services */
+        position: relative; /* Ensuring match with services */
+        z-index: 4; /* Ensuring match with services */
+        padding: 0; /* Ensuring match with services */
+        width: 100%; /* Ensuring match with services */
+        max-width: 1200px; /* Ensuring match with services */
     }
     .hero-description {
         font-size: 0.95em;
@@ -1165,7 +1183,7 @@ footer h2 {
 
     /* Adjustments for services section */
     .services-heading {
-        font-family: 'Poppins', sans-serif; /* FIXED: Ensuring font-family is set for smaller breakpoints as well */
+        font-family: 'Poppins', sans-serif; /* Ensuring font-family is set for smaller breakpoints as well */
         font-size: 4.5em;
         line-height: 0.9em;
         font-weight: 800; /* Ensuring match */
@@ -1266,7 +1284,16 @@ footer h2 {
     .hero-heading {
         font-size: clamp(2.716em, 8.73vw, 3.395em); /* FIXED: Reduced by 3% from clamp(2.8em, 9vw, 3.5em) */
         line-height: 0.9em;
+        font-weight: 900; /* Ensuring match with services */
         margin-bottom: 15px;
+        text-transform: uppercase; /* Ensuring match with services */
+        text-align: left; /* Ensuring match with services */
+        margin-left: 0; /* Ensuring match with services */
+        position: relative; /* Ensuring match with services */
+        z-index: 4; /* Ensuring match with services */
+        padding: 0; /* Ensuring match with services */
+        width: 100%; /* Ensuring match with services */
+        max-width: 1200px; /* Ensuring match with services */
     }
     .hero-description {
         font-size: 0.85em;
