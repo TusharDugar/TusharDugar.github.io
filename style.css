@@ -494,114 +494,117 @@ html::before {
 
 /* Services Section Wrapper (for pinning) */
 #services-pin-wrapper {
-    height: 1600vh; /* UPDATED: Increased height to allow pinning logic to work */
+    height: 1600vh; /* As specified in prompt */
     position: relative;
     width: 100%;
 }
 
 /* Services Section Styles (Two-Column Layout & Manual Pinning) */
 .services-section {
-    position: sticky; /* UPDATED: Now sticky as per prompt */
-    top: 0; /* UPDATED: Pin to top as per prompt */
-    height: 100vh; /* UPDATED: As per prompt */
-    display: flex; /* UPDATED: As per prompt */
-    align-items: center; /* UPDATED: As per prompt */
-    justify-content: space-between; /* UPDATED: As per prompt */
-    max-width: 1200px; /* UPDATED: Constrain max-width per prompt */
-    margin: 0 auto; /* UPDATED: Center horizontally per prompt */
-    z-index: 2;
+    position: sticky; /* As specified in prompt */
+    top: 0; /* As specified in prompt */
+    height: 100vh; /* As specified in prompt */
+    display: flex; /* As specified in prompt */
+    align-items: center; /* As specified in prompt */
+    justify-content: space-between; /* As specified in prompt */
+    max-width: 1200px; /* Constrain max-width for content */
+    margin: 0 auto; /* Center horizontally */
+    z-index: 2; /* Ensure it stays above background */
     background-color: transparent; /* Keep background transparent */
-    padding: 100px 20px; /* UPDATED: Adjusted padding per prompt example */
+    padding: 100px 20px; /* Example padding */
     box-sizing: border-box;
-    gap: 80px; /* UPDATED: Increased gap between columns as per prompt */
-    overflow: hidden; /* UPDATED: Added overflow: hidden to contain elements */
+    gap: 80px; /* Gap between columns */
+    overflow: hidden; /* Prevent content overflow within section */
 }
 
-/* The .is-pinned class is no longer strictly needed for pinning itself as it's sticky,
-   but it's left in place for consistency with JS state management if it affects other things.
-   Its fixed positioning is now overridden by the section's sticky property. */
+/* Class added by JS when the section is manually pinned */
 .services-section.is-pinned {
-    position: fixed; /* UPDATED: Re-activated fixed positioning */
-    top: 0; /* UPDATED: Re-activated */
-    left: 50%; /* UPDATED: Re-activated */
-    width: 100%; /* UPDATED: Re-activated */
-    max-width: 1200px; /* UPDATED: Re-activated */
-    transform: translateX(-50%); /* UPDATED: Re-activated */
-    z-index: 10; /* UPDATED: Re-activated */
-    padding: 0 60px; /* UPDATED: Re-activated */
+    position: fixed; /* Re-activated fixed positioning */
+    top: 0;
+    left: 50%;
+    width: 100%;
+    max-width: 1200px; /* Constrain max-width when fixed, keeps content centered */
+    transform: translateX(-50%); /* Center horizontally */
+    z-index: 10; /* Ensure it stays above other scrolling content */
+    padding: 0 60px; /* Match main-layout-container padding when fixed */
+    display: flex; /* UPDATED: Restore flex context in fixed state */
+    gap: 80px; /* UPDATED: Restore gap in fixed state */
+    align-items: center; /* UPDATED: Restore alignment in fixed state */
+    justify-content: space-between; /* UPDATED: Restore justification in fixed state */
+    background-color: transparent; /* UPDATED: Restore background in fixed state */
+    overflow: hidden; /* UPDATED: Restore overflow in fixed state */
 }
 
 
 /* Left Column of Services Section */
 .services-left-column {
-    position: relative; /* UPDATED: Added position: relative for z-index */
-    z-index: 2; /* UPDATED: Added z-index to bring it above the cube */
+    position: relative; /* Added position: relative for z-index */
+    z-index: 2; /* Added z-index to bring it above the cube */
     flex-basis: 45%; /* Adjust width for left column */
     max-width: 500px;
-    display: flex;
+    display: flex; /* As specified in prompt */
     flex-direction: column;
-    justify-content: center; /* UPDATED: Vertically center content within its column */
+    justify-content: center; /* Vertically center content within its column, as specified */
     align-items: flex-start; /* Align text to the start */
     text-align: left; /* Align text to the left */
-    height: 100%; /* UPDATED: Take full height to allow internal centering */
+    height: 100%; /* Take full height to allow internal centering */
     padding-right: 20px; /* Space between columns */
     box-sizing: border-box;
-    flex-shrink: 1; /* UPDATED: Added flex-shrink rule */
+    flex-shrink: 1; /* Allow column to shrink if needed */
 }
 
 /* Right Column of Services Section */
 .services-right-column {
-    overflow: hidden; /* UPDATED: Added overflow: hidden to contain the cube */
+    overflow: hidden; /* Added overflow: hidden to contain the cube */
     flex-basis: 50%; /* Adjust width for right column */
     max-width: 500px;
-    display: flex; /* UPDATED: Make it a flex container to center the cube */
-    justify-content: center; /* UPDATED: Horizontally center cube within its column */
-    align-items: center; /* UPDATED: Vertically center cube within its column */
+    display: flex; /* As specified in prompt */
+    justify-content: center; /* Horizontally center cube within its column, as specified */
+    align-items: center; /* Vertically center cube within its column, as specified */
     height: 100%; /* Take full height of parent flex container */
-    box-sizing: border-box; 
-    flex-shrink: 1; /* UPDATED: Added flex-shrink rule */
-    min-width: 0; /* UPDATED: Added min-width: 0 to allow shrinking */
+    box-sizing: border-box;
+    flex-shrink: 1; /* Allow column to shrink if needed */
+    min-width: 0; /* Allow flexbox to shrink it correctly */
 }
 
 
 /* Services Main Title */
 .services-heading {
-    font-family: 'Poppins', sans-serif;
-    font-size: clamp(2.5rem, 8vw, 8rem); /* UPDATED: Clamp for responsive scaling */
+    font-family: 'Poppins', sans-serif; /* Assumed font-family */
+    font-size: clamp(2.5rem, 8vw, 8rem); /* As specified in prompt */
     line-height: 0.75em;
     font-weight: 800;
-    margin-bottom: 20px; /* Adjusted margin */
+    margin-bottom: 20px;
     text-transform: uppercase;
-    text-align: left; /* UPDATED: Left-aligned heading */
+    text-align: left;
     position: relative;
     z-index: 4;
     padding: 0;
     width: 100%;
-    max-width: 1200px;
 }
-.services-heading .text-white { color: var(--text-light); display: block; }
-.services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
+.services-heading .text-white { color: var(--text-light); display: block; } /* For two-tone effect */
+.services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* For two-tone effect */
 
+/* Styling for the description in the left column */
 .services-description {
-    font-size: clamp(0.875rem, 1.2vw, 1rem); /* Responsive font size */
-    line-height: 1.4;
+    font-size: clamp(0.875rem, 1.2vw, 1rem); /* As specified in prompt */
+    line-height: 1.4; /* As specified in prompt */
     color: var(--text-medium);
     text-align: left;
     max-width: 100%;
 }
 
 
-/* --- 3D Cube Animation Styles (RESTORED & MODIFIED for rotateX) --- */
+/* --- 3D Cube Animation Styles --- */
 .cube-container {
-    z-index: 1; /* UPDATED: Added z-index to be below left column text */
-    width: 100%;
-    max-width: 500px; /* UPDATED: Adjusted max-width as per prompt example */
-    height: 300px; /* UPDATED: Adjusted height as per prompt example */
-    margin: 0 auto; /* Centered with margin auto within its flex parent */
-    perspective: 1200px; /* UPDATED: Adjusted perspective */
-    position: sticky; /* UPDATED: Sticky for right-column pinning as per prompt */
-    top: 50%; /* UPDATED: For vertical centering with sticky as per prompt */
-    transform: translateY(-50%); /* UPDATED: For vertical centering with sticky as per prompt */
+    width: 100%; /* Take full width of parent right column */
+    max-width: 500px; /* As specified in prompt */
+    height: 300px; /* As specified in prompt */
+    margin: 0 auto; /* Center horizontally within its flex parent */
+    perspective: 1200px; /* As specified in prompt */
+    position: sticky; /* As specified in prompt */
+    top: 50%; /* As specified in prompt */
+    transform: translateY(-50%); /* As specified in prompt */
     overflow: hidden; /* Important for clipping rotating elements */
     will-change: transform, opacity;
     border: none;
@@ -611,73 +614,73 @@ html::before {
     width: 100%;
     height: 100%;
     position: relative;
-    transform-style: preserve-3d;
-    transition: transform 1200ms cubic-bezier(0.645, 0.045, 0.355, 1); /* UPDATED: Easing from prompt */
-    transform: rotateX(0deg); /* Initial state for dynamic rotateX flip. No static tilt here. */
+    transform-style: preserve-3d; /* As specified in prompt */
+    transition: transform 1200ms cubic-bezier(0.645, 0.045, 0.355, 1); /* As specified in prompt */
+    transform: rotateX(0deg); /* Initial state for dynamic rotateX flip */
     will-change: transform;
-    overflow: hidden; /* UPDATED: Added overflow: hidden as safeguard */
+    overflow: hidden; /* Added overflow: hidden as safeguard */
 }
 
 .face {
     position: absolute;
     width: 100%;
-    height: 100%; /* Each face must match container height */
-    border: none; /* No border on faces for clean look */
-    background-color: var(--bg-tool-card);
-    color: var(--text-light);
-    padding: 2rem; /* UPDATED: Base padding as per prompt */
-    display: flex;
+    height: 100%; /* Each face must match container height, as specified */
+    border: none;
+    background-color: var(--bg-tool-card); /* Dark background */
+    color: var(--text-light); /* Light text color */
+    padding: 2rem; /* As specified in prompt */
+    display: flex; /* As specified in prompt */
     flex-direction: column;
-    justify-content: center; /* UPDATED: Vertically centers content block */
-    align-items: flex-start; /* UPDATED: Align content to the left within face */
-    backface-visibility: hidden;
+    justify-content: center; /* Vertically centers content block, as specified */
+    align-items: flex-start; /* Align content to the left within face, as specified */
+    backface-visibility: hidden; /* As specified in prompt */
     will-change: transform, opacity;
-    box-sizing: border-box; /* Ensure padding is included in height */
-    text-align: left; /* UPDATED: Ensure text inside face respects alignment */
+    box-sizing: border-box;
+    text-align: left; /* Ensure text inside face respects alignment */
 }
 
 /* Styling for content within the face */
 .service-content {
     width: 100%; /* Take full width of face padding */
-    flex-grow: 1; /* Allow content to grow and push face-number to bottom if needed */
+    flex-grow: 1; /* Allow content to grow and push face-number to bottom */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* UPDATED: Center title/description vertically if they don't take full space */
-    align-items: flex-start; /* UPDATED: Align title/description horizontally */
+    justify-content: center; /* Center title/description vertically */
+    align-items: flex-start; /* Align title/description horizontally */
     text-align: left;
 }
 
 .service-title {
-    font-size: clamp(1rem, 1.5vw, 1.25rem); /* UPDATED: Applied clamp for responsiveness */
+    font-size: clamp(1rem, 1.5vw, 1.25rem); /* As specified in prompt */
     font-weight: 700;
-    margin-bottom: 0.5rem; /* UPDATED: Adjusted margin */
+    margin-bottom: 0.5rem; /* As specified in prompt */
     line-height: 1.2;
-    color: #9CFF33; /* UPDATED: Set color to #9CFF33 as per prompt */
+    color: #9CFF33; /* As specified in prompt */
 }
 
 .service-description {
-    text-align: left; /* UPDATED: Left-aligned description text */
-    line-height: 1.4; /* UPDATED: Tighter line spacing */
+    text-align: left; /* As specified in prompt */
+    line-height: 1.4; /* As specified in prompt */
     word-spacing: 1px;
-    font-size: clamp(0.875rem, 1.2vw, 1rem); /* UPDATED: Applied clamp for responsiveness */
+    font-size: clamp(0.875rem, 1.2vw, 1rem); /* As specified in prompt */
     color: var(--text-medium);
     max-width: 100%;
 }
 
 .face-number {
-    position: absolute;
-    bottom: 1rem; /* UPDATED: Positioned from bottom */
-    right: 1rem;  /* UPDATED: Positioned from right */
-    font-size: clamp(3rem, 10vw, 6rem); /* UPDATED: Applied clamp, adjusted values */
+    position: absolute; /* As specified in prompt */
+    bottom: 1rem; /* As specified in prompt */
+    right: 1rem;  /* As specified in prompt */
+    font-size: clamp(3rem, 10vw, 6rem); /* As specified in prompt */
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.08); /* UPDATED: Changed color as per prompt (subtle watermark) */
+    color: rgba(255, 255, 255, 0.08); /* As specified in prompt */
     pointer-events: none;
     z-index: 0;
     line-height: 1;
 }
 
-/* Responsive adjustments for 3D cube on different devices */
-@media (min-width: 768px) { /* UPDATED: z-index rules apply from 768px and up */
+/* --- Responsive adjustments for the services section --- */
+@media (min-width: 768px) { /* z-index rules apply from 768px and up */
     .services-left-column {
         z-index: 2; /* Ensure it stays above the cube-container */
     }
@@ -691,20 +694,19 @@ html::before {
         padding: 0 40px; /* Adjust fixed padding for medium screens */
     }
     .services-left-column {
-        flex-basis: 40%; /* Adjust width */
+        flex-basis: 40%;
     }
     .services-right-column {
-        flex-basis: 55%; /* Adjust width */
+        flex-basis: 55%;
     }
     .cube-container {
         max-width: 80%; /* Consistent responsive max-width */
         height: 100%; /* Height scales with parent */
-        min-height: 300px; /* Consistent min-height */
+        min-height: 300px; /* Ensure min-height */
     }
     .face {
-        padding: 1.2rem; /* Adjusted padding */
+        padding: 1.2rem;
     }
-    /* Clamp functions handle responsive font sizing */
     .face-number {
         bottom: 0.8rem;
         right: 0.8rem;
@@ -713,13 +715,13 @@ html::before {
 
 @media (max-width: 768px) {
     .services-section {
-        flex-direction: column; /* Stack into a single column */
+        flex-direction: column; /* Stack into a single column, as specified */
         height: auto; /* Allow height to adjust */
         min-height: 100vh; /* Ensure it still takes up space when not pinned */
-        padding: 60px 20px;
+        padding: 60px 20px; /* Adjust padding */
         gap: 40px; /* Smaller gap when stacked */
     }
-    /* .services-section.is-pinned should effectively mimic the .services-section mobile state */
+    /* .is-pinned state should mimic the relative mobile layout when active */
     .services-section.is-pinned {
         flex-direction: column;
         top: auto; left: auto; transform: none; /* Override fixed positioning for mobile context */
@@ -736,7 +738,7 @@ html::before {
         max-width: 100%;
         height: auto;
         padding-right: 0;
-        margin-bottom: 0; /* No margin when stacked, gap handles spacing */
+        margin-bottom: 0; /* Spacing handled by parent gap */
         align-items: center; /* Center text block horizontally */
         text-align: center;
     }
@@ -746,21 +748,21 @@ html::before {
     .services-right-column {
         flex-basis: auto; /* Auto width */
         max-width: 100%;
-        height: auto; /* Let cube dictate height */
-        justify-content: center; /* Ensure cube is centered */
+        height: auto;
+        justify-content: center;
         align-items: center;
     }
     .cube-container {
-        position: relative; /* UPDATED: Revert to relative, not sticky, on small screens */
+        position: relative; /* Remove sticky, as specified */
         top: auto;
         transform: none;
-        max-width: 80%; /* Adjust max width for mobile */
-        height: 400px; /* UPDATED: Fixed height for cube when relative */
-        margin: 0 auto; /* Center cube if not sticky */
+        max-width: 80%;
+        height: 400px; /* As specified in prompt */
+        margin: 0 auto;
         min-height: 300px; /* Ensure min-height */
     }
     .face {
-        padding: 1rem; /* Adjusted padding */
+        padding: 1rem;
         justify-content: center;
         align-items: center;
         text-align: center;
@@ -781,15 +783,15 @@ html::before {
 
 @media (max-width: 480px) {
     .services-section {
-        gap: 30px; /* Smaller gap */
+        gap: 30px;
         padding: 40px 15px;
     }
     .cube-container {
-        height: 300px; /* Smaller fixed height for mobile */
+        height: 300px; /* As specified in prompt */
         min-height: 200px; /* Ensure min-height */
     }
-    .face { 
-        padding: 0.8rem; /* Adjusted padding */
+    .face {
+        padding: 0.8rem;
     }
     .face-number {
         bottom: 0.2rem;
@@ -797,65 +799,261 @@ html::before {
     }
 }
 
+/* --- Accessibility: Reduced motion override --- */
+@media (prefers-reduced-motion: reduce) {
+    /* For other reveal animations */
+    .reveal-item,
+    .reveal-parent .reveal-child,
+    .reveal-stagger-container .reveal-stagger,
+    .tool-card {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+        animation: none !important;
+        visibility: visible !important;
+    }
+    
+    /* Specific overrides for the services section in reduced motion */
+    #services-pin-wrapper {
+        height: auto !important; /* No extra scroll space needed */
+        position: relative !important;
+    }
+    .services-section {
+        position: relative !important; /* Revert to normal document flow */
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 80px 40px !important; /* Use default section padding */
+        pointer-events: auto !important;
+        flex-direction: column !important; /* Always stack */
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 20px !important; /* Default stacked gap */
+    }
+    .services-left-column, .services-right-column {
+        flex-basis: auto !important;
+        max-width: 100% !important;
+        height: auto !important;
+        padding-right: 0 !important;
+        margin-bottom: 20px !important; /* Space between stacked columns */
+        justify-content: flex-start !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+    .services-heading, .services-description {
+        text-align: center !important;
+    }
 
-/* Tools Grid Styling (Restored with Stagger) */
+    .cube-container {
+        perspective: none !important; /* Flatten 3D */
+        transform: none !important;
+        height: auto !important; /* Auto height for stacked content */
+        margin: 0 auto !important;
+        position: relative !important;
+        top: auto !important;
+        overflow: visible !important; /* Allow content to dictate size */
+        max-width: 100% !important;
+        z-index: auto !important; /* Reset z-index */
+    }
+    .cube {
+        transform-style: flat !important; /* Flatten 3D transforms */
+        transform: none !important;
+        transition: none !important;
+        display: flex; /* Stack faces vertically */
+        flex-direction: column;
+        gap: 20px;
+        height: auto;
+    }
+    .face {
+        transition: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        position: relative !important; /* Flow naturally */
+        transform: none !important;
+        height: auto !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+        padding: 1rem !important; /* Consistent padding */
+    }
+    .face .service-content {
+        align-items: flex-start !important;
+        text-align: left !important;
+    }
+    .face .service-description {
+        text-align: left !important;
+    }
+    .face .face-number {
+        position: relative !important; /* Flow naturally */
+        bottom: auto !important;
+        right: auto !important;
+        font-size: 0.8em !important;
+        color: var(--text-medium) !important;
+        margin-top: 10px;
+        align-self: flex-end !important;
+    }
+}
+
+/* --- Reverted "Let's Connect" Section CSS --- */
+footer#contact {
+    background-color: var(--bg-section-card); /* Dark background */
+    color: var(--text-light);
+    padding: 100px 40px;
+    text-align: center;
+}
+
+footer h2 { /* Original h2 style */
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 3.2em;
+    color: var(--primary-heading-color);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.7); /* Restore text shadow */
+}
+
+.contact-tagline {
+    font-size: 1.1rem; /* Specific font size */
+    margin-bottom: 40px;
+    color: var(--text-medium); /* Specific text color */
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+    opacity: 0.95;
+}
+
+.contact-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Gap between buttons */
+    margin-bottom: 40px;
+}
+
+.contact-button {
+    background-color: var(--bg-profile-card); /* White background for buttons */
+    color: var(--text-dark-card); /* Dark text for buttons */
+    padding: 15px 25px; /* Specific padding */
+    border: none;
+    border-radius: 10px; /* Rounded corners */
+    font-size: 1rem; /* Specific font size */
+    display: flex; /* Flex container for icon/text */
+    flex-direction: row; /* Icon and text side-by-side */
+    align-items: center;
+    justify-content: center; /* Center content horizontally */
+    gap: 8px; /* Gap between icon and text */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: auto; /* Allow content to dictate width */
+    height: auto; /* Allow content to dictate height */
+    position: relative; /* For copied state */
+    overflow: hidden; /* For copied state transition */
+}
+
+.contact-button:hover {
+    transform: translateY(-2px); /* Subtle lift on hover */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.contact-button i { /* Icon styling */
+    font-size: 1.5em; /* Smaller icon for compact button */
+    color: var(--accent-primary-sawad); /* Orange accent */
+}
+
+.contact-button .button-value {
+    font-size: 1em; /* Adjusted to fit better */
+    font-weight: 600;
+    color: var(--text-dark-card); /* Dark text */
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+    margin: 0;
+    max-width: none;
+}
+
+.contact-button .copied-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--accent-primary-sawad); /* Solid orange, not gradient */
+    color: var(--text-light);
+    font-size: 1.2em; /* Adjusted font size */
+    font-weight: bold;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    z-index: 3;
+}
+
+/* States when button is 'copied' (keep as is) */
+.contact-button.copied .button-content-main {
+    transform: translateY(-100%) !important;
+    opacity: 0 !important;
+}
+
+.contact-button.copied .copied-text {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+}
+
+.social-links { /* Restore social links styling if needed */
+    margin-top: 30px;
+}
+.social-links a {
+    color: var(--text-light);
+    margin: 0 20px;
+    transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.social-links a:hover {
+    color: var(--accent-secondary-sawad);
+    transform: scale(1.3);
+}
+
+/* --- Reverted "Premium Tools" Section CSS --- */
 .tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 15px;
-    margin-left: 0;
-    margin-right: 0;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted minmax for better fit */
+    gap: 20px; /* Increased gap for more spacing */
+    margin: 60px auto; /* Center the grid */
+    max-width: 900px; /* Max width for the grid */
+    padding: 0;
     justify-items: stretch;
 }
 
-/* Tools Main Title - NEW: Base styles for tools-heading */
-.tools-heading {
-    font-family: 'Poppins', sans-serif;
-    font-size: clamp(2.5rem, 8vw, 8rem); /* UPDATED: Clamp for responsive scaling */
-    line-height: 0.75em;
-    font-weight: 800;
-    margin-bottom: 40px; /* Matching services heading */
-    text-transform: uppercase; /* Matching services heading */
-    text-align: left; /* Matching services heading */
-    margin-left: 0; /* Matching services heading */
-    position: relative; /* Matching services heading */
-    z-index: 4; /* Matching services heading */
-    padding: 0; /* Matching services heading */
-    width: 100%; /* Matching services heading */
-    max-width: 1200px; /* Matching services heading */
-}
-/* Ensure text-white and text-gray for tools heading also works */
-.tools-heading .text-white { color: var(--text-light); display: block; }
-.tools-heading .text-gray { color: var(--text-sub-heading-grey); display: block; }
-
-/* Tool Card (Animations) */
 .tool-card {
-    background-color: var(--bg-tool-card);
+    background: linear-gradient(145deg, #1c1c1c, #121212); /* Glossy gradient background */
     border-radius: 15px;
-    padding: 20px;
+    padding: 25px; /* Increased padding */
     display: flex;
     align-items: center;
-    gap: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    gap: 20px; /* Increased gap */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); /* Deeper shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Elegant hover transition */
     cursor: pointer;
-    will-change: transform, opacity;
-
-    opacity: 0; /* Default hidden for reveal animation */
-    transform: translateY(60px); /* Default position for reveal animation */
-}
-.tool-card.visible {
-  opacity: 1;
-  transform: translateY(0);
+    will-change: transform, opacity; /* Keep for reveal animation */
+    /* Remove opacity/transform for reveal if already handled by reveal-stagger */
 }
 
 .tool-card:hover {
-    transform: translateY(-5px);
-    background-color: rgba(26, 26, 26, 0.9);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    transform: translateY(-6px); /* More pronounced lift */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); /* Even deeper shadow on hover */
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a); /* Slightly lighter on hover */
 }
 
-.tool-icon-wrapper {
+.tool-icon-wrapper { /* Keep existing styling */
     width: 50px;
     height: 50px;
     background-color: var(--tool-icon-bg);
@@ -866,3 +1064,573 @@ html::before {
     flex-shrink: 0;
     overflow: hidden;
 }
+
+.tool-logo { /* Keep existing styling */
+    max-width: 70%;
+    max-height: 70%;
+    object-fit: contain;
+    filter: brightness(0.01);
+}
+
+.tool-info { /* Keep existing styling */
+    flex-grow: 1;
+    text-align: left;
+}
+
+.tool-name { /* Keep existing styling */
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--tool-name-color);
+    margin: 0 0 5px 0;
+    line-height: 1.2;
+}
+
+.tool-category { /* Keep existing styling */
+    font-size: 0.85em;
+    color: var(--tool-category-color);
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Responsive adjustments for tools grid */
+@media (max-width: 1200px) {
+    .tools-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        max-width: 600px;
+        gap: 15px;
+    }
+    .tool-card {
+        padding: 20px;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tools-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        max-width: 400px;
+        gap: 15px;
+    }
+    .tool-card {
+        padding: 18px;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tools-grid {
+        gap: 10px;
+    }
+    .tool-card {
+        padding: 15px;
+        gap: 10px;
+    }
+}
+
+/* --- Existing Accessibility (Reduced Motion) --- */
+@media (prefers-reduced-motion: reduce) {
+    /* ... (unchanged) ... */
+    /* All .reveal-item, .reveal-parent, .reveal-stagger-container, .tool-card will have animations disabled */
+    
+    /* Services Section specific overrides for reduced motion */
+    #services-pin-wrapper { /* Hide wrapper as pinning is disabled */
+        height: auto !important;
+        position: relative !important;
+    }
+    .services-section { /* Ensure it's static and not fixed/centered */
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 80px 40px !important; /* Revert to normal section padding */
+        pointer-events: auto !important;
+        flex-direction: column !important; /* Always stack */
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 20px !important; /* Default stacked gap */
+    }
+    .services-left-column, .services-right-column {
+        flex-basis: auto !important;
+        max-width: 100% !important;
+        height: auto !important;
+        padding-right: 0 !important;
+        margin-bottom: 20px !important; /* Space when stacked */
+        justify-content: flex-start !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+    .services-heading, .services-description {
+        text-align: center !important;
+    }
+
+    .cube-container {
+        perspective: none !important;
+        transform: none !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        position: relative !important;
+        top: auto !important;
+        overflow: visible !important;
+        max-width: 100% !important;
+        z-index: auto !important;
+    }
+    .cube {
+        transform-style: flat !important;
+        transform: none !important;
+        transition: none !important;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: auto;
+    }
+    .face {
+        transition: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        position: relative !important;
+        transform: none !important;
+        height: auto !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+        padding: 1rem !important; /* Consistent padding */
+    }
+    .face .service-content {
+        align-items: flex-start !important;
+        text-align: left !important;
+    }
+    .face .service-description {
+        text-align: left !important;
+    }
+    .face .face-number {
+        position: relative !important;
+        bottom: auto !important;
+        right: auto !important;
+        font-size: 0.8em !important;
+        color: var(--text-medium) !important;
+        margin-top: 10px;
+        align-self: flex-end !important;
+    }
+}
+</style>
+
+### **3. `script.js`**
+
+```javascript
+// script.js
+// Global constants for animation timing
+const ROTATION_INCREMENT_DEG = 45; // Degrees for an 8-sided prism (360 / 8 = 45)
+const ANIMATION_DURATION_MS = 1200; // Match CSS transition duration for .cube
+const SCROLL_THRESHOLD_PX = 30; // Minimum scroll pixels to trigger a swipe
+const SCROLL_DEBOUNCE_TIME_MS = 50; // Prevent rapid-fire wheel events from stacking
+
+// Function to copy text to clipboard for contact buttons
+function copyToClipboard(button) {
+    const valueElement = button.querySelector('.button-value');
+    const value = valueElement ? valueElement.textContent.trim() : ''; // Trim whitespace
+
+    if (value) {
+        navigator.clipboard.writeText(value)
+            .then(() => {
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                }, 2000); // Reset after 2 seconds
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers or if clipboard API fails (e.g., execCommand)
+                const textarea = document.createElement('textarea');
+                textarea.value = value;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    button.classList.add('copied');
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                    }, 2000);
+                } catch (ex) {
+                    console.error('Failed to copy using execCommand: ', ex);
+                } finally {
+                    document.body.removeChild(textarea);
+                }
+            });
+    }
+}
+
+// Unified Function to reveal elements on scroll (for 2D animations)
+function initIntersectionObserverAnimations() {
+  const observerOptions = {
+    root: null, // relative to the viewport
+    rootMargin: "0px",
+    threshold: 0.1 // show when 10% of the element is visible
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Check for reduced motion preference
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+            return;
+        }
+
+        // Handle reveal-item (single item reveal like headers, individual cards, 3D cube container)
+        if (entry.target.classList.contains("reveal-item")) {
+          entry.target.classList.add("visible");
+        }
+        // Handle reveal-parent (for About section staggered children)
+        else if (entry.target.classList.contains("reveal-parent")) {
+          // Select ALL direct and indirect .reveal-child elements within this parent
+          const childrenToStagger = entry.target.querySelectorAll(".reveal-child"); 
+          
+          childrenToStagger.forEach((child, index) => {
+            setTimeout(() => {
+              child.classList.add("visible");
+            }, index * 100); // Apply stagger delay (100ms)
+          });
+        }
+        // Handle reveal-stagger-container (for staggered children like Tools and Contact buttons)
+        else if (entry.target.classList.contains("reveal-stagger-container")) {
+          const children = entry.target.querySelectorAll(".reveal-stagger");
+          children.forEach((child, index) => {
+            setTimeout(() => {
+              child.classList.add("visible");
+            }, index * 100); // Apply stagger delay (100ms)
+          });
+        }
+        
+        observer.unobserve(entry.target); // Stop observing once revealed
+      }
+    });
+  }, observerOptions);
+
+  // Observe all types of animated containers/items
+  document.querySelectorAll(".reveal-item, .reveal-parent, .reveal-stagger-container").forEach(el => observer.observe(el));
+}
+
+
+// Scroll Spy for section title (REMOVED TEXT CHANGE LOGIC)
+const sections = document.querySelectorAll("section[id], footer[id]");
+const navIndicator = document.querySelector(".left-column-sticky h3"); // Target for your name
+
+window.addEventListener("scroll", () => {
+  let current = ""; 
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 150;
+
+    if (window.scrollY >= sectionTop && window.scrollY < sectionTop + section.offsetHeight) {
+      current = section.getAttribute("id");
+    }
+  });
+});
+
+
+// Mouse Follower Glow (implementation)
+document.addEventListener('DOMContentLoaded', () => {
+    const mouseFollowerGlow = document.querySelector('.mouse-follower-glow');
+    if (mouseFollowerGlow) {
+        document.addEventListener('mousemove', (event) => {
+            mouseFollowerGlow.style.transform = `translate(-50%, -50%) translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+        });
+    }
+
+    // Initialize contact button copy functionality
+    const contactButtons = document.querySelectorAll('.contact-button');
+    contactButtons.forEach(button => {
+        button.addEventListener('click', () => copyToClipboard(button));
+    });
+
+    // Initialize IntersectionObserver-based animations (for About section, Tools, Contact, and the 3D cube container itself)
+    initIntersectionObserverAnimations();
+
+    // --- Services Section 3D Cube Animation (Discrete Step) ---
+    const servicesSection = document.getElementById('services');
+    const servicesPinWrapper = document.getElementById('services-pin-wrapper'); // The new wrapper div for pinning
+    const cubeContainer = document.querySelector('.cube-container');
+    const cube = document.getElementById('services-cube');
+    
+    if (!servicesSection || !servicesPinWrapper || !cubeContainer || !cube) {
+        console.error("One or more required elements for Services 3D cube animation not found. Skipping initialization.");
+        return; // Exit if elements are missing
+    }
+    
+    const faces = document.querySelectorAll('.face');
+    const SERVICES_COUNT = faces.length; // Should be 8.
+
+    let currentRotationAngle = 0; // Tracks the cube's rotation for the active face
+    let activeFaceIndex = 0;      // Index of the face currently 'front'
+    let isAnimatingCube = false;  // Flag to prevent multiple animations at once
+    let isServicesSectionPinned = false; // Flag for pinning state
+    
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Calculates the `translateZ` distance for faces to form an 8-sided prism based on height for X-axis rotation
+    function calculateFaceOffset() {
+        if (!cubeContainer || SERVICES_COUNT === 0) return 0;
+        
+        const faceHeight = cubeContainer.offsetHeight; // Use height for X-axis rotation
+        // R = (H/2) / tan(PI/N) formula for a regular N-sided polygon, where H is the dimension along the rotation plane.
+        const calculatedOffset = (faceHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+        
+        return isNaN(calculatedOffset) || calculatedOffset === 0 ? 300 : calculatedOffset; // Default to 300px if calculation fails
+    }
+
+    // Sets up the initial 3D positioning of each face for rotateX
+    function setupCubeFaces() {
+        if (!cube || SERVICES_COUNT === 0) return;
+        const faceOffset = calculateFaceOffset();
+
+        faces.forEach((face, i) => {
+            face.style.transition = 'none'; // Clear transitions for setup
+            face.style.visibility = 'hidden'; // Hide all initially
+            face.style.opacity = 0; // Set opacity to 0
+
+            const angleForFace = i * ROTATION_INCREMENT_DEG;
+            // Position faces around the X-axis for a vertical prism
+            face.style.transform = `rotateX(${angleForFace}deg) translateZ(${faceOffset}px)`;
+        });
+
+        cube.style.transition = 'none'; // No transition for initial cube setup
+        cube.style.transform = `rotateX(${-currentRotationAngle}deg)`; // Apply initial cube rotation (dynamic X-axis)
+        
+        // Initial visibility: only the first face is fully visible
+        if (faces[activeFaceIndex]) {
+            faces[activeFaceIndex].style.visibility = 'visible';
+            faces[activeFaceIndex].style.opacity = 1;
+        }
+    }
+
+    // Manages opacity and visibility of faces during a 3D transition for rotateX (instant snaps)
+    function updateFaceOpacityAndVisibility(progress, prevActiveFaceIndex, newActiveFaceIndex) {
+        if (prefersReducedMotion) {
+            // In reduced motion, CSS handles the flattened layout and visibility.
+            return; 
+        }
+
+        faces.forEach((face, i) => {
+            face.style.transition = 'none'; // Instant opacity changes
+            face.style.visibility = 'hidden'; // Default hidden
+            face.style.opacity = 0; // Default transparent
+        });
+
+        // Outgoing face snaps to opacity: 0 after 50% progress
+        if (faces[prevActiveFaceIndex]) { // The old face
+            faces[prevActiveFaceIndex].style.visibility = 'visible';
+            if (progress < 0.5) { // Visible until just before 50%
+                faces[prevActiveFaceIndex].style.opacity = 1;
+            } else { // Instantly hidden at 50% and beyond
+                faces[prevActiveFaceIndex].style.opacity = 0;
+            }
+        }
+
+        // Incoming face snaps to opacity: 1 starting at 50% progress
+        if (faces[newActiveFaceIndex]) { // The new face
+            faces[newActiveFaceIndex].style.visibility = 'visible';
+            if (progress < 0.5) { // Hidden until just before 50%
+                faces[newActiveFaceIndex].style.opacity = 0;
+            } else { // Instantly visible at 50% and beyond
+                faces[newActiveFaceIndex].style.opacity = 1;
+            }
+        }
+    }
+
+    // Animates the cube to the next/previous face using rotateX
+    function animateCube(direction) {
+        if (isAnimatingCube || prefersReducedMotion) return false;
+
+        let targetActiveFaceIndex = activeFaceIndex + direction;
+
+        // Determine if we hit a boundary that should allow page scroll
+        const willHitStartBoundary = activeFaceIndex === 0 && direction === -1;
+        const willHitEndBoundary = activeFaceIndex === SERVICES_COUNT - 1 && direction === 1;
+
+        if (willHitStartBoundary || willHitEndBoundary) {
+            // Cube animation cannot proceed, signal to unpin/scroll page
+            return false; 
+        }
+
+        const prevActiveFaceIndex = activeFaceIndex; 
+        activeFaceIndex = targetActiveFaceIndex;
+
+        isAnimatingCube = true;
+
+        currentRotationAngle += direction * ROTATION_INCREMENT_DEG;
+        cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.645, 0.045, 0.355, 1)`; // Ensure easing is applied
+        cube.style.transform = `rotateX(${-currentRotationAngle}deg)`; 
+        
+        let startTime = null;
+        let animationFrameId;
+
+        function animateFade(currentTime) {
+            if (!startTime) startTime = currentTime;
+            const elapsed = currentTime - startTime;
+            let progress = Math.min(elapsed / ANIMATION_DURATION_MS, 1);
+
+            updateFaceOpacityAndVisibility(progress, prevActiveFaceIndex, activeFaceIndex);
+
+            if (progress < 1) {
+                animationFrameId = requestAnimationFrame(animateFade);
+            } else {
+                isAnimatingCube = false;
+                cube.style.transition = 'none'; // Clear transition after animation
+                
+                faces.forEach((face, i) => {
+                    face.style.visibility = 'hidden';
+                    face.style.opacity = 0;
+                });
+                if (faces[activeFaceIndex]) {
+                    faces[activeFaceIndex].style.visibility = 'visible';
+                    faces[activeFaceIndex].style.opacity = 1;
+                    faces[activeFaceIndex].style.transition = 'none';
+                }
+            }
+        }
+
+        animationFrameId = requestAnimationFrame(animateFade);
+        return true; // Cube animation started
+    }
+
+
+    // --- Manual Scroll Pinning and Locking for Services Section ---
+    const servicesPinObserver = new IntersectionObserver((entries) => {
+        if (prefersReducedMotion) return; // Disable pinning/locking for reduced motion
+
+        entries.forEach(entry => {
+            const servicesSectionRect = servicesSection.getBoundingClientRect(); // Get rect of the actual section
+            const viewportHeight = window.innerHeight;
+            
+            // Pin when the top of the services section hits near the top of the viewport
+            // and the bottom of the services section is still within or below the viewport.
+            // This is a robust check for when the section is "active" in the view.
+            if (servicesSectionRect.top <= 0 && servicesSectionRect.bottom >= viewportHeight) {
+                 if (!isServicesSectionPinned) {
+                    servicesSection.classList.add('is-pinned');
+                    isServicesSectionPinned = true;
+                    document.body.style.overflow = 'hidden'; // Lock page scroll
+                }
+            } else {
+                // Unpin logic: if section is pinned and it's no longer fully visible (or scrolling past its wrapper)
+                if (isServicesSectionPinned) {
+                    servicesSection.classList.remove('is-pinned');
+                    isServicesSectionPinned = false;
+                    document.body.style.overflow = 'auto'; // Unlock page scroll
+                }
+            }
+        });
+    }, {
+        root: null, // viewport
+        rootMargin: '0px',
+        threshold: [0, 0.01, 0.99, 1] // Observe when entering, leaving, and fully visible
+    });
+
+    servicesPinObserver.observe(servicesPinWrapper);
+
+    // --- Manual Wheel/Touch Event Handlers for Cube Rotation & Page Scroll ---
+    let lastWheelTime = 0; 
+    let lastTouchY = 0;
+
+    const handleScrollEvent = (event) => {
+        if (prefersReducedMotion) return;
+
+        // If the services section is pinned, prevent default page scroll and handle cube rotation
+        if (isServicesSectionPinned) {
+            event.preventDefault(); 
+            
+            const now = Date.now();
+            if (now - lastWheelTime < SCROLL_DEBOUNCE_TIME_MS) {
+                return; // Debounce rapid wheel events
+            }
+            lastWheelTime = now;
+
+            const direction = event.deltaY > 0 ? 1 : -1; // 1 for scroll down, -1 for scroll up
+            const didAnimate = animateCube(direction);
+
+            if (!didAnimate) {
+                // If animateCube returns false (hit boundary 01 or 08),
+                // it means the cube cannot rotate further. Unpin the section
+                // to allow the user to scroll to the next/previous section.
+                servicesSection.classList.remove('is-pinned');
+                isServicesSectionPinned = false;
+                document.body.style.overflow = 'auto'; 
+
+                // Attempt to initiate page scroll slightly after unpinning
+                // This makes the transition feel more natural.
+                window.scrollBy({ top: direction * 50, behavior: 'smooth' }); 
+            }
+        }
+    };
+
+    const handleTouchStart = (e) => {
+        if (prefersReducedMotion || !isServicesSectionPinned) return;
+        lastTouchY = e.touches[0].clientY;
+        // Don't prevent default here to allow native scroll if not pinned
+    };
+
+    const handleTouchMove = (e) => {
+        if (prefersReducedMotion || !isServicesSectionPinned || isAnimatingCube) return;
+
+        const currentTouchY = e.touches[0].clientY;
+        const touchDelta = lastTouchY - currentTouchY; // Positive for swipe up, negative for swipe down
+
+        if (Math.abs(touchDelta) > SCROLL_THRESHOLD_PX) {
+            e.preventDefault(); // Prevent page scroll if significant swipe
+            const direction = touchDelta > 0 ? 1 : -1; // Swipe up (delta > 0) is scroll down (dir 1)
+            const didAnimate = animateCube(direction);
+            
+            if (!didAnimate) {
+                // Unpin if at boundary
+                servicesSection.classList.remove('is-pinned');
+                isServicesSectionPinned = false;
+                document.body.style.overflow = 'auto';
+                window.scrollBy({ top: direction * 50, behavior: 'smooth' }); 
+            }
+            lastTouchY = currentTouchY; // Reset for next move detection
+        }
+    };
+
+    window.addEventListener('wheel', handleScrollEvent, { passive: false });
+    // Use the #services-pin-wrapper for touch events to ensure event listener is active over the entire scroll area
+    servicesPinWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
+    servicesPinWrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+
+    // Initial setup and resize handling
+    const initializeServices = () => {
+        setupCubeFaces(); 
+
+        if (prefersReducedMotion) {
+            servicesSection.classList.remove('is-pinned');
+            document.body.style.overflow = 'auto';
+            faces.forEach(face => {
+                face.style.transition = 'none';
+                face.style.opacity = 1;
+                face.style.visibility = 'visible';
+            });
+            cube.style.transform = 'none';
+            if (cubeContainer) {
+                cubeContainer.style.position = 'relative'; // Revert cube-container sticky/transform
+                cubeContainer.style.top = 'auto';
+                cubeContainer.style.transform = 'none';
+            }
+            servicesPinObserver.unobserve(servicesPinWrapper); // Stop observing
+        } else {
+            // Ensure section is not pinned initially and body is scrollable
+            servicesSection.classList.remove('is-pinned');
+            document.body.style.overflow = 'auto';
+            // Start observing the pin wrapper if not already
+            servicesPinObserver.observe(servicesPinWrapper);
+        }
+    };
+
+    window.addEventListener('resize', initializeServices);
+    initializeServices(); // Call on initial load
+
+    // Trigger a scroll event immediately to ensure initial IntersectionObserver checks
+    window.dispatchEvent(new Event('scroll'));
+});
+</script>
