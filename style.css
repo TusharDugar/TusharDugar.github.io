@@ -121,7 +121,7 @@ body::after {
 @keyframes glow2 {
     0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
     50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; } /* Adjusted max opacity */
-    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; }
+    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; }
 }
 
 
@@ -521,11 +521,12 @@ html::before {
    Its fixed positioning is now overridden by the section's sticky property. */
 .services-section.is-pinned {
     /* These properties are largely managed by the sticky parent now,
-       but retained for completeness or if JS changes state for other reasons. */
+       but retained for completeness or if JS changes state for for example the body overflow */
     /* position: fixed; */
     /* top: 0; */
     /* left: 50%; */
     /* width: 100%; */
+    /* max-width: 1200px; */
     /* transform: translateX(-50%); */
     /* z-index: 10; */
     /* padding: 0 60px; */
@@ -640,7 +641,7 @@ html::before {
 }
 
 .service-title {
-    font-size: clamp(1rem, 2.5vw, 1.5rem); /* UPDATED: Applied clamp for responsiveness as per prompt */
+    font-size: clamp(1rem, 1.5vw, 1.25rem); /* UPDATED: Applied clamp for responsiveness */
     font-weight: 700;
     margin-bottom: 0.5rem; /* UPDATED: Adjusted margin */
     line-height: 1.2;
@@ -651,7 +652,7 @@ html::before {
     text-align: left; /* UPDATED: Left-aligned description text */
     line-height: 1.4; /* UPDATED: Tighter line spacing */
     word-spacing: 1px;
-    font-size: clamp(0.9rem, 2vw, 1.25rem); /* UPDATED: Applied clamp for responsiveness as per prompt */
+    font-size: clamp(0.9rem, 2vw, 1.25rem); /* UPDATED: Applied clamp for responsiveness */
     color: var(--text-medium);
     max-width: 100%;
 }
@@ -660,9 +661,9 @@ html::before {
     position: absolute;
     bottom: 1rem; /* UPDATED: Positioned from bottom */
     right: 1rem;  /* UPDATED: Positioned from right */
-    font-size: clamp(4rem, 15vw, 10rem); /* UPDATED: Applied clamp, adjusted values as per prompt */
+    font-size: clamp(3rem, 10vw, 6rem); /* UPDATED: Applied clamp, adjusted values */
     font-weight: 500;
-    color: #262626; /* UPDATED: Changed color as per prompt */
+    color: rgba(255, 255, 255, 0.08); /* UPDATED: Changed color as per prompt (subtle watermark) */
     pointer-events: none;
     z-index: 0;
     line-height: 1;
@@ -979,144 +980,4 @@ footer h2 {
     max-width: 90%;
     color: var(--text-light);
     margin-top: 5px;
-}
-
-.contact-button .copied-text {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--accent-primary-sawad); /* Solid orange, not gradient */
-    color: var(--text-light);
-    font-size: 1.5em;
-    font-weight: bold;
-    border-radius: 12px;
-    opacity: 0;
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-    z-index: 3;
-}
-
-/* States when button is 'copied' */
-.contact-button.copied .button-content-main {
-    transform: translateY(-100%) !important;
-    opacity: 0 !important;
-}
-
-.contact-button.copied .copied-text {
-    transform: translateY(0) !important;
-    opacity: 1 !important;
-}
-
-.social-links {
-    margin-top: 30px;
-}
-.social-links a {
-    color: var(--text-light);
-    margin: 0 20px;
-    transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.social-links a:hover {
-    color: var(--accent-secondary-sawad);
-    transform: scale(1.3);
-}
-
-
-/* Accessibility: Reduced motion override */
-@media (prefers-reduced-motion: reduce) {
-    .reveal-item,
-    .reveal-parent .reveal-child,
-    .reveal-stagger-container .reveal-stagger,
-    .tool-card
-    {
-        transition: none !important;
-        transform: none !important;
-        opacity: 1 !important;
-        animation: none !important;
-        visibility: visible !important; /* Ensure content is visible */
-    }
-    /* For the 3D cube faces, ensure they are visible and flat if motion is reduced */
-    #services-pin-wrapper { /* Hide wrapper as pinning is disabled */
-        height: auto !important;
-        position: relative !important;
-    }
-    .services-section { /* Ensure it's static and not fixed/centered */
-        position: relative !important;
-        top: auto !important;
-        left: auto !important;
-        transform: none !important;
-        height: auto !important;
-        min-height: auto !important; /* Allow natural height */
-        padding: 80px 40px !important; /* Revert to normal section padding */
-        pointer-events: auto !important; /* Ensure interaction */
-        flex-direction: column !important; /* Stack columns */
-        justify-content: flex-start !important;
-        align-items: center !important;
-        gap: 20px !important; /* Default gap when stacked */
-    }
-    .services-left-column, .services-right-column {
-        flex-basis: auto !important; /* No fixed flex basis */
-        max-width: 100% !important;
-        height: auto !important;
-        padding-right: 0 !important;
-        margin-bottom: 20px !important; /* Space when stacked */
-        justify-content: flex-start !important;
-        align-items: center !important;
-        text-align: center !important;
-    }
-    .services-heading, .services-description {
-        text-align: center !important;
-    }
-
-    .cube-container {
-        perspective: none !important; /* Flatten the container perspective */
-        transform: none !important; /* Remove any static tilt if it were present */
-        height: auto !important; /* Allow content to dictate height */
-        margin: 0 auto !important; /* Center cube if not sticky */
-        position: relative !important; /* Not sticky */
-        top: auto !important;
-        overflow: visible !important; /* Allow content to overflow if needed in static mode */
-        max-width: 100% !important; /* Allow to fill width */
-    }
-    .cube {
-        transform-style: flat !important; /* Flatten the 3D transforms on the cube */
-        transform: none !important; /* Remove initial rotation */
-        transition: none !important; /* No rotation transitions */
-        display: flex; /* Display faces stacked vertically */
-        flex-direction: column;
-        gap: 20px;
-        height: auto; /* Allow height to adjust to content */
-    }
-    .face {
-        transition: none !important;
-        opacity: 1 !important; /* All faces visible */
-        visibility: visible !important;
-        position: relative !important; /* Change from absolute for flex layout */
-        transform: none !important; /* Remove all 3D transforms from faces */
-        height: auto !important; /* Adjust height based on content in flat mode */
-        justify-content: flex-start !important; /* Adjust alignment for stacked layout */
-        align-items: flex-start !important; /* Align content to start */
-        text-align: left !important; /* Align text to left */
-    }
-    .face .service-content { /* Adjust service content within face for reduced motion */
-        align-items: flex-start !important;
-        text-align: left !important;
-    }
-    .face .service-description {
-        text-align: left !important;
-    }
-    .face .face-number {
-        position: relative !important; /* Make face-number flow with content */
-        bottom: auto !important;
-        right: auto !important;
-        font-size: 0.8em !important; /* Smaller, integrated font size */
-        color: var(--text-medium) !important; /* More visible color */
-        margin-top: 10px; /* Space from description */
-        align-self: flex-end !important; /* Align to the end of the flex item */
-    }
 }
