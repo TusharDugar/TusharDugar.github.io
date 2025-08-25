@@ -749,7 +749,7 @@ html::before {
     }
     .face {
         padding: 1rem; /* Adjusted padding */
-        justify-content: center; /* Center text in stacked layout */
+        justify-content: center;
         align-items: center;
         text-align: center;
     }
