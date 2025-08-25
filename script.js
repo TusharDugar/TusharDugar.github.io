@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prefersReducedMotion) return; // Disable pinning/locking for reduced motion
 
         entries.forEach(entry => {
-            console.log('Observer fired', { // Debug log
+            console.log('Observer fired (servicesPinWrapper):', { // Debug log
                 targetId: entry.target.id,
                 isIntersecting: entry.isIntersecting,
                 intersectionRatio: entry.intersectionRatio
@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, {
         root: null, // viewport
         rootMargin: '0px',
-        threshold: [0] // UPDATED: Observe when any part of the target enters or leaves (threshold 0)
+        threshold: [0, 1] // UPDATED: Observe when any part enters/leaves, and when fully visible
     });
 
     servicesPinObserver.observe(servicesPinWrapper);
