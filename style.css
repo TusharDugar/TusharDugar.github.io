@@ -560,7 +560,7 @@ html::before {
     backface-visibility: hidden;
     will-change: transform, opacity;
     box-sizing: border-box; /* Ensure padding is included in height */
-    text-align: left; /* Ensure text inside face respects alignment */
+    text-align: center; /* Changed to center for content within face */
 }
 
 /* Styling for content within the face */
@@ -568,6 +568,10 @@ html::before {
     width: 100%; /* Take full width of face padding */
     flex-grow: 1; /* Allow content to grow and push face-number to bottom if needed */
     max-width: 100%; /* Removed previous 80% to give more space */
+    display: flex; /* Make content a flex container too */
+    flex-direction: column;
+    justify-content: center; /* Center title/description vertically if they don't take full space */
+    align-items: center; /* Center title/description horizontally */
 }
 
 .service-title {
@@ -579,7 +583,7 @@ html::before {
 }
 
 .service-description {
-    text-align: justify;
+    text-align: center; /* UPDATED: Centered description text */
     line-height: 1.2; /* UPDATED: Tighter line spacing */
     word-spacing: 1px;
     font-size: 1em;
@@ -1428,8 +1432,15 @@ footer h2 {
         transform: none !important; /* Remove all 3D transforms from faces */
         height: auto; /* Adjust height based on content in flat mode */
         justify-content: flex-start; /* Adjust alignment for stacked layout */
-        align-items: flex-start;
-        text-align: left;
+        align-items: flex-start; /* Align content to start */
+        text-align: left; /* Align text to left */
+    }
+    .face .service-content { /* Adjust service content within face for reduced motion */
+        align-items: flex-start !important;
+        text-align: left !important;
+    }
+    .face .service-description {
+        text-align: left !important;
     }
     .face .face-number {
         position: relative !important; /* Make face-number flow with content */
