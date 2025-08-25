@@ -521,8 +521,8 @@ html::before {
     position: fixed;
     top: 0;
     left: 50%; /* UPDATED: Center horizontally */
-    width: 100%; /* Use 100% width to allow max-width to constrain */
-    max-width: 1200px; /* UPDATED: Constrain max-width when fixed, keeps content centered */
+    width: 100%; /* Use 100% width, max-width will constrain */
+    max-width: 1200px; /* UPDATED: Constrain max-width when fixed */
     height: 100vh;
     transform: translateX(-50%); /* UPDATED: Center horizontally */
     z-index: 10; /* Ensure it stays above other scrolling content */
@@ -551,7 +551,7 @@ html::before {
     justify-content: center; /* UPDATED: Horizontally center cube within its column */
     align-items: center; /* UPDATED: Vertically center cube within its column */
     height: 100%; /* Take full height of parent flex container */
-    box-sizing: border-sizing;
+    box-sizing: border-box;
 }
 
 
@@ -1204,6 +1204,7 @@ footer h2 {
 }
 
 .tool-info {
+
     flex-grow: 1;
     text-align: left;
 }
