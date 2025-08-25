@@ -494,13 +494,43 @@ html::before {
 
 /* Services Section Styles */
 .services-section {
-  position: relative;
+  /* position: relative; -- REMOVED: Will be managed by JS for pinning */
   padding: 80px 40px;
   text-align: left;
   z-index: 2;
   background-color: transparent;
   margin-top: 0;
   margin-bottom: 0;
+  /* Add default fixed positioning properties, JS will toggle 'is-pinned' */
+  top: 50%; /* Default vertical center */
+  left: 50%; /* Default horizontal center */
+  transform: translate(-50%, -50%); /* Default center transform */
+  position: relative; /* Start as relative, JS will manage fixed */
+  width: 100%; /* Ensure it takes full width for responsive centering */
+  max-width: 1200px; /* Inherit from .section */
+  height: calc(100vh - 160px); /* Give it a viewport-relative height when pinned */
+  display: flex; /* For centering content within the section itself */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; /* Default to non-interactive, JS will enable when pinned */
+}
+
+/* Class added by JS when the section is pinned */
+.services-section.is-pinned {
+    position: fixed;
+    pointer-events: auto; /* Enable interaction when pinned */
+    z-index: 10; /* Ensure it stays above other scrolling content */
+}
+
+/* Class added by JS when the section is NOT pinned, but active */
+.services-section.is-active-relative {
+    position: relative; /* Maintain relative positioning if not pinned but active */
+    height: auto; /* Allow content to dictate height */
+    transform: none; /* Remove centering transform */
+    top: auto;
+    left: auto;
+    pointer-events: auto; /* Enable interaction */
 }
 
 /* Services Main Title */
@@ -511,7 +541,7 @@ html::before {
     font-weight: 800;
     margin-bottom: 40px;
     text-transform: uppercase;
-    text-align: left;
+    text-align: center; /* UPDATED: Centered heading */
     margin-left: 0;
     position: relative;
     z-index: 4;
@@ -606,12 +636,16 @@ html::before {
 
 /* Responsive adjustments for 3D cube on different devices */
 @media (max-width: 1200px) {
+    .services-section {
+        height: calc(100vh - 120px); /* Adjusted pinned height */
+        padding: 60px 30px;
+    }
     .cube-container {
         max-width: 640px;
         height: 280px;
     }
     .face {
-        padding: 15px; /* UPDATED: Reduced padding */
+        padding: 15px; /* UPDATED */
     }
     .service-title {
         font-size: 1.8em;
@@ -627,12 +661,16 @@ html::before {
 }
 
 @media (max-width: 768px) {
+    .services-section {
+        height: calc(100vh - 100px); /* Adjusted pinned height */
+        padding: 40px 20px;
+    }
     .cube-container {
         max-width: 90%;
         height: 250px;
     }
     .face {
-        padding: 10px; /* UPDATED: Reduced padding */
+        padding: 10px; /* UPDATED */
     }
     .service-title {
         font-size: 1.5em;
@@ -648,10 +686,14 @@ html::before {
 }
 
 @media (max-width: 480px) {
+    .services-section {
+        height: calc(100vh - 80px); /* Adjusted pinned height */
+        padding: 30px 15px;
+    }
     .cube-container {
         height: 200px;
     }
-    .face {
+    .face { 
         padding: 8px; /* UPDATED: Reduced padding for smallest screen */
     }
     .service-title {
@@ -1011,7 +1053,7 @@ footer h2 {
         font-weight: 800; 
         margin-bottom: 50px; 
         text-transform: uppercase; 
-        text-align: left; 
+        text-align: center; /* UPDATED: Centered heading */
         position: relative; 
         z-index: 4; 
         padding: 0; 
@@ -1091,6 +1133,10 @@ footer h2 {
 }
 
 @media (max-width: 768px) {
+    .services-section {
+        height: calc(100vh - 100px); /* Adjusted pinned height */
+        padding: 40px 20px;
+    }
     .main-layout-container {
         flex-direction: column;
         padding: 0 20px;
@@ -1195,7 +1241,7 @@ footer h2 {
         font-weight: 800; 
         margin-bottom: 30px; 
         text-transform: uppercase; 
-        text-align: left; 
+        text-align: center; /* UPDATED: Centered heading */
         position: relative; 
         z-index: 4; 
         padding: 0; 
@@ -1276,6 +1322,10 @@ footer h2 {
 }
 
 @media (max-width: 480px) {
+    .services-section {
+        height: calc(100vh - 80px); /* Adjusted pinned height */
+        padding: 30px 15px;
+    }
     .main-layout-container {
         padding: 0 15px;
     }
@@ -1313,7 +1363,7 @@ footer h2 {
         font-weight: 800; 
         margin-bottom: 25px; 
         text-transform: uppercase; 
-        text-align: left; 
+        text-align: center; /* UPDATED: Centered heading */
         position: relative; 
         z-index: 4; 
         padding: 0; 
@@ -1325,7 +1375,7 @@ footer h2 {
         height: 200px;
     }
     .face { 
-        padding: 5px; /* UPDATED: Reduced padding for smallest screen */
+        padding: 8px; /* UPDATED: Reduced padding for smallest screen */
     }
     .service-title {
         font-size: 1.3em;
@@ -1411,9 +1461,22 @@ footer h2 {
         visibility: visible !important; /* Ensure content is visible */
     }
     /* For the 3D cube faces, ensure they are visible if motion is reduced */
+    .services-section { /* Ensure it's static and not fixed/centered */
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        height: auto !important;
+        padding: 80px 40px !important; /* Revert to normal section padding */
+        pointer-events: auto !important; /* Ensure interaction */
+    }
+    .services-spacer { /* Hide spacer in reduced motion */
+        display: none !important;
+    }
     .cube-container {
         perspective: none !important; /* Flatten the container perspective */
         transform: none !important; /* Remove any static tilt if it were present */
+        height: auto !important; /* Allow content to dictate height */
     }
     .cube {
         transform-style: flat !important; /* Flatten the 3D transforms on the cube */
@@ -1430,10 +1493,10 @@ footer h2 {
         visibility: visible !important;
         position: relative !important; /* Change from absolute for flex layout */
         transform: none !important; /* Remove all 3D transforms from faces */
-        height: auto; /* Adjust height based on content in flat mode */
-        justify-content: flex-start; /* Adjust alignment for stacked layout */
-        align-items: flex-start; /* Align content to start */
-        text-align: left; /* Align text to left */
+        height: auto !important; /* Adjust height based on content in flat mode */
+        justify-content: flex-start !important; /* Adjust alignment for stacked layout */
+        align-items: flex-start !important; /* Align content to start */
+        text-align: left !important; /* Align text to left */
     }
     .face .service-content { /* Adjust service content within face for reduced motion */
         align-items: flex-start !important;
