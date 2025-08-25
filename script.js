@@ -186,20 +186,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Manages opacity and visibility of faces during a 3D transition for rotateX
     function updateFaceOpacityAndVisibility(progress, prevActiveFaceIndex, newActiveFaceIndex) {
         if (prefersReducedMotion) {
-            // In reduced motion, ensure ALL faces are visible and flattened
-            faces.forEach(face => {
-                face.style.visibility = 'visible';
-                face.style.opacity = 1;
-                face.style.transition = 'none';
-                face.style.transform = 'none'; // Flatten all faces
-            });
-            // Also flatten the cube itself in reduced motion
-            cube.style.transform = 'none';
-            return;
+            // In reduced motion, CSS handles the flattened layout. JS ensures current one is visible.
+            // All faces become `position: relative; transform: none; opacity: 1; visibility: visible;`
+            // via CSS for reduced motion, so no complex JS opacity/visibility needed here.
+            return; 
         }
 
         faces.forEach((face, i) => {
-            face.style.transition = 'opacity 0.01s linear'; // Use very short transition for JS to control opacity smoothly
+            face.style.transition = 'opacity 0.01s linear'; // Very short transition for JS to control opacity smoothly
             face.style.visibility = 'hidden'; // Default hidden
             face.style.opacity = 0; // Default transparent
         });
@@ -363,13 +357,26 @@ document.addEventListener('DOMContentLoaded', () => {
         setupCubeFaces(); 
         // If reduced motion is preferred, immediately update visibility to show all faces flat
         if (prefersReducedMotion) {
-            updateFaceOpacityAndVisibility(1, 0, 0); // Force final state for all faces to be visible (flattened)
+            // In reduced motion, CSS is configured to show all faces as relative blocks.
+            // We just ensure this state is fully applied on load/resize.
+            faces.forEach(face => {
+                face.style.transition = 'none';
+                face.style.opacity = 1;
+                face.style.visibility = 'visible';
+            });
+            cube.style.transform = 'none'; // Ensure cube is also flattened
         }
         // Re-calculate dimensions on window resize (important for responsive cube)
         window.addEventListener('resize', () => {
             setupCubeFaces(); // Re-initialize positions and states based on new sizes
             if (prefersReducedMotion) {
-                updateFaceOpacityAndVisibility(1, 0, 0); // Re-apply flattened view on resize for reduced motion
+                // For reduced motion on resize, re-apply flattened view explicitly
+                faces.forEach(face => {
+                    face.style.transition = 'none';
+                    face.style.opacity = 1;
+                    face.style.visibility = 'visible';
+                });
+                cube.style.transform = 'none';
             }
         });
     }, 100); // Small delay to allow initial render
