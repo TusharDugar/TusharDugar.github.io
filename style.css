@@ -501,38 +501,40 @@ html::before {
 
 /* Services Section Styles (Two-Column Layout & Manual Pinning) */
 .services-section {
-    position: sticky; /* As specified in prompt */
-    top: 0; /* As specified in prompt */
-    height: 100vh; /* As specified in prompt */
-    display: flex; /* As specified in prompt */
-    align-items: center; /* As specified in prompt */
-    justify-content: space-between; /* As specified in prompt */
-    max-width: 1200px; /* Constrain max-width for content */
-    margin: 0 auto; /* Center horizontally */
-    z-index: 2; /* Ensure it stays above background */
-    background-color: transparent; /* Keep background transparent */
-    padding: 100px 20px; /* Example padding */
+    /* REMOVED: position: sticky; top: 0; height: 100vh; */
+    /* Instead, it should be a regular block element that takes up 100vh when it appears */
+    width: 100%; /* Ensure it spans full width of parent */
+    height: 100vh; /* It occupies this height naturally within the wrapper */
+    display: flex; 
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px; 
+    margin: 0 auto;
+    z-index: 2; 
+    background-color: transparent; 
+    padding: 100px 20px; 
     box-sizing: border-box;
-    gap: 80px; /* Gap between columns */
-    overflow: hidden; /* Prevent content overflow within section */
+    gap: 80px; 
+    overflow: hidden; 
+    position: relative; /* Add relative position so z-index works on its children */
 }
 
 /* Class added by JS when the section is manually pinned */
 .services-section.is-pinned {
-    position: fixed; /* Re-activated fixed positioning */
+    position: fixed; 
     top: 0;
     left: 50%;
     width: 100%; /* Ensure it takes full viewport width before max-width applies */
     max-width: 1200px; /* Constrain max-width when fixed, keeps content centered */
-    transform: translateX(-50%); /* Center horizontally */
-    z-index: 10; /* Ensure it stays above other scrolling content */
+    transform: translateX(-50%); 
+    z-index: 10; 
     padding: 0 60px; /* Match main-layout-container padding when fixed */
-    display: flex; /* UPDATED: Restore flex context in fixed state */
-    gap: 80px; /* UPDATED: Restore gap in fixed state */
-    align-items: center; /* UPDATED: Restore alignment in fixed state */
-    justify-content: space-between; /* UPDATED: Restore justification in fixed state */
-    background-color: transparent; /* UPDATED: Restore background in fixed state */
-    overflow: hidden; /* UPDATED: Restore overflow in fixed state */
+    display: flex; 
+    gap: 80px; 
+    align-items: center; 
+    justify-content: space-between; 
+    background-color: transparent; 
+    overflow: hidden; 
 }
 
 
@@ -617,8 +619,6 @@ html::before {
     height: 100%;
     position: relative;
     transform-style: preserve-3d; /* As specified in prompt */
-    /* Remove transition here, JS will set it for animations, or keep a base one for direct transforms */
-    /* transition: transform 1200ms cubic-bezier(0.645, 0.045, 0.355, 1); */ 
     transform: rotateX(0deg); /* Initial state for dynamic rotateX flip */
     will-change: transform;
     overflow: hidden; /* Added overflow: hidden as safeguard */
