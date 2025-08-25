@@ -121,7 +121,7 @@ body::after {
 @keyframes glow2 {
     0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
     50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; } /* Adjusted max opacity */
-    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; }
+    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; }
 }
 
 
@@ -552,25 +552,28 @@ html::before {
     border: none; /* No border on faces for clean look */
     background-color: var(--bg-tool-card);
     color: var(--text-light);
-    padding: 30px;
+    padding: 20px; /* UPDATED: Reduced base padding for more content room */
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column; /* Changed to column to stack title/description */
+    justify-content: center; /* Center content vertically within face */
+    align-items: flex-start; /* Align content to the start (left) */
     backface-visibility: hidden;
     will-change: transform, opacity;
-    /* REMOVED: Initial opacity/visibility and transform - now fully controlled by JS for rotateX positioning and dynamic fades */
+    box-sizing: border-box; /* Ensure padding is included in height */
+    text-align: left; /* Ensure text inside face respects alignment */
 }
 
 /* Styling for content within the face */
 .service-content {
-    width: auto;
-    max-width: 80%;
+    width: 100%; /* Take full width of face padding */
+    flex-grow: 1; /* Allow content to grow and push face-number to bottom if needed */
+    max-width: 100%; /* Removed previous 80% to give more space */
 }
 
 .service-title {
     font-size: 2em;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Adjusted margin */
     line-height: 1.2;
     color: var(--text-light);
 }
@@ -581,11 +584,13 @@ html::before {
     word-spacing: 1px;
     font-size: 1em;
     color: var(--text-medium);
-    max-width: 90%;
+    max-width: 100%; /* Ensure it takes full available width */
 }
 
 .face-number {
-    position: relative;
+    position: absolute; /* UPDATED: Changed to absolute for precise positioning */
+    bottom: 10px;      /* UPDATED: Positioned from bottom */
+    right: 10px;       /* UPDATED: Positioned from right */
     flex-shrink: 0;
     font-size: 11em;
     font-weight: 500;
@@ -593,7 +598,7 @@ html::before {
     pointer-events: none;
     z-index: 0;
     line-height: 1;
-    margin-left: 20px;
+    /* margin-left: 20px; -- REMOVED as absolute position makes it redundant */
 }
 
 /* Responsive adjustments for 3D cube on different devices */
@@ -603,7 +608,7 @@ html::before {
         height: 280px;
     }
     .face {
-        padding: 25px;
+        padding: 20px; /* UPDATED: Reduced padding */
     }
     .service-title {
         font-size: 1.8em;
@@ -613,6 +618,8 @@ html::before {
     }
     .face-number {
         font-size: 9em;
+        bottom: 5px; /* UPDATED: Adjusted position */
+        right: 5px;  /* UPDATED: Adjusted position */
     }
 }
 
@@ -622,7 +629,7 @@ html::before {
         height: 250px;
     }
     .face {
-        padding: 20px;
+        padding: 15px; /* UPDATED: Reduced padding */
     }
     .service-title {
         font-size: 1.5em;
@@ -632,6 +639,8 @@ html::before {
     }
     .face-number {
         font-size: 7em;
+        bottom: 5px; /* UPDATED: Adjusted position */
+        right: 5px;  /* UPDATED: Adjusted position */
     }
 }
 
@@ -640,7 +649,7 @@ html::before {
         height: 200px;
     }
     .face {
-        padding: 15px;
+        padding: 10px; /* UPDATED: Reduced padding for smallest screen */
     }
     .service-title {
         font-size: 1.3em;
@@ -650,6 +659,8 @@ html::before {
     }
     .face-number {
         font-size: 5em;
+        bottom: 0px; /* UPDATED: Adjusted position more aggressively */
+        right: 0px;  /* UPDATED: Adjusted position more aggressively */
     }
 }
 
@@ -1010,7 +1021,7 @@ footer h2 {
         height: 340px; 
     }
     .face {
-        padding: 30px;
+        padding: 20px; /* UPDATED */
     }
     .service-title {
         font-size: 1.8em;
@@ -1020,7 +1031,8 @@ footer h2 {
     }
     .face-number {
         font-size: 10em;
-        right: 15px;
+        bottom: 5px; /* UPDATED */
+        right: 5px;  /* UPDATED */
     }
 
     /* Adjustments for tools section */
@@ -1193,7 +1205,7 @@ footer h2 {
         height: 289px; 
     }
     .face {
-        padding: 25px;
+        padding: 15px; /* UPDATED */
     }
     .service-title {
         font-size: 1.5em;
@@ -1203,7 +1215,8 @@ footer h2 {
     }
     .face-number {
         font-size: 8em;
-        right: 10px;
+        bottom: 5px; /* UPDATED */
+        right: 5px;  /* UPDATED */
     }
 
     /* Adjustments for tools section */
@@ -1309,7 +1322,7 @@ footer h2 {
         height: 200px;
     }
     .face { 
-        padding: 15px;
+        padding: 10px; /* UPDATED */
     }
     .service-title {
         font-size: 1.3em;
@@ -1319,8 +1332,8 @@ footer h2 {
     }
     .face-number {
         font-size: 5em;
-        bottom: -15px;
-        right: -5px;
+        bottom: 0px; /* UPDATED */
+        right: 0px;  /* UPDATED */
     }
 
     .tools-section {
@@ -1403,8 +1416,8 @@ footer h2 {
         transform-style: flat !important; /* Flatten the 3D transforms on the cube */
         transform: none !important; /* Remove initial rotation */
         transition: none !important; /* No rotation transitions */
-        display: grid; /* Layout faces in a grid instead of stacked */
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Example grid */
+        display: flex; /* Display faces stacked vertically */
+        flex-direction: column;
         gap: 20px;
         height: auto; /* Allow height to adjust to content */
     }
@@ -1412,8 +1425,20 @@ footer h2 {
         transition: none !important;
         opacity: 1 !important; /* All faces visible */
         visibility: visible !important;
-        position: relative !important; /* Change from absolute for grid layout */
+        position: relative !important; /* Change from absolute for flex layout */
         transform: none !important; /* Remove all 3D transforms from faces */
         height: auto; /* Adjust height based on content in flat mode */
+        justify-content: flex-start; /* Adjust alignment for stacked layout */
+        align-items: flex-start;
+        text-align: left;
+    }
+    .face .face-number {
+        position: relative !important; /* Make face-number flow with content */
+        bottom: auto !important;
+        right: auto !important;
+        font-size: 0.8em !important; /* Smaller, integrated font size */
+        color: var(--text-medium) !important; /* More visible color */
+        margin-top: 10px; /* Space from description */
+        align-self: flex-end; /* Align to the end of the flex item */
     }
 }
