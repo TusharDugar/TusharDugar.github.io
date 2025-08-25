@@ -113,8 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.dispatchEvent(new Event('scroll'));
 
     // --- Services Section 3D Cube Animation (Discrete Step) ---
-    const servicesSection = document.getElementById('services'); // Not directly used in the provided cube JS, but kept for context.
-    const cubeContainer = document.querySelector('.cube-container'); // This is the new container for the 3D effect.
+    // The servicesSection variable is not directly used in this specific cube logic, but kept for context.
+    // const servicesSection = document.getElementById('services'); 
+    const cubeContainer = document.querySelector('.cube-container'); // This is the container for the 3D effect.
     const cube = document.getElementById('services-cube'); // The actual rotating element.
     if (!cube) { // Exit if element doesn't exist
         console.error("services-cube element not found. 3D cube animation cannot initialize.");
@@ -124,22 +125,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const faces = document.querySelectorAll('.face'); // The individual service cards.
     const SERVICES_COUNT = faces.length; // Should be 8.
 
-    let currentRotation = 0; // Tracks the current rotation of the cube element.
-    let isScrolling = false; // Flag to lock interaction during a cube flip.
-    let lastScrollTop = 0; // For scroll direction detection.
-    const rotationIncrement = 45; // 45° per step for an 8-sided prism.
+    let currentRotationAngle = 0; // Tracks the current rotation of the cube element.
+    let activeFaceIndex = 0; // Which face is currently active/front-facing (0 to 7).
+    let isAnimatingCube = false; // Flag to lock interaction during a cube flip.
 
-    // Function to calculate face offset (from previous relevant code, adapted for cube-container)
-    // This is the original logic that calculates the translateZ for the faces
+    // Calculates the `translateZ` distance for faces to form a seamless octagon
     function calculateFaceOffset() {
         if (!cubeContainer || SERVICES_COUNT === 0) return 0;
-        const faceWidth = cubeContainer.offsetWidth; // Use container width for calculation
+        
+        const faceWidth = cubeContainer.offsetWidth; 
         // R = (W/2) / tan(PI/N) formula for a regular N-sided polygon.
         const calculatedOffset = (faceWidth / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+        
+        // Use 450px as default/fallback if calculated value is invalid or too small
         return isNaN(calculatedOffset) || calculatedOffset === 0 ? 450 : calculatedOffset; 
     }
 
-    // Sets up the initial 3D positioning of each face (adapted from previous relevant code)
+    // Sets up the initial 3D positioning of each face
     function setupCubeFaces() {
         if (!cube || SERVICES_COUNT === 0) return;
         const faceOffset = calculateFaceOffset();
@@ -148,138 +150,157 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.opacity = 0;
             face.style.visibility = 'hidden';
 
-            const angleForFace = i * rotationIncrement; // 0, 45, 90...
+            const angleForFace = i * ROTATION_INCREMENT_DEG; // 0, 45, 90...
             // Apply transforms (rotateY and translateZ) dynamically
             face.style.transform = `rotateY(${angleForFace}deg) translateZ(${faceOffset}px)`;
         });
 
         // Ensure the cube itself is at the current logical rotation state
         cube.style.transition = 'none'; // No transition for initial setup of cube's transform
-        // FIXED: Apply isometric tilt (rotateX) consistently from JS
-        cube.style.transform = `rotateX(-25deg) rotateY(${currentRotation}deg)`; 
+        // CRITICAL FIX: Always include rotateX for isometric tilt in JS transform.
+        cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; 
         
-        updateActiveFace(currentRotation); // Set initial visibility
+        updateFaceVisibility(); // Set initial visibility for activeFaceIndex
     }
 
-    // Calculate which face should be active based on current Y rotation.
-    const calculateActiveFace = (rotation) => {
-        const normalizedRotation = ((rotation % 360) + 360) % 360;
-        // Adjust for isometric tilt's visual effect if necessary, but direct calculation is usually fine for discrete steps.
-        return Math.round(normalizedRotation / rotationIncrement) % SERVICES_COUNT;
-    };
-
-    // Update active face display (visibility and opacity).
-    const updateActiveFace = (rotation) => {
-        const activeIndex = calculateActiveFace(rotation);
+    // Updates the visibility (opacity/display) of faces based on cube's rotation
+    function updateFaceVisibility() {
         faces.forEach((face, i) => {
             face.classList.remove('is-active'); // Clear active class first
             face.style.transition = 'opacity 0.3s ease-out'; // Default transition for visibility changes
 
-            // Determine if this face is 'front-facing' within a tolerance.
-            // This is simplified for a discrete step model where only one face is truly 'active'.
-            if (i === activeIndex) {
-                 face.classList.add('is-active');
-                 face.style.opacity = 1;
-                 face.style.visibility = 'visible';
+            // Calculate the face's effective current angle relative to the viewport's front (0deg)
+            let effectiveAngle = (i * ROTATION_INCREMENT_DEG - currentRotationAngle) % 360;
+
+            // Normalize angle to be within -180 to 180 for consistent checks
+            if (effectiveAngle > 180) effectiveAngle -= 360;
+            if (effectiveAngle < -180) effectiveAngle += 360;
+
+            // Define tolerance for "front-facing"
+            const frontFacingTolerance = ROTATION_INCREMENT_DEG / 2; // e.g., +/- 22.5 degrees for 45deg increment
+
+            if (Math.abs(effectiveAngle) < frontFacingTolerance) {
+                // This face is currently visible (or nearly so)
+                face.classList.add('is-active');
+                face.style.opacity = 1;
+                face.style.visibility = 'visible';
             } else {
-                 face.style.opacity = 0;
-                 face.style.visibility = 'hidden';
+                // This face is rotated away
+                face.style.opacity = 0;
+                face.style.visibility = 'hidden';
             }
         });
-    };
+    }
 
-    // Scroll event handler for cube rotation (adapted from your provided snippet)
-    window.addEventListener('scroll', (event) => { // Added 'event' parameter
-        if (isScrolling) return;
-        
-        const st = window.scrollY;
-        const direction = st > lastScrollTop ? 1 : -1;
-        lastScrollTop = st;
+    // Animates the cube to the next/previous face
+    // Returns true if animation started, false if at boundary or already animating
+    function animateCube(direction) {
+        if (isAnimatingCube) return false;
 
-        // Check if cube container is in viewport
-        const rect = cubeContainer.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        const threshold = window.innerWidth < 768 ? 0.3 : 0.2; // More generous on mobile
-        
-        if (rect.top < viewportHeight * (1 - threshold) && rect.bottom > viewportHeight * threshold) {
-            // Only attempt animation if not at the "edge" of the services (non-looping)
-            let newProposedRotation = currentRotation + direction * rotationIncrement;
-            
-            // Limit rotation to 0 to 360 degrees for 8 faces (0 to 7 * 45 = 315)
-            // This creates a "stop" at the first and last face.
-            const maxVisibleRotation = (SERVICES_COUNT - 1) * rotationIncrement;
-            
-            if (newProposedRotation >= 0 && newProposedRotation <= maxVisibleRotation) {
-                isScrolling = true;
-                
-                currentRotation = newProposedRotation;
-                
-                cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms ease`; // Apply transition
-                // FIXED: Apply isometric tilt + new Y rotation
-                cube.style.transform = `rotateX(-25deg) rotateY(${currentRotation}deg)`; 
-                
-                // Update active face after animation completes
-                setTimeout(() => { 
-                    isScrolling = false; 
-                    updateActiveFace(currentRotation);
-                    cube.style.transition = 'none'; // Remove transition for discrete control post-animation
-                }, ANIMATION_DURATION_MS); 
-            }
-            // Prevent default scroll behavior only if cube actually rotates
-            if (newProposedRotation >= 0 && newProposedRotation <= maxVisibleRotation) {
-                 event.preventDefault();
-            }
+        let newActiveFaceIndex = activeFaceIndex + direction;
+
+        // Boundary check for non-looping
+        if (newActiveFaceIndex < 0) {
+            newActiveFaceIndex = 0; // Clamp at first card
+            return false; // Allows page to scroll up
         }
-    });
+        if (newActiveFaceIndex >= SERVICES_COUNT) {
+            newActiveFaceIndex = SERVICES_COUNT - 1; // Clamp at last card
+            return false; // Allows page to scroll down
+        }
 
-    // Handle touch events for scrolling the cube (adapted from your provided snippet)
+        isAnimatingCube = true;
+        activeFaceIndex = newActiveFaceIndex;
+
+        currentRotationAngle += direction * ROTATION_INCREMENT_DEG; // Accumulate rotation
+        cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms ease`; // Re-apply transition for smooth animation
+        // CRITICAL FIX: Always include rotateX for isometric tilt in JS transform.
+        cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; 
+
+        // Once animation completes, reset flag and update visibility
+        setTimeout(() => {
+            isAnimatingCube = false;
+            updateFaceVisibility(); // Refresh visibility after the transition is settled
+            cube.style.transition = 'none'; // Remove transition for discrete control
+        }, ANIMATION_DURATION_MS); // Match CSS transition duration
+
+        return true;
+    }
+
+    // --- Scroll & Touch Event Handlers ---
+    let lastWheelTime = 0; // For debounce on wheel events
+    // touchStartX and touchStartY are declared outside the event listener to retain state.
+    let touchStartX = 0;
     let touchStartY = 0;
-    let touchMoveY = 0;
+    let touchDeltaY = 0; // Cumulative vertical touch movement
 
+    // Handles global scroll events (desktop wheel)
+    // IMPORTANT: 'event' parameter explicitly passed here
+    window.addEventListener('wheel', (event) => { 
+        // Check if the cube container is in the active viewport area for interaction
+        const rect = cubeContainer.getBoundingClientRect();
+        const isCubeInView = rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2; // Roughly centered in viewport
+
+        if (!isCubeInView) return; // Not in view, let page scroll normally
+
+        // Prevent rapid-fire wheel events (debounce)
+        const now = Date.now();
+        if (now - lastWheelTime < SCROLL_DEBOUNCE_TIME_MS) {
+            event.preventDefault(); // Temporarily prevent if too fast
+            return;
+        }
+        lastWheelTime = now;
+
+        // Determine scroll direction
+        const direction = event.deltaY > 0 ? 1 : -1; // 1 for scroll down, -1 for scroll up
+
+        // Attempt to animate the cube
+        const didAnimate = animateCube(direction);
+
+        if (didAnimate) {
+            event.preventDefault(); // ONLY prevent default if the cube actually animated
+        } else {
+            // Cube did not animate (hit boundary), allow normal page scroll.
+            // No preventDefault here means the browser will scroll the page.
+        }
+    }, { passive: false }); // Needs to be passive: false to allow preventDefault
+
+    // Handles touch start (mobile)
     cubeContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX; // Capture X for direction
         touchStartY = e.touches[0].clientY;
-        touchMoveY = touchStartY; // Reset move Y
-    }, { passive: true });
+        touchDeltaY = 0; // Reset cumulative delta
+    }, { passive: true }); // passive:true for start, performance gain
 
+    // Handles touch move (mobile)
     cubeContainer.addEventListener('touchmove', (e) => {
         const deltaY = touchStartY - e.touches[0].clientY;
-        if (Math.abs(deltaY) > 10) { // Small threshold
-             e.preventDefault(); // Prevent page scroll only if significant movement
-             touchMoveY = e.touches[0].clientY;
+        const deltaX = touchStartX - e.touches[0].clientX; // Check horizontal swipe
+        
+        // Prevent page scroll only if a significant vertical movement and predominantly vertical
+        if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 10) { // 10px threshold for meaningful swipe
+            e.preventDefault(); 
+            touchDeltaY = deltaY; // Accumulate for `touchend` decision
+        } else {
+            // If horizontal swipe or minor movement, don't preventDefault, allow native scroll
         }
-    }, { passive: false });
+    }, { passive: false }); // passive:false, needed for preventDefault
 
+    // Handles touch end (mobile)
     cubeContainer.addEventListener('touchend', () => {
-        if (isAnimatingCube) return; // Use the main animation flag.
+        if (isAnimatingCube) return; // Prevent new animation if one is in progress
 
-        const deltaY = touchStartY - touchMoveY;
         const rect = cubeContainer.getBoundingClientRect();
         const isCubeInView = rect.top < window.innerHeight && rect.bottom > 0;
 
-        if (isCubeInView && Math.abs(deltaY) > SCROLL_THRESHOLD_PX) {
-            const direction = deltaY > 0 ? 1 : -1; // Swipe up means scroll down (direction 1)
-            
-            let newProposedRotation = currentRotation + direction * rotationIncrement;
-            const maxVisibleRotation = (SERVICES_COUNT - 1) * rotationIncrement;
-
-            if (newProposedRotation >= 0 && newProposedRotation <= maxVisibleRotation) {
-                isAnimatingCube = true; // Use the main animation flag.
-                currentRotation = newProposedRotation;
-
-                cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms ease`;
-                // FIXED: Apply isometric tilt + new Y rotation
-                cube.style.transform = `rotateX(-25deg) rotateY(${currentRotation}deg)`;
-
-                setTimeout(() => {
-                    isAnimatingCube = false; // Use the main animation flag.
-                    updateActiveFace(currentRotation);
-                    cube.style.transition = 'none';
-                }, ANIMATION_DURATION_MS);
-            }
+        if (isCubeInView && Math.abs(touchDeltaY) > SCROLL_THRESHOLD_PX) {
+            const direction = touchDeltaY > 0 ? 1 : -1; // Swipe up means scroll down (direction 1)
+            animateCube(direction);
         }
+        touchStartX = 0; // Reset
         touchStartY = 0; // Reset
-        touchMoveY = 0; // Reset
-    }, { passive: true });
+        touchDeltaY = 0; // Reset
+    }, { passive: true }); // passive:true, interaction finished.
 
 
     // Initial setup when DOM is ready
