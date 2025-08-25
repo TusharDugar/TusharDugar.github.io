@@ -507,14 +507,14 @@ html::before {
     height: 100vh; /* It occupies this height naturally within the wrapper */
     display: flex; 
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; /* Changed from space-between to center */
     max-width: 1200px; 
     margin: 0 auto;
     z-index: 2; 
     background-color: transparent; 
     padding: 100px 20px; 
     box-sizing: border-box;
-    gap: 80px; 
+    gap: 0; /* Changed from 80px, no gap needed with single child */
     overflow: hidden; 
     position: relative; /* Add relative position so z-index works on its children */
 }
@@ -530,69 +530,71 @@ html::before {
     z-index: 10; 
     padding: 0 60px; /* Match main-layout-container padding when fixed */
     display: flex; 
-    gap: 80px; 
+    gap: 0; /* Changed from 80px */
     align-items: center; 
-    justify-content: space-between; 
+    justify-content: center; /* Changed from space-between */
     background-color: transparent; 
     overflow: hidden; 
 }
 
 
-/* Left Column of Services Section */
+/* Left Column of Services Section (These styles are now largely moot as the element is removed from HTML) */
 .services-left-column {
-    position: relative; /* Added position: relative for z-index */
-    z-index: 2; /* Added z-index to bring it above the cube */
-    flex-basis: 45%; /* Adjust width for left column */
-    max-width: 500px;
+    /* flex-basis: 45%; */ /* Original value */
+    /* max-width: 500px; */ /* Original value */
+    /* If the element is added back, adjust these as needed */
+
+    position: relative; 
+    z-index: 2; 
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Vertically center content within its column, as specified */
-    align-items: flex-start; /* Align text to the start */
-    text-align: left; /* Align text to the left */
-    height: 100%; /* Take full height to allow internal centering */
-    padding-right: 20px; /* Space between columns */
+    justify-content: center; 
+    align-items: flex-start; 
+    text-align: left; 
+    height: 100%; 
+    padding-right: 20px; 
     box-sizing: border-box;
-    flex-shrink: 1; /* Allow column to shrink if needed */
+    flex-shrink: 1; 
 }
 
 /* Right Column of Services Section */
 .services-right-column {
     overflow: hidden; /* Added overflow: hidden to contain the cube */
-    position: relative; /* UPDATED: Added position: relative for z-index to apply to its children */
-    z-index: 1; /* UPDATED: Added z-index for layering with left column */
-    flex-basis: 50%; /* Adjust width for right column */
-    max-width: 500px;
-    display: flex; /* As specified in prompt */
+    position: relative; 
+    z-index: 1; 
+    flex-basis: 100%; /* Changed from 50% to take full width */
+    max-width: 100%; /* Changed from 500px to take full width */
+    display: flex; 
     justify-content: center; /* Horizontally center cube within its column, as specified */
     align-items: center; /* Vertically center cube within its column, as specified */
     height: 100%; /* Take full height of parent flex container */
     box-sizing: border-box; 
-    flex-shrink: 1; /* Allow column to shrink if needed */
+    flex-shrink: 1; 
     min-width: 0; /* Allow flexbox to shrink it correctly */
 }
 
 
-/* Services Main Title */
+/* Services Main Title (These styles are now moot as the element is removed from HTML) */
 .services-heading {
-    font-family: 'Poppins', sans-serif; /* Assumed font-family */
-    font-size: clamp(2.5rem, 8vw, 8rem); /* As specified in prompt */
+    font-family: 'Poppins', sans-serif; 
+    font-size: clamp(2.5rem, 8vw, 8rem); 
     line-height: 0.75em;
     font-weight: 800;
     margin-bottom: 20px;
     text-transform: uppercase;
     text-align: left;
     position: relative;
-    z-index: 4; /* Higher z-index for heading within its column */
+    z-index: 4; 
     padding: 0;
     width: 100%;
 }
-.services-heading .text-white { color: var(--text-light); display: block; } /* For two-tone effect */
-.services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* For two-tone effect */
+.services-heading .text-white { color: var(--text-light); display: block; } 
+.services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
-/* Styling for the description in the left column */
+/* Styling for the description in the left column (Moot) */
 .services-description {
-    font-size: clamp(0.875rem, 1.2vw, 1rem); /* As specified in prompt */
-    line-height: 1.4; /* As specified in prompt */
+    font-size: clamp(0.875rem, 1.2vw, 1rem); 
+    line-height: 1.4; 
     color: var(--text-medium);
     text-align: left;
     max-width: 100%;
@@ -686,11 +688,9 @@ html::before {
 
 /* --- Responsive adjustments for the services section --- */
 @media (min-width: 768px) { /* z-index rules apply from 768px and up */
-    .services-left-column {
-        z-index: 2; /* Ensure it stays above the cube-container */
-    }
-    .services-right-column { /* UPDATED: Added z-index here */
-        z-index: 1; /* Lower z-index than left column */
+    /* .services-left-column { z-index: 2; } */ /* Moot as element removed */
+    .services-right-column { 
+        z-index: 1; /* Lower z-index than left column if it existed, still valid */
     }
 }
 
@@ -698,11 +698,10 @@ html::before {
     .services-section.is-pinned {
         padding: 0 40px; /* Adjust fixed padding for medium screens */
     }
-    .services-left-column {
-        flex-basis: 40%;
-    }
+    /* .services-left-column { flex-basis: 40%; } */ /* Moot as element removed */
     .services-right-column {
-        flex-basis: 55%;
+        flex-basis: 100%; /* Ensure it takes full width here too */
+        max-width: 100%; /* Ensure it takes full width here too */
     }
     .cube-container {
         max-width: 80%; /* Consistent responsive max-width */
@@ -724,7 +723,7 @@ html::before {
         height: auto; /* Allow height to adjust */
         min-height: 100vh; /* Ensure it still takes up space when not pinned */
         padding: 60px 20px; /* Adjust padding */
-        gap: 40px; /* Smaller gap when stacked */
+        gap: 0; /* Changed from 40px */
     }
     /* .services-section.is-pinned should effectively mimic the .services-section mobile state */
     .services-section.is-pinned {
@@ -737,20 +736,11 @@ html::before {
         padding: 60px 20px;
         margin: 0 auto;
         z-index: 1; /* Not aggressively on top in stacked layout */
+        gap: 0; /* Changed from 80px */
+        justify-content: center; /* Changed from space-between */
     }
-    .services-left-column {
-        flex-basis: auto; /* Auto width */
-        max-width: 100%;
-        height: auto;
-        padding-right: 0;
-        margin-bottom: 0; /* Spacing handled by parent gap */
-        align-items: center; /* Center text block horizontally */
-        text-align: center;
-        z-index: auto; /* Reset z-index for stacked layout */
-    }
-    .services-heading, .services-description {
-        text-align: center;
-    }
+    /* .services-left-column { flex-basis: auto; max-width: 100%; ... } */ /* Moot as element removed */
+    /* .services-heading, .services-description { text-align: center; } */ /* Moot as element removed */
     .services-right-column {
         flex-basis: auto; /* Auto width */
         max-width: 100%;
@@ -853,20 +843,29 @@ html::before {
         align-items: center !important;
         gap: 20px !important; /* Default stacked gap */
     }
-    .services-left-column, .services-right-column {
+    /* .services-left-column, .services-right-column {
         flex-basis: auto !important;
         max-width: 100% !important;
         height: auto !important;
         padding-right: 0 !important;
-        margin-bottom: 20px !important; /* Space when stacked */
+        margin-bottom: 20px !important; 
         justify-content: flex-start !important;
         align-items: center !important;
         text-align: center !important;
-        z-index: auto !important; /* Reset z-index */
-    }
-    .services-heading, .services-description {
+        z-index: auto !important;
+    } */ /* Moot as element removed, keeping right-column for reference */
+    .services-right-column { /* Adjusting only right column here as left is removed */
+        flex-basis: auto !important; /* Ensures it collapses and stacks properly */
+        max-width: 100% !important;
+        height: auto !important;
+        padding-right: 0 !important;
+        margin-bottom: 20px !important; /* Add some space if there were other elements (now it's just padding) */
+        justify-content: flex-start !important;
+        align-items: center !important;
         text-align: center !important;
+        z-index: auto !important;
     }
+    /* .services-heading, .services-description { text-align: center !important; } */ /* Moot as element removed */
 
     .cube-container {
         perspective: none !important;
