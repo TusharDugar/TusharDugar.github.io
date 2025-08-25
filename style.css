@@ -540,9 +540,8 @@ html::before {
 
 /* Left Column of Services Section (These styles are now largely moot as the element is removed from HTML) */
 .services-left-column {
-    /* flex-basis: 45%; */ /* Original value */
-    /* max-width: 500px; */ /* Original value */
-    /* If the element is added back, adjust these as needed */
+    /* flex-basis: 45%; */ /* Original value - commented out as element is removed */
+    /* max-width: 500px; */ /* Original value - commented out as element is removed */
 
     position: relative; 
     z-index: 2; 
@@ -843,24 +842,14 @@ html::before {
         align-items: center !important;
         gap: 20px !important; /* Default stacked gap */
     }
-    /* .services-left-column, .services-right-column {
-        flex-basis: auto !important;
-        max-width: 100% !important;
-        height: auto !important;
-        padding-right: 0 !important;
-        margin-bottom: 20px !important; 
-        justify-content: flex-start !important;
-        align-items: center !important;
-        text-align: center !important;
-        z-index: auto !important;
-    } */ /* Moot as element removed, keeping right-column for reference */
+    /* .services-left-column { flex-basis: auto !important; max-width: 100% !important; ... } */ /* Moot as element removed, keeping right-column for reference */
     .services-right-column { /* Adjusting only right column here as left is removed */
         flex-basis: auto !important; /* Ensures it collapses and stacks properly */
         max-width: 100% !important;
         height: auto !important;
         padding-right: 0 !important;
         margin-bottom: 20px !important; /* Add some space if there were other elements (now it's just padding) */
-        justify-content: flex-start !important;
+        justify-content: center !important; /* Center cube in reduced motion */
         align-items: center !important;
         text-align: center !important;
         z-index: auto !important;
@@ -894,17 +883,18 @@ html::before {
         position: relative !important;
         transform: none !important;
         height: auto !important;
-        justify-content: flex-start !important;
-        align-items: flex-start !important;
-        text-align: left !important;
+        justify-content: center !important; /* Center content within face */
+        align-items: center !important;
+        text-align: center !important;
         padding: 1rem !important; /* Consistent padding */
     }
     .face .service-content {
-        align-items: flex-start !important;
-        text-align: left !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
     }
     .face .service-description {
-        text-align: left !important;
+        text-align: center !important;
     }
     .face .face-number {
         position: relative !important;
