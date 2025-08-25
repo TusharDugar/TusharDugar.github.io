@@ -492,45 +492,20 @@ html::before {
 }
 
 
-/* Services Section Styles */
+/* Services Section Styles (Managed by GSAP for pinning) */
 .services-section {
-  /* position: relative; -- REMOVED: Will be managed by JS for pinning */
-  padding: 80px 40px;
-  text-align: left;
-  z-index: 2;
-  background-color: transparent;
-  margin-top: 0;
-  margin-bottom: 0;
-  /* Add default fixed positioning properties, JS will toggle 'is-pinned' */
-  top: 50%; /* Default vertical center */
-  left: 50%; /* Default horizontal center */
-  transform: translate(-50%, -50%); /* Default center transform */
-  position: relative; /* Start as relative, JS will manage fixed */
   width: 100%; /* Ensure it takes full width for responsive centering */
   max-width: 1200px; /* Inherit from .section */
-  height: calc(100vh - 160px); /* Give it a viewport-relative height when pinned */
+  height: 100vh; /* Will be set by GSAP for pinning purposes */
   display: flex; /* For centering content within the section itself */
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  pointer-events: none; /* Default to non-interactive, JS will enable when pinned */
-}
-
-/* Class added by JS when the section is pinned */
-.services-section.is-pinned {
-    position: fixed;
-    pointer-events: auto; /* Enable interaction when pinned */
-    z-index: 10; /* Ensure it stays above other scrolling content */
-}
-
-/* Class added by JS when the section is NOT pinned, but active */
-.services-section.is-active-relative {
-    position: relative; /* Maintain relative positioning if not pinned but active */
-    height: auto; /* Allow content to dictate height */
-    transform: none; /* Remove centering transform */
-    top: auto;
-    left: auto;
-    pointer-events: auto; /* Enable interaction */
+  z-index: 2;
+  background-color: transparent;
+  padding: 80px 40px; /* Standard section padding, GSAP pins this container */
+  margin: 0 auto; /* Center it when not pinned */
+  box-sizing: border-box; /* Include padding in height/width calculations */
 }
 
 /* Services Main Title */
@@ -605,7 +580,7 @@ html::before {
 }
 
 .service-title {
-    font-size: 2em;
+    font-size: clamp(1rem, 2vw, 1.5rem); /* UPDATED: Applied clamp for responsiveness */
     font-weight: 700;
     margin-bottom: 10px; /* Adjusted margin */
     line-height: 1.2;
@@ -616,7 +591,7 @@ html::before {
     text-align: center; /* UPDATED: Centered description text */
     line-height: 1.2; /* UPDATED: Tighter line spacing */
     word-spacing: 1px;
-    font-size: 1em;
+    font-size: clamp(0.875rem, 1.8vw, 1.25rem); /* UPDATED: Applied clamp for responsiveness */
     color: var(--text-medium);
     max-width: 100%; /* Ensure it takes full available width */
 }
@@ -626,9 +601,9 @@ html::before {
     bottom: 10px;      /* UPDATED: Positioned from bottom */
     right: 10px;       /* UPDATED: Positioned from right */
     flex-shrink: 0;
-    font-size: 8em; /* UPDATED: Reduced base font size */
+    font-size: clamp(4rem, 15vw, 8em); /* UPDATED: Applied clamp, adjusted base to 8em */
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.05); /* As per original hue, not #262626 */
     pointer-events: none;
     z-index: 0;
     line-height: 1;
@@ -637,32 +612,20 @@ html::before {
 /* Responsive adjustments for 3D cube on different devices */
 @media (max-width: 1200px) {
     .services-section {
-        height: calc(100vh - 120px); /* Adjusted pinned height */
         padding: 60px 30px;
     }
     .cube-container {
-        max-width: 640px;
-        height: 280px;
+        max-width: 700px;
+        height: 340px; /* Maintain height, as clamping will handle text size */
     }
     .face {
         padding: 15px; /* UPDATED */
     }
-    .service-title {
-        font-size: 1.8em;
-    }
-    .service-description {
-        font-size: 0.9em;
-    }
-    .face-number {
-        font-size: 7em; /* UPDATED */
-        bottom: 5px; /* UPDATED */
-        right: 5px;  /* UPDATED */
-    }
+    /* service-title, service-description, face-number now use clamp, so direct font-size is not needed here unless override specific value in clamp */
 }
 
 @media (max-width: 768px) {
     .services-section {
-        height: calc(100vh - 100px); /* Adjusted pinned height */
         padding: 40px 20px;
     }
     .cube-container {
@@ -672,22 +635,11 @@ html::before {
     .face {
         padding: 10px; /* UPDATED */
     }
-    .service-title {
-        font-size: 1.5em;
-    }
-    .service-description {
-        font-size: 0.85em;
-    }
-    .face-number {
-        font-size: 6em; /* UPDATED */
-        bottom: 5px; /* UPDATED */
-        right: 5px;  /* UPDATED */
-    }
+    /* service-title, service-description, face-number now use clamp */
 }
 
 @media (max-width: 480px) {
     .services-section {
-        height: calc(100vh - 80px); /* Adjusted pinned height */
         padding: 30px 15px;
     }
     .cube-container {
@@ -696,17 +648,7 @@ html::before {
     .face { 
         padding: 8px; /* UPDATED: Reduced padding for smallest screen */
     }
-    .service-title {
-        font-size: 1.3em;
-    }
-    .service-description {
-        font-size: 0.8em;
-    }
-    .face-number {
-        font-size: 4em; /* UPDATED */
-        bottom: 0px; /* UPDATED */
-        right: 0px;  /* UPDATED */
-    }
+    /* service-title, service-description, face-number now use clamp */
 }
 
 
@@ -1068,14 +1010,8 @@ footer h2 {
     .face {
         padding: 15px; /* UPDATED */
     }
-    .service-title {
-        font-size: 1.8em;
-    }
-    .service-description {
-        font-size: 0.9em;
-    }
+    /* clamp() handles font sizes in children */
     .face-number {
-        font-size: 7em; /* UPDATED */
         bottom: 5px; /* UPDATED */
         right: 5px;  /* UPDATED */
     }
@@ -1134,7 +1070,6 @@ footer h2 {
 
 @media (max-width: 768px) {
     .services-section {
-        height: calc(100vh - 100px); /* Adjusted pinned height */
         padding: 40px 20px;
     }
     .main-layout-container {
@@ -1187,7 +1122,6 @@ footer h2 {
     .about-short-desc {
         font-size: 0.8em;
         margin-bottom: 15px;
-        padding: 0 2px;
     }
     .about-social-icons a {
         font-size: 1.3em;
@@ -1256,14 +1190,8 @@ footer h2 {
     .face {
         padding: 10px; /* UPDATED */
     }
-    .service-title {
-        font-size: 1.5em;
-    }
-    .service-description {
-        font-size: 0.85em;
-    }
+    /* clamp() handles font sizes in children */
     .face-number {
-        font-size: 6em; /* UPDATED */
         bottom: 5px; /* UPDATED */
         right: 5px;  /* UPDATED */
     }
@@ -1323,7 +1251,6 @@ footer h2 {
 
 @media (max-width: 480px) {
     .services-section {
-        height: calc(100vh - 80px); /* Adjusted pinned height */
         padding: 30px 15px;
     }
     .main-layout-container {
@@ -1377,21 +1304,13 @@ footer h2 {
     .face { 
         padding: 8px; /* UPDATED: Reduced padding for smallest screen */
     }
-    .service-title {
-        font-size: 1.3em;
-    }
-    .service-description {
-        font-size: 0.8em;
-    }
+    /* clamp() handles font sizes in children */
     .face-number {
-        font-size: 4em; /* UPDATED */
         bottom: 0px; /* UPDATED */
         right: 0px;  /* UPDATED */
     }
 
-    .tools-section {
-        padding: 40px 15px; 
-    }
+    /* Adjustments for tools section */
     .tools-heading { /* Matching services heading */
         font-family: 'Poppins', sans-serif;
         font-size: 2.8em; 
@@ -1469,14 +1388,16 @@ footer h2 {
         height: auto !important;
         padding: 80px 40px !important; /* Revert to normal section padding */
         pointer-events: auto !important; /* Ensure interaction */
-    }
-    .services-spacer { /* Hide spacer in reduced motion */
-        display: none !important;
+        display: block !important; /* Unset flex for simpler flow */
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
     }
     .cube-container {
         perspective: none !important; /* Flatten the container perspective */
         transform: none !important; /* Remove any static tilt if it were present */
         height: auto !important; /* Allow content to dictate height */
+        margin: 60px auto !important; /* Restore normal margin */
+        overflow: visible !important; /* Allow content to overflow if needed in static mode */
     }
     .cube {
         transform-style: flat !important; /* Flatten the 3D transforms on the cube */
@@ -1512,6 +1433,6 @@ footer h2 {
         font-size: 0.8em !important; /* Smaller, integrated font size */
         color: var(--text-medium) !important; /* More visible color */
         margin-top: 10px; /* Space from description */
-        align-self: flex-end; /* Align to the end of the flex item */
+        align-self: flex-end !important; /* Align to the end of the flex item */
     }
 }
