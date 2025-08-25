@@ -533,7 +533,7 @@ html::before {
     overflow: hidden;
     will-change: transform;
     /* Custom property for face offset calculation (set by JS) */
-    --face-offset: 450px; /* Default from user's snippet, will be overridden by JS for correctness */
+    --face-offset: 450px;
 }
 
 .cube {
