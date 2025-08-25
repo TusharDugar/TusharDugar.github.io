@@ -121,7 +121,7 @@ body::after {
 @keyframes glow2 {
     0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
     50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; } /* Adjusted max opacity */
-    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; }
+    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; }
 }
 
 
@@ -494,7 +494,7 @@ html::before {
 
 /* Services Section Wrapper (for pinning) */
 #services-pin-wrapper {
-    height: 800vh; /* This creates the scroll area for pinning the services section */
+    height: 1600vh; /* UPDATED: Increased height to allow pinning logic to work */
     position: relative;
     width: 100%;
 }
@@ -516,20 +516,16 @@ html::before {
     gap: 60px; /* UPDATED: Added gap between columns as per prompt */
 }
 
-/* The .is-pinned class is no longer strictly needed for pinning itself as it's sticky,
-   but it's left in place for consistency with JS state management if it affects other things.
-   Its fixed positioning is now overridden by the section's sticky property. */
+/* Class added by JS when the section is manually pinned */
 .services-section.is-pinned {
-    /* These properties are largely managed by the sticky parent now,
-       but retained for completeness or if JS changes state for for example the body overflow */
-    /* position: fixed; */
-    /* top: 0; */
-    /* left: 50%; */
-    /* width: 100%; */
-    /* max-width: 1200px; */
-    /* transform: translateX(-50%); */
-    /* z-index: 10; */
-    /* padding: 0 60px; */
+    position: fixed; /* UPDATED: Re-activated fixed positioning */
+    top: 0; /* UPDATED: Re-activated */
+    left: 50%; /* UPDATED: Re-activated */
+    width: 100%; /* UPDATED: Re-activated */
+    max-width: 1200px; /* UPDATED: Re-activated */
+    transform: translateX(-50%); /* UPDATED: Re-activated */
+    z-index: 10; /* UPDATED: Re-activated */
+    padding: 0 60px; /* UPDATED: Re-activated */
 }
 
 
@@ -661,7 +657,7 @@ html::before {
     position: absolute;
     bottom: 1rem; /* UPDATED: Positioned from bottom */
     right: 1rem;  /* UPDATED: Positioned from right */
-    font-size: clamp(3rem, 10vw, 6rem); /* UPDATED: Applied clamp, adjusted values */
+    font-size: clamp(4rem, 15vw, 10rem); /* UPDATED: Applied clamp, adjusted values */
     font-weight: 500;
     color: rgba(255, 255, 255, 0.08); /* UPDATED: Changed color as per prompt (subtle watermark) */
     pointer-events: none;
@@ -850,134 +846,4 @@ html::before {
     align-items: center;
     flex-shrink: 0;
     overflow: hidden;
-}
-
-.tool-logo {
-    max-width: 70%;
-    max-height: 70%;
-    object-fit: contain;
-    filter: brightness(0.01);
-}
-
-.tool-info {
-
-    flex-grow: 1;
-    text-align: left;
-}
-
-.tool-name {
-    font-size: 1.1em;
-    font-weight: 600;
-    color: var(--tool-name-color);
-    margin: 0 0 5px 0;
-    line-height: 1.2;
-}
-
-.tool-category {
-    font-size: 0.85em;
-    color: var(--tool-category-color);
-    margin: 0;
-    line-height: 1.2;
-}
-
-
-/* Footer (Contact Section) */
-footer {
-    background-color: var(--bg-main);
-    color: var(--text-light);
-    text-align: center;
-    padding: 60px 0;
-    position: relative;
-    z-index: 1;
-}
-
-footer a {
-    color: var(--accent-secondary-sawad);
-    text-decoration: none;
-    transition: text-decoration 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-footer h2 {
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 3.2em;
-    color: var(--primary-heading-color);
-    font-weight: 700;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-    letter-spacing: 1.5px;
-}
-
-.contact-tagline {
-    font-size: 1.1em;
-    margin-bottom: 40px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0.95;
-    line-height: 1.8;
-    color: var(--text-light);
-}
-
-.contact-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 40px;
-}
-
-.contact-button {
-    background-color: rgba(255, 255, 255, 0.005); /* Very very transparent */
-    border: 1px solid rgba(255, 255, 255, 0.01); /* Very very transparent border */
-    border-radius: 12px;
-    padding: 0;
-    font-size: 1.2em; /* Adjusted default font size */
-    font-weight: 600;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    width: 280px;
-    height: 120px; /* Adjusted default height */
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    text-align: center;
-}
-
-.contact-button:hover {
-    transform: translateY(-8px);
-    background-color: rgba(26, 26, 26, 0.9);
-    box-shadow: 0 10px 25px var(--shadow-color-dark), 0 0 15px var(--accent-secondary-sawad);
-}
-
-.contact-button .button-content-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-.contact-button i {
-    font-size: 2.8em;
-    color: var(--accent-primary-sawad);
-}
-
-.contact-button .button-value {
-    font-size: 0.9em; /* FIXED: Reduced font size for better fit */
-    font-weight: bold;
-    opacity: 1;
-    white-space: normal; /* FIXED: Allow text to wrap */
-    overflow: hidden; /* Keep hidden if it overflows after wrap */
-    text-overflow: ellipsis; /* Keep ellipsis for long single words if needed */
-    padding: 0 5px;
-    max-width: 90%;
-    color: var(--text-light);
-    margin-top: 5px;
 }
