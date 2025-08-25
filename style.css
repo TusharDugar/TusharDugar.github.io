@@ -513,13 +513,11 @@ html::before {
     background-color: transparent; /* Keep background transparent */
     padding: 100px 20px; /* UPDATED: Adjusted padding per prompt example */
     box-sizing: border-box;
-    gap: 60px; /* UPDATED: Added gap between columns as per prompt */
+    gap: 80px; /* UPDATED: Increased gap between columns as per prompt */
     overflow: hidden; /* UPDATED: Added overflow: hidden to contain elements */
 }
 
-/* The .is-pinned class is no longer strictly needed for pinning itself as it's sticky,
-   but it's left in place for consistency with JS state management if it affects other things.
-   Its fixed positioning is now overridden by the section's sticky property. */
+/* Class added by JS when the section is manually pinned */
 .services-section.is-pinned {
     position: fixed; /* UPDATED: Re-activated fixed positioning */
     top: 0; /* UPDATED: Re-activated */
@@ -534,6 +532,8 @@ html::before {
 
 /* Left Column of Services Section */
 .services-left-column {
+    position: relative; /* UPDATED: Added position: relative for z-index */
+    z-index: 2; /* UPDATED: Added z-index to bring it above the cube */
     flex-basis: 45%; /* Adjust width for left column */
     max-width: 500px;
     display: flex;
@@ -549,6 +549,7 @@ html::before {
 
 /* Right Column of Services Section */
 .services-right-column {
+    overflow: hidden; /* UPDATED: Added overflow: hidden to contain the cube */
     flex-basis: 50%; /* Adjust width for right column */
     max-width: 500px;
     display: flex; /* UPDATED: Make it a flex container to center the cube */
@@ -590,6 +591,7 @@ html::before {
 
 /* --- 3D Cube Animation Styles (RESTORED & MODIFIED for rotateX) --- */
 .cube-container {
+    z-index: 1; /* UPDATED: Added z-index to be below left column text */
     width: 100%;
     max-width: 500px; /* UPDATED: Adjusted max-width as per prompt example */
     height: 300px; /* UPDATED: Adjusted height as per prompt example */
@@ -674,6 +676,15 @@ html::before {
 }
 
 /* Responsive adjustments for 3D cube on different devices */
+@media (min-width: 768px) { /* UPDATED: z-index rules apply from 768px and up */
+    .services-left-column {
+        z-index: 2; /* Ensure it stays above the cube-container */
+    }
+    .cube-container {
+        z-index: 1; /* Lower z-index than left column */
+    }
+}
+
 @media (max-width: 1200px) {
     .services-section.is-pinned {
         padding: 0 40px; /* Adjust fixed padding for medium screens */
@@ -771,10 +782,6 @@ html::before {
     .services-section {
         gap: 30px; /* Smaller gap */
         padding: 40px 15px;
-    }
-    /* .services-section.is-pinned mobile state already covered by 768px */
-    .services-left-column {
-        margin-bottom: 0; /* No margin, gap handles spacing */
     }
     .cube-container {
         height: 300px; /* Smaller fixed height for mobile */
