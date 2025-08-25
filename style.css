@@ -121,7 +121,7 @@ body::after {
 @keyframes glow2 {
     0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
     50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; } /* Adjusted max opacity */
-    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; }
+    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; }
 }
 
 
@@ -517,7 +517,9 @@ html::before {
     overflow: hidden; /* UPDATED: Added overflow: hidden to contain elements */
 }
 
-/* Class added by JS when the section is manually pinned */
+/* The .is-pinned class is no longer strictly needed for pinning itself as it's sticky,
+   but it's left in place for consistency with JS state management if it affects other things.
+   Its fixed positioning is now overridden by the section's sticky property. */
 .services-section.is-pinned {
     position: fixed; /* UPDATED: Re-activated fixed positioning */
     top: 0; /* UPDATED: Re-activated */
@@ -603,8 +605,6 @@ html::before {
     overflow: hidden; /* Important for clipping rotating elements */
     will-change: transform, opacity;
     border: none;
-    height: 100%; /* UPDATED: Ensure 100% height for sticky context */
-    min-height: 300px; /* UPDATED: Added min-height as per prompt */
 }
 
 .cube {
@@ -615,6 +615,7 @@ html::before {
     transition: transform 1200ms cubic-bezier(0.645, 0.045, 0.355, 1); /* UPDATED: Easing from prompt */
     transform: rotateX(0deg); /* Initial state for dynamic rotateX flip. No static tilt here. */
     will-change: transform;
+    overflow: hidden; /* UPDATED: Added overflow: hidden as safeguard */
 }
 
 .face {
@@ -658,7 +659,7 @@ html::before {
     text-align: left; /* UPDATED: Left-aligned description text */
     line-height: 1.4; /* UPDATED: Tighter line spacing */
     word-spacing: 1px;
-    font-size: clamp(0.9rem, 2vw, 1.25rem); /* UPDATED: Applied clamp for responsiveness */
+    font-size: clamp(0.875rem, 1.2vw, 1rem); /* UPDATED: Applied clamp for responsiveness */
     color: var(--text-medium);
     max-width: 100%;
 }
