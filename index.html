@@ -13,7 +13,9 @@
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css?v=6"> 
 
-    <!-- GSAP and ScrollTrigger CDNs removed as they are not used -->
+    <!-- GSAP and ScrollTrigger CDNs RE-INTRODUCED -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 </head>
 <body>
     <!-- Background Layers -->
@@ -70,18 +72,15 @@
                 <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
             </section>
 
-            <!-- Sentinel element to trigger pinning/unpinning of the Services section -->
-            <div class="services-trigger-start"></div>
-
-            <!-- Services Section - RESTORED 3D CUBE ANIMATION -->
+            <!-- Services Section - RESTORED 3D CUBE ANIMATION with GSAP Pinning -->
             <section id="services" class="section services-section reveal-item">
                 <h2 class="services-heading reveal-item">
                     <span class="text-white">MY</span>
                     <span class="text-gray">SERVICES</span>
                 </h2>
 
-                <!-- The 3D Cube Container - now has reveal-item class -->
-                <div class="cube-container reveal-item">
+                <!-- The 3D Cube Container -->
+                <div class="cube-container"> <!-- Removed reveal-item here, as services-section is already reveal-item and GSAP manages its appearance after initial load -->
                     <div class="cube" id="services-cube">
                         <div class="face face-1" data-index="0">
                             <div class="service-content">
@@ -142,9 +141,6 @@
                     </div>
                 </div>
             </section>
-
-            <!-- Spacer element to reserve space for the pinned Services section -->
-            <div class="services-spacer"></div>
 
             <!-- Premium Tools Section -->
             <section id="tools" class="section tools-section reveal-item">
