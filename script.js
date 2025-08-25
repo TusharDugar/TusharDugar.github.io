@@ -133,8 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const cubeContainer = document.querySelector('.cube-container');
     const cube = document.getElementById('services-cube');
     
+    // Log elements to confirm they are found
+    console.log("DOMContentLoaded triggered");
+    console.log({ servicesSection, servicesPinWrapper, cubeContainer, cube });
+
     if (!servicesSection || !servicesPinWrapper || !cubeContainer || !cube) {
-        console.error("One or more required elements for Services 3D cube animation not found. Skipping initialization.");
+        console.error("Missing key elements. Aborting cube animation setup.");
         return; // Exit if elements are missing
     }
     
@@ -281,28 +285,34 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prefersReducedMotion) return; // Disable pinning/locking for reduced motion
 
         entries.forEach(entry => {
-            // Updated pinning logic: pin if any part of the pinWrapper is intersecting.
-            // This makes the pinning more immediate and covers the entire 1600vh scroll area.
-            if (entry.isIntersecting) { 
-                if (!isServicesSectionPinned) {
-                    servicesSection.classList.add('is-pinned');
-                    isServicesSectionPinned = true;
-                    document.body.style.overflow = 'hidden'; // Lock page scroll
-                    console.log('SERVICES SECTION PINNED!'); // Debug log
-                }
-            } else { // servicesPinWrapper has left the viewport (either above or below)
-                if (isServicesSectionPinned) {
-                    servicesSection.classList.remove('is-pinned');
-                    isServicesSectionPinned = false;
-                    document.body.style.overflow = 'auto'; // Unlock page scroll
-                    console.log('SERVICES SECTION UNPINNED!'); // Debug log
+            console.log('Observer fired', { // Debug log
+                targetId: entry.target.id,
+                isIntersecting: entry.isIntersecting,
+                intersectionRatio: entry.intersectionRatio
+            });
+            
+            if (entry.target.id === 'services-pin-wrapper') {
+                if (entry.isIntersecting) { // servicesPinWrapper is entering or within the viewport
+                    if (!isServicesSectionPinned) {
+                        servicesSection.classList.add('is-pinned');
+                        isServicesSectionPinned = true;
+                        document.body.style.overflow = 'hidden'; // Lock page scroll
+                        console.log('SERVICES SECTION PINNED!'); // Debug log
+                    }
+                } else { // servicesPinWrapper has left the viewport (either above or below)
+                    if (isServicesSectionPinned) {
+                        servicesSection.classList.remove('is-pinned');
+                        isServicesSectionPinned = false;
+                        document.body.style.overflow = 'auto'; // Unlock page scroll
+                        console.log('SERVICES SECTION UNPINNED!'); // Debug log
+                    }
                 }
             }
         });
     }, {
         root: null, // viewport
         rootMargin: '0px',
-        threshold: [0] // Observe when any part of the target enters or leaves (threshold 0)
+        threshold: [0] // UPDATED: Observe when any part of the target enters or leaves (threshold 0)
     });
 
     servicesPinObserver.observe(servicesPinWrapper);
@@ -386,6 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (prefersReducedMotion) {
             servicesSection.classList.remove('is-pinned');
+            isServicesSectionPinned = false; // Ensure flag is false
             document.body.style.overflow = 'auto';
             faces.forEach(face => {
                 face.style.transition = 'none';
