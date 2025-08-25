@@ -151,7 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const faceWidth = cubeContainer.offsetWidth; 
         const calculatedOffset = (faceWidth / 2) / Math.tan(Math.PI / SERVICES_COUNT);
         
-        return isNaN(calculatedOffset) || calculatedOffset === 0 ? 450 : calculatedOffset; 
+        // Use a reasonable fallback if calculated value is invalid or too small/large
+        return isNaN(calculatedOffset) || calculatedOffset === 0 ? parseFloat(getComputedStyle(cubeContainer).getPropertyValue('--face-offset')) : calculatedOffset; 
     }
 
     // Sets up the initial 3D positioning of each face
@@ -181,12 +182,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Enhanced updateFaceOpacityAndVisibility for two-face rule and fade timing during animation
     function updateFaceOpacityAndVisibility(progress, prevActiveFaceIndex, newActiveFaceIndex) {
         if (prefersReducedMotion) {
-            // For reduced motion, all faces are visible via CSS.
-            // Ensure the active face is instantly brought to front/visible by JS.
+            // For reduced motion, ensure only the active face is fully visible
             faces.forEach((face, i) => {
-                face.style.visibility = 'visible'; // Ensure visibility if JS removed it
-                face.style.opacity = (i === newActiveFaceIndex) ? 1 : 0; // Only the active face is fully opaque
+                face.style.visibility = (i === newActiveFaceIndex) ? 'visible' : 'hidden';
+                face.style.opacity = (i === newActiveFaceIndex) ? 1 : 0;
                 face.style.transition = 'none';
+                if (i === newActiveFaceIndex) {
+                    face.style.transform = `rotateY(0deg) translateZ(${calculateFaceOffset()}px)`; // Flatten and bring to front if necessary
+                } else {
+                    face.style.transform = `rotateY(0deg) translateZ(${calculateFaceOffset()}px) rotateY(90deg)`; // Rotate out of flat view
+                }
             });
             return;
         }
