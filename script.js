@@ -268,29 +268,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prefersReducedMotion) return; // Disable pinning/locking for reduced motion
 
         entries.forEach(entry => {
-            // console.log('Observer fired (servicesPinWrapper):', { // Debug log
-            //     targetId: entry.target.id,
-            //     isIntersecting: entry.isIntersecting,
-            //     intersectionRatio: entry.intersectionRatio
-            // });
+            console.log('Observer fired (servicesPinWrapper):', { // Debug log
+                targetId: entry.target.id,
+                isIntersecting: entry.isIntersecting,
+                intersectionRatio: entry.intersectionRatio,
+                isServicesSectionPinned: isServicesSectionPinned // Log current state
+            });
             
             if (entry.target.id === 'services-pin-wrapper') {
-                // If the wrapper is fully within the viewport and we're not at a boundary allowing scroll
-                // This condition for pinning is slightly simplified, it pins as soon as it enters.
-                // The unpinning will handle leaving the wrapper.
                 if (entry.isIntersecting && entry.intersectionRatio > 0) { // When servicesPinWrapper is at least partly visible
                     if (!isServicesSectionPinned) {
                         servicesSection.classList.add('is-pinned');
                         isServicesSectionPinned = true;
                         document.body.style.overflow = 'hidden'; // Lock page scroll
-                        // console.log('SERVICES SECTION PINNED!'); // Debug log
+                        console.log('SERVICES SECTION PINNED! Body overflow hidden.'); // Debug log
                     }
-                } else { // servicesPinWrapper has left the viewport
-                    if (isServicesSectionPinned) {
+                } else { // servicesPinWrapper has left the viewport (either above or below)
+                    if (isServicesSectionPinned) { // Only unpin if it was previously pinned
                         servicesSection.classList.remove('is-pinned');
                         isServicesSectionPinned = false;
                         document.body.style.overflow = 'auto'; // Unlock page scroll
-                        // console.log('SERVICES SECTION UNPINNED!'); // Debug log
+                        console.log('SERVICES SECTION UNPINNED! Body overflow auto.'); // Debug log
                     }
                 }
             }
@@ -315,26 +313,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // If the services section is pinned, prevent default page scroll and handle cube rotation
         if (isServicesSectionPinned) {
+            event.preventDefault(); // Always prevent default if currently pinned
+            
             const now = Date.now();
             if (now - lastWheelTime < SCROLL_DEBOUNCE_TIME_MS) {
-                event.preventDefault(); // Still prevent default for rapid-fire if pinned
-                return; 
+                return; // Debounce rapid wheel events
             }
             lastWheelTime = now;
 
             const direction = event.deltaY > 0 ? 1 : -1; // 1 for scroll down, -1 for scroll up
             const didAnimate = animateCube(direction);
 
-            if (didAnimate) {
-                event.preventDefault(); // ONLY prevent default if cube is animating
-            } else {
+            if (!didAnimate) {
                 // If animateCube returns false (hit boundary),
                 // it means the cube cannot rotate further.
-                // Allow native page scroll to resume.
-                // The IntersectionObserver will handle unpinning once the user scrolls past servicesPinWrapper.
-                // No need for explicit unpinning here, as the observer handles it more robustly.
-                // Ensure page scroll is re-enabled if it was locked.
+                // We must explicitly unpin the section and re-enable body scroll.
+                servicesSection.classList.remove('is-pinned');
+                isServicesSectionPinned = false;
                 document.body.style.overflow = 'auto'; 
+                console.log('Unpinning at boundary, re-enabling page scroll.'); // Debug log
             }
         }
     };
@@ -343,7 +340,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prefersReducedMotion || !isServicesSectionPinned) return;
         lastTouchY = e.touches[0].clientY;
         touchMoveAccumulator = 0; // Reset accumulator
-        // Don't prevent default here to allow native scroll if not pinned
+        // If pinned, prevent default on start to reduce initial native scroll attempt
+        e.preventDefault(); 
     };
 
     const handleTouchMove = (e) => {
@@ -360,23 +358,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const direction = touchMoveAccumulator > 0 ? 1 : -1; // Swipe up (positive accumulator) is scroll down (dir 1)
             const didAnimate = animateCube(direction);
             
-            if (didAnimate) {
-                // Animation started, keep default prevented
-            } else {
-                // Cube hit boundary, allow page scroll
+            if (!didAnimate) {
+                // Cube hit boundary, unpin and allow page scroll
+                servicesSection.classList.remove('is-pinned');
+                isServicesSectionPinned = false;
                 document.body.style.overflow = 'auto';
+                console.log('Unpinning at touch boundary, re-enabling page scroll.'); // Debug log
             }
             touchMoveAccumulator = 0; // Reset accumulator after processing a swipe
+        } else {
+            e.preventDefault(); // Still prevent default if pinned, even if not enough delta for cube rotation
         }
     };
 
     // Use passive: false to allow event.preventDefault() for scroll locking
     window.addEventListener('wheel', handleScrollEvent, { passive: false });
-    // Attach touch events to the document or a wider container for better capture
-    // servicesPinWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
-    // servicesPinWrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
-    // Attaching to window for broader touch coverage, or a specific large scrollable area if needed.
-    // However, attaching to servicesPinWrapper is more specific and safer. Reverting to original for now.
     servicesPinWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
     servicesPinWrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
 
@@ -397,15 +393,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Ensure section is not pinned initially and body is scrollable
             servicesSection.classList.remove('is-pinned');
             isServicesSectionPinned = false; // Ensure flag is false
-            document.body.style.overflow = 'auto';
-            // Start observing the pin wrapper if not already observed
-            // Check if it's already observed to avoid errors on resize
-            let isObserved = false;
-            try {
-                // There's no direct way to check if an element is *currently* observed,
-                // so we rely on the `isServicesSectionPinned` flag or simply re-observe.
-                // For simplicity, we just observe and let the observer handle duplicates or re-entry.
-            } catch (e) { /* ignore */ }
+            document.body.style.overflow = 'auto'; // Make sure body is scrollable by default
+            
+            // Start observing the pin wrapper
+            // Remove previous observation if any, then re-observe to ensure fresh state
+            try { servicesPinObserver.unobserve(servicesPinWrapper); } catch (e) { /* ignore if not observed */ }
             servicesPinObserver.observe(servicesPinWrapper);
             console.log('Services section initialized for 3D animation and pinning.'); // Debug log
         }
@@ -415,5 +407,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeServices(); // Call on initial load
 
     // Trigger a scroll event immediately to ensure initial IntersectionObserver checks
+    // This is still good practice to ensure the observer fires early.
     window.dispatchEvent(new Event('scroll'));
 });
