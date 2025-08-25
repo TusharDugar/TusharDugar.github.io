@@ -121,7 +121,7 @@ body::after {
 @keyframes glow2 {
     0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
     50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; } /* Adjusted max opacity */
-    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; }
+    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; }
 }
 
 
@@ -514,9 +514,12 @@ html::before {
     padding: 100px 20px; /* UPDATED: Adjusted padding per prompt example */
     box-sizing: border-box;
     gap: 60px; /* UPDATED: Added gap between columns as per prompt */
+    overflow: hidden; /* UPDATED: Added overflow: hidden to contain elements */
 }
 
-/* Class added by JS when the section is manually pinned */
+/* The .is-pinned class is no longer strictly needed for pinning itself as it's sticky,
+   but it's left in place for consistency with JS state management if it affects other things.
+   Its fixed positioning is now overridden by the section's sticky property. */
 .services-section.is-pinned {
     position: fixed; /* UPDATED: Re-activated fixed positioning */
     top: 0; /* UPDATED: Re-activated */
@@ -541,6 +544,7 @@ html::before {
     height: 100%; /* UPDATED: Take full height to allow internal centering */
     padding-right: 20px; /* Space between columns */
     box-sizing: border-box;
+    flex-shrink: 1; /* UPDATED: Added flex-shrink rule */
 }
 
 /* Right Column of Services Section */
@@ -552,6 +556,8 @@ html::before {
     align-items: center; /* UPDATED: Vertically center cube within its column */
     height: 100%; /* Take full height of parent flex container */
     box-sizing: border-box; 
+    flex-shrink: 1; /* UPDATED: Added flex-shrink rule */
+    min-width: 0; /* UPDATED: Added min-width: 0 to allow shrinking */
 }
 
 
@@ -595,6 +601,8 @@ html::before {
     overflow: hidden; /* Important for clipping rotating elements */
     will-change: transform, opacity;
     border: none;
+    height: 100%; /* UPDATED: Ensure 100% height for sticky context */
+    min-height: 300px; /* UPDATED: Added min-height as per prompt */
 }
 
 .cube {
@@ -657,7 +665,7 @@ html::before {
     position: absolute;
     bottom: 1rem; /* UPDATED: Positioned from bottom */
     right: 1rem;  /* UPDATED: Positioned from right */
-    font-size: clamp(4rem, 15vw, 10rem); /* UPDATED: Applied clamp, adjusted values */
+    font-size: clamp(3rem, 10vw, 6rem); /* UPDATED: Applied clamp, adjusted values */
     font-weight: 500;
     color: rgba(255, 255, 255, 0.08); /* UPDATED: Changed color as per prompt (subtle watermark) */
     pointer-events: none;
@@ -679,6 +687,7 @@ html::before {
     .cube-container {
         max-width: 80%; /* Consistent responsive max-width */
         height: 100%; /* Height scales with parent */
+        min-height: 300px; /* Consistent min-height */
     }
     .face {
         padding: 1.2rem; /* Adjusted padding */
@@ -736,6 +745,7 @@ html::before {
         max-width: 80%; /* Adjust max width for mobile */
         height: 400px; /* UPDATED: Fixed height for cube when relative */
         margin: 0 auto; /* Center cube if not sticky */
+        min-height: 300px; /* Ensure min-height */
     }
     .face {
         padding: 1rem; /* Adjusted padding */
@@ -768,6 +778,7 @@ html::before {
     }
     .cube-container {
         height: 300px; /* Smaller fixed height for mobile */
+        min-height: 200px; /* Ensure min-height */
     }
     .face { 
         padding: 0.8rem; /* Adjusted padding */
