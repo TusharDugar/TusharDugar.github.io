@@ -987,7 +987,16 @@ footer h2 {
     .services-heading {
         font-size: 6em;
         line-height: 0.85em;
-        margin-bottom: 50px;
+        font-weight: 800; /* Ensuring match */
+        margin-bottom: 50px; /* Ensuring match */
+        text-transform: uppercase; /* Ensuring match */
+        text-align: left; /* Ensuring match */
+        margin-left: 0; /* Ensuring match */
+        position: relative; /* Ensuring match */
+        z-index: 4; /* Ensuring match */
+        padding: 0; /* Ensuring match */
+        width: 100%; /* Ensuring match */
+        max-width: 1200px; /* Ensuring match */
     }
     /* Cube container adjustments */
     .cube-container {
@@ -1151,7 +1160,16 @@ footer h2 {
     .services-heading {
         font-size: 4.5em;
         line-height: 0.9em;
-        margin-bottom: 30px;
+        font-weight: 800; /* Ensuring match */
+        margin-bottom: 30px; /* Ensuring match */
+        text-transform: uppercase; /* Ensuring match */
+        text-align: left; /* Ensuring match */
+        margin-left: 0; /* Ensuring match */
+        position: relative; /* Ensuring match */
+        z-index: 4; /* Ensuring match */
+        padding: 0; /* Ensuring match */
+        width: 100%; /* Ensuring match */
+        max-width: 1200px; /* Ensuring match */
     }
     /* Cube container adjustments */
     .cube-container {
