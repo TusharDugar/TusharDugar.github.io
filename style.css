@@ -243,7 +243,7 @@ html::before {
     gap: 60px; /* Gap between left and right columns */
 }
 
-/* Left Column Styling */
+/* Left Column Sticky Styling */
 .left-column-sticky {
     flex-shrink: 0;
     flex-basis: 370px; /* Fixed width for the left column */
@@ -264,7 +264,7 @@ html::before {
     padding-right: 0; /* Remove unnecessary padding */
 }
 
-/* FIXED: Desktop-specific rules for left column (fixed and centrally aligned within its allocated space) */
+/* Desktop-specific rules for left column (fixed and centrally aligned within its allocated space) */
 @media (min-width: 1024px) {
     .main-layout-container {
         align-items: flex-start; /* Align to top to allow sticky to work properly */
@@ -407,9 +407,9 @@ html::before {
 
 /* Short Description */
 .about-short-desc {
-    text-align: center; /* FIXED: Centrally aligned */
-    line-height: 1.8; /* FIXED: Better line spacing */
-    word-spacing: 1px; /* FIXED: Better word spacing */
+    text-align: center; /* Centrally aligned */
+    line-height: 1.8; /* Better line spacing */
+    word-spacing: 1px; /* Better word spacing */
     font-size: 0.9em;
     color: var(--text-medium-card);
     margin-bottom: 25px;
@@ -482,12 +482,12 @@ html::before {
 
 /* HERO DESCRIPTION ADJUSTMENTS */
 .hero-description {
-    text-align: justify; /* FIXED: Justify text */
-    line-height: 1.8; /* FIXED: Better line spacing */
-    word-spacing: 1px; /* FIXED: Better word spacing */
+    text-align: justify; /* Justify text */
+    line-height: 1.8; /* Better line spacing */
+    word-spacing: 1px; /* Better word spacing */
     font-size: 1em;
-    margin-bottom: 40px; /* FIXED: Adjust hero text spacing */
-    max-width: 90%; /* FIXED: Adjust hero text spacing */
+    margin-bottom: 40px; /* Adjust hero text spacing */
+    max-width: 90%; /* Adjust hero text spacing */
     color: var(--text-medium);
 }
 
@@ -522,33 +522,52 @@ html::before {
 .services-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
-/* --- NEW: 2D Services Grid Styles (Replacing 3D Cube) --- */
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted for better card distribution */
-    gap: 20px; /* Spacing between service cards */
-    margin: 60px auto; /* Center the grid */
-    max-width: 900px; /* Max width for the grid */
-    padding: 0 10px; /* Small horizontal padding */
+/* --- 3D Cube Animation Styles (RESTORED & FIXED) --- */
+.cube-container {
+    width: 100%;
+    max-width: 900px; /* Wider cards */
+    height: 340px; /* Reduced by 15% from 400px base */
+    margin: 60px auto;
+    perspective: 1500px; /* Adjusted perspective for better depth */
+    position: relative; 
+    overflow: hidden; /* Important for clipping rotating elements */
+    will-change: transform, opacity;
+    border: none;
 }
 
-.service-card {
-    background-color: var(--bg-tool-card); /* Using existing tool card background color */
-    border-radius: 15px;
-    padding: 30px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    text-align: left;
-    display: flex; /* To align title and number */
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 200px; /* Ensures cards have a consistent height */
+.cube {
+    width: 100%;
+    height: 100%;
     position: relative;
-    overflow: hidden; /* For inner elements like face-number */
-    cursor: default; /* Not interactive like tools for this animation */
+    transform-style: preserve-3d;
+    transition: transform 1200ms cubic-bezier(0.65, 0.05, 0.36, 1); /* Matching JS duration and easing */
+    transform: rotateX(-25deg) rotateY(0deg); /* Initial isometric perspective */
+    will-change: transform;
 }
 
-/* Styling for content within the service card */
-.service-card .service-title {
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: none; /* No border on faces for clean look */
+    background-color: var(--bg-tool-card);
+    color: var(--text-light);
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+    /* REMOVED: Initial opacity/visibility - now fully controlled by JS */
+}
+
+/* Styling for content within the face */
+.service-content {
+    width: auto;
+    max-width: 80%;
+}
+
+.service-title {
     font-size: 2em;
     font-weight: 700;
     margin-bottom: 15px;
@@ -556,100 +575,84 @@ html::before {
     color: var(--text-light);
 }
 
-.service-card .service-description {
+.service-description {
     text-align: justify;
     line-height: 1.8;
     word-spacing: 1px;
     font-size: 1em;
     color: var(--text-medium);
-    margin-bottom: 0; /* Remove bottom margin if flex column */
+    max-width: 90%;
 }
 
-.service-card .face-number {
-    position: absolute; /* Position relative to card */
-    bottom: -20px; /* Position at bottom right */
-    right: -10px;
+.face-number {
+    position: relative;
     flex-shrink: 0;
-    font-size: 9em; /* Smaller than 3D cube for better fit */
+    font-size: 11em;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.05);
     pointer-events: none;
     z-index: 0;
     line-height: 1;
+    margin-left: 20px;
 }
 
-.service-card:hover {
-  transform: translateY(-5px); /* Subtle lift on hover */
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-}
-
-
-/* Responsive adjustments for services grid */
+/* Responsive adjustments for 3D cube on different devices */
 @media (max-width: 1200px) {
-    .services-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        max-width: 700px;
-        gap: 15px;
+    .cube-container {
+        max-width: 640px;
+        height: 280px;
     }
-    .service-card {
+    .face {
         padding: 25px;
-        min-height: 180px;
     }
-    .service-card .service-title {
+    .service-title {
         font-size: 1.8em;
     }
-    .service-card .service-description {
+    .service-description {
         font-size: 0.9em;
     }
-    .service-card .face-number {
-        font-size: 8em;
+    .face-number {
+        font-size: 9em;
     }
 }
 
 @media (max-width: 768px) {
-    .services-grid {
-        grid-template-columns: 1fr; /* Single column on smaller tablets/mobiles */
-        max-width: 400px;
-        gap: 15px;
+    .cube-container {
+        max-width: 90%;
+        height: 250px;
     }
-    .service-card {
+    .face {
         padding: 20px;
-        min-height: 160px;
     }
-    .service-card .service-title {
+    .service-title {
         font-size: 1.5em;
     }
-    .service-card .service-description {
+    .service-description {
         font-size: 0.85em;
     }
-    .service-card .face-number {
-        font-size: 6em;
+    .face-number {
+        font-size: 7em;
     }
 }
 
 @media (max-width: 480px) {
-    .services-grid {
-        gap: 10px;
-        margin: 40px auto;
-        padding: 0;
+    .cube-container {
+        height: 200px;
     }
-    .service-card {
+    .face {
         padding: 15px;
-        min-height: 140px;
     }
-    .service-card .service-title {
+    .service-title {
         font-size: 1.3em;
     }
-    .service-card .service-description {
+    .service-description {
         font-size: 0.8em;
     }
-    .service-card .face-number {
+    .face-number {
         font-size: 5em;
-        bottom: -15px;
-        right: -5px;
     }
 }
+
 
 /* Tools Grid Styling (Restored with Stagger) */
 .tools-grid {
@@ -1003,23 +1006,23 @@ footer h2 {
         width: 100%; 
         max-width: 1200px; 
     }
-    .services-grid {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Further adjusted for smaller screens */
-        max-width: 600px;
-        gap: 15px;
+    /* Cube container adjustments */
+    .cube-container {
+        max-width: 700px;
+        height: 340px; 
     }
-    .service-card {
-        padding: 25px;
-        min-height: 180px;
+    .face {
+        padding: 30px;
     }
-    .service-card .service-title {
+    .service-title {
         font-size: 1.8em;
     }
-    .service-card .service-description {
+    .service-description {
         font-size: 0.9em;
     }
-    .service-card .face-number {
-        font-size: 8em;
+    .face-number {
+        font-size: 10em;
+        right: 15px;
     }
 
     /* Adjustments for tools section */
@@ -1189,23 +1192,23 @@ footer h2 {
         width: 100%; 
         max-width: 1200px; 
     }
-    .services-grid {
-        grid-template-columns: 1fr; /* Single column on smaller tablets/mobiles */
-        max-width: 400px;
-        gap: 15px;
+    /* Cube container adjustments */
+    .cube-container {
+        max-width: 100%; 
+        height: 289px; 
     }
-    .service-card {
-        padding: 20px;
-        min-height: 160px;
+    .face {
+        padding: 25px;
     }
-    .service-card .service-title {
+    .service-title {
         font-size: 1.5em;
     }
-    .service-card .service-description {
+    .service-description {
         font-size: 0.85em;
     }
-    .service-card .face-number {
-        font-size: 6em;
+    .face-number {
+        font-size: 8em;
+        right: 10px;
     }
 
     /* Adjustments for tools section */
@@ -1309,22 +1312,20 @@ footer h2 {
         width: 100%; 
         max-width: 1200px; 
     }
-    .services-grid {
-        gap: 10px;
-        margin: 40px auto;
-        padding: 0;
+    /* Cube container adjustments */
+    .cube-container {
+        height: 200px;
     }
-    .service-card {
+    .face { 
         padding: 15px;
-        min-height: 140px;
     }
-    .service-card .service-title {
+    .service-title {
         font-size: 1.3em;
     }
-    .service-card .service-description {
+    .service-description {
         font-size: 0.8em;
     }
-    .service-card .face-number {
+    .face-number {
         font-size: 5em;
         bottom: -15px;
         right: -5px;
@@ -1394,8 +1395,7 @@ footer h2 {
     .reveal-item,
     .reveal-parent .reveal-child,
     .reveal-stagger-container .reveal-stagger,
-    .tool-card,
-    .services-grid .service-card /* NEW: For 2D service cards */
+    .tool-card
     {
         transition: none !important;
         transform: none !important;
@@ -1404,5 +1404,22 @@ footer h2 {
         visibility: visible !important; /* Ensure content is visible */
     }
     /* For the 3D cube faces, ensure they are visible if motion is reduced */
-    /* REMOVED: 3D cube specific reduced motion overrides */
+    .cube-container {
+        perspective: none !important; /* Flatten the container perspective */
+        transform: none !important; /* Remove initial isometric tilt */
+    }
+    .cube {
+        transform-style: flat !important; /* Flatten the 3D transforms on the cube */
+        transform: none !important; /* Remove initial rotation */
+        transition: none !important; /* No rotation transitions */
+    }
+    .face {
+        transition: none !important;
+        opacity: 1 !important; /* All faces visible */
+        visibility: visible !important;
+        position: relative !important; /* Arrange faces flatly, not stacked in 3D */
+        transform: none !important; /* Remove all 3D transforms from faces */
+        /* You might want to display them in a grid or stack them vertically here */
+        /* For now, just ensure they are visible and non-3D */
+    }
 }
