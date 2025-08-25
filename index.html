@@ -11,7 +11,7 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=7"> <!-- Incrementing version for cache busting -->
+    <link rel="stylesheet" href="style.css?v=8"> <!-- Incrementing version for cache busting -->
 
     <!-- Removed GSAP and ScrollTrigger CDNs -->
 </head>
@@ -63,11 +63,9 @@
                 <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
             </section>
 
-            <!-- Wrapper for the Services section to enable pinning logic -->
-            <div id="services-pin-wrapper" style="height: 1600vh;">
-                <!-- Services Section - Two-Column Layout with 3D Cube Animation -->
+            <!-- Recreated "MY SERVICES" Section -->
+            <div id="services-pin-wrapper">
                 <section id="services" class="services-section reveal-item">
-                    <!-- Left column for services section -->
                     <div class="services-left-column">
                         <h2 class="services-heading reveal-item">
                             <span class="text-white">MY</span>
@@ -77,12 +75,9 @@
                             I provide comprehensive digital solutions, from stunning web designs and robust e-commerce platforms to strategic SEO and engaging content creation. Let's elevate your online presence together.
                         </p>
                     </div>
-
-                    <!-- Right column for services section (contains the cube) -->
                     <div class="services-right-column">
-                        <!-- The 3D Cube Container -->
-                        <div class="cube-container reveal-item"> 
-                            <div class="cube" id="services-cube">
+                        <div class="cube-container reveal-item">
+                            <div id="services-cube" class="cube">
                                 <div class="face" data-index="0">
                                     <div class="service-content">
                                         <h3 class="service-title">Web Design</h3>
@@ -107,7 +102,7 @@
                                 <div class="face" data-index="3">
                                     <div class="service-content">
                                         <h3 class="service-title">Graphic Design</h3>
-                                    <p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p>
+                                        <p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p>
                                     </div>
                                     <div class="face-number">04</div>
                                 </div>
@@ -244,7 +239,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
