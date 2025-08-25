@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.opacity = 0; // Default transparent
         });
 
-        // Outgoing face snaps to opacity: 0 at 50% progress
+        // Outgoing face snaps to opacity: 0 after 50% progress
         if (faces[prevActiveFaceIndex]) { // The old face
             faces[prevActiveFaceIndex].style.visibility = 'visible';
             if (progress < 0.5) { // Visible until just before 50%
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Incoming face snaps to opacity: 1 at 50% progress
+        // Incoming face snaps to opacity: 1 starting at 50% progress
         if (faces[newActiveFaceIndex]) { // The new face
             faces[newActiveFaceIndex].style.visibility = 'visible';
             if (progress < 0.5) { // Hidden until just before 50%
