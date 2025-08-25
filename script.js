@@ -146,18 +146,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Calculates the `translateZ` distance for faces to form a seamless octagon
+    // Calculates the `translateZ` distance for faces to form an 8-sided prism based on height for X-axis rotation
     function calculateFaceOffset() {
         if (!cubeContainer || SERVICES_COUNT === 0) return 0;
         
-        const faceWidth = cubeContainer.offsetWidth; 
-        const calculatedOffset = (faceWidth / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+        const faceHeight = cubeContainer.offsetHeight; // Use height for X-axis rotation
+        // R = (H/2) / tan(PI/N) formula for a regular N-sided polygon, where H is the dimension along the rotation plane.
+        const calculatedOffset = (faceHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
         
-        // Use CSS custom property as fallback if calculated value is invalid
-        return isNaN(calculatedOffset) || calculatedOffset === 0 ? parseFloat(getComputedStyle(cubeContainer).getPropertyValue('--face-offset')) : calculatedOffset; 
+        // Return a sensible fallback if calculated value is invalid or too small/large
+        return isNaN(calculatedOffset) || calculatedOffset === 0 ? 300 : calculatedOffset; // Default to 300px if calculation fails
     }
 
-    // Sets up the initial 3D positioning of each face
+    // Sets up the initial 3D positioning of each face for rotateX
     function setupCubeFaces() {
         if (!cube || SERVICES_COUNT === 0) return;
         const faceOffset = calculateFaceOffset();
@@ -168,11 +169,12 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.opacity = 0; // Set opacity to 0
 
             const angleForFace = i * ROTATION_INCREMENT_DEG;
-            face.style.transform = `rotateY(${angleForFace}deg) translateZ(${faceOffset}px)`;
+            // Position faces around the X-axis for a vertical prism
+            face.style.transform = `rotateX(${angleForFace}deg) translateZ(${faceOffset}px)`;
         });
 
         cube.style.transition = 'none'; // No transition for initial cube setup
-        cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; 
+        cube.style.transform = `rotateX(${-currentRotationAngle}deg)`; // Apply initial cube rotation (dynamic X-axis)
         
         // Initial visibility: only the first face is fully visible
         if (faces[activeFaceIndex]) {
@@ -181,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Manages opacity and visibility of faces during a 3D transition
+    // Manages opacity and visibility of faces during a 3D transition for rotateX
     function updateFaceOpacityAndVisibility(progress, prevActiveFaceIndex, newActiveFaceIndex) {
         if (prefersReducedMotion) {
             // In reduced motion, ensure ALL faces are visible and flattened
@@ -223,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Animates the cube to the next/previous face
+    // Animates the cube to the next/previous face using rotateX
     function animateCube(direction) {
         if (isAnimatingCube || prefersReducedMotion) return false;
 
@@ -242,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentRotationAngle += direction * ROTATION_INCREMENT_DEG;
         cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.65, 0.05, 0.36, 1)`; // Re-apply transition with easing
-        cube.style.transform = `rotateX(-25deg) rotateY(${-currentRotationAngle}deg)`; 
+        cube.style.transform = `rotateX(${-currentRotationAngle}deg)`; // Dynamic rotateX for the cube
         
         let startTime = null;
 
@@ -361,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupCubeFaces(); 
         // If reduced motion is preferred, immediately update visibility to show all faces flat
         if (prefersReducedMotion) {
-            updateFaceOpacityAndVisibility(1, 0, 0); // Force final state for all faces to be visible
+            updateFaceOpacityAndVisibility(1, 0, 0); // Force final state for all faces to be visible (flattened)
         }
         // Re-calculate dimensions on window resize (important for responsive cube)
         window.addEventListener('resize', () => {
