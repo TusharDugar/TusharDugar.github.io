@@ -22,7 +22,7 @@
     --primary-heading-color: var(--text-light);
     --shadow-color-dark: rgba(0, 0, 0, 0.8); /* Darker shadow for depth */
     --shadow-color-subtle: rgba(0, 0, 0, 0.4); /* Subtle shadow for blending */
-    --shadow-color-card-white: rgba(0, 0, 0, 0.25); /* Specific shadow for white card */
+    --shadow-color-card-white: rgba(0,0,0,0.25); /* Specific shadow for white card */
 
     /* New colors for Tool Cards */
     --bg-tool-card: #1A1A1A; /* Dark background for tool cards */
@@ -132,7 +132,7 @@ html::before {
     inset: 0;
     z-index: 0; /* Above color glows, below main content */
     pointer-events: none;
-    opacity: 0.008; /* EXTREMELY SUBTLE */
+    opacity: 0.02; /* UPDATED: Increased opacity for better visibility */
     
     /* TWEAKED LINE THICKNESS & SEGMENTATION */
     mask-image:
@@ -520,11 +520,11 @@ html::before {
 .services-section.is-pinned {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100vw;
+    left: 50%; /* UPDATED: Center horizontally */
+    width: 100%; /* Use 100% width to allow max-width to constrain */
+    max-width: 1200px; /* UPDATED: Constrain max-width when fixed, keeps content centered */
     height: 100vh;
-    max-width: none; /* Override max-width when fixed */
-    transform: none; /* Override any previous transforms */
+    transform: translateX(-50%); /* UPDATED: Center horizontally */
     z-index: 10; /* Ensure it stays above other scrolling content */
     padding: 0 60px; /* Match main-layout-container padding when fixed */
 }
@@ -551,14 +551,14 @@ html::before {
     justify-content: center; /* UPDATED: Horizontally center cube within its column */
     align-items: center; /* UPDATED: Vertically center cube within its column */
     height: 100%; /* Take full height of parent flex container */
-    box-sizing: border-box;
+    box-sizing: border-sizing;
 }
 
 
 /* Services Main Title */
 .services-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 8em;
+    font-size: clamp(2.5rem, 8vw, 8rem); /* UPDATED: Clamp for responsive scaling */
     line-height: 0.75em;
     font-weight: 800;
     margin-bottom: 20px; /* Adjusted margin */
@@ -587,11 +587,11 @@ html::before {
     width: 100%;
     max-width: 80%; /* UPDATED: Changed to 80% as per prompt */
     height: 100%; /* UPDATED: Changed to 100% to fill parent, will be clamped by content on mobile */
-    margin: 0; /* Remove auto margins as flex parent centers it */
+    margin: 0 auto; /* UPDATED: Centered with margin auto */
     perspective: 1200px; /* UPDATED: Adjusted perspective */
-    position: sticky; /* UPDATED: Sticky for right-column pinning */
-    top: 50%; /* UPDATED: For vertical centering with sticky */
-    transform: translateY(-50%); /* UPDATED: For vertical centering with sticky */
+    position: relative; /* UPDATED: Removed sticky, now relative */
+    top: auto; /* UPDATED: Removed top */
+    transform: none; /* UPDATED: Removed transform */
     overflow: hidden; /* Important for clipping rotating elements */
     will-change: transform, opacity;
     border: none;
@@ -617,12 +617,12 @@ html::before {
     padding: 1.5rem; /* UPDATED: Base padding */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* UPDATED: Vertically centers content block */
-    align-items: flex-start; /* UPDATED: Align content to the left within face */
+    justify-content: center; /* Vertically centers content block */
+    align-items: flex-start; /* Align content to the left within face */
     backface-visibility: hidden;
     will-change: transform, opacity;
     box-sizing: border-box; /* Ensure padding is included in height */
-    text-align: left; /* UPDATED: Ensure text inside face respects alignment */
+    text-align: left; /* Ensure text inside face respects alignment */
 }
 
 /* Styling for content within the face */
@@ -631,8 +631,8 @@ html::before {
     flex-grow: 1; /* Allow content to grow and push face-number to bottom if needed */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* UPDATED: Center title/description vertically if they don't take full space */
-    align-items: flex-start; /* UPDATED: Align title/description horizontally */
+    justify-content: center; /* Center title/description vertically if they don't take full space */
+    align-items: flex-start; /* Align title/description horizontally */
     text-align: left;
 }
 
@@ -683,7 +683,7 @@ html::before {
     .face {
         padding: 1.2rem; /* Adjusted padding */
     }
-    /* clamp() handles font sizes in children */
+    /* Clamp functions handle responsive font sizing */
     .face-number {
         bottom: 0.8rem;
         right: 0.8rem;
@@ -787,9 +787,9 @@ html::before {
 /* Tools Main Title - NEW: Base styles for tools-heading */
 .tools-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 8em; /* Matching services heading */
-    line-height: 0.75em; /* Matching services heading */
-    font-weight: 800; /* Matching services heading */
+    font-size: clamp(2.5rem, 8vw, 8rem); /* UPDATED: Clamp for responsive scaling */
+    line-height: 0.75em;
+    font-weight: 800;
     margin-bottom: 40px; /* Matching services heading */
     text-transform: uppercase; /* Matching services heading */
     text-align: left; /* Matching services heading */
@@ -1036,7 +1036,7 @@ footer h2 {
     .face {
         padding: 1.2rem; /* Adjusted padding */
     }
-    /* Clamp functions handle font sizes in children */
+    /* Clamp functions handle responsive font sizing */
     .face-number {
         bottom: 0.8rem;
         right: 0.8rem;
@@ -1140,9 +1140,9 @@ footer h2 {
 /* Tools Main Title - NEW: Base styles for tools-heading */
 .tools-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 8em; /* Matching services heading */
-    line-height: 0.75em; /* Matching services heading */
-    font-weight: 800; /* Matching services heading */
+    font-size: clamp(2.5rem, 8vw, 8rem); /* UPDATED: Clamp for responsive scaling */
+    line-height: 0.75em;
+    font-weight: 800;
     margin-bottom: 40px; /* Matching services heading */
     text-transform: uppercase; /* Matching services heading */
     text-align: left; /* Matching services heading */
@@ -1408,7 +1408,7 @@ footer h2 {
         max-width: 100% !important;
         height: auto !important;
         padding-right: 0 !important;
-        margin-bottom: 0 !important; /* Spacing handled by parent gap */
+        margin-bottom: 20px !important; /* Space when stacked */
         justify-content: flex-start !important;
         align-items: center !important;
         text-align: center !important;
