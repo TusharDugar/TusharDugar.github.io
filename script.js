@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
             face.style.visibility = 'hidden';
             face.style.opacity = 0; // Default hidden
 
-            const angleForFace = i * ROTATION_INCREMENT_DEG; // 0, 45, 90...
+            const angleForFace = i * ROTATION_INCREMENT_DEG;
             face.style.transform = `rotateY(${angleForFace}deg) translateZ(${faceOffset}px)`;
         });
 
@@ -187,11 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 face.style.visibility = (i === newActiveFaceIndex) ? 'visible' : 'hidden';
                 face.style.opacity = (i === newActiveFaceIndex) ? 1 : 0;
                 face.style.transition = 'none';
-                if (i === newActiveFaceIndex) {
-                    face.style.transform = `rotateY(0deg) translateZ(${calculateFaceOffset()}px)`; // Flatten and bring to front if necessary
-                } else {
-                    face.style.transform = `rotateY(0deg) translateZ(${calculateFaceOffset()}px) rotateY(90deg)`; // Rotate out of flat view
-                }
             });
             return;
         }
@@ -256,9 +251,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (progress < 1) {
                 requestAnimationFrame(animateFade);
             } else {
-                // Animation complete
+                // Animation complete - this is the ONLY place to handle completion
                 isAnimatingCube = false;
-                cube.style.transition = 'none'; // Remove transition for discrete control post-animation
+                cube.style.transition = 'none'; // Clear cube transition after animation
                 
                 // Final state after animation: only the new active face is visible
                 faces.forEach((face, i) => {
