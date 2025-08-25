@@ -1,3 +1,5 @@
+/* style.css */
+
 /* Basic Reset & Font */
 :root {
     /* Sawad-inspired Color Palette */
@@ -200,7 +202,7 @@ html::before {
 /* Stagger Child (for elements inside About section) */
 .reveal-child {
     opacity: 0;
-    transform: translateY(60px);
+    transform: translateY(20px); /* Reduced from 60px to prevent clipping by overflow:hidden parents */
     transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform, opacity;
 }
@@ -289,8 +291,6 @@ html::before {
     max-width: 370px;
     height: auto;
     box-sizing: border-box;
-    /* transition: none; This element itself does not animate, its children do via .reveal-parent/.reveal-child */
-    /* FIXED: The .reveal-item directly on this section handles its own animation */
 
     display: flex;
     flex-direction: column;
@@ -459,7 +459,7 @@ html::before {
 /* HERO TEXT ADJUSTMENTS */
 .hero-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 7.76em; /* FIXED: Reduced by 3% from 8em (8 * 0.97 = 7.76) */
+    font-size: 8.4em; /* UPDATED: Changed to 8.4em as requested */
     line-height: 0.75em;
     font-weight: 900;
     margin-bottom: 20px;
@@ -523,7 +523,6 @@ html::before {
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Applied specific sub-heading grey color */
 
 /* --- 3D Cube Animation Styles --- */
-/* Your provided 3D cube CSS starts here */
 .cube-container {
     width: 100%;
     max-width: 900px; /* Wider cards */
@@ -535,6 +534,7 @@ html::before {
     will-change: transform;
     /* Custom property for face offset calculation (set by JS) */
     --face-offset: 450px;
+    border: none; /* REMOVED: No border on container */
 }
 
 .cube {
@@ -542,9 +542,10 @@ html::before {
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.5s ease;
+    /* UPDATED: Transition duration and easing */
+    transition: transform 1200ms cubic-bezier(0.65, 0.05, 0.36, 1);
     /* FIXED: Base isometric tilt added here in CSS. JS will update rotateY, but rotateX should persist. */
-    transform: rotateX(-25deg) rotateY(0deg); /* This ensures the initial isometric perspective */
+    transform: rotateX(-25deg) rotateY(0deg); 
     will-change: transform;
 }
 
@@ -552,7 +553,7 @@ html::before {
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 1px solid #CCCCCC;
+    border: none; /* REMOVED: Border from faces */
     background-color: var(--bg-tool-card);
     color: var(--text-light);
     padding: 30px;
@@ -561,16 +562,8 @@ html::before {
     align-items: center;
     backface-visibility: hidden;
     will-change: transform, opacity;
-    transition: opacity 0.3s ease-out;
-    opacity: 0; /* Managed by JS */
-    visibility: hidden; /* Managed by JS */
-    text-align: left; /* FIXED: Ensure text alignment for face content */
-}
-
-/* Active face (managed by JS) */
-.face.is-active {
-    opacity: 1;
-    visibility: visible;
+    /* REMOVED: Default opacity and visibility as JS will fully control */
+    /* REMOVED: Default transition as JS will set dynamically for fade timing */
 }
 
 /* Styling for content within the face */
@@ -608,7 +601,7 @@ html::before {
     margin-left: 20px;
 }
 
-/* Rotation positions for 8 faces */
+/* Rotation positions for 8 faces (these are for initial CSS, JS will dynamically apply) */
 .face-1 { transform: rotateY(0deg); }
 .face-2 { transform: rotateY(45deg); }
 .face-3 { transform: rotateY(90deg); }
@@ -674,7 +667,6 @@ html::before {
         font-size: 5em;
     }
 }
-/* Your provided 3D cube CSS ends here */
 
 
 /* Tools Grid Styling (Restored with Stagger) */
@@ -971,18 +963,18 @@ footer h2 {
 
     /* Adjustments for hero content */
     .hero-heading {
-        font-size: 5.82em; /* FIXED: Reduced by 3% from 6em (6 * 0.97 = 5.82) */
+        font-size: 6.3em; /* UPDATED: Scaled proportionally (8.4/7.76 * 5.82) */
         line-height: 0.85em;
-        font-weight: 900; /* Ensuring match with services */
+        font-weight: 900; 
         margin-bottom: 25px;
-        text-transform: uppercase; /* Ensuring match with services */
-        text-align: left; /* Ensuring match with services */
-        margin-left: 0; /* Ensuring match with services */
-        position: relative; /* Ensuring match with services */
-        z-index: 4; /* Ensuring match with services */
-        padding: 0; /* Ensuring match with services */
-        width: 100%; /* Ensuring match with services */
-        max-width: 1200px; /* Ensuring match with services */
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-left: 0; 
+        position: relative; 
+        z-index: 4; 
+        padding: 0; 
+        width: 100%; 
+        max-width: 1200px; 
     }
     .hero-description {
         font-size: 1em;
@@ -995,24 +987,24 @@ footer h2 {
 
     /* Adjustments for services section */
     .services-heading {
-        font-family: 'Poppins', sans-serif; /* Ensuring font-family is set for smaller breakpoints as well */
+        font-family: 'Poppins', sans-serif; 
         font-size: 6em;
         line-height: 0.85em;
-        font-weight: 800; /* Ensuring match */
-        margin-bottom: 50px; /* Ensuring match */
-        text-transform: uppercase; /* Ensuring match */
-        text-align: left; /* Ensuring match */
-        margin-left: 0; /* Ensuring match */
-        position: relative; /* Ensuring match */
-        z-index: 4; /* Ensuring match */
-        padding: 0; /* Ensuring match */
-        width: 100%; /* Ensuring match */
-        max-width: 1200px; /* Ensuring match */
+        font-weight: 800; 
+        margin-bottom: 50px; 
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-left: 0; 
+        position: relative; 
+        z-index: 4; 
+        padding: 0; 
+        width: 100%; 
+        max-width: 1200px; 
     }
     /* Cube container adjustments */
     .cube-container {
         max-width: 700px;
-        height: 340px; /* Reduced by 15% from 400px base */
+        height: 340px; 
     }
     .face {
         padding: 30px;
@@ -1030,21 +1022,20 @@ footer h2 {
 
 
     /* Adjustments for tools section */
-    /* FIXED: Tools heading now matches services heading */
-    .tools-heading {
+    .tools-heading { /* NEW: Matching services heading */
         font-family: 'Poppins', sans-serif;
-        font-size: 6em; /* Matching services heading */
-        line-height: 0.85em; /* Matching services heading */
-        font-weight: 800; /* Matching services heading */
-        margin-bottom: 50px; /* Matching services heading */
-        text-transform: uppercase; /* Matching services heading */
-        text-align: left; /* Matching services heading */
-        margin-left: 0; /* Matching services heading */
-        position: relative; /* Matching services heading */
-        z-index: 4; /* Matching services heading */
-        padding: 0; /* Matching services heading */
-        width: 100%; /* Matching services heading */
-        max-width: 1200px; /* Matching services heading */
+        font-size: 6em; 
+        line-height: 0.85em; 
+        font-weight: 800; 
+        margin-bottom: 50px; 
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-left: 0; 
+        position: relative; 
+        z-index: 4; 
+        padding: 0; 
+        width: 100%; 
+        max-width: 1200px; 
     }
     .tools-grid {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1068,18 +1059,18 @@ footer h2 {
     }
 
     footer {
-        padding: 80px 0; /* Reduced for medium screens */
+        padding: 80px 0; 
     }
     .contact-button {
         width: 220px;
-        height: 100px; /* FIXED: Adjusted height */
-        font-size: 0.9em; /* FIXED: Adjusted font size */
+        height: 100px; /* UPDATED: Adjusted height */
+        font-size: 0.9em; /* UPDATED: Adjusted font size */
     }
     .contact-button .button-value {
-        font-size: 0.8em; /* FIXED: Adjusted font size */
+        font-size: 0.8em; /* UPDATED: Adjusted font size */
     }
     .contact-button .copied-text {
-        font-size: 1.1em; /* FIXED: Adjusted font size */
+        font-size: 1.2em; /* UPDATED: Adjusted font size */
     }
 }
 
@@ -1100,7 +1091,7 @@ footer h2 {
         flex-basis: auto;
     }
     .section {
-        padding: 60px 20px; /* Reduced for small screens */
+        padding: 60px 20px; 
     }
 
     /* Specific adjustments for profile card on 768px screens */
@@ -1161,18 +1152,18 @@ footer h2 {
         text-align: center;
     }
     .hero-heading {
-        font-size: 4.365em; /* FIXED: Reduced by 3% from 4.5em (4.5 * 0.97 = 4.365) */
+        font-size: 4.8em; /* UPDATED: Scaled proportionally (8.4/7.76 * 4.365) */
         line-height: 0.9em;
-        font-weight: 900; /* Ensuring match with services */
+        font-weight: 900; 
         margin-bottom: 20px;
-        text-transform: uppercase; /* Ensuring match with services */
-        text-align: left; /* Ensuring match with services */
-        margin-left: 0; /* Ensuring match with services */
-        position: relative; /* Ensuring match with services */
-        z-index: 4; /* Ensuring match with services */
-        padding: 0; /* Ensuring match with services */
-        width: 100%; /* Ensuring match with services */
-        max-width: 1200px; /* Ensuring match with services */
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-left: 0; 
+        position: relative; 
+        z-index: 4; 
+        padding: 0; 
+        width: 100%; 
+        max-width: 1200px; 
     }
     .hero-description {
         font-size: 0.95em;
@@ -1183,24 +1174,24 @@ footer h2 {
 
     /* Adjustments for services section */
     .services-heading {
-        font-family: 'Poppins', sans-serif; /* Ensuring font-family is set for smaller breakpoints as well */
+        font-family: 'Poppins', sans-serif; 
         font-size: 4.5em;
         line-height: 0.9em;
-        font-weight: 800; /* Ensuring match */
-        margin-bottom: 30px; /* Ensuring match */
-        text-transform: uppercase; /* Ensuring match */
-        text-align: left; /* Ensuring match */
-        margin-left: 0; /* Ensuring match */
-        position: relative; /* Ensuring match */
-        z-index: 4; /* Ensuring match */
-        padding: 0; /* Ensuring match */
-        width: 100%; /* Ensuring match */
-        max-width: 1200px; /* Ensuring match */
+        font-weight: 800; 
+        margin-bottom: 30px; 
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-left: 0; 
+        position: relative; 
+        z-index: 4; 
+        padding: 0; 
+        width: 100%; 
+        max-width: 1200px; 
     }
     /* Cube container adjustments */
     .cube-container {
-        max-width: 100%; /* Ensure full width usage on mobile */
-        height: 289px; /* Reduced by 15% from 340px */
+        max-width: 100%; 
+        height: 289px; 
     }
     .face {
         padding: 25px;
@@ -1218,21 +1209,20 @@ footer h2 {
 
 
     /* Adjustments for tools section */
-    /* FIXED: Tools heading now matches services heading */
-    .tools-heading {
+    .tools-heading { /* NEW: Matching services heading */
         font-family: 'Poppins', sans-serif;
-        font-size: 4.5em; /* Matching services heading */
-        line-height: 0.9em; /* Matching services heading */
-        font-weight: 800; /* Matching services heading */
-        margin-bottom: 30px; /* Matching services heading */
-        text-transform: uppercase; /* Matching services heading */
-        text-align: left; /* Matching services heading */
-        margin-left: 0; /* Matching services heading */
-        position: relative; /* Matching services heading */
-        z-index: 4; /* Matching services heading */
-        padding: 0; /* Matching services heading */
-        width: 100%; /* Matching services heading */
-        max-width: 1200px; /* Matching services heading */
+        font-size: 4.5em; 
+        line-height: 0.9em; 
+        font-weight: 800; 
+        margin-bottom: 30px; 
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-left: 0; 
+        position: relative; 
+        z-index: 4; 
+        padding: 0; 
+        width: 100%; 
+        max-width: 1200px; 
     }
     .tools-grid {
         grid-template-columns: 1fr;
@@ -1261,14 +1251,14 @@ footer h2 {
     }
     .contact-button {
         width: 200px;
-        height: 95px; /* FIXED: Adjusted height */
-        font-size: 0.85em; /* FIXED: Adjusted font size */
+        height: 95px; /* UPDATED: Adjusted height */
+        font-size: 0.85em; /* UPDATED: Adjusted font size */
     }
     .contact-button .button-value {
-        font-size: 0.7em; /* FIXED: Adjusted font size */
+        font-size: 0.75em; /* UPDATED: Adjusted font size */
     }
     .contact-button .copied-text {
-        font-size: 1.1em; /* FIXED: Adjusted font size */
+        font-size: 1.1em; /* UPDATED: Adjusted font size */
     }
 }
 
@@ -1276,24 +1266,24 @@ footer h2 {
     .main-layout-container {
         padding: 0 15px;
     }
-    .section h2 { /* Global h2 within a section */
+    .section h2 { 
         font-size: 2.8em;
         letter-spacing: 0.5px;
         margin-bottom: 30px;
     }
     .hero-heading {
-        font-size: clamp(2.716em, 8.73vw, 3.395em); /* FIXED: Reduced by 3% from clamp(2.8em, 9vw, 3.5em) */
+        font-size: clamp(2.716em, 8.73vw, 3.67em); /* UPDATED: Adjusted upper bound (8.4/7.76 * 3.395) */
         line-height: 0.9em;
-        font-weight: 900; /* Ensuring match with services */
+        font-weight: 900; 
         margin-bottom: 15px;
-        text-transform: uppercase; /* Ensuring match with services */
-        text-align: left; /* Ensuring match with services */
-        margin-left: 0; /* Ensuring match with services */
-        position: relative; /* Ensuring match with services */
-        z-index: 4; /* Ensuring match with services */
-        padding: 0; /* Ensuring match with services */
-        width: 100%; /* Ensuring match with services */
-        max-width: 1200px; /* Ensuring match with services */
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-left: 0; 
+        position: relative; 
+        z-index: 4; 
+        padding: 0; 
+        width: 100%; 
+        max-width: 1200px; 
     }
     .hero-description {
         font-size: 0.85em;
@@ -1302,24 +1292,24 @@ footer h2 {
     }
 
     .services-section {
-        padding: 40px 15px; /* Further reduced */
+        padding: 40px 15px; 
     }
     .services-heading {
-        font-family: 'Poppins', sans-serif; /* Ensuring font-family is set for smaller breakpoints as well */
+        font-family: 'Poppins', sans-serif; 
         font-size: 2.8em;
         line-height: 0.9em;
-        font-weight: 800; /* Ensuring match */
-        margin-bottom: 25px; /* Ensuring match */
-        text-transform: uppercase; /* Ensuring match */
-        text-align: left; /* Ensuring match */
-        margin-left: 0; /* Ensuring match */
-        position: relative; /* Ensuring match */
-        z-index: 4; /* Ensuring match */
-        padding: 0; /* Ensuring match */
-        width: 100%; /* Ensuring match */
-        max-width: 1200px; /* Ensuring match */
+        font-weight: 800; 
+        margin-bottom: 25px; 
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-left: 0; 
+        position: relative; 
+        z-index: 4; 
+        padding: 0; 
+        width: 100%; 
+        max-width: 1200px; 
     }
-    .face { /* Service items in cube */
+    .face { 
         padding: 30px;
     }
     .service-title {
@@ -1334,23 +1324,22 @@ footer h2 {
     }
 
     .tools-section {
-        padding: 40px 15px; /* Further reduced */
+        padding: 40px 15px; 
     }
-    /* FIXED: Tools heading now matches services heading */
-    .tools-heading {
+    .tools-heading { /* NEW: Matching services heading */
         font-family: 'Poppins', sans-serif;
-        font-size: 2.8em; /* Matching services heading */
-        line-height: 0.9em; /* Matching services heading */
-        font-weight: 800; /* Matching services heading */
-        margin-bottom: 25px; /* Matching services heading */
-        text-transform: uppercase; /* Matching services heading */
-        text-align: left; /* Matching services heading */
-        margin-left: 0; /* Matching services heading */
-        position: relative; /* Matching services heading */
-        z-index: 4; /* Matching services heading */
-        padding: 0; /* Matching services heading */
-        width: 100%; /* Matching services heading */
-        max-width: 1200px; /* Matching services heading */
+        font-size: 2.8em; 
+        line-height: 0.9em; 
+        font-weight: 800; 
+        margin-bottom: 25px; 
+        text-transform: uppercase; 
+        text-align: left; 
+        margin-left: 0; 
+        position: relative; 
+        z-index: 4; 
+        padding: 0; 
+        width: 100%; 
+        max-width: 1200px; 
     }
     .tools-grid {
         grid-template-columns: 1fr;
@@ -1382,14 +1371,14 @@ footer h2 {
     }
     .contact-button {
         width: 90%;
-        height: 70px; /* FIXED: Adjusted height */
-        font-size: 0.8em; /* FIXED: Adjusted font size */
+        height: 80px; /* UPDATED: Adjusted height */
+        font-size: 0.9em; /* UPDATED: Adjusted font size */
     }
     .contact-button .button-value {
-        font-size: 0.65em; /* FIXED: Adjusted font size */
+        font-size: 0.75em; /* UPDATED: Adjusted font size */
     }
     .contact-button .copied-text {
-        font-size: 0.9em; /* FIXED: Adjusted font size */
+        font-size: 1em; /* UPDATED: Adjusted font size */
     }
 }
 
@@ -1411,7 +1400,7 @@ footer h2 {
         transition: none !important;
         opacity: 1 !important;
         visibility: visible !important;
-        transform: none !important; /* Remove any 3D transforms */
+        transform: none !important; /* Flat view for reduced motion */
     }
     /* For the cube container itself, flatten it */
     .cube-container {
