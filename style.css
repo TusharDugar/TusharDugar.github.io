@@ -459,7 +459,7 @@ html::before {
 /* HERO TEXT ADJUSTMENTS */
 .hero-heading {
     font-family: 'Poppins', sans-serif;
-    font-size: 8.4em; /* UPDATED: Changed to 8.4em as requested */
+    font-size: 7.75em; /* UPDATED: Changed to 7.75em */
     line-height: 0.75em;
     font-weight: 900;
     margin-bottom: 20px;
@@ -528,12 +528,12 @@ html::before {
     max-width: 900px; /* Wider cards */
     height: 340px; /* Reduced by 15% from 400px base */
     margin: 60px auto;
-    perspective: 1000px;
+    perspective: 1500px; /* UPDATED: Increased perspective to avoid clipping */
     position: relative; 
     overflow: hidden;
     will-change: transform;
     /* Custom property for face offset calculation (set by JS) */
-    --face-offset: 450px;
+    --face-offset: 300px; /* UPDATED: Adjusted fallback */
     border: none; /* REMOVED: No border on container */
 }
 
@@ -564,6 +564,8 @@ html::before {
     will-change: transform, opacity;
     /* REMOVED: Default opacity and visibility as JS will fully control */
     /* REMOVED: Default transition as JS will set dynamically for fade timing */
+    opacity: 0; /* Default hidden, JS will override */
+    visibility: hidden; /* Default hidden, JS will override */
 }
 
 /* Styling for content within the face */
@@ -602,6 +604,7 @@ html::before {
 }
 
 /* Rotation positions for 8 faces (these are for initial CSS, JS will dynamically apply) */
+/* These are just a static fallback and primarily set by JS */
 .face-1 { transform: rotateY(0deg); }
 .face-2 { transform: rotateY(45deg); }
 .face-3 { transform: rotateY(90deg); }
@@ -678,6 +681,26 @@ html::before {
     margin-right: 0;
     justify-items: stretch;
 }
+
+/* Tools Main Title - NEW: Base styles for tools-heading */
+.tools-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 8em; /* Matching services heading */
+    line-height: 0.75em; /* Matching services heading */
+    font-weight: 800; /* Matching services heading */
+    margin-bottom: 40px; /* Matching services heading */
+    text-transform: uppercase; /* Matching services heading */
+    text-align: left; /* Matching services heading */
+    margin-left: 0; /* Matching services heading */
+    position: relative; /* Matching services heading */
+    z-index: 4; /* Matching services heading */
+    padding: 0; /* Matching services heading */
+    width: 100%; /* Matching services heading */
+    max-width: 1200px; /* Matching services heading */
+}
+/* Ensure text-white and text-gray for tools heading also works */
+.tools-heading .text-white { color: var(--text-light); display: block; }
+.tools-heading .text-gray { color: var(--text-sub-heading-grey); display: block; }
 
 /* Tool Card (Animations) */
 .tool-card {
@@ -963,7 +986,7 @@ footer h2 {
 
     /* Adjustments for hero content */
     .hero-heading {
-        font-size: 6.3em; /* UPDATED: Scaled proportionally (8.4/7.76 * 5.82) */
+        font-size: 5.8em; /* UPDATED: Adjusted based on new base 7.75em */
         line-height: 0.85em;
         font-weight: 900; 
         margin-bottom: 25px;
@@ -1022,7 +1045,7 @@ footer h2 {
 
 
     /* Adjustments for tools section */
-    .tools-heading { /* NEW: Matching services heading */
+    .tools-heading { /* Matching services heading */
         font-family: 'Poppins', sans-serif;
         font-size: 6em; 
         line-height: 0.85em; 
@@ -1152,7 +1175,7 @@ footer h2 {
         text-align: center;
     }
     .hero-heading {
-        font-size: 4.8em; /* UPDATED: Scaled proportionally (8.4/7.76 * 4.365) */
+        font-size: 4.4em; /* UPDATED: Adjusted based on new base 7.75em */
         line-height: 0.9em;
         font-weight: 900; 
         margin-bottom: 20px;
@@ -1209,7 +1232,7 @@ footer h2 {
 
 
     /* Adjustments for tools section */
-    .tools-heading { /* NEW: Matching services heading */
+    .tools-heading { /* Matching services heading */
         font-family: 'Poppins', sans-serif;
         font-size: 4.5em; 
         line-height: 0.9em; 
@@ -1272,7 +1295,7 @@ footer h2 {
         margin-bottom: 30px;
     }
     .hero-heading {
-        font-size: clamp(2.716em, 8.73vw, 3.67em); /* UPDATED: Adjusted upper bound (8.4/7.76 * 3.395) */
+        font-size: clamp(2.5em, 8.1vw, 3.1em); /* UPDATED: Adjusted based on new base 7.75em */
         line-height: 0.9em;
         font-weight: 900; 
         margin-bottom: 15px;
@@ -1326,7 +1349,7 @@ footer h2 {
     .tools-section {
         padding: 40px 15px; 
     }
-    .tools-heading { /* NEW: Matching services heading */
+    .tools-heading { /* Matching services heading */
         font-family: 'Poppins', sans-serif;
         font-size: 2.8em; 
         line-height: 0.9em; 
