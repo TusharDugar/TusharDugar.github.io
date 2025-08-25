@@ -186,9 +186,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Manages opacity and visibility of faces during a 3D transition for rotateX
     function updateFaceOpacityAndVisibility(progress, prevActiveFaceIndex, newActiveFaceIndex) {
         if (prefersReducedMotion) {
-            // In reduced motion, CSS handles the flattened layout. JS ensures current one is visible.
-            // All faces become `position: relative; transform: none; opacity: 1; visibility: visible;`
-            // via CSS for reduced motion, so no complex JS opacity/visibility needed here.
+            // In reduced motion, CSS handles the flattened layout and visibility.
+            // No complex JS opacity/visibility needed here.
             return; 
         }
 
