@@ -220,6 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Animates the cube to the next/previous face using rotateX
     function animateCube(direction) {
+        console.log("Animating cube in direction:", direction, "Current index:", activeFaceIndex); // Debug log
         if (isAnimatingCube || prefersReducedMotion) return false;
 
         let targetActiveFaceIndex = activeFaceIndex + direction;
@@ -280,31 +281,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prefersReducedMotion) return; // Disable pinning/locking for reduced motion
 
         entries.forEach(entry => {
-            // Log for debugging
-            console.log('Observer entry:', entry.target.id, 'isIntersecting:', entry.isIntersecting, 'intersectionRatio:', entry.intersectionRatio);
-            
-            if (entry.target.id === 'services-pin-wrapper') {
-                if (entry.isIntersecting) { // servicesPinWrapper is entering or within the viewport
-                    if (!isServicesSectionPinned) {
-                        servicesSection.classList.add('is-pinned');
-                        isServicesSectionPinned = true;
-                        document.body.style.overflow = 'hidden'; // Lock page scroll
-                        console.log('SERVICES SECTION PINNED!'); // Debug log
-                    }
-                } else { // servicesPinWrapper has left the viewport
-                    if (isServicesSectionPinned) {
-                        servicesSection.classList.remove('is-pinned');
-                        isServicesSectionPinned = false;
-                        document.body.style.overflow = 'auto'; // Unlock page scroll
-                        console.log('SERVICES SECTION UNPINNED!'); // Debug log
-                    }
+            // Updated pinning logic: pin if any part of the pinWrapper is intersecting.
+            // This makes the pinning more immediate and covers the entire 1600vh scroll area.
+            if (entry.isIntersecting) { 
+                if (!isServicesSectionPinned) {
+                    servicesSection.classList.add('is-pinned');
+                    isServicesSectionPinned = true;
+                    document.body.style.overflow = 'hidden'; // Lock page scroll
+                    console.log('SERVICES SECTION PINNED!'); // Debug log
+                }
+            } else { // servicesPinWrapper has left the viewport (either above or below)
+                if (isServicesSectionPinned) {
+                    servicesSection.classList.remove('is-pinned');
+                    isServicesSectionPinned = false;
+                    document.body.style.overflow = 'auto'; // Unlock page scroll
+                    console.log('SERVICES SECTION UNPINNED!'); // Debug log
                 }
             }
         });
     }, {
         root: null, // viewport
         rootMargin: '0px',
-        threshold: [0, 1] // Observe when any part enters/leaves and when fully visible
+        threshold: [0] // Observe when any part of the target enters or leaves (threshold 0)
     });
 
     servicesPinObserver.observe(servicesPinWrapper);
