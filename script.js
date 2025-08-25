@@ -134,8 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const cube = document.getElementById('services-cube');
     
     if (!servicesSection || !servicesPinWrapper || !cubeContainer || !cube) {
-        console.error("One or more required elements for Services 3D cube animation not found.");
-        return;
+        console.error("One or more required elements for Services 3D cube animation not found. Skipping initialization.");
+        return; // Exit if elements are missing
     }
     
     const faces = document.querySelectorAll('.face');
@@ -280,31 +280,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (prefersReducedMotion) return; // Disable pinning/locking for reduced motion
 
         entries.forEach(entry => {
-            const servicesSectionRect = servicesSection.getBoundingClientRect(); // Get rect of the actual section
-            const viewportHeight = window.innerHeight;
+            // Log for debugging
+            console.log('Observer entry:', entry.target.id, 'isIntersecting:', entry.isIntersecting, 'intersectionRatio:', entry.intersectionRatio);
             
-            // Pin when the top of the services section hits near the top of the viewport
-            // and the bottom of the services section is still within or below the viewport.
-            // This is a robust check for when the section is "active" in the view.
-            if (servicesSectionRect.top <= 0 && servicesSectionRect.bottom >= viewportHeight) {
-                 if (!isServicesSectionPinned) {
-                    servicesSection.classList.add('is-pinned');
-                    isServicesSectionPinned = true;
-                    document.body.style.overflow = 'hidden'; // Lock page scroll
-                }
-            } else {
-                // Unpin logic: if section is pinned and it's no longer fully visible (or scrolling past its wrapper)
-                if (isServicesSectionPinned) {
-                    servicesSection.classList.remove('is-pinned');
-                    isServicesSectionPinned = false;
-                    document.body.style.overflow = 'auto'; // Unlock page scroll
+            if (entry.target.id === 'services-pin-wrapper') {
+                if (entry.isIntersecting) { // servicesPinWrapper is entering or within the viewport
+                    if (!isServicesSectionPinned) {
+                        servicesSection.classList.add('is-pinned');
+                        isServicesSectionPinned = true;
+                        document.body.style.overflow = 'hidden'; // Lock page scroll
+                        console.log('SERVICES SECTION PINNED!'); // Debug log
+                    }
+                } else { // servicesPinWrapper has left the viewport
+                    if (isServicesSectionPinned) {
+                        servicesSection.classList.remove('is-pinned');
+                        isServicesSectionPinned = false;
+                        document.body.style.overflow = 'auto'; // Unlock page scroll
+                        console.log('SERVICES SECTION UNPINNED!'); // Debug log
+                    }
                 }
             }
         });
     }, {
         root: null, // viewport
         rootMargin: '0px',
-        threshold: [0, 0.01, 0.99, 1] // Observe when entering, leaving, and fully visible
+        threshold: [0, 1] // Observe when any part enters/leaves and when fully visible
     });
 
     servicesPinObserver.observe(servicesPinWrapper);
@@ -314,6 +314,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastTouchY = 0;
 
     const handleScrollEvent = (event) => {
+        console.log("Scroll event fired, isPinned:", isServicesSectionPinned, "Animating:", isAnimatingCube); // Debug log
+
         if (prefersReducedMotion) return;
 
         // If the services section is pinned, prevent default page scroll and handle cube rotation
@@ -336,6 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 servicesSection.classList.remove('is-pinned');
                 isServicesSectionPinned = false;
                 document.body.style.overflow = 'auto'; 
+                console.log('Unpinning at boundary, initiating page scroll.'); // Debug log
 
                 // Attempt to initiate page scroll slightly after unpinning
                 // This makes the transition feel more natural.
@@ -366,6 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 servicesSection.classList.remove('is-pinned');
                 isServicesSectionPinned = false;
                 document.body.style.overflow = 'auto';
+                console.log('Unpinning at touch boundary, initiating page scroll.'); // Debug log
                 window.scrollBy({ top: direction * 50, behavior: 'smooth' }); 
             }
             lastTouchY = currentTouchY; // Reset for next move detection
@@ -396,13 +400,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 cubeContainer.style.top = 'auto';
                 cubeContainer.style.transform = 'none';
             }
-            servicesPinObserver.unobserve(servicesPinWrapper); // Stop observing
+            // Stop observing if reduced motion is preferred
+            servicesPinObserver.unobserve(servicesPinWrapper); 
+            console.log('Reduced motion active: Services section initialized flat.'); // Debug log
         } else {
             // Ensure section is not pinned initially and body is scrollable
             servicesSection.classList.remove('is-pinned');
+            isServicesSectionPinned = false; // Ensure flag is false
             document.body.style.overflow = 'auto';
             // Start observing the pin wrapper if not already
             servicesPinObserver.observe(servicesPinWrapper);
+            console.log('Services section initialized for 3D animation and pinning.'); // Debug log
         }
     };
 
