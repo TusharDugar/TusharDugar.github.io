@@ -32,6 +32,11 @@
 
     /* New color for grey headings (re-introduced) */
     --text-sub-heading-grey: #666666; /* Distinct grey color for headings */
+
+    /* Custom Gradients/Shadows (as used in the proposed CSS, now defined) */
+    --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); /* Dark gradient for cube faces */
+    --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); /* Stronger shadow for cube faces */
+    --cube-service-title-color: #9CFF33; /* Specific green for cube service titles */
 }
 
 /* Universal Box-Sizing for easier layout management */
@@ -182,7 +187,7 @@ html::before {
   padding: 80px 40px; /* Reduced from 200px for tighter spacing */
 }
 
-/* Reveal Animation Base */
+/* Reveal Animation Base (Applied to other sections, not #services or cube-container now) */
 .reveal-item {
     opacity: 0;
     transform: translateY(40px);
@@ -494,87 +499,65 @@ html::before {
 
 /* Services Section Wrapper (for pinning) */
 #services-pin-wrapper {
-    height: 1600vh; /* As specified in prompt */
+    height: 1600vh; /* As specified in prompt - GSAP ScrollTrigger will use this to define scroll length */
     position: relative;
     width: 100%;
 }
 
-/* Services Section Styles (Two-Column Layout & Manual Pinning) */
+/* Services Section Styles (Two-Column Layout & Pinning) */
 .services-section {
-    /* REMOVED: position: sticky; top: 0; height: 100vh; */
-    /* Instead, it should be a regular block element that takes up 100vh when it appears */
-    width: 100%; /* Ensure it spans full width of parent */
-    height: 100vh; /* It occupies this height naturally within the wrapper */
-    display: flex; 
-    align-items: center;
-    justify-content: center; /* Changed from space-between to center */
-    max-width: 1200px; 
-    margin: 0 auto;
+    position: relative; /* Default state, GSAP will manage 'fixed' */
+    width: 100%;
+    height: 100vh; /* Occupy full viewport height when active */
+    display: grid; /* Use CSS Grid for layout */
+    grid-template-columns: minmax(auto, 1fr) auto; /* Flexible left, auto width for right (cube) */
+    gap: 80px; /* Gap between columns */
+    align-items: center; /* Vertically align content in grid cells */
+    max-width: 1200px; /* Max width of the overall section content */
+    margin: 0 auto; /* Center the section horizontally */
     z-index: 2; 
     background-color: transparent; 
-    padding: 100px 20px; 
+    padding: 100px 20px; /* Standard padding for the section */
     box-sizing: border-box;
-    gap: 0; /* Changed from 80px, no gap needed with single child */
-    overflow: hidden; 
-    position: relative; /* Add relative position so z-index works on its children */
-}
-
-/* Class added by JS when the section is manually pinned */
-.services-section.is-pinned {
-    position: fixed; 
-    top: 0;
-    left: 50%;
-    width: 100%; /* Ensure it takes full viewport width before max-width applies */
-    max-width: 1200px; /* Constrain max-width when fixed, keeps content centered */
-    transform: translateX(-50%); 
-    z-index: 10; 
-    padding: 0 60px; /* Match main-layout-container padding when fixed */
-    display: flex; 
-    gap: 0; /* Changed from 80px */
-    align-items: center; 
-    justify-content: center; /* Changed from space-between */
-    background-color: transparent; 
-    overflow: hidden; 
+    overflow: hidden; /* Important for containing 3D content */
+    opacity: 0; /* Hidden by default, GSAP will fade it in */
+    transform: scale(0.8); /* Smaller by default, GSAP will scale it up */
 }
 
 
-/* Left Column of Services Section (These styles are now largely moot as the element is removed from HTML) */
+/* Left Column of Services Section (Text Column) */
 .services-left-column {
-    /* flex-basis: 45%; */ /* Original value - commented out as element is removed */
-    /* max-width: 500px; */ /* Original value - commented out as element is removed */
-
     position: relative; 
     z-index: 2; 
     display: flex;
     flex-direction: column;
-    justify-content: center; 
-    align-items: flex-start; 
+    justify-content: center; /* Vertically center content */
+    align-items: flex-start; /* Align text to the start */
     text-align: left; 
-    height: 100%; 
-    padding-right: 20px; 
+    height: 100%; /* Take full height of grid cell */
+    padding-right: 0; /* No extra padding, gap handles spacing */
     box-sizing: border-box;
     flex-shrink: 1; 
+    opacity: 1; /* GSAP will control this later */
 }
 
-/* Right Column of Services Section */
+/* Right Column of Services Section (Cube Column) */
 .services-right-column {
-    overflow: hidden; /* Added overflow: hidden to contain the cube */
+    overflow: hidden; /* Essential for containing 3D content */
     position: relative; 
     z-index: 1; 
-    flex-basis: 100%; /* Changed from 50% to take full width */
-    max-width: 100%; /* Changed from 500px to take full width */
-    display: flex; 
-    justify-content: center; /* Horizontally center cube within its column, as specified */
-    align-items: center; /* Vertically center cube within its column, as specified */
-    height: 100%; /* Take full height of parent flex container */
+    display: flex; /* For centering the cube-container within this column */
+    justify-content: center; /* Horizontally center cube within its column */
+    align-items: center; /* Vertically center cube within its column */
+    height: 100%; /* Take full height of grid cell */
     box-sizing: border-box; 
-    flex-shrink: 1; 
-    min-width: 0; /* Allow flexbox to shrink it correctly */
+    flex-shrink: 0; /* Prevent this column from shrinking more than necessary */
+    min-width: 0; /* Allow content to shrink if necessary in flex context */
 }
 
 
-/* Services Main Title (These styles are now moot as the element is removed from HTML) */
-/* .services-heading {
+/* Services Main Title */
+.services-heading {
     font-family: 'Poppins', sans-serif; 
     font-size: clamp(2.5rem, 8vw, 8rem); 
     line-height: 0.75em;
@@ -590,26 +573,25 @@ html::before {
 .services-heading .text-white { color: var(--text-light); display: block; } 
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
-/* Styling for the description in the left column (Moot) */
-/* .services-description {
+/* Styling for the description in the left column */
+.services-description {
     font-size: clamp(0.875rem, 1.2vw, 1rem); 
     line-height: 1.4; 
     color: var(--text-medium);
     text-align: left;
     max-width: 100%;
-} */
+}
 
 
 /* --- 3D Cube Animation Styles --- */
 .cube-container {
-    width: 100%; /* Take full width of parent right column */
-    max-width: 500px; /* As specified in prompt */
-    height: 300px; /* As specified in prompt */
+    width: 100%; /* Takes full width of its parent (.services-right-column) */
+    /* max-width, height will be set by JS/GSAP based on breakpoint (900px, 640px, 300px) */
+    aspect-ratio: 1 / 1; /* Ensures it's always a perfect square */
     margin: 0 auto; /* Center horizontally within its flex parent */
     perspective: 1200px; /* As specified in prompt */
-    position: sticky; /* As specified in prompt */
-    top: 50%; /* As specified in prompt */
-    transform: translateY(-50%); /* As specified in prompt */
+    
+    position: relative; /* Ensure it stays in flow, relative to right column */
     overflow: hidden; /* Important for clipping rotating elements */
     will-change: transform, opacity;
     border: none;
@@ -620,9 +602,10 @@ html::before {
     height: 100%;
     position: relative;
     transform-style: preserve-3d; /* As specified in prompt */
-    transform: rotateX(0deg); /* Initial state for dynamic rotateX flip */
+    transform: rotateX(0deg); /* Initial state for dynamic rotateX flip, GSAP will control */
     will-change: transform;
     overflow: hidden; /* Added overflow: hidden as safeguard */
+    /* No transition here, GSAP will apply transform directly */
 }
 
 .face {
@@ -630,9 +613,9 @@ html::before {
     width: 100%;
     height: 100%; /* Each face must match container height, as specified */
     border: none;
-    background-color: var(--bg-tool-card); /* Dark background */
+    background: var(--bg-gradient-2); /* Using defined variable */
     color: var(--text-light); /* Light text color */
-    padding: 2rem; /* As specified in prompt */
+    padding: clamp(1rem, 4vw, 2.5rem); /* Responsive padding with clamp */
     display: flex; /* As specified in prompt */
     flex-direction: column;
     justify-content: center; /* Vertically centers content block, as specified */
@@ -641,8 +624,10 @@ html::before {
     will-change: transform, opacity;
     box-sizing: border-box;
     text-align: left; /* Ensure text inside face respects alignment */
-    /* Add a transition for opacity if you want a subtle fade for face content */
-    transition: opacity 300ms ease-in-out; /* Adjusted for smooth content reveal/hide */
+    box-shadow: var(--shadow-strong); /* Using defined variable */
+    opacity: 0; /* Initial opacity for all faces except active, GSAP will manage */
+    visibility: hidden; /* Initially hidden, GSAP will manage */
+    border-radius: 15px; /* Added from proposed CSS */
 }
 
 /* Styling for content within the face */
@@ -657,27 +642,27 @@ html::before {
 }
 
 .service-title {
-    font-size: clamp(1rem, 1.5vw, 1.25rem); /* As specified in prompt */
+    font-size: clamp(1rem, 1.8vw, 1.8rem); /* Responsive title font size */
     font-weight: 700;
-    margin-bottom: 0.5rem; /* As specified in prompt */
+    margin-bottom: clamp(0.5rem, 1vw, 1rem); /* Responsive margin */
     line-height: 1.2;
-    color: #9CFF33; /* As specified in prompt */
+    color: var(--cube-service-title-color); /* Using defined variable */
 }
 
 .service-description {
     text-align: left; /* As specified in prompt */
     line-height: 1.4; /* As specified in prompt */
     word-spacing: 1px;
-    font-size: clamp(0.875rem, 1.2vw, 1rem); /* As specified in prompt */
+    font-size: clamp(0.875rem, 1.2vw, 1rem); /* Responsive description font size */
     color: var(--text-medium);
     max-width: 100%;
 }
 
 .face-number {
     position: absolute; /* As specified in prompt */
-    bottom: 1rem; /* As specified in prompt */
-    right: 1rem;  /* As specified in prompt */
-    font-size: clamp(3rem, 10vw, 6rem); /* As specified in prompt */
+    bottom: clamp(1rem, 2vw, 1.5rem); /* Responsive position */
+    right: clamp(1rem, 2vw, 1.5rem);  /* Responsive position */
+    font-size: clamp(3rem, 10vw, 6rem); /* Responsive font size */
     font-weight: 500;
     color: rgba(255, 255, 255, 0.08); /* As specified in prompt */
     pointer-events: none;
@@ -687,80 +672,60 @@ html::before {
 
 /* --- Responsive adjustments for the services section --- */
 @media (min-width: 768px) { /* z-index rules apply from 768px and up */
-    /* .services-left-column { z-index: 2; } */ /* Moot as element removed */
+    .services-left-column {
+        z-index: 2; /* Ensure it stays above the cube-container */
+    }
     .services-right-column { 
-        z-index: 1; /* Lower z-index than left column if it existed, still valid */
+        z-index: 1; /* Lower z-index than left column */
     }
 }
 
 @media (max-width: 1200px) {
-    .services-section.is-pinned {
-        padding: 0 40px; /* Adjust fixed padding for medium screens */
+    .services-section {
+        grid-template-columns: minmax(auto, 1fr) auto; /* Maintain grid but allow sizing changes */
+        gap: 60px;
+        padding: 80px 40px;
     }
-    /* .services-left-column { flex-basis: 40%; } */ /* Moot as element removed */
-    .services-right-column {
-        flex-basis: 100%; /* Ensure it takes full width here too */
-        max-width: 100%; /* Ensure it takes full width here too */
-    }
-    .cube-container {
-        max-width: 80%; /* Consistent responsive max-width */
-        height: 100%; /* Height scales with parent */
-        min-height: 300px; /* Ensure min-height */
-    }
-    .face {
-        padding: 1.2rem;
-    }
-    .face-number {
-        bottom: 0.8rem;
-        right: 0.8rem;
-    }
+    /* Cube container max width/height will be handled by GSAP's matchMedia for 640px */
 }
 
 @media (max-width: 768px) {
     .services-section {
-        flex-direction: column; /* Stack into a single column, as specified */
-        height: auto; /* Allow height to adjust */
-        min-height: 100vh; /* Ensure it still takes up space when not pinned */
+        grid-template-columns: 1fr; /* Stack into a single column */
+        height: auto; /* Allow height to adjust for stacked content */
+        min-height: 100vh; /* Ensure it still takes up space */
         padding: 60px 20px; /* Adjust padding */
-        gap: 0; /* Changed from 40px */
+        gap: 40px; /* Spacing between stacked items */
+        text-align: center; /* Center text for stacked layout */
+        /* GSAP's matchMedia will handle unpinning and transforming the cube to flat mode */
     }
-    /* .services-section.is-pinned should effectively mimic the .services-section mobile state */
-    .services-section.is-pinned {
-        flex-direction: column;
-        top: auto; left: auto; transform: none; /* Override fixed positioning for mobile context */
-        position: relative; /* Make it flow naturally */
-        width: 100%;
-        height: auto;
-        max-width: 100%;
-        padding: 60px 20px;
-        margin: 0 auto;
-        z-index: 1; /* Not aggressively on top in stacked layout */
-        gap: 0; /* Changed from 80px */
-        justify-content: center; /* Changed from space-between */
+    .services-left-column {
+        align-items: center; /* Center text block horizontally */
+        text-align: center;
+        height: auto; /* Allow content to dictate height */
+        z-index: auto; /* Reset z-index */
     }
-    /* .services-left-column { flex-basis: auto; max-width: 100%; ... } */ /* Moot as element removed */
-    /* .services-heading, .services-description { text-align: center; } */ /* Moot as element removed */
+    .services-heading, .services-description {
+        text-align: center;
+    }
     .services-right-column {
-        flex-basis: auto; /* Auto width */
-        max-width: 100%;
         height: auto;
-        justify-content: center;
-        align-items: center;
-        z-index: auto; /* Reset z-index for stacked layout */
+        z-index: auto; /* Reset z-index */
+        /* Cube container max-width/height will be handled by GSAP's matchMedia for 300px */
+        margin-top: 20px; /* Space from text above */
     }
     .cube-container {
-        position: relative; /* Remove sticky, as specified */
-        top: auto;
-        transform: none;
-        max-width: 80%;
-        height: 400px; /* As specified in prompt */
+        position: relative; /* Disable sticky on mobile */
+        top: auto; 
+        transform: none; 
+        height: auto; /* Allow it to scale */
         margin: 0 auto;
         min-height: 300px; /* Ensure min-height */
+        /* GSAP's matchMedia will explicitly apply flat styles to cube and faces */
     }
-    .cube { /* On mobile, the cube also needs to flatten */
+    .cube { 
         transform-style: flat; /* Ensure flat for stacking */
-        transform: none !important; /* Reset any JS transform */
-        transition: none !important; /* No cube rotation animation */
+        transform: none; /* Reset any GSAP transform initially */
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -771,10 +736,10 @@ html::before {
         justify-content: center;
         align-items: center;
         text-align: center;
-        position: relative !important; /* Make faces static on mobile */
-        transform: none !important; /* Reset face transforms */
-        opacity: 1 !important; /* All faces visible */
-        visibility: visible !important; /* All faces visible */
+        position: relative; /* Make faces static on mobile */
+        transform: none; /* Reset face transforms */
+        opacity: 1; /* All faces visible by default in stacked mode */
+        visibility: visible;
         height: auto; /* Allow content to dictate height */
     }
     .service-content {
@@ -786,8 +751,13 @@ html::before {
         text-align: center;
     }
     .face-number {
-        bottom: 0.5rem;
-        right: 0.5rem;
+        position: relative; /* Make number flow with content */
+        bottom: auto;
+        right: auto;
+        font-size: 0.8em;
+        color: var(--text-medium);
+        margin-top: 10px;
+        align-self: flex-end;
     }
 }
 
@@ -797,21 +767,16 @@ html::before {
         padding: 40px 15px;
     }
     .cube-container {
-        height: 300px; /* As specified in prompt */
+        /* max-width/height will be handled by GSAP's matchMedia for 300px */
         min-height: 200px; /* Ensure min-height */
     }
     .face {
         padding: 0.8rem;
     }
-    .face-number {
-        bottom: 0.2rem;
-        right: 0.2rem;
-    }
 }
 
-/* --- Accessibility: Reduced motion override --- */
+/* --- Accessibility: Reduced motion override (GSAP also handles this directly) --- */
 @media (prefers-reduced-motion: reduce) {
-    /* For other reveal animations */
     .reveal-item,
     .reveal-parent .reveal-child,
     .reveal-stagger-container .reveal-stagger,
@@ -823,42 +788,46 @@ html::before {
         visibility: visible !important;
     }
     
-    /* Specific overrides for the services section in reduced motion */
-    #services-pin-wrapper { /* Hide wrapper as pinning is disabled */
-        height: auto !important;
+    /* These specific overrides will be mirrored/managed by GSAP's matchMedia for reduced-motion */
+    #services-pin-wrapper { 
+        height: auto !important; 
         position: relative !important;
     }
-    .services-section { /* Ensure it's static and not fixed/centered */
+    .services-section { 
         position: relative !important;
         top: auto !important;
         left: auto !important;
         transform: none !important;
         height: auto !important;
         min-height: auto !important;
-        padding: 80px 40px !important; /* Revert to normal section padding */
+        padding: 80px 40px !important; 
         pointer-events: auto !important;
-        flex-direction: column !important; /* Always stack */
+        grid-template-columns: 1fr !important; 
+        flex-direction: column !important; 
         justify-content: flex-start !important;
         align-items: center !important;
-        gap: 20px !important; /* Default stacked gap */
+        gap: 20px !important; 
+        opacity: 1 !important; /* Ensure visibility */
+        transform: none !important; /* Ensure no scale */
     }
-    /* .services-left-column { flex-basis: auto !important; max-width: 100% !important; ... } */ /* Moot as element removed, keeping right-column for reference */
-    .services-right-column { /* Adjusting only right column here as left is removed */
-        flex-basis: auto !important; /* Ensures it collapses and stacks properly */
+    .services-left-column, .services-right-column {
+        flex-basis: auto !important;
         max-width: 100% !important;
         height: auto !important;
         padding-right: 0 !important;
-        margin-bottom: 20px !important; /* Add some space if there were other elements (now it's just padding) */
-        justify-content: center !important; /* Center cube in reduced motion */
+        margin-bottom: 20px !important; 
+        justify-content: center !important; 
         align-items: center !important;
         text-align: center !important;
         z-index: auto !important;
     }
-    /* .services-heading, .services-description { text-align: center !important; } */ /* Moot as element removed */
+    .services-heading, .services-description {
+        text-align: center !important;
+    }
 
     .cube-container {
-        perspective: none !important;
-        transform: none !important;
+        perspective: none !important; 
+        transform: none !important; 
         height: auto !important;
         margin: 0 auto !important;
         position: relative !important;
@@ -866,9 +835,10 @@ html::before {
         overflow: visible !important;
         max-width: 100% !important;
         z-index: auto !important;
+        aspect-ratio: auto !important; 
     }
     .cube {
-        transform-style: flat !important;
+        transform-style: flat !important; 
         transform: none !important;
         transition: none !important;
         display: flex;
@@ -883,15 +853,20 @@ html::before {
         position: relative !important;
         transform: none !important;
         height: auto !important;
-        justify-content: center !important; /* Center content within face */
+        justify-content: center !important; 
         align-items: center !important;
         text-align: center !important;
-        padding: 1rem !important; /* Consistent padding */
+        padding: 1rem !important; 
+        box-shadow: none !important; 
+        background: var(--bg-tool-card) !important; 
     }
     .face .service-content {
         justify-content: center !important;
         align-items: center !important;
         text-align: center !important;
+    }
+    .face .service-title {
+        color: var(--text-light) !important; 
     }
     .face .service-description {
         text-align: center !important;
