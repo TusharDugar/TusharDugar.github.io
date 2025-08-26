@@ -8,7 +8,7 @@
     --text-medium-card: #4B4B4B;
     --accent-primary-sawad: #FF6B00;
     --text-sub-heading-grey: #666666;
-    /* ✅ FIX 1: Correct color is now orange */
+    /* ✅ CORRECTED: The service title color is now orange */
     --service-title-color: #FF6B00; 
     --bg-tool-card: #1A1A1A;
     --tool-icon-bg: #F8F8F8;
@@ -78,26 +78,13 @@ body {
 .services-heading .text-gray { display: block; color: var(--text-sub-heading-grey); } 
 .cube-container { width: 100%; max-width: 900px; height: 400px; margin: 0 auto; perspective: 1000px; position: relative; }
 .cube { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
-.face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 24px;
-    background: black;
-    padding: clamp(1.5rem, 4vw, 2.5rem);
-    border: 1px solid #333;
-    overflow: hidden;
-}
+.face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; border-radius: 24px; background: black; padding: clamp(1.5rem, 4vw, 2.5rem); border: 1px solid #333; overflow: hidden; }
 .service-title {
     font-size: clamp(1.2rem, 2.2vw, 2rem);
-    /* ✅ FIX 2: Correct font weight is now bold */
+    /* ✅ CORRECTED: Font weight is now bold */
     font-weight: 600; 
     line-height: 1.3;
-    color: var(--service-title-color); /* This will now correctly use the orange color from :root */
+    color: var(--service-title-color); /* This now correctly points to the orange variable */
     margin: 0 0 0.8rem 0;
 }
 .service-description {
