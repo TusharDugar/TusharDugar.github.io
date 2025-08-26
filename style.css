@@ -96,7 +96,7 @@ body {
 .services-heading .text-gray { display: block; color: var(--text-sub-heading-grey); } 
 .cube-container { 
     flex: 1;
-    max-width: 450px;
+    max-width: 380px;
     height: 220px;
     perspective: 1600px;
     position: relative; 
@@ -121,6 +121,11 @@ body {
 .service-title { font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 600; line-height: 1.2; color: var(--service-title-color); margin-bottom: 0.5rem; }
 .service-description { font-size: clamp(0.8rem, 1.2vw, 0.9rem); line-height: 1.4; color: #cccccc; max-width: 100%; }
 .face-number { position: absolute; bottom: -15px; right: 15px; font-size: clamp(5rem, 15vw, 8rem); font-weight: 700; color: rgba(50, 50, 50, 0.5); z-index: -1; line-height: 1; }
+@media (max-width: 768px) {
+    .services-section { flex-direction: column; justify-content: center; text-align: center; }
+    .services-heading { text-align: center; margin-bottom: 40px; }
+    .cube-container { max-width: 100%; height: auto; }
+}
 
 /* Premium Tools Section */
 .tools-heading .text-white, .tools-heading .text-gray { display: block; }
