@@ -111,7 +111,7 @@ body {
     justify-content: center;
     border-radius: 20px;
     background: black;
-    padding: 1rem;
+    padding: 0.8rem 1.5rem; /* Tighter padding */
     border: 1px solid #333;
     overflow: hidden;
 }
@@ -122,14 +122,14 @@ body {
     padding: 0;
 }
 .service-title {
-    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-size: clamp(1rem, 2vw, 1.4rem); /* Final polish on size */
     font-weight: 600; 
     line-height: 1.3;
     color: var(--service-title-color);
     margin-bottom: 0.5rem;
 }
 .service-description {
-    font-size: clamp(0.85rem, 1vw, 1rem);
+    font-size: clamp(0.8rem, 1.2vw, 0.95rem); /* Final polish on size */
     line-height: 1.5;
     color: #cccccc;
     max-width: 95%;
