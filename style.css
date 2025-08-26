@@ -511,8 +511,8 @@ html::before {
     height: 100vh; /* Occupy full viewport height when active */
     display: flex; /* Changed to flex container */
     flex-direction: column; /* Stack heading and cube */
-    align-items: center; /* Center children horizontally by default */
-    justify-content: center; /* Center children vertically */
+    align-items: stretch; /* IMPORTANT: Stretch items to fill available width */
+    justify-content: flex-start; /* IMPORTANT: Align to the top, not center */
     gap: 40px; /* Gap between heading and cube */
     max-width: 1200px; /* Max width of the overall section content */
     margin: 0 auto; /* Center the section horizontally */
@@ -537,9 +537,9 @@ html::before {
     margin-bottom: 0; /* Managed by parent gap */
     text-transform: uppercase;
     text-align: left; /* Keep left-aligned as per requirement */
-    align-self: flex-start; /* Align to the start of the flex container */
+    align-self: flex-start; /* IMPORTANT: Align to the start of the flex container */
     position: relative;
-    z-index: 4; 
+    z-index: 2; /* IMPORTANT: Ensure heading is above cube */
     padding: 0;
     width: 100%; /* Take full width to allow text-align: left */
     
@@ -550,13 +550,11 @@ html::before {
 .services-heading .text-white { color: var(--text-light); display: block; } 
 .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
-/* services-description is removed from HTML */
-
 /* Cube Container (now direct child of #services) */
 .cube-container {
     /* width and height will be explicitly set by JS/GSAP based on breakpoint (900px, 640px, 300px) */
     aspect-ratio: 1 / 1; /* Ensures it's always a perfect square */
-    /* margin: 0 auto; */ /* Centering is handled by .services-section's align-items: center */
+    /* margin: 0 auto; */ /* Horizontal centering is handled by .services-section's align-items: stretch + align-self: center */
     perspective: 1200px; /* As specified in prompt */
     
     position: relative; 
@@ -571,8 +569,11 @@ html::before {
 
     /* Ensure it aligns within the main #services flex column */
     display: flex;
-    justify-content: center; /* Center the cube visually within its own container */
+    justify-content: center; /* IMPORTANT: Center the cube visually within its own container */
     align-items: center;
+    align-self: center; /* IMPORTANT: Center the cube-container horizontally within the section */
+    
+    z-index: 1; /* Cube is behind the heading */
 }
 
 .cube {
@@ -651,22 +652,11 @@ html::before {
 }
 
 /* --- Responsive adjustments for the services section --- */
-@media (min-width: 768px) { /* z-index rules apply from 768px and up */
-    .services-heading {
-        z-index: 2; /* Ensure heading stays above the cube */
-    }
-    .cube-container { 
-        z-index: 1; /* Cube is behind the heading */
-    }
-}
-
 @media (max-width: 1200px) {
     .services-section {
-        /* On medium desktops, adjust padding/gap as needed */
-        gap: 40px; /* Reduced gap */
+        gap: 40px; /* Adjusted gap for smaller screens */
         padding: 80px 40px;
     }
-    /* Cube container max width/height will be handled by GSAP's matchMedia for 640px */
 }
 
 @media (max-width: 768px) {
@@ -677,7 +667,6 @@ html::before {
         padding: 60px 20px; /* Adjust padding */
         gap: 30px; /* Spacing between stacked items */
         text-align: center; /* Center text for stacked layout */
-        /* GSAP's matchMedia will handle unpinning and transforming the cube to flat mode */
     }
     .services-heading {
         align-self: center; /* Center heading when stacked */
@@ -685,7 +674,6 @@ html::before {
         height: auto; /* Allow content to dictate height */
         z-index: auto; /* Reset z-index */
     }
-    /* services-description is removed */
     .cube-container {
         position: relative; /* Disable sticky on mobile */
         top: auto; 
@@ -693,7 +681,7 @@ html::before {
         height: auto; /* Allow it to scale */
         margin: 0 auto;
         min-height: 300px; /* Ensure min-height */
-        /* GSAP's matchMedia will explicitly apply flat styles to cube and faces */
+        align-self: center; /* Keep centered when stacked */
     }
     .cube { 
         transform-style: flat; /* Ensure flat for stacking */
