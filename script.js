@@ -1,9 +1,8 @@
 // script.js
 // Global constants for animation timing
-const ROTATION_INCREMENT_DEG = 45; // Degrees for an 8-sided prism (360 / 8 = 45)
-const ANIMATION_DURATION_MS = 1200; // Match CSS transition duration for .cube
-const SCROLL_THRESHOLD_PX = 30; // Minimum scroll pixels to trigger a swipe
-const SCROLL_DEBOUNCE_TIME_MS = 100; // Prevent rapid-fire wheel events from stacking
+// ROTATION_INCREMENT_DEG and ANIMATION_DURATION_MS are now managed by GSAP for the cube animation
+const SCROLL_THRESHOLD_PX = 30; // Minimum scroll pixels to trigger a swipe (less relevant with GSAP but kept for other interactions)
+const SCROLL_DEBOUNCE_TIME_MS = 100; // Prevent rapid-fire wheel events from stacking (less relevant with GSAP)
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
@@ -132,283 +131,193 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize IntersectionObserver-based animations (for About section, Tools, Contact, and other reveal-items)
     initIntersectionObserverAnimations();
 
-    // --- Services Section 3D Cube Animation (Discrete Step) ---
+    // --- Services Section 3D Cube Animation (GSAP + ScrollTrigger) ---
     const servicesSection = document.getElementById('services');
-    const servicesPinWrapper = document.getElementById('services-pin-wrapper'); // The new wrapper div for pinning
+    const servicesPinWrapper = document.getElementById('services-pin-wrapper');
+    const servicesLeftColumn = document.querySelector('.services-left-column');
     const cubeContainer = document.querySelector('.cube-container');
-    const cube = document.getElementById('services-cube'); // Corrected ID usage from HTML
-    
-    // Log elements to confirm they are found
-    console.log("DOMContentLoaded triggered");
-    console.log({ servicesSection, servicesPinWrapper, cubeContainer, cube });
-
-    if (!servicesSection || !servicesPinWrapper || !cubeContainer || !cube) {
-        console.error("Missing key elements. Aborting cube animation setup.");
-        return; // Exit if elements are missing
-    }
-    
+    const cube = document.getElementById('services-cube');
     const faces = document.querySelectorAll('.face');
     const SERVICES_COUNT = faces.length; // Should be 8.
+    const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT; // 45 degrees for 8 faces
 
-    let currentRotationAngle = 0; // Tracks the cube's rotation for the active face
-    let activeFaceIndex = 0;      // Index of the face currently 'front'
-    let isCubeTransitioning = false;  // Flag to prevent multiple animations at once
-    let isServicesSectionPinned = false; // Flag for pinning state
-    
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Calculates the `translateZ` distance for faces to form an 8-sided prism based on height for X-axis rotation
-    function calculateFaceOffset() {
-        if (!cubeContainer || SERVICES_COUNT === 0) return 0;
-        
-        const faceHeight = cubeContainer.offsetHeight; // Use height for X-axis rotation
-        // R = (H/2) / tan(PI/N) formula for a regular N-sided polygon, where H is the dimension along the rotation plane.
-        // This is the apothem (distance from center to face).
-        const calculatedOffset = (faceHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
-        
-        return isNaN(calculatedOffset) || calculatedOffset === 0 ? 300 : calculatedOffset; // Default to 300px if calculation fails
+    if (!servicesSection || !servicesPinWrapper || !servicesLeftColumn || !cubeContainer || !cube || SERVICES_COUNT === 0) {
+        console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
+        // Fallback: ensure section and faces are visible if animation fails
+        if (servicesSection) {
+            gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible' });
+        }
+        faces.forEach(face => {
+            gsap.set(face, { opacity: 1, visibility: 'visible', transform: 'none', position: 'relative' });
+            face.style.transformStyle = 'flat'; // Ensure CSS takes over
+        });
+        if (cube) {
+            gsap.set(cube, { transform: 'none' });
+            cube.style.transformStyle = 'flat';
+        }
+        return; 
     }
 
-    // Sets up the initial 3D positioning of each face for rotateX
-    function setupCubeFaces() {
-        if (prefersReducedMotion || !cube || SERVICES_COUNT === 0) {
-            // If reduced motion or elements are missing, ensure faces are displayed flat/stacked
-            faces.forEach(face => {
-                face.style.transition = 'none';
-                face.style.visibility = 'visible';
-                face.style.opacity = 1;
-                face.style.position = 'relative'; // Stack them
-                face.style.transform = 'none'; // Flatten any 3D transforms
-            });
-            if (cube) cube.style.transform = 'none'; // Flatten cube
-            return;
-        }
+    // Calculate `translateZ` distance for faces
+    function calculateFaceOffset(cubeHeight) {
+        if (!cubeHeight || SERVICES_COUNT === 0) return 0;
+        // R = (H/2) / tan(PI/N)
+        return (cubeHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+    }
 
-        const faceOffset = calculateFaceOffset();
-
+    // Set up initial 3D positioning of each face
+    function setupInitialCubeFaces(currentCubeSize) {
+        const faceOffset = calculateFaceOffset(currentCubeSize);
         faces.forEach((face, i) => {
-            face.style.transition = 'none'; // Clear transitions for setup
-            face.style.visibility = 'hidden'; // Hide all initially
-            face.style.opacity = 0; // Set opacity to 0
-
             const angleForFace = i * ROTATION_INCREMENT_DEG;
             // Position faces around the X-axis for a vertical prism
-            face.style.transform = `rotateX(${angleForFace}deg) translateZ(${faceOffset}px)`;
-        });
-
-        cube.style.transition = 'none'; // No transition for initial cube setup
-        cube.style.transform = `rotateX(${-currentRotationAngle}deg)`; // Apply initial cube rotation (dynamic X-axis)
-        
-        // Initial visibility: only the first face is fully visible
-        if (faces[activeFaceIndex]) {
-            faces[activeFaceIndex].style.visibility = 'visible';
-            faces[activeFaceIndex].style.opacity = 1;
-        }
-    }
-
-    // Animates the cube to the next/previous face using rotateX
-    function animateCube(direction) {
-        // console.log("Animating cube in direction:", direction, "Current index:", activeFaceIndex); // Debug log
-        if (isCubeTransitioning || prefersReducedMotion) return false;
-
-        let nextActiveFaceIndex = activeFaceIndex + direction;
-
-        // Determine if we hit a boundary that should allow page scroll
-        const atStartBoundary = activeFaceIndex === 0 && direction === -1;
-        const atEndBoundary = activeFaceIndex === SERVICES_COUNT - 1 && direction === 1;
-
-        if (atStartBoundary || atEndBoundary) {
-            // Cube animation cannot proceed, signal to unpin/scroll page
-            return false; 
-        }
-
-        // Valid rotation, update the active face
-        const previousActiveFaceIndex = activeFaceIndex;
-        activeFaceIndex = nextActiveFaceIndex;
-
-        isCubeTransitioning = true; // Set flag to block new animations
-
-        // Hide the previous active face content immediately (with a subtle fade from CSS)
-        if (faces[previousActiveFaceIndex]) {
-            faces[previousActiveFaceIndex].style.opacity = 0;
-            // visibility hidden is applied after opacity transition for accessibility/DOM interaction
-            setTimeout(() => {
-                if (!isServicesSectionPinned) return; // Only hide if still pinned
-                faces[previousActiveFaceIndex].style.visibility = 'hidden';
-            }, 300); // Matches face opacity transition duration
-        }
-
-        // Calculate new rotation angle
-        currentRotationAngle += direction * ROTATION_INCREMENT_DEG;
-
-        // Apply the transition to the cube's rotation
-        cube.style.transition = `transform ${ANIMATION_DURATION_MS}ms cubic-bezier(0.645, 0.045, 0.355, 1)`;
-        cube.style.transform = `rotateX(${-currentRotationAngle}deg)`;
-
-        // Listen for the end of the CSS transform transition on the cube
-        const onTransitionEnd = () => {
-            cube.removeEventListener('transitionend', onTransitionEnd); // Clean up listener
-            
-            // After transition, make the new active face visible and opaque
-            if (faces[activeFaceIndex]) {
-                faces[activeFaceIndex].style.visibility = 'visible';
-                faces[activeFaceIndex].style.opacity = 1;
-            }
-
-            isCubeTransitioning = false; // Reset flag
-            cube.style.transition = 'none'; // Clear transition property to prevent interference on subsequent direct transforms
-        };
-
-        cube.addEventListener('transitionend', onTransitionEnd);
-
-        return true; // Cube animation successfully started
-    }
-
-
-    // --- Manual Scroll Pinning and Locking for Services Section ---
-    const servicesPinObserver = new IntersectionObserver((entries) => {
-        if (prefersReducedMotion) return; // Disable pinning/locking for reduced motion
-
-        entries.forEach(entry => {
-            console.log('Observer fired (servicesPinWrapper):', { // Debug log
-                targetId: entry.target.id,
-                isIntersecting: entry.isIntersecting,
-                intersectionRatio: entry.intersectionRatio,
-                isServicesSectionPinned: isServicesSectionPinned // Log current state
+            gsap.set(face, { 
+                transform: `rotateX(${angleForFace}deg) translateZ(${faceOffset}px)`,
+                opacity: (i === 0) ? 1 : 0, // Only first face visible initially
+                visibility: (i === 0) ? 'visible' : 'hidden',
+                position: 'absolute', // Ensure 3D positioning
+                transformStyle: 'preserve-3d' // Ensure backface-visibility works
             });
-            
-            if (entry.target.id === 'services-pin-wrapper') {
-                if (entry.isIntersecting && entry.intersectionRatio > 0) { // When servicesPinWrapper is at least partly visible
-                    if (!isServicesSectionPinned) {
-                        servicesSection.classList.add('is-pinned');
-                        isServicesSectionPinned = true;
-                        document.body.style.overflow = 'hidden'; // Lock page scroll
-                        console.log('SERVICES SECTION PINNED! Body overflow hidden.'); // Debug log
-                    }
-                } else { // servicesPinWrapper has left the viewport (either above or below)
-                    if (isServicesSectionPinned) { // Only unpin if it was previously pinned
-                        servicesSection.classList.remove('is-pinned');
-                        isServicesSectionPinned = false;
-                        document.body.style.overflow = 'auto'; // Unlock page scroll
-                        console.log('SERVICES SECTION UNPINNED! Body overflow auto.'); // Debug log
-                    }
+        });
+        // Ensure cube itself is in 3D mode
+        gsap.set(cube, { transformStyle: 'preserve-3d' });
+    }
+
+    let cubeAnimationTimeline; // Declare timeline outside to manage it globally
+
+    // GSAP Responsive Media Queries (matchMedia)
+    gsap.matchMedia().add({
+        // Desktop Large (min-width: 1201px) - Cube 900px
+        "largeDesktop": "(min-width: 1201px)",
+        // Desktop Medium / Tablet Large (min-width: 769px and max-width: 1200px) - Cube 640px
+        "mediumDesktop": "(min-width: 769px) and (max-width: 1200px)",
+        // Mobile / Tablet Small (max-width: 768px) - Cube 300px, stacked layout
+        "mobile": "(max-width: 768px)",
+        // Reduced motion override (for all screen sizes)
+        "reducedMotion": "(prefers-reduced-motion: reduce)"
+
+    }, (context) => { // context.conditions will tell us which media queries matched
+        
+        let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
+        let currentCubeSize = 300; // Default smallest size
+
+        // Kill any previous ScrollTrigger for this section to prevent duplicates on resize
+        if (ScrollTrigger.getById('servicesCubePin')) {
+            ScrollTrigger.getById('servicesCubePin').kill(true); // true to revert to original styles
+            cubeAnimationTimeline.clear(); // Clear the timeline
+        }
+
+        // --- Handle Reduced Motion First ---
+        if (reducedMotion) {
+            console.log("Reduced motion detected. Applying flat layout.");
+            // Reset styles to flat/stacked appearance
+            gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0 });
+            gsap.set(servicesLeftColumn, { opacity: 1, y: 0, x: 0 }); // Ensure left column is visible and not animated
+            gsap.set(cubeContainer, { width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+            gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
+            faces.forEach(face => {
+                gsap.set(face, { 
+                    transform: 'none', 
+                    opacity: 1, 
+                    visibility: 'visible', 
+                    position: 'relative', 
+                    transformStyle: 'flat',
+                    clearProps: 'all' // Important to remove any GSAP-set inline styles
+                });
+            });
+            // Skip further animation setup
+            return; 
+        }
+
+        // --- Determine Cube Size based on Breakpoints ---
+        if (largeDesktop) {
+            currentCubeSize = 900;
+        } else if (mediumDesktop) {
+            currentCubeSize = 640;
+        } else if (mobile) {
+            currentCubeSize = 300;
+        }
+
+        // Apply cube container size
+        gsap.set(cubeContainer, { width: currentCubeSize, height: currentCubeSize, maxWidth: currentCubeSize, perspective: 1200 });
+        setupInitialCubeFaces(currentCubeSize); // Initialize faces for 3D
+        
+        // --- Setup Cube Animation & Pinning ---
+        let mainTimeline = gsap.timeline({
+            scrollTrigger: {
+                id: 'servicesCubePin', // Unique ID for this ScrollTrigger
+                trigger: servicesPinWrapper,
+                start: "top top",
+                end: "bottom bottom",
+                pin: servicesSection, // Pin the entire services-section
+                scrub: true, // Link animation to scroll position
+                snap: {
+                    snapTo: "labels", // Snap to the labels defined in the timeline
+                    duration: 0.6,    // Snap duration for smoother feel
+                    ease: "power2.inOut" // Snap easing
+                },
+                pinSpacing: false, // Prevents ScrollTrigger from adding extra padding
+                // Markers for debugging (can remove in production)
+                // markers: { startColor: "green", endColor: "red", indent: 20 }, 
+                onEnter: () => {
+                    // Optional: Fade in left column text when entering section
+                    gsap.to(servicesLeftColumn, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" });
+                },
+                onLeave: () => {
+                     // Optional: Fade out left column text when leaving section (scrolling down)
+                    gsap.to(servicesLeftColumn, { opacity: 0, y: -50, duration: 0.6, ease: "power2.in" });
+                },
+                onEnterBack: () => {
+                    // Optional: Fade in left column text when re-entering section (scrolling up)
+                    gsap.to(servicesLeftColumn, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" });
+                },
+                onLeaveBack: () => {
+                    // Optional: Fade out left column text when leaving section (scrolling up)
+                    gsap.to(servicesLeftColumn, { opacity: 0, y: 50, duration: 0.6, ease: "power2.in" });
                 }
             }
         });
-    }, {
-        root: null, // viewport
-        rootMargin: '0px',
-        threshold: [0, 0.1, 0.9, 1] // Observe when any part enters/leaves, and when nearly full
-    });
 
-    servicesPinObserver.observe(servicesPinWrapper);
-
-    // --- Manual Wheel/Touch Event Handlers for Cube Rotation & Page Scroll ---
-    let lastWheelTime = 0; 
-    let lastTouchY = 0;
-    let touchMoveAccumulator = 0; // Accumulate small touch deltas
-
-    const handleScrollEvent = (event) => {
-        // console.log("Scroll event fired, isPinned:", isServicesSectionPinned, "Animating:", isCubeTransitioning); // Debug log
-
-        if (prefersReducedMotion) return;
-
-        // If the services section is pinned, prevent default page scroll and handle cube rotation
-        if (isServicesSectionPinned) {
-            event.preventDefault(); // Always prevent default if currently pinned
-            
-            const now = Date.now();
-            if (now - lastWheelTime < SCROLL_DEBOUNCE_TIME_MS) {
-                return; // Debounce rapid wheel events
-            }
-            lastWheelTime = now;
-
-            const direction = event.deltaY > 0 ? 1 : -1; // 1 for scroll down, -1 for scroll up
-            const didAnimate = animateCube(direction);
-
-            if (!didAnimate) {
-                // If animateCube returns false (hit boundary),
-                // it means the cube cannot rotate further.
-                // We must explicitly unpin the section and re-enable body scroll.
-                servicesSection.classList.remove('is-pinned');
-                isServicesSectionPinned = false;
-                document.body.style.overflow = 'auto'; 
-                console.log('Unpinning at boundary, re-enabling page scroll.'); // Debug log
-            }
-        }
-    };
-
-    const handleTouchStart = (e) => {
-        if (prefersReducedMotion || !isServicesSectionPinned) return;
-        lastTouchY = e.touches[0].clientY;
-        touchMoveAccumulator = 0; // Reset accumulator
-        // If pinned, prevent default on start to reduce initial native scroll attempt
-        e.preventDefault(); 
-    };
-
-    const handleTouchMove = (e) => {
-        if (prefersReducedMotion || !isServicesSectionPinned || isCubeTransitioning) return;
-
-        const currentTouchY = e.touches[0].clientY;
-        const deltaY = lastTouchY - currentTouchY; // Positive for swipe up (scroll down), negative for swipe down (scroll up)
-        lastTouchY = currentTouchY; // Update for next move
-
-        touchMoveAccumulator += deltaY;
-
-        if (Math.abs(touchMoveAccumulator) > SCROLL_THRESHOLD_PX) {
-            e.preventDefault(); // Prevent page scroll if significant swipe
-            const direction = touchMoveAccumulator > 0 ? 1 : -1; // Swipe up (positive accumulator) is scroll down (dir 1)
-            const didAnimate = animateCube(direction);
-            
-            if (!didAnimate) {
-                // Cube hit boundary, unpin and allow page scroll
-                servicesSection.classList.remove('is-pinned');
-                isServicesSectionPinned = false;
-                document.body.style.overflow = 'auto';
-                console.log('Unpinning at touch boundary, re-enabling page scroll.'); // Debug log
-            }
-            touchMoveAccumulator = 0; // Reset accumulator after processing a swipe
-        } else {
-            e.preventDefault(); // Still prevent default if pinned, even if not enough delta for cube rotation
-        }
-    };
-
-    // Use passive: false to allow event.preventDefault() for scroll locking
-    window.addEventListener('wheel', handleScrollEvent, { passive: false });
-    servicesPinWrapper.addEventListener('touchstart', handleTouchStart, { passive: false });
-    servicesPinWrapper.addEventListener('touchmove', handleTouchMove, { passive: false });
+        // Initialize section opacity and scale if not already visible/scaled
+        mainTimeline.fromTo(servicesSection, 
+            { opacity: 0, scale: 0.8, yPercent: 10 }, 
+            { opacity: 1, scale: 1, yPercent: 0, duration: 1, ease: "power2.out" }, 0) // Fade in and grow at the very start of the pin wrapper scroll
+        .fromTo(servicesLeftColumn, // Animate left column text fade in/move up
+            { opacity: 0, y: 50 },
+            { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 0); // Start at the same time as section fades in
 
 
-    // Initial setup and resize handling
-    const initializeServices = () => {
-        // Run setupCubeFaces which internally checks for prefersReducedMotion
-        setupCubeFaces(); 
+        // Add labels and rotation steps to the timeline
+        faces.forEach((face, i) => {
+            const currentFaceRotation = -i * ROTATION_INCREMENT_DEG;
+            mainTimeline.addLabel(`face${i}`, i / SERVICES_COUNT); // Add label at a proportional point in the timeline
 
-        if (prefersReducedMotion) {
-            servicesSection.classList.remove('is-pinned');
-            isServicesSectionPinned = false; // Ensure flag is false
-            document.body.style.overflow = 'auto';
-            // Stop observing if reduced motion is preferred
-            servicesPinObserver.unobserve(servicesPinWrapper); 
-            console.log('Reduced motion active: Services section initialized flat.'); // Debug log
-        } else {
-            // Ensure section is not pinned initially and body is scrollable
-            servicesSection.classList.remove('is-pinned');
-            isServicesSectionPinned = false; // Ensure flag is false
-            document.body.style.overflow = 'auto'; // Make sure body is scrollable by default
-            
-            // Start observing the pin wrapper
-            // Remove previous observation if any, then re-observe to ensure fresh state
-            try { servicesPinObserver.unobserve(servicesPinWrapper); } catch (e) { /* ignore if not observed */ }
-            servicesPinObserver.observe(servicesPinWrapper);
-            console.log('Services section initialized for 3D animation and pinning.'); // Debug log
-        }
-    };
+            // Tween the cube's rotation
+            mainTimeline.to(cube, {
+                rotateX: currentFaceRotation,
+                duration: 1, // Normalized duration for GSAP
+                ease: "power2.inOut",
+                onUpdate: () => { // Manage individual face visibility
+                    const progressInSegment = mainTimeline.scrollTrigger.progress;
+                    const activeIndex = Math.round(progressInSegment * (SERVICES_COUNT - 1));
 
-    window.addEventListener('resize', initializeServices);
-    initializeServices(); // Call on initial load
+                    faces.forEach((f, idx) => {
+                        if (idx === activeIndex) {
+                            gsap.to(f, { opacity: 1, visibility: 'visible', duration: 0.3 });
+                        } else {
+                            gsap.to(f, { opacity: 0, visibility: 'hidden', duration: 0.3 });
+                        }
+                    });
+                }
+            }, `face${i}`);
+        });
 
-    // Trigger a scroll event immediately to ensure initial IntersectionObserver checks
-    // This is still good practice to ensure the observer fires early.
-    window.dispatchEvent(new Event('scroll'));
+        // Store the timeline so we can kill/recreate on resize
+        cubeAnimationTimeline = mainTimeline;
+    }, cube); // cube is the scope for this matchMedia, ensures variables are cleaned up
+
+    // Ensure initial setup runs on page load before any scroll
+    // This is handled by matchMedia.add() which runs immediately if conditions met.
+    // If not, then a default 'setupInitialCubeFaces(900)' might be needed outside matchMedia.
+    // However, the current GSAP setup already ensures initial state properly.
 });
