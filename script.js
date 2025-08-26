@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize all other reveal-on-scroll animations
     initIntersectionObserverAnimations();
 
-    // --- REFINED "DESIGN CUBE-STYLE" SERVICES ANIMATION ---
+    // --- "DESIGN CUBE-STYLE" SERVICES ANIMATION ---
     const servicesSection = document.getElementById('services');
     const servicesPinWrapper = document.getElementById('services-pin-wrapper');
     const cubeContainer = document.querySelector('.cube-container');
@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const faces = document.querySelectorAll('.face');
     const SERVICES_COUNT = faces.length;
 
-    // Guard clause to prevent errors if elements aren't found
     if (!servicesSection || !servicesPinWrapper || !cubeContainer || !cube || !SERVICES_COUNT) {
         console.error("Services section elements not found. Aborting animation setup.");
         return;
@@ -92,14 +91,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }, (context) => {
         let { isDesktop, reducedMotion } = context.conditions;
 
-        // Fallback for mobile and accessibility
         if (!isDesktop || reducedMotion) {
             gsap.set(faces, { position: 'relative', transform: 'none', autoAlpha: 1 });
             return;
         }
 
         // --- Desktop Animation Setup ---
-        const faceHeight = 400; // Matches the fixed height in CSS
+        const faceHeight = 300; // Use the new fixed height for calculations
         const faceDepth = faceHeight / 2 / Math.tan(Math.PI / SERVICES_COUNT);
         
         faces.forEach((face, i) => {
@@ -109,10 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Set the total scrollable height for the animation
         servicesPinWrapper.style.height = `${SERVICES_COUNT * 100}vh`;
 
-        // Main scroll-driven animation for cube rotation
         gsap.to(cube, {
             rotateX: `-${(SERVICES_COUNT - 1) * (360 / SERVICES_COUNT)}`,
             ease: "none",
@@ -126,20 +122,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Optional exit animation
         gsap.to(cubeContainer, {
             autoAlpha: 0,
             scale: 0.9,
             scrollTrigger: {
                 trigger: servicesPinWrapper,
-                start: "bottom bottom-=200", // Start fading 200px from the end
+                start: "bottom bottom-=200",
                 end: "bottom bottom",
                 scrub: true
             }
         });
     });
 
-    // Refresh ScrollTrigger on window resize to recalculate dimensions
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh();
     });
