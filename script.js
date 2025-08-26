@@ -1,8 +1,7 @@
 // script.js
-// Global constants for animation timing
-// ROTATION_INCREMENT_DEG and ANIMATION_DURATION_MS are now managed by GSAP for the cube animation
-const SCROLL_THRESHOLD_PX = 30; // Minimum scroll pixels to trigger a swipe (less relevant with GSAP but kept for other interactions)
-const SCROLL_DEBOUNCE_TIME_MS = 100; // Prevent rapid-fire wheel events from stacking (less relevant with GSAP)
+// Global constants for animation timing - these are now primarily controlled by GSAP
+const SCROLL_THRESHOLD_PX = 30; // Kept for other potential interactions, but not directly used by GSAP cube
+const SCROLL_DEBOUNCE_TIME_MS = 100; // Kept for other potential interactions
 
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
@@ -117,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('mousemove', (event) => {
             // Using requestAnimationFrame for smooth mouse tracking for performance
             requestAnimationFrame(() => {
-                mouseFollowerGlow.style.transform = `translate(-50%, -50%) translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+                gsap.to(mouseFollowerGlow, { x: event.clientX, y: event.clientY, duration: 0.1, ease: "power2.out" });
             });
         });
     }
@@ -140,21 +139,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const faces = document.querySelectorAll('.face');
     const SERVICES_COUNT = faces.length; // Should be 8.
     const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT; // 45 degrees for 8 faces
+    const SCROLL_PER_FACE_VH = 400; // How much scroll space for each face rotation
 
     if (!servicesSection || !servicesPinWrapper || !servicesLeftColumn || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
         // Fallback: ensure section and faces are visible if animation fails
-        if (servicesSection) {
-            gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible' });
-        }
+        gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
+        gsap.set(servicesLeftColumn, { opacity: 1, y: 0, x: 0 });
+        gsap.set(cubeContainer, { width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+        gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
-            gsap.set(face, { opacity: 1, visibility: 'visible', transform: 'none', position: 'relative' });
-            face.style.transformStyle = 'flat'; // Ensure CSS takes over
+            gsap.set(face, { 
+                opacity: 1, 
+                visibility: 'visible', 
+                transform: 'none', 
+                position: 'relative', 
+                transformStyle: 'flat',
+                clearProps: 'all' // Important to remove any GSAP-set inline styles
+            });
         });
-        if (cube) {
-            gsap.set(cube, { transform: 'none' });
-            cube.style.transformStyle = 'flat';
-        }
         return; 
     }
 
@@ -176,11 +179,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 opacity: (i === 0) ? 1 : 0, // Only first face visible initially
                 visibility: (i === 0) ? 'visible' : 'hidden',
                 position: 'absolute', // Ensure 3D positioning
-                transformStyle: 'preserve-3d' // Ensure backface-visibility works
+                transformStyle: 'preserve-3d', // Ensure backface-visibility works
+                transition: 'opacity 0.4s ease-in-out' // Add transition for smooth opacity changes
             });
         });
         // Ensure cube itself is in 3D mode
-        gsap.set(cube, { transformStyle: 'preserve-3d' });
+        gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0 }); // Reset cube rotation
     }
 
     let cubeAnimationTimeline; // Declare timeline outside to manage it globally
@@ -199,19 +203,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }, (context) => { // context.conditions will tell us which media queries matched
         
         let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
-        let currentCubeSize = 300; // Default smallest size
-
-        // Kill any previous ScrollTrigger for this section to prevent duplicates on resize
-        if (ScrollTrigger.getById('servicesCubePin')) {
-            ScrollTrigger.getById('servicesCubePin').kill(true); // true to revert to original styles
-            cubeAnimationTimeline.clear(); // Clear the timeline
+        let currentCubeSize = 300; // Default smallest size for mobile
+        
+        // --- Kill/Revert previous animations ---
+        if (cubeAnimationTimeline) {
+            cubeAnimationTimeline.kill();
+            cubeAnimationTimeline = null;
         }
+        // Revert section's inline styles from previous pinning/animations
+        ScrollTrigger.getById('servicesCubePin')?.kill(true); // Kill specific ScrollTrigger by ID
 
         // --- Handle Reduced Motion First ---
         if (reducedMotion) {
             console.log("Reduced motion detected. Applying flat layout.");
             // Reset styles to flat/stacked appearance
-            gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0 });
+            gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
             gsap.set(servicesLeftColumn, { opacity: 1, y: 0, x: 0 }); // Ensure left column is visible and not animated
             gsap.set(cubeContainer, { width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
@@ -222,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     visibility: 'visible', 
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'all' // Important to remove any GSAP-set inline styles
+                    clearProps: 'transform,opacity,visibility,position,transformStyle,transition' // Clear GSAP inline styles
                 });
             });
             // Skip further animation setup
@@ -234,90 +240,112 @@ document.addEventListener('DOMContentLoaded', () => {
             currentCubeSize = 900;
         } else if (mediumDesktop) {
             currentCubeSize = 640;
-        } else if (mobile) {
-            currentCubeSize = 300;
-        }
+        } // 'mobile' condition (max-width: 768px) already defaults currentCubeSize to 300
 
         // Apply cube container size
         gsap.set(cubeContainer, { width: currentCubeSize, height: currentCubeSize, maxWidth: currentCubeSize, perspective: 1200 });
         setupInitialCubeFaces(currentCubeSize); // Initialize faces for 3D
         
         // --- Setup Cube Animation & Pinning ---
-        let mainTimeline = gsap.timeline({
-            scrollTrigger: {
-                id: 'servicesCubePin', // Unique ID for this ScrollTrigger
-                trigger: servicesPinWrapper,
-                start: "top top",
-                end: "bottom bottom",
-                pin: servicesSection, // Pin the entire services-section
-                scrub: true, // Link animation to scroll position
-                snap: {
-                    snapTo: "labels", // Snap to the labels defined in the timeline
-                    duration: 0.6,    // Snap duration for smoother feel
-                    ease: "power2.inOut" // Snap easing
-                },
-                pinSpacing: false, // Prevents ScrollTrigger from adding extra padding
-                // Markers for debugging (can remove in production)
-                // markers: { startColor: "green", endColor: "red", indent: 20 }, 
-                onEnter: () => {
-                    // Optional: Fade in left column text when entering section
-                    gsap.to(servicesLeftColumn, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" });
-                },
-                onLeave: () => {
-                     // Optional: Fade out left column text when leaving section (scrolling down)
-                    gsap.to(servicesLeftColumn, { opacity: 0, y: -50, duration: 0.6, ease: "power2.in" });
-                },
-                onEnterBack: () => {
-                    // Optional: Fade in left column text when re-entering section (scrolling up)
-                    gsap.to(servicesLeftColumn, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" });
-                },
-                onLeaveBack: () => {
-                    // Optional: Fade out left column text when leaving section (scrolling up)
-                    gsap.to(servicesLeftColumn, { opacity: 0, y: 50, duration: 0.6, ease: "power2.in" });
+        if (mobile) {
+            // On mobile, keep the cube flat and remove pinning
+            console.log("Mobile layout active. Disabling 3D scroll animation.");
+            gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,opacity,scale,visibility' }); // Clear any previous fixed styles
+            gsap.set(servicesLeftColumn, { opacity: 1, y: 0 }); // Ensure text is visible
+            gsap.set(cubeContainer, { 
+                width: currentCubeSize, 
+                height: currentCubeSize, 
+                maxWidth: '100%', // Allow mobile to use 100% width, limited by its own max-width
+                aspectRatio: 1, // Keep aspect ratio
+                position: 'relative', 
+                top: 'auto', 
+                y: 0, 
+                perspective: 'none' // Flatten perspective
+            });
+            gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
+            faces.forEach(face => {
+                gsap.set(face, { 
+                    transform: 'none', 
+                    opacity: 1, 
+                    visibility: 'visible', 
+                    position: 'relative', 
+                    transformStyle: 'flat',
+                    clearProps: 'transform,opacity,visibility,position,transformStyle,transition'
+                });
+            });
+            // No ScrollTrigger created for mobile in this case
+        } else {
+            // Desktop animation setup
+            console.log(`Desktop layout active. Cube size: ${currentCubeSize}px. Setting up 3D animation.`);
+
+            // Set the height of the servicesPinWrapper dynamically
+            // This needs to be done *before* ScrollTrigger.create() so it knows the full scrollable height
+            servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh';
+
+            cubeAnimationTimeline = gsap.timeline({
+                scrollTrigger: {
+                    id: 'servicesCubePin', // Unique ID for this ScrollTrigger
+                    trigger: servicesPinWrapper,
+                    start: "top top",
+                    end: "bottom bottom",
+                    pin: servicesSection, // Pin the entire services-section
+                    scrub: 0.6, // Smoothly links animation to scroll position
+                    snap: {
+                        snapTo: "labels", // Snap to the labels defined in the timeline
+                        duration: 0.5,    // Snap duration for smoother feel
+                        ease: "power2.inOut" // Snap easing
+                    },
+                    pinSpacing: false, // Prevents ScrollTrigger from adding extra padding
+                    // markers: { startColor: "green", endColor: "red", indent: 20 }, // For debugging
+                    onEnter: () => console.log("Services section entered!"),
+                    onLeave: () => console.log("Services section left (scrolling down)"),
+                    onEnterBack: () => console.log("Services section re-entered (scrolling up)"),
+                    onLeaveBack: () => console.log("Services section left (scrolling up)")
                 }
-            }
-        });
+            });
 
-        // Initialize section opacity and scale if not already visible/scaled
-        mainTimeline.fromTo(servicesSection, 
-            { opacity: 0, scale: 0.8, yPercent: 10 }, 
-            { opacity: 1, scale: 1, yPercent: 0, duration: 1, ease: "power2.out" }, 0) // Fade in and grow at the very start of the pin wrapper scroll
-        .fromTo(servicesLeftColumn, // Animate left column text fade in/move up
-            { opacity: 0, y: 50 },
-            { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 0); // Start at the same time as section fades in
+            // 1. Initial fade-in and scale-up for the entire section
+            cubeAnimationTimeline.fromTo(servicesSection, 
+                { opacity: 0, scale: 0.8, visibility: 'hidden' }, 
+                { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); // At the very start of the pin scroll
+
+            // 2. Left column text animation (fade/move)
+            cubeAnimationTimeline.fromTo(servicesLeftColumn, 
+                { opacity: 0, y: 50 },
+                { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 0); // Start with section fade-in
 
 
-        // Add labels and rotation steps to the timeline
-        faces.forEach((face, i) => {
-            const currentFaceRotation = -i * ROTATION_INCREMENT_DEG;
-            mainTimeline.addLabel(`face${i}`, i / SERVICES_COUNT); // Add label at a proportional point in the timeline
+            // 3. Cube rotation and face visibility control
+            faces.forEach((face, i) => {
+                const currentFaceRotation = -i * ROTATION_INCREMENT_DEG;
+                const labelProgress = i / SERVICES_COUNT; // Position label proportionally
 
-            // Tween the cube's rotation
-            mainTimeline.to(cube, {
-                rotateX: currentFaceRotation,
-                duration: 1, // Normalized duration for GSAP
-                ease: "power2.inOut",
-                onUpdate: () => { // Manage individual face visibility
-                    const progressInSegment = mainTimeline.scrollTrigger.progress;
-                    const activeIndex = Math.round(progressInSegment * (SERVICES_COUNT - 1));
+                cubeAnimationTimeline.addLabel(`face${i}`, labelProgress);
+                
+                // Tween the cube's rotation to show the current face
+                cubeAnimationTimeline.to(cube, {
+                    rotateX: currentFaceRotation,
+                    duration: 1, // Normalized duration for GSAP (will be scaled by scrub)
+                    ease: "power2.inOut",
+                    onStart: () => { // When this specific face's rotation starts to become active
+                        // Ensure current face is visible, others are hidden
+                        faces.forEach((f, idx) => {
+                            if (idx === i) {
+                                gsap.to(f, { opacity: 1, visibility: 'visible', duration: 0.4, ease: "power2.out" });
+                            } else {
+                                gsap.to(f, { opacity: 0, visibility: 'hidden', duration: 0.4, ease: "power2.in" });
+                            }
+                        });
+                    }
+                }, `face${i}`);
+            });
 
-                    faces.forEach((f, idx) => {
-                        if (idx === activeIndex) {
-                            gsap.to(f, { opacity: 1, visibility: 'visible', duration: 0.3 });
-                        } else {
-                            gsap.to(f, { opacity: 0, visibility: 'hidden', duration: 0.3 });
-                        }
-                    });
-                }
-            }, `face${i}`);
-        });
+            // 4. Fade out section at the very end of the pin wrapper scroll
+            cubeAnimationTimeline.to(servicesSection, 
+                { opacity: 0, scale: 0.8, visibility: 'hidden', duration: 1, ease: "power2.in" }, `face${SERVICES_COUNT - 1}+=1`); // Fade out after last face animation
+        }
+    });
 
-        // Store the timeline so we can kill/recreate on resize
-        cubeAnimationTimeline = mainTimeline;
-    }, cube); // cube is the scope for this matchMedia, ensures variables are cleaned up
-
-    // Ensure initial setup runs on page load before any scroll
-    // This is handled by matchMedia.add() which runs immediately if conditions met.
-    // If not, then a default 'setupInitialCubeFaces(900)' might be needed outside matchMedia.
-    // However, the current GSAP setup already ensures initial state properly.
+    // Refresh ScrollTrigger after all initial setup (especially important after dynamic height change)
+    ScrollTrigger.refresh();
 });
