@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const faces = document.querySelectorAll('.face');
     const SERVICES_COUNT = faces.length;
     const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
-    const SCROLL_PER_FACE_VH = 50; // Tighter scroll distance
+    const SCROLL_PER_FACE_VH = 50;
 
     if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
@@ -244,7 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             cubeAnimationTimeline.to(faces, {
                 autoAlpha: (j) => (j === i ? 1 : 0),
-                duration: 0.5
+                duration: 0.5,
+                immediateRender: false // REFINEMENT: Prevents flickering on fast scrolls
             }, label);
         });
         
