@@ -144,11 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return; 
     }
 
-    // MODIFIED: Simplified and corrected face positioning logic.
-    function setupInitialCubeFaces(currentCubeSize) {
-        // The distance faces should be from the center is half the cube's size.
-        const faceOffset = currentCubeSize / 2;
-        
+    function calculateFaceOffset(cubeHeight) {
+        if (!cubeHeight || SERVICES_COUNT === 0) return 0;
+        return (cubeHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+    }
+
+    function setupInitialCubeFaces(cubeHeight) {
+        const faceOffset = calculateFaceOffset(cubeHeight);
         faces.forEach((face, i) => {
             const angleForFace = i * ROTATION_INCREMENT_DEG;
             gsap.set(face, { 
@@ -158,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 backfaceVisibility: 'hidden'
             });
         });
-
         gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0 });
         gsap.set(faces, { autoAlpha: 0 });
         gsap.set(faces[0], { autoAlpha: 1 });
@@ -173,8 +174,11 @@ document.addEventListener('DOMContentLoaded', () => {
         "reducedMotion": "(prefers-reduced-motion: reduce)"
     }, (context) => {
         let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
-        let currentCubeSize = 300;
         
+        // MODIFIED: Define separate width and height for the new rectangular design
+        let cubeWidth;
+        let cubeHeight;
+
         if (cubeAnimationTimeline) {
             cubeAnimationTimeline.kill();
             cubeAnimationTimeline = null;
@@ -189,10 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return; 
         }
 
-        if (largeDesktop) currentCubeSize = 900;
-        else if (mediumDesktop) currentCubeSize = 640;
+        // Set responsive dimensions
+        if (largeDesktop) {
+            cubeWidth = 900;
+            cubeHeight = 400;
+        } else if (mediumDesktop) {
+            cubeWidth = 640;
+            cubeHeight = 350;
+        } else { // Mobile
+            cubeWidth = '100%';
+            cubeHeight = 250;
+        }
 
-        gsap.set(cubeContainer, { width: currentCubeSize, height: currentCubeSize, perspective: 1200 });
+        gsap.set(cubeContainer, { width: cubeWidth, height: cubeHeight, perspective: 2000 });
         
         if (mobile) {
             console.log("Mobile layout: Applying flat, stacked layout.");
@@ -201,7 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         } 
         
-        setupInitialCubeFaces(currentCubeSize);
+        // Pass the new height to the setup function
+        setupInitialCubeFaces(cubeHeight);
         
         servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh';
 
@@ -274,4 +288,4 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh();
     });
-});
+});```
