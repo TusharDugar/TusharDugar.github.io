@@ -29,76 +29,82 @@
     <!-- Mouse Follower Glow Element -->
     <div class="mouse-follower-glow"></div>
 
-    <!-- Main Content Wrapper -->
-    <div class="content-wrapper">
-        <!-- About Section (Now at the top) -->
-        <section id="about" class="section about-section reveal-parent">
-            <div class="about-card"> 
-                <div class="dashed-decoration top-left-curve"></div>
-                <div class="dashed-decoration bottom-right-curve"></div>
-                <div class="profile-image-container reveal-child">
-                    <img src="images/profile.jpg" alt="Tushar Dugar Profile" class="profile-photo">
-                </div>
-                <h3 class="reveal-child">Tushar Dugar</h3>
-                <div class="fire-icon-with-line reveal-child">
-                    <span class="fire-icon"><i class="fas fa-fire"></i></span>
-                </div>
-                <p class="about-short-desc reveal-child">A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.</p>
-                <div class="about-social-icons reveal-child">
-                    <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
-                    <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="mailto:imtushar4621@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Hero Section -->
-        <section id="hero" class="section hero-section reveal-item">
-            <h1 class="hero-heading">
-                <span class="crafting">Crafting</span><br>
-                <span class="digital">Digital Experiences</span>
-            </h1>
-            <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
-        </section>
-
-        <!-- Services Section -->
-        <div id="services-pin-wrapper">
-            <section id="services" class="services-section">
-                <h2 class="services-heading">
-                    <span class="text-white">MY</span>
-                    <span class="text-gray">SERVICES</span>
-                </h2>
-                <div class="cube-container">
-                    <div id="services-cube" class="cube">
-                       <!-- All 8 face elements... -->
-                       <div class="face" data-index="0"><div class="service-content"><h3 class="service-title">Web Design</h3><p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p></div><div class="face-number">01</div></div>
-                       <div class="face" data-index="1"><div class="service-content"><h3 class="service-title">SEO Optimization</h3><p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p></div><div class="face-number">02</div></div>
-                       <div class="face" data-index="2"><div class="service-content"><h3 class="service-title">UX/UI Design</h3><p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p></div><div class="face-number">03</div></div>
-                       <div class="face" data-index="3"><div class="service-content"><h3 class="service-title">Graphic Design</h3><p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p></div><div class="face-number">04</div></div>
-                       <div class="face" data-index="4"><div class="service-content"><h3 class="service-title">E-commerce Solutions</h3><p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p></div><div class="face-number">05</div></div>
-                       <div class="face" data-index="5"><div class="service-content"><h3 class="service-title">Digital Marketing</h3><p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p></div><div class="face-number">06</div></div>
-                       <div class="face" data-index="6"><div class="service-content"><h3 class="service-title">Content Creation</h3><p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p></div><div class="face-number">07</div></div>
-                       <div class="face" data-index="7"><div class="service-content"><h3 class="service-title">Social Media Management</h3><p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p></div><div class="face-number">08</div></div>
+    <div class="main-layout-container">
+        <!-- Left Column (Sticky) -->
+        <div class="left-column-sticky">
+            <section id="about" class="section about-left-content reveal-parent">
+                <div class="profile-card-wrapper"> 
+                    <div class="dashed-decoration top-left-curve"></div>
+                    <div class="dashed-decoration bottom-right-curve"></div>
+                    <div class="profile-image-container reveal-child">
+                        <img src="images/profile.jpg" alt="Tushar Dugar Profile" class="profile-photo">
                     </div>
-                </section>
+                    <h3 class="reveal-child">Tushar Dugar</h3>
+                    <div class="fire-icon-with-line reveal-child">
+                        <span class="fire-icon"><i class="fas fa-fire"></i></span>
+                    </div>
+                    <p class="about-short-desc reveal-child">A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.</p>
+                    <div class="about-social-icons reveal-child">
+                        <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
+                        <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="mailto:imtushar4621@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <!-- Premium Tools Section -->
-        <section id="tools" class="section reveal-item">
-            <h2 class="tools-heading reveal-item">
-                <span class="text-white">PREMIUM</span>
-                <span class="text-gray">TOOLS</span>
-            </h2>
-            <div class="tools-grid reveal-stagger-container">
-                <!-- All 6 tool cards... -->
+        <!-- Right Column (Scrolling) -->
+        <div class="right-column-scroll">
+            <!-- Hero Section -->
+            <section id="hero-right" class="section hero-right-content reveal-item">
+                <h1 class="hero-heading">
+                    <span class="crafting">Crafting</span><br>
+                    <span class="digital">Digital Experiences</span>
+                </h1>
+                <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
+            </section>
+
+            <!-- Services Section -->
+            <div id="services-pin-wrapper">
+                <!-- MODIFIED: Simplified structure for a clean column layout -->
+                <section id="services" class="services-section">
+                    <h2 class="services-heading">
+                        <span class="text-white">MY</span>
+                        <span class="text-gray">SERVICES</span>
+                    </h2>
+                    <div class="cube-container">
+                        <div id="services-cube" class="cube">
+                           <!-- All 8 face elements remain the same -->
+                           <div class="face" data-index="0"><div class="service-content"><h3 class="service-title">Web Design</h3><p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p></div><div class="face-number">01</div></div>
+                           <div class="face" data-index="1"><div class="service-content"><h3 class="service-title">SEO Optimization</h3><p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p></div><div class="face-number">02</div></div>
+                           <div class="face" data-index="2"><div class="service-content"><h3 class="service-title">UX/UI Design</h3><p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p></div><div class="face-number">03</div></div>
+                           <div class="face" data-index="3"><div class="service-content"><h3 class="service-title">Graphic Design</h3><p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p></div><div class="face-number">04</div></div>
+                           <div class="face" data-index="4"><div class="service-content"><h3 class="service-title">E-commerce Solutions</h3><p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p></div><div class="face-number">05</div></div>
+                           <div class="face" data-index="5"><div class="service-content"><h3 class="service-title">Digital Marketing</h3><p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p></div><div class="face-number">06</div></div>
+                           <div class="face" data-index="6"><div class="service-content"><h3 class="service-title">Content Creation</h3><p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p></div><div class="face-number">07</div></div>
+                           <div class="face" data-index="7"><div class="service-content"><h3 class="service-title">Social Media Management</h3><p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p></div><div class="face-number">08</div></div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </section>
+
+            <!-- Premium Tools Section -->
+            <section id="tools" class="section reveal-item">
+                <h2 class="tools-heading reveal-item">
+                    <span class="text-white">PREMIUM</span>
+                    <span class="text-gray">TOOLS</span>
+                </h2>
+                <div class="tools-grid reveal-stagger-container">
+                    <!-- All tool cards... -->
+                </div>
+            </section>
+        </div>
     </div>
 
     <!-- Contact Section (Footer) -->
     <footer id="contact" class="section reveal-item">
-        <!-- ... -->
+        <!-- All footer content... -->
     </footer>
 
     <script src="script.js" defer></script>
