@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize all other reveal-on-scroll animations
     initIntersectionObserverAnimations();
 
-    // --- FINAL "DESIGN CUBE-STYLE" SERVICES ANIMATION ---
+    // --- FINAL SERVICES ANIMATION ---
     const servicesSection = document.getElementById('services');
     const servicesPinWrapper = document.getElementById('services-pin-wrapper');
     const cubeContainer = document.querySelector('.cube-container');
@@ -96,8 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // --- Desktop Animation Setup ---
-        const faceHeight = 260; // Must match the fixed height in CSS
+        const faceHeight = 220;
         const faceDepth = (faceHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
         
         faces.forEach((face, i) => {
@@ -107,24 +106,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // ✅ FIX: Adjusted scroll length for a smoother animation
         const scrollLength = SERVICES_COUNT * faceHeight * 1.2;
         servicesPinWrapper.style.height = `${scrollLength}px`;
 
-        const totalRotation = (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT);
-
-        gsap.to(cube, {
-            rotateX: `-${totalRotation}`,
-            ease: "none",
-            scrollTrigger: {
-                trigger: servicesPinWrapper,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1,
-                pin: servicesSection,
-                anticipatePin: 1
+        gsap.fromTo(cube,
+            { rotateX: 0 },
+            {
+                rotateX: `-${(SERVICES_COUNT - 1) * (360 / SERVICES_COUNT)}`,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: servicesPinWrapper,
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1,
+                    pin: servicesSection,
+                    anticipatePin: 1
+                }
             }
-        });
+        );
 
         gsap.to(cubeContainer, {
             autoAlpha: 0,
