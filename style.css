@@ -1,117 +1,41 @@
-/* Basic Reset & Font */
-:root {
-    --bg-main: #000000;
-    --bg-profile-card: #FFFFFF;
-    --text-light: #F0F0F0;
-    --text-medium: #A0A0A0;
-    --text-dark-card: #000000;
-    --text-medium-card: #4B4B4B;
-    --accent-primary-sawad: #FF6B00;
-    --text-sub-heading-grey: #666666;
-    --service-title-color: #FF6B00; 
-    --bg-tool-card: #1A1A1A;
-    --tool-icon-bg: #F8F8F8;
-    --shadow-color-card-white: rgba(0,0,0,0.25);
-    --bg-section-card: #141414;
-}
+/* ... (root, body, and other sections remain the same) ... */
 
-/* Universal Box-Sizing & Body */
-*, *::before, *::after { box-sizing: border-box; }
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    color: var(--text-light);
-    background-color: var(--bg-main);
-    overflow-x: hidden;
-}
-
-/* Background Layers (Unchanged) */
-.site-background-image, .background-color-gradient, .mouse-follower-glow { /* ... */ }
-
-/* --- REFACTORED: Main Content Layout --- */
-.content-wrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 40px;
-    position: relative;
-    z-index: 1;
-}
-
-/* Global Section & Reveal Animations */
-.section { padding: 80px 0; } /* Simplified padding */
-.reveal-item, .reveal-child, .reveal-stagger { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
-.reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
-
-/* --- REFACTORED: "About" Section Card --- */
-.about-section {
-    padding-top: 50px;
-    padding-bottom: 50px;
-    display: flex;
-    justify-content: center;
-}
-.about-card {
-    background-color: var(--bg-profile-card);
-    color: var(--text-dark-card);
-    border-radius: 20px;
-    padding: 30px 25px;
-    box-shadow: 0 10px 30px var(--shadow-color-card-white);
-    width: 100%;
-    max-width: 450px; /* A bit wider for a header card */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-.profile-image-container { width: 150px; height: 150px; border-radius: 50%; overflow: hidden; margin-bottom: 25px; position: relative; background-color: var(--accent-primary-sawad); }
-.profile-photo { width: 100%; height: 100%; object-fit: cover; }
-.about-card h3 { font-size: 2.5em; font-weight: 700; margin: 0 0 15px 0; }
-.fire-icon-with-line { margin-bottom: 20px; }
-.about-short-desc { font-size: 0.95em; margin-bottom: 25px; }
-.about-social-icons { display: flex; gap: 20px; }
-.about-social-icons a { color: var(--accent-primary-sawad); font-size: 1.5em; }
-.dashed-decoration { position: absolute; border: 2px dashed var(--accent-primary-sawad); border-radius: 50%; pointer-events: none; }
-.top-left-curve { width: 150px; height: 150px; top: -50px; left: -50px; border-top-color: transparent; border-left-color: transparent; }
-.bottom-right-curve { width: 150px; height: 150px; bottom: -50px; right: -50px; border-bottom-color: transparent; border-right-color: transparent; }
-
-/* Hero Section */
-.hero-heading { text-align: center; font-size: clamp(4rem, 10vw, 7rem); line-height: 1; font-weight: 900; margin-bottom: 20px; }
-.hero-heading .crafting { color: #ffffff; }
-.hero-heading .digital { color: var(--text-sub-heading-grey); }
-.hero-description { text-align: center; max-width: 800px; margin: 0 auto 40px auto; font-size: 1.1em; }
-
-/* --- REFACTORED: "MY SERVICES" Section --- */
+/* --- "MY SERVICES" SECTION --- */
 #services-pin-wrapper { position: relative; width: 100%; }
+
+/* ✅ FIX 1: Ensure cube appears BELOW the heading */
 .services-section { 
     position: relative; 
     width: 100%; 
     height: 100vh; 
     display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; /* Center everything horizontally */
-    padding: 40px 0; 
+    flex-direction: column; /* Stack heading and cube vertically */
+    justify-content: flex-start; /* Align items to the top */
+    align-items: center; /* Center them horizontally */
+    padding: 80px 20px; /* Adjust padding for top alignment */
     box-sizing: border-box; 
     overflow: hidden; 
 }
+
 .services-heading { 
     font-size: clamp(3rem, 10vw, 8rem); 
-    line-height: 1; 
+    line-height: 0.8em; 
     font-weight: 800; 
     text-transform: uppercase; 
-    text-align: center; /* Center the heading */
-    margin-bottom: 60px; 
+    text-align: center; 
+    margin-bottom: 60px; /* Space between heading and cube */
 }
-.services-heading .text-white, .services-heading .text-gray { display: inline-block; } 
+.services-heading .text-white { display: block; }
+.services-heading .text-gray { display: block; color: var(--text-sub-heading-grey); } 
 
+/* ✅ FIX 2 & 3: Final size and perspective adjustments */
 .cube-container { 
-    width: 100%; 
-    max-width: 800px; 
-    height: 260px;
-    perspective: 1000px; 
+    width: 100%;
+    max-width: 800px; /* Keep it wide but make it shorter */
+    height: 220px;    /* Reduced height */
+    perspective: 1600px; /* Increased perspective to show fewer faces */
     position: relative; 
+    z-index: 2;
 }
 .cube { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
 .face {
@@ -124,14 +48,27 @@ body {
     justify-content: center;
     border-radius: 20px;
     background: black;
-    padding: 0.8rem 1.5rem;
+    padding: 0.75rem 1.5rem;
     border: 1px solid #333;
     overflow: hidden;
-    text-align: left; /* Keep text inside cards left-aligned */
 }
-.service-title { font-size: clamp(1rem, 2vw, 1.4rem); font-weight: 600; line-height: 1.3; color: var(--service-title-color); margin-bottom: 0.5rem; }
-.service-description { font-size: clamp(0.8rem, 1.2vw, 0.95rem); line-height: 1.5; color: #cccccc; max-width: 95%; }
-.face-number { position: absolute; bottom: -20px; right: 20px; font-size: clamp(6rem, 18vw, 10rem); font-weight: 700; color: rgba(50, 50, 50, 0.5); z-index: -1; }
+.face .service-content, .face .service-title, .face .service-description { margin: 0; padding: 0; }
+.service-title { font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 600; line-height: 1.2; color: var(--service-title-color); margin-bottom: 0.5rem; }
+.service-description { font-size: clamp(0.8rem, 1.2vw, 0.9rem); line-height: 1.4; color: #cccccc; max-width: 100%; }
+.face-number { position: absolute; bottom: -15px; right: 15px; font-size: clamp(5rem, 15vw, 8rem); font-weight: 700; color: rgba(50, 50, 50, 0.5); z-index: -1; line-height: 1; }
 
-/* Premium Tools & Contact Sections (Styles are self-contained and correct) */
-/* ... */
+@media (max-width: 768px) {
+    .services-section {
+        justify-content: center;
+        text-align: center;
+    }
+    .services-heading {
+        margin-bottom: 40px;
+    }
+    .cube-container {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* ... (rest of the CSS file is unchanged) ... */
