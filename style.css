@@ -71,17 +71,80 @@ body {
 
 /* "MY SERVICES" Section */
 #services-pin-wrapper { position: relative; width: 100%; }
-.services-section { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; box-sizing: border-box; overflow: hidden; }
-.services-heading { font-size: clamp(3rem, 10vw, 8rem); line-height: 0.8em; font-weight: 800; text-transform: uppercase; text-align: left; margin-bottom: 60px; width: 100%; max-width: 800px; }
+.services-section { 
+    position: relative; 
+    width: 100%; 
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    padding: 40px 20px; 
+    box-sizing: border-box; 
+    overflow: hidden; 
+}
+.services-heading { 
+    font-size: clamp(3rem, 10vw, 8rem); 
+    line-height: 0.8em; 
+    font-weight: 800; 
+    text-transform: uppercase; 
+    text-align: left; 
+    margin-bottom: 60px; 
+}
 .services-heading .text-white { display: block; }
 .services-heading .text-gray { display: block; color: var(--text-sub-heading-grey); } 
-.cube-container { width: 100%; max-width: 800px; height: 300px; perspective: 1000px; position: relative; }
+.cube-container { 
+    width: 100%; 
+    max-width: 800px; 
+    height: 260px;
+    margin: 0 auto; 
+    perspective: 1000px; 
+    position: relative; 
+}
 .cube { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
-.face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; border-radius: 20px; background: black; padding: clamp(1.2rem, 3vw, 2rem); border: 1px solid #333; overflow: hidden; }
-.face .service-content, .face .service-title, .face .service-description { margin: 0; padding: 0; }
-.service-title { font-size: clamp(1.1rem, 2vw, 1.6rem); font-weight: 600; line-height: 1.3; color: var(--service-title-color); margin-bottom: 0.5rem; }
-.service-description { font-size: clamp(0.85rem, 1.2vw, 1rem); line-height: 1.5; color: #cccccc; max-width: 95%; }
-.face-number { position: absolute; bottom: -20px; right: 20px; font-size: clamp(6rem, 18vw, 12rem); font-weight: 700; color: rgba(50, 50, 50, 0.5); z-index: -1; line-height: 1; }
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 20px;
+    background: black;
+    padding: 1rem;
+    border: 1px solid #333;
+    overflow: hidden;
+}
+.face .service-content, 
+.face .service-title, 
+.face .service-description {
+    margin: 0;
+    padding: 0;
+}
+.service-title {
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-weight: 600; 
+    line-height: 1.3;
+    color: var(--service-title-color);
+    margin-bottom: 0.5rem;
+}
+.service-description {
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    line-height: 1.5;
+    color: #cccccc;
+    max-width: 95%;
+    overflow-wrap: break-word;
+}
+.face-number {
+    position: absolute;
+    bottom: -20px;
+    right: 20px;
+    font-size: clamp(6rem, 18vw, 10rem);
+    font-weight: 700;
+    color: rgba(50, 50, 50, 0.5);
+    z-index: -1;
+    line-height: 1;
+}
 
 /* Premium Tools Section */
 .tools-heading .text-white, .tools-heading .text-gray { display: block; }
