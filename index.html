@@ -11,7 +11,7 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=11"> <!-- Incrementing version for cache busting -->
+    <link rel="stylesheet" href="style.css?v=13"> <!-- Incrementing version for cache busting -->
 
     <!-- GSAP & ScrollTrigger CDNs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -70,7 +70,7 @@
             </section>
 
             <!-- Recreated "MY SERVICES" Section -->
-            <div id="services-pin-wrapper" style="height: 1600vh;">
+            <div id="services-pin-wrapper"> <!-- height is now set by JS -->
                 <!-- 'reveal-item' class REMOVED from section for GSAP control or immediate visibility -->
                 <section id="services" class="services-section"> 
                     <div class="services-left-column">
@@ -78,9 +78,7 @@
                             <span class="text-white">MY</span>
                             <span class="text-gray">SERVICES</span>
                         </h2>
-                        <p class="services-description">
-                            I provide comprehensive digital solutions, from stunning web designs and robust e-commerce platforms to strategic SEO and engaging content creation. Let's elevate your online presence together.
-                        </p>
+                        <!-- REMOVED: <p class="services-description">...</p> -->
                     </div>
                     
                     <div class="services-right-column">
