@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- Desktop Animation Setup ---
-        const faceHeight = 300; // Use the new fixed height for calculations
+        const faceHeight = 260; // Use the new fixed height for calculations
         const faceDepth = faceHeight / 2 / Math.tan(Math.PI / SERVICES_COUNT);
         
         faces.forEach((face, i) => {
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        servicesPinWrapper.style.height = `${SERVICES_COUNT * 100}vh`;
+        servicesPinWrapper.style.height = `${SERVICES_COUNT * faceHeight}px`;
 
         gsap.to(cube, {
             rotateX: `-${(SERVICES_COUNT - 1) * (360 / SERVICES_COUNT)}`,
