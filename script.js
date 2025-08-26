@@ -232,7 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Cube Rotation and Face Visibility
         faces.forEach((face, i) => {
             const label = `face${i}`;
-            // Distribute labels across first ~85-90% of the timeline to leave space for the exit animation
             const labelPosition = i / (SERVICES_COUNT - 1) * 0.9; 
             
             cubeAnimationTimeline.addLabel(label, labelPosition);
@@ -244,16 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }, label);
             
             cubeAnimationTimeline.to(faces, {
-                // Use a function-based value to set autoAlpha for each face
                 autoAlpha: (j) => (j === i ? 1 : 0),
                 duration: 0.5
             }, label);
         });
         
         // Staggered Exit Animation
-        cubeAnimationTimeline.addLabel("exit", ">-0.5"); // Position the exit label relative to the end
+        cubeAnimationTimeline.addLabel("exit", ">-0.5");
 
-        // Fade out the cube first
         cubeAnimationTimeline.to(cubeContainer, {
             autoAlpha: 0,
             scale: 0.9,
@@ -261,15 +258,20 @@ document.addEventListener('DOMContentLoaded', () => {
             ease: "power2.in"
         }, "exit");
         
-        // Then fade out the heading
         cubeAnimationTimeline.to(servicesHeading, {
             autoAlpha: 0,
             y: -30,
             duration: 1,
             ease: "power2.in"
-        }, "exit+=0.2"); // Start slightly after the cube starts fading
+        }, "exit+=0.2");
 
     });
 
+    // Final refresh after all setup
     ScrollTrigger.refresh();
+    
+    // ADDED: Bulletproof resize listener
+    window.addEventListener("resize", () => {
+        ScrollTrigger.refresh();
+    });
 });
