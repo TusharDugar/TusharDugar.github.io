@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Services Section 3D Cube Animation (GSAP + ScrollTrigger) ---
     const servicesSection = document.getElementById('services');
     const servicesPinWrapper = document.getElementById('services-pin-wrapper');
-    const servicesLeftColumn = document.querySelector('.services-left-column');
+    const servicesHeading = document.querySelector('.services-heading'); // Directly target heading
     const cubeContainer = document.querySelector('.cube-container');
     const cube = document.getElementById('services-cube');
     const faces = document.querySelectorAll('.face');
@@ -141,11 +141,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT; // 45 degrees for 8 faces
     const SCROLL_PER_FACE_VH = 400; // How much scroll space for each face rotation
 
-    if (!servicesSection || !servicesPinWrapper || !servicesLeftColumn || !cubeContainer || !cube || SERVICES_COUNT === 0) {
+    if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
         // Fallback: ensure section and faces are visible if animation fails
         gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
-        gsap.set(servicesLeftColumn, { opacity: 1, y: 0, x: 0 });
+        gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); // Ensure heading is visible and not animated
         gsap.set(cubeContainer, { width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
         gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 transform: 'none', 
                 position: 'relative', 
                 transformStyle: 'flat',
-                clearProps: 'all' // Important to remove any GSAP-set inline styles
+                clearProps: 'transform,opacity,visibility,position,transformStyle,transition' // Clear GSAP inline styles
             });
         });
         return; 
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Reduced motion detected. Applying flat layout.");
             // Reset styles to flat/stacked appearance
             gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
-            gsap.set(servicesLeftColumn, { opacity: 1, y: 0, x: 0 }); // Ensure left column is visible and not animated
+            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); // Ensure heading is visible and not animated
             gsap.set(cubeContainer, { width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // On mobile, keep the cube flat and remove pinning
             console.log("Mobile layout active. Disabling 3D scroll animation.");
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,opacity,scale,visibility' }); // Clear any previous fixed styles
-            gsap.set(servicesLeftColumn, { opacity: 1, y: 0 }); // Ensure text is visible
+            gsap.set(servicesHeading, { opacity: 1, y: 0 }); // Ensure heading is visible
             gsap.set(cubeContainer, { 
                 width: currentCubeSize, 
                 height: currentCubeSize, 
@@ -297,7 +297,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     pinSpacing: false, // Prevents ScrollTrigger from adding extra padding
                     // markers: { startColor: "green", endColor: "red", indent: 20 }, // For debugging
-                    onEnter: () => console.log("Services section entered!"),
+                    onEnter: () => {
+                        console.log("Services section entered!");
+                        // Ensure body overflow is auto before pinning begins, then GSAP handles pinning
+                        // No need to manually set body overflow here as ScrollTrigger handles pinning of 'servicesSection'
+                    },
                     onLeave: () => console.log("Services section left (scrolling down)"),
                     onEnterBack: () => console.log("Services section re-entered (scrolling up)"),
                     onLeaveBack: () => console.log("Services section left (scrolling up)")
@@ -309,8 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 { opacity: 0, scale: 0.8, visibility: 'hidden' }, 
                 { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); // At the very start of the pin scroll
 
-            // 2. Left column text animation (fade/move)
-            cubeAnimationTimeline.fromTo(servicesLeftColumn, 
+            // 2. Heading animation (fade/move) - Target servicesHeading directly
+            cubeAnimationTimeline.fromTo(servicesHeading, 
                 { opacity: 0, y: 50 },
                 { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 0); // Start with section fade-in
 
