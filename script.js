@@ -1,14 +1,77 @@
 // script.js
 
-// ... (Keep the copyToClipboard, initIntersectionObserverAnimations, and other top-level functions) ...
+// Function to copy text to clipboard for contact buttons
+function copyToClipboard(button) {
+    const value = button.dataset.contact || ''; 
 
+    if (value) {
+        navigator.clipboard.writeText(value)
+            .then(() => {
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+    }
+}
+
+// Unified Function to reveal elements on scroll (Intersection Observer)
+function initIntersectionObserverAnimations() {
+  const observerOptions = { root: null, rootMargin: "0px", threshold: 0.1 };
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+            return;
+        }
+        if (entry.target.classList.contains("reveal-item")) {
+          entry.target.classList.add("visible");
+        }
+        else if (entry.target.classList.contains("reveal-parent")) {
+          const childrenToStagger = entry.target.querySelectorAll(".reveal-child"); 
+          childrenToStagger.forEach((child, index) => {
+            setTimeout(() => { child.classList.add("visible"); }, index * 100);
+          });
+        }
+        else if (entry.target.classList.contains("reveal-stagger-container")) {
+          const children = entry.target.querySelectorAll(".reveal-stagger");
+          children.forEach((child, index) => {
+            setTimeout(() => { child.classList.add("visible"); }, index * 100);
+          });
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  document.querySelectorAll(".reveal-item, .reveal-parent, .reveal-stagger-container").forEach(el => observer.observe(el));
+}
+
+// Main execution block after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     
-    // ... (Keep the Mouse Follower and Contact Button initializers) ...
+    // Mouse Follower Glow
+    const mouseFollowerGlow = document.querySelector('.mouse-follower-glow');
+    if (mouseFollowerGlow) {
+        document.addEventListener('mousemove', (event) => {
+            gsap.to(mouseFollowerGlow, { x: event.clientX, y: event.clientY, duration: 0.3, ease: "power2.out" });
+        });
+    }
 
+    // Initialize contact button functionality
+    const contactButtons = document.querySelectorAll('.contact-button');
+    contactButtons.forEach(button => {
+        button.addEventListener('click', () => copyToClipboard(button));
+    });
+
+    // Initialize all other reveal-on-scroll animations
     initIntersectionObserverAnimations();
 
-    // --- REFINED SERVICES CUBE ANIMATION ---
+    // --- REFINED "DESIGN CUBE-STYLE" SERVICES ANIMATION ---
     const servicesSection = document.getElementById('services');
     const servicesPinWrapper = document.getElementById('services-pin-wrapper');
     const cubeContainer = document.querySelector('.cube-container');
@@ -16,36 +79,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const faces = document.querySelectorAll('.face');
     const SERVICES_COUNT = faces.length;
 
-    // Guard clause
+    // Guard clause to prevent errors if elements aren't found
     if (!servicesSection || !servicesPinWrapper || !cubeContainer || !cube || !SERVICES_COUNT) {
         console.error("Services section elements not found. Aborting animation setup.");
         return;
     }
 
     gsap.matchMedia().add({
-        // Run this animation on screens wider than 768px
         isDesktop: "(min-width: 769px)",
-        // This is the fallback for mobile
         isMobile: "(max-width: 768px)",
-        // Fallback for accessibility
         reducedMotion: "(prefers-reduced-motion: reduce)"
     }, (context) => {
         let { isDesktop, reducedMotion } = context.conditions;
 
-        // If not on desktop or if user prefers reduced motion, apply flat layout and exit
+        // Fallback for mobile and accessibility
         if (!isDesktop || reducedMotion) {
             gsap.set(faces, { position: 'relative', transform: 'none', autoAlpha: 1 });
             return;
         }
 
         // --- Desktop Animation Setup ---
-
-        // 1. Calculate the geometry
-        const faceHeight = cubeContainer.offsetHeight; // Use the actual height from CSS
-        // This is the magic calculation for a seamless prism
+        const faceHeight = 400; // Matches the fixed height in CSS
         const faceDepth = faceHeight / 2 / Math.tan(Math.PI / SERVICES_COUNT);
         
-        // 2. Position each face in 3D space
         faces.forEach((face, i) => {
             const angle = i * (360 / SERVICES_COUNT);
             gsap.set(face, {
@@ -53,39 +109,34 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // 3. Set the total scroll height for the wrapper
+        // Set the total scrollable height for the animation
         servicesPinWrapper.style.height = `${SERVICES_COUNT * 100}vh`;
 
-        // 4. Create the main scroll-driven animation timeline
-        const tl = gsap.timeline({
+        // Main scroll-driven animation for cube rotation
+        gsap.to(cube, {
+            rotateX: `-${(SERVICES_COUNT - 1) * (360 / SERVICES_COUNT)}`,
+            ease: "none",
             scrollTrigger: {
                 trigger: servicesPinWrapper,
                 start: "top top",
                 end: "bottom bottom",
-                scrub: 1, // Smoothly scrub the animation
-                pin: servicesSection, // Pin the section during the scroll
-                anticipatePin: 1, // Helps prevent layout jumps
-            },
-        });
-
-        // Animate the cube's rotation
-        tl.to(cube, {
-            rotateX: `-${(SERVICES_COUNT - 1) * (360 / SERVICES_COUNT)}`,
-            ease: "none", // Linear rotation
-        });
-
-        // 5. (Optional) Add a fade-out for the cube at the very end
-        gsap.to(cubeContainer, {
-            autoAlpha: 0, // Fades out both opacity and visibility
-            scale: 0.95,
-            scrollTrigger: {
-                trigger: servicesPinWrapper,
-                start: "bottom bottom-=200px", // Start fading 200px from the end
-                end: "bottom bottom",
-                scrub: true,
+                scrub: 1,
+                pin: servicesSection,
+                anticipatePin: 1
             }
         });
 
+        // Optional exit animation
+        gsap.to(cubeContainer, {
+            autoAlpha: 0,
+            scale: 0.9,
+            scrollTrigger: {
+                trigger: servicesPinWrapper,
+                start: "bottom bottom-=200", // Start fading 200px from the end
+                end: "bottom bottom",
+                scrub: true
+            }
+        });
     });
 
     // Refresh ScrollTrigger on window resize to recalculate dimensions
