@@ -534,7 +534,7 @@ html::before {
     font-size: clamp(2.5rem, 8vw, 8rem); 
     line-height: 0.75em;
     font-weight: 800;
-    margin-bottom: 0; /* Managed by parent gap */
+    margin-bottom: 40px; /* IMPORTANT: Breathing space below heading */
     text-transform: uppercase;
     text-align: left; /* Keep left-aligned as per requirement */
     align-self: flex-start; /* IMPORTANT: Align to the start of the flex container */
@@ -657,6 +657,7 @@ html::before {
         gap: 40px; /* Adjusted gap for smaller screens */
         padding: 80px 40px;
     }
+    /* Cube container max width/height will be handled by GSAP's matchMedia for 640px */
 }
 
 @media (max-width: 768px) {
@@ -667,6 +668,7 @@ html::before {
         padding: 60px 20px; /* Adjust padding */
         gap: 30px; /* Spacing between stacked items */
         text-align: center; /* Center text for stacked layout */
+        /* GSAP's matchMedia will handle unpinning and transforming the cube to flat mode */
     }
     .services-heading {
         align-self: center; /* Center heading when stacked */
