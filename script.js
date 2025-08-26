@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize all other reveal-on-scroll animations
     initIntersectionObserverAnimations();
 
-    // --- "DESIGN CUBE-STYLE" SERVICES ANIMATION ---
+    // --- FINAL "DESIGN CUBE-STYLE" SERVICES ANIMATION ---
     const servicesSection = document.getElementById('services');
     const servicesPinWrapper = document.getElementById('services-pin-wrapper');
     const cubeContainer = document.querySelector('.cube-container');
@@ -97,8 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- Desktop Animation Setup ---
-        const faceHeight = 260; // Use the new fixed height for calculations
-        const faceDepth = faceHeight / 2 / Math.tan(Math.PI / SERVICES_COUNT);
+        const faceHeight = 260; // Must match the fixed height in CSS
+        const faceDepth = (faceHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
         
         faces.forEach((face, i) => {
             const angle = i * (360 / SERVICES_COUNT);
@@ -107,10 +107,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        servicesPinWrapper.style.height = `${SERVICES_COUNT * faceHeight}px`;
+        // ✅ FIX: Adjusted scroll length for a smoother animation
+        const scrollLength = SERVICES_COUNT * faceHeight * 1.2;
+        servicesPinWrapper.style.height = `${scrollLength}px`;
+
+        const totalRotation = (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT);
 
         gsap.to(cube, {
-            rotateX: `-${(SERVICES_COUNT - 1) * (360 / SERVICES_COUNT)}`,
+            rotateX: `-${totalRotation}`,
             ease: "none",
             scrollTrigger: {
                 trigger: servicesPinWrapper,
