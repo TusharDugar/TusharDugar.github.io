@@ -14,6 +14,7 @@
     --tool-icon-bg: #F8F8F8;
     --tool-name-color: var(--text-light);
     --tool-category-color: var(--text-medium);
+    --shadow-color-card-white: rgba(0,0,0,0.25);
 }
 
 /* Universal Box-Sizing */
@@ -153,38 +154,98 @@ body::after {
     padding-bottom: 100px;
 }
 
-/* Left Column Card */
+/* --- RESTORED: Full Left Column Card Styles --- */
 .about-left-content {
     background-color: var(--bg-profile-card);
     color: var(--text-dark-card);
     border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 30px 25px;
+    box-shadow: 0 10px 30px var(--shadow-color-card-white);
     width: 100%;
     max-width: 370px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
     position: relative;
     overflow: hidden;
 }
+.profile-image-container {
+    width: calc(100% + 50px);
+    max-width: 420px;
+    height: 200px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    position: relative;
+    background-color: var(--accent-primary-sawad);
+}
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    filter: brightness(0.95); /* Adjusted for better visibility */
+}
 .about-left-content h3 {
     font-family: 'Poppins', sans-serif;
     font-size: 2.8em;
-    font-weight: 900;
+    font-weight: 700;
     color: var(--text-dark-card);
     margin: 0 0 20px 0;
     line-height: 1.1;
 }
+.fire-icon-with-line {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.fire-icon {
+    background-color: var(--accent-primary-sawad);
+    border-radius: 50%;
+    padding: 8px;
+    font-size: 1.1em;
+    color: var(--text-light);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    z-index: 2;
+}
+.fire-icon-with-line::before,
+.fire-icon-with-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2px;
+    border-top: 2px dashed var(--accent-primary-sawad);
+    z-index: 1;
+}
+.fire-icon-with-line::before { left: 0; width: calc(50% - 25px); }
+.fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
 .about-short-desc {
     text-align: center;
     line-height: 1.7;
     font-size: 0.9em;
     color: var(--text-medium-card);
-    margin: 0;
+    margin-bottom: 25px;
     max-width: 90%;
+}
+.about-social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: auto;
+}
+.about-social-icons a {
+    color: var(--accent-primary-sawad);
+    font-size: 1.5em;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+.about-social-icons a:hover {
+    transform: translateY(-2px) scale(1.05);
 }
 .dashed-decoration {
     position: absolute;
@@ -346,9 +407,8 @@ body::after {
 }
 
 /* Premium Tools Section */
-.tools-heading {
-    /* ... your heading styles ... */
-}
+.tools-heading .text-white { display: block; }
+.tools-heading .text-gray { display: block; color: var(--text-sub-heading-grey); }
 .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -468,4 +528,7 @@ footer h2 {
 .contact-button.copied .copied-text {
     transform: translateY(0);
     opacity: 1;
+}
+.social-links {
+    margin-top: 30px;
 }
