@@ -499,14 +499,15 @@ html::before {
 
 /* Services Section Wrapper (for pinning) */
 #services-pin-wrapper {
-    height: 1600vh; /* As specified in prompt - GSAP ScrollTrigger will use this to define scroll length */
-    position: relative;
+    /* Height will be set dynamically by GSAP in script.js */
+    /* This element is primarily the trigger for ScrollTrigger, not for layout */
+    position: relative; /* Needs to be positioned for ScrollTrigger to work reliably */
     width: 100%;
 }
 
 /* Services Section Styles (Two-Column Layout & Pinning) */
 .services-section {
-    position: relative; /* Default state, GSAP will manage 'fixed' */
+    position: relative; /* Default state, GSAP will manage 'fixed' property */
     width: 100%;
     height: 100vh; /* Occupy full viewport height when active */
     display: grid; /* Use CSS Grid for layout */
@@ -515,43 +516,49 @@ html::before {
     align-items: center; /* Vertically align content in grid cells */
     max-width: 1200px; /* Max width of the overall section content */
     margin: 0 auto; /* Center the section horizontally */
-    z-index: 2; 
+    z-index: 2; /* Ensure it stays above background */
     background-color: transparent; 
     padding: 100px 20px; /* Standard padding for the section */
     box-sizing: border-box;
     overflow: hidden; /* Important for containing 3D content */
-    opacity: 0; /* Hidden by default, GSAP will fade it in */
-    transform: scale(0.8); /* Smaller by default, GSAP will scale it up */
+    
+    /* Initial state for GSAP animation (fade in and grow) */
+    opacity: 0; 
+    transform: scale(0.8); 
+    visibility: hidden; /* Start hidden for controlled GSAP reveal */
 }
 
 
 /* Left Column of Services Section (Text Column) */
 .services-left-column {
     position: relative; 
-    z-index: 2; 
+    z-index: 2; /* Ensure text is above the cube in 3D space if overlap happens */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Vertically center content */
+    justify-content: center; /* Vertically center content within its grid cell */
     align-items: flex-start; /* Align text to the start */
     text-align: left; 
     height: 100%; /* Take full height of grid cell */
-    padding-right: 0; /* No extra padding, gap handles spacing */
+    padding-right: 0; /* No extra padding, grid gap handles spacing */
     box-sizing: border-box;
     flex-shrink: 1; 
-    opacity: 1; /* GSAP will control this later */
+    
+    /* Initial state for GSAP animation */
+    opacity: 0;
+    transform: translateY(50px);
 }
 
 /* Right Column of Services Section (Cube Column) */
 .services-right-column {
     overflow: hidden; /* Essential for containing 3D content */
     position: relative; 
-    z-index: 1; 
+    z-index: 1; /* Cube column is behind text column for z-index */
     display: flex; /* For centering the cube-container within this column */
-    justify-content: center; /* Horizontally center cube within its column */
+    justify-content: flex-end; /* IMPORTANT: Align cube to the RIGHT within its grid cell */
     align-items: center; /* Vertically center cube within its column */
     height: 100%; /* Take full height of grid cell */
     box-sizing: border-box; 
-    flex-shrink: 0; /* Prevent this column from shrinking more than necessary */
+    flex-shrink: 0; /* Prevent this column from shrinking too much */
     min-width: 0; /* Allow content to shrink if necessary in flex context */
 }
 
@@ -585,16 +592,20 @@ html::before {
 
 /* --- 3D Cube Animation Styles --- */
 .cube-container {
-    width: 100%; /* Takes full width of its parent (.services-right-column) */
-    /* max-width, height will be set by JS/GSAP based on breakpoint (900px, 640px, 300px) */
+    /* width and height will be explicitly set by JS/GSAP based on breakpoint (900px, 640px, 300px) */
     aspect-ratio: 1 / 1; /* Ensures it's always a perfect square */
-    margin: 0 auto; /* Center horizontally within its flex parent */
+    /* margin: 0 auto; */ /* Horizontal centering is handled by .services-right-column now */
     perspective: 1200px; /* As specified in prompt */
     
-    position: relative; /* Ensure it stays in flow, relative to right column */
+    position: relative; /* Ensure it stays in flow relative to its parent */
     overflow: hidden; /* Important for clipping rotating elements */
     will-change: transform, opacity;
     border: none;
+    
+    /* Initial state for GSAP animation */
+    opacity: 0; 
+    transform: scale(0.8); 
+    visibility: hidden; /* Start hidden for controlled GSAP reveal */
 }
 
 .cube {
@@ -625,8 +636,10 @@ html::before {
     box-sizing: border-box;
     text-align: left; /* Ensure text inside face respects alignment */
     box-shadow: var(--shadow-strong); /* Using defined variable */
-    opacity: 0; /* Initial opacity for all faces except active, GSAP will manage */
-    visibility: hidden; /* Initially hidden, GSAP will manage */
+    
+    /* Initial state for GSAP animation - only the active face will be visible */
+    opacity: 0; 
+    visibility: hidden; 
     border-radius: 15px; /* Added from proposed CSS */
 }
 
@@ -682,7 +695,8 @@ html::before {
 
 @media (max-width: 1200px) {
     .services-section {
-        grid-template-columns: minmax(auto, 1fr) auto; /* Maintain grid but allow sizing changes */
+        /* On medium desktops, adjust grid columns and gap */
+        grid-template-columns: minmax(auto, 1fr) 400px; /* Adjust cube column width */
         gap: 60px;
         padding: 80px 40px;
     }
@@ -705,14 +719,16 @@ html::before {
         height: auto; /* Allow content to dictate height */
         z-index: auto; /* Reset z-index */
     }
-    .services-heading, .services-description {
+    .services-heading { /* Only heading remains */
         text-align: center;
     }
+    /* services-description is removed */
+
     .services-right-column {
         height: auto;
         z-index: auto; /* Reset z-index */
-        /* Cube container max-width/height will be handled by GSAP's matchMedia for 300px */
         margin-top: 20px; /* Space from text above */
+        /* Cube container max-width/height will be handled by GSAP's matchMedia for 300px */
     }
     .cube-container {
         position: relative; /* Disable sticky on mobile */
@@ -767,7 +783,6 @@ html::before {
         padding: 40px 15px;
     }
     .cube-container {
-        /* max-width/height will be handled by GSAP's matchMedia for 300px */
         min-height: 200px; /* Ensure min-height */
     }
     .face {
@@ -777,6 +792,7 @@ html::before {
 
 /* --- Accessibility: Reduced motion override (GSAP also handles this directly) --- */
 @media (prefers-reduced-motion: reduce) {
+    /* Global reveals */
     .reveal-item,
     .reveal-parent .reveal-child,
     .reveal-stagger-container .reveal-stagger,
@@ -788,7 +804,8 @@ html::before {
         visibility: visible !important;
     }
     
-    /* These specific overrides will be mirrored/managed by GSAP's matchMedia for reduced-motion */
+    /* Services section specific overrides for reduced motion */
+    /* GSAP's matchMedia takes priority, but these serve as a CSS-only fallback */
     #services-pin-wrapper { 
         height: auto !important; 
         position: relative !important;
@@ -807,8 +824,8 @@ html::before {
         justify-content: flex-start !important;
         align-items: center !important;
         gap: 20px !important; 
-        opacity: 1 !important; /* Ensure visibility */
-        transform: none !important; /* Ensure no scale */
+        opacity: 1 !important; 
+        visibility: visible !important;
     }
     .services-left-column, .services-right-column {
         flex-basis: auto !important;
@@ -821,9 +838,10 @@ html::before {
         text-align: center !important;
         z-index: auto !important;
     }
-    .services-heading, .services-description {
+    .services-heading {
         text-align: center !important;
     }
+    /* services-description is removed */
 
     .cube-container {
         perspective: none !important; 
