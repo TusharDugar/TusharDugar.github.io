@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize all other reveal-on-scroll animations
     initIntersectionObserverAnimations();
 
-    // --- FINAL SERVICES ANIMATION ---
+    // --- FINAL POLISHED SERVICES ANIMATION ---
     const servicesSection = document.getElementById('services');
     const servicesPinWrapper = document.getElementById('services-pin-wrapper');
     const cubeContainer = document.querySelector('.cube-container');
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const faceHeight = 220;
-        const faceDepth = (faceHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+        const faceDepth = (faceHeight / 2) / Math.sin(Math.PI / SERVICES_COUNT);
         
         faces.forEach((face, i) => {
             const angle = i * (360 / SERVICES_COUNT);
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        const scrollLength = SERVICES_COUNT * faceHeight * 1.2;
+        const scrollLength = SERVICES_COUNT * faceHeight * 1.4;
         servicesPinWrapper.style.height = `${scrollLength}px`;
 
         gsap.fromTo(cube,
