@@ -144,13 +144,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return; 
     }
 
-    function calculateFaceOffset(cubeHeight) {
-        if (!cubeHeight || SERVICES_COUNT === 0) return 0;
-        return (cubeHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
-    }
-
+    // MODIFIED: Simplified and corrected face positioning logic.
     function setupInitialCubeFaces(currentCubeSize) {
-        const faceOffset = calculateFaceOffset(currentCubeSize);
+        // The distance faces should be from the center is half the cube's size.
+        const faceOffset = currentCubeSize / 2;
+        
         faces.forEach((face, i) => {
             const angleForFace = i * ROTATION_INCREMENT_DEG;
             gsap.set(face, { 
@@ -160,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 backfaceVisibility: 'hidden'
             });
         });
+
         gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0 });
         gsap.set(faces, { autoAlpha: 0 });
         gsap.set(faces[0], { autoAlpha: 1 });
@@ -245,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cubeAnimationTimeline.to(faces, {
                 autoAlpha: (j) => (j === i ? 1 : 0),
                 duration: 0.5,
-                immediateRender: false // REFINEMENT: Prevents flickering on fast scrolls
+                immediateRender: false
             }, label);
         });
         
