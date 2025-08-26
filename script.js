@@ -59,6 +59,8 @@ function initIntersectionObserverAnimations() {
         }
 
         // Handle reveal-item (single item reveal like headers, individual cards, 3D cube container)
+        // NOTE: The services-section and cube-container no longer have 'reveal-item' in HTML
+        // So this block will primarily apply to other sections/elements.
         if (entry.target.classList.contains("reveal-item")) {
           entry.target.classList.add("visible");
         }
@@ -127,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => copyToClipboard(button));
     });
 
-    // Initialize IntersectionObserver-based animations (for About section, Tools, Contact, and the 3D cube container itself)
+    // Initialize IntersectionObserver-based animations (for About section, Tools, Contact, and other reveal-items)
     initIntersectionObserverAnimations();
 
     // --- Services Section 3D Cube Animation (Discrete Step) ---
