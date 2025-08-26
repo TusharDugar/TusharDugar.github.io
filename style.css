@@ -8,7 +8,8 @@
     --text-medium-card: #4B4B4B;
     --accent-primary-sawad: #FF6B00;
     --text-sub-heading-grey: #666666;
-    --service-title-color: #9CFF33;
+    /* ✅ FIX 1: Correct color is now orange */
+    --service-title-color: #FF6B00; 
     --bg-tool-card: #1A1A1A;
     --tool-icon-bg: #F8F8F8;
     --tool-name-color: var(--text-light);
@@ -69,7 +70,7 @@ body {
 .hero-heading .digital { color: var(--text-sub-heading-grey); }
 .hero-description { text-align: justify; line-height: 1.8; font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); }
 
-/* --- "MY SERVICES" SECTION --- */
+/* "MY SERVICES" Section */
 #services-pin-wrapper { position: relative; width: 100%; }
 .services-section { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 40px 20px; box-sizing: border-box; }
 .services-heading { font-size: clamp(3rem, 10vw, 8rem); line-height: 0.8em; font-weight: 800; text-transform: uppercase; text-align: left; margin-bottom: 80px; }
@@ -77,8 +78,6 @@ body {
 .services-heading .text-gray { display: block; color: var(--text-sub-heading-grey); } 
 .cube-container { width: 100%; max-width: 900px; height: 400px; margin: 0 auto; perspective: 1000px; position: relative; }
 .cube { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
-
-/* FIX 1 & 2: Polished padding and font sizes to eliminate gaps and overflow */
 .face {
     position: absolute;
     width: 100%;
@@ -86,158 +85,57 @@ body {
     backface-visibility: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Ensures content is vertically centered */
+    justify-content: center;
     border-radius: 24px;
     background: black;
-    padding: clamp(2rem, 5vw, 3.5rem); /* Fine-tuned padding */
+    padding: clamp(1.5rem, 4vw, 2.5rem);
     border: 1px solid #333;
     overflow: hidden;
 }
 .service-title {
-    font-size: clamp(1.2rem, 2vw, 1.8rem); /* Slightly smaller max font size */
-    font-weight: 400; /* Adjusted weight for balance */
+    font-size: clamp(1.2rem, 2.2vw, 2rem);
+    /* ✅ FIX 2: Correct font weight is now bold */
+    font-weight: 600; 
     line-height: 1.3;
-    color: var(--service-title-color);
-    margin: 0 0 1rem 0;
+    color: var(--service-title-color); /* This will now correctly use the orange color from :root */
+    margin: 0 0 0.8rem 0;
 }
 .service-description {
-    font-size: clamp(0.9rem, 1.2vw, 1rem); /* Fine-tuned font size */
+    font-size: clamp(0.9rem, 1.3vw, 1.1rem);
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #cccccc;
-    max-width: 95%; /* Allow a bit more width */
+    max-width: 90%;
 }
 .face-number {
     position: absolute;
-    bottom: -25px; /* Nudged for better alignment */
-    right: 25px;
-    font-size: clamp(8rem, 20vw, 12rem); /* Capped max size to prevent overflow */
+    bottom: -30px;
+    right: 20px;
+    font-size: clamp(8rem, 20vw, 14rem);
     font-weight: 700;
     color: rgba(50, 50, 50, 0.5);
     z-index: -1;
     line-height: 1;
 }
 
-/* --- Premium Tools & Contact Section (UNCHANGED) --- */
+/* Premium Tools & Contact Sections (Unchanged) */
 .tools-heading .text-white, .tools-heading .text-gray { display: block; }
-.tools-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-top: 60px;
-}
-.tool-card {
-    background: var(--bg-tool-card);
-    border-radius: 15px;
-    padding: 25px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.tool-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-}
-.tool-icon-wrapper {
-    width: 50px; height: 50px;
-    background-color: var(--tool-icon-bg);
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-}
-.tool-logo {
-    max-width: 70%;
-    max-height: 70%;
-    object-fit: contain;
-}
-.tool-name {
-    font-size: 1.1em;
-    font-weight: 600;
-    color: var(--tool-name-color);
-    margin: 0 0 5px 0;
-}
-.tool-category {
-    font-size: 0.85em;
-    color: var(--tool-category-color);
-    margin: 0;
-}
-footer#contact {
-    background-color: var(--bg-section-card);
-    padding: 100px 40px;
-    text-align: center;
-}
-footer h2 {
-    font-size: 3.2em;
-    margin-bottom: 25px;
-}
-.contact-tagline {
-    font-size: 1.1rem;
-    margin-bottom: 40px;
-    color: var(--text-medium);
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.contact-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-.contact-button {
-    background-color: var(--bg-profile-card);
-    color: var(--text-dark-card);
-    padding: 15px 25px;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-.contact-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-}
-.contact-button i {
-    font-size: 1.5em;
-    color: var(--accent-primary-sawad);
-}
-.button-content-main {
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-.copied-text {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--accent-primary-sawad);
-    color: var(--text-light);
-    font-weight: bold;
-    border-radius: 10px;
-    opacity: 0;
-    transform: translateY(100%);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-.contact-button.copied .button-content-main {
-    transform: translateY(-100%);
-    opacity: 0;
-}
-.contact-button.copied .copied-text {
-    transform: translateY(0);
-    opacity: 1;
-}
-.social-links {
-    margin-top: 30px;
-}
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 60px; }
+.tool-card { background: var(--bg-tool-card); border-radius: 15px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.tool-card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); }
+.tool-icon-wrapper { width: 50px; height: 50px; background-color: var(--tool-icon-bg); border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
+.tool-logo { max-width: 70%; max-height: 70%; object-fit: contain; }
+.tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
+.tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
+footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; text-align: center; }
+footer h2 { font-size: 3.2em; margin-bottom: 25px; }
+.contact-tagline { font-size: 1.1rem; margin-bottom: 40px; color: var(--text-medium); max-width: 700px; margin-left: auto; margin-right: auto; }
+.contact-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+.contact-button { background-color: var(--bg-profile-card); color: var(--text-dark-card); padding: 15px 25px; border: none; border-radius: 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+.contact-button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+.contact-button i { font-size: 1.5em; color: var(--accent-primary-sawad); }
+.button-content-main { transition: transform 0.3s ease, opacity 0.3s ease; }
+.copied-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: var(--accent-primary-sawad); color: var(--text-light); font-weight: bold; border-radius: 10px; opacity: 0; transform: translateY(100%); transition: transform 0.3s ease, opacity 0.3s ease; }
+.contact-button.copied .button-content-main { transform: translateY(-100%); opacity: 0; }
+.contact-button.copied .copied-text { transform: translateY(0); opacity: 1; }
+.social-links { margin-top: 30px; }
