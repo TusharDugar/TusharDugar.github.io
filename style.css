@@ -154,7 +154,7 @@ body::after {
     padding-bottom: 100px;
 }
 
-/* --- RESTORED: Full Left Column Card Styles --- */
+/* RESTORED: Full Left Column Card Styles */
 .about-left-content {
     background-color: var(--bg-profile-card);
     color: var(--text-dark-card);
@@ -185,7 +185,7 @@ body::after {
     height: 100%;
     object-fit: cover;
     object-position: center top;
-    filter: brightness(0.95); /* Adjusted for better visibility */
+    filter: brightness(0.95);
 }
 .about-left-content h3 {
     font-family: 'Poppins', sans-serif;
