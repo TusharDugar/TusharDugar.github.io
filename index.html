@@ -11,7 +11,7 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=24"> <!-- Incremented version -->
+    <link rel="stylesheet" href="style.css?v=25"> <!-- Incremented version -->
 
     <!-- GSAP & ScrollTrigger CDNs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -67,7 +67,6 @@
 
             <!-- Services Section -->
             <div id="services-pin-wrapper">
-                <!-- MODIFIED: Section now contains two direct children for the row layout -->
                 <section id="services" class="services-section">
                     <div class="services-heading-wrapper">
                         <h2 class="services-heading">
@@ -77,7 +76,6 @@
                     </div>
                     <div class="cube-container">
                         <div id="services-cube" class="cube">
-                           <!-- All 8 face elements remain the same -->
                            <div class="face" data-index="0"><div class="service-content"><h3 class="service-title">Web Design</h3><p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p></div><div class="face-number">01</div></div>
                            <div class="face" data-index="1"><div class="service-content"><h3 class="service-title">SEO Optimization</h3><p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p></div><div class="face-number">02</div></div>
                            <div class="face" data-index="2"><div class="service-content"><h3 class="service-title">UX/UI Design</h3><p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p></div><div class="face-number">03</div></div>
@@ -91,15 +89,41 @@
                 </section>
             </div>
 
-            <!-- Other sections... -->
+            <!-- RESTORED: Premium Tools Section -->
             <section id="tools" class="section reveal-item">
-                <!-- ... -->
+                <h2 class="tools-heading reveal-item">
+                    <span class="text-white">PREMIUM</span>
+                    <span class="text-gray">TOOLS</span>
+                </h2>
+                <div class="tools-grid reveal-stagger-container">
+                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg" alt="Google Gemini Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Google Gemini</h4><p class="tool-category">AI Assistant</p></div></div>
+                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/openai.svg" alt="ChatGPT Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">ChatGPT</h4><p class="tool-category">AI Assistant</p></div></div>
+                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="Figma Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Figma</h4><p class="tool-category">Design Tool</p></div></div>
+                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="Photoshop Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Adobe Photoshop</h4><p class="tool-category">Image Editing</p></div></div>
+                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googleanalytics.svg" alt="Google Analytics Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Google Analytics</h4><p class="tool-category">Web Analytics</p></div></div>
+                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/semrush.svg" alt="SEMrush Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">SEMrush</h4><p class="tool-category">SEO & Content Marketing</p></div></div>
+                </div>
             </section>
         </div>
     </div>
 
+    <!-- RESTORED: Contact Section (Footer) -->
     <footer id="contact" class="section reveal-item">
-        <!-- ... -->
+        <h2>Let’s Connect!</h2>
+        <p class="contact-tagline">
+            I am always open to discuss your project,<br>improve your online presence or help with your website.
+        </p>
+        <div class="contact-buttons reveal-stagger-container">
+            <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
+                <div class="button-content-main"><i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span></div>
+                <span class="copied-text">Copied!</span>
+            </button>
+            <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
+                <div class="button-content-main"><i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span></div>
+                <span class="copied-text">Copied!</span>
+            </button>
+        </div>
+        <div class="social-links"></div>
     </footer>
 
     <script src="script.js" defer></script>
