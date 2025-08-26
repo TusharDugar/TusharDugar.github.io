@@ -554,7 +554,6 @@ html::before {
 .cube-container {
     /* width and height will be explicitly set by JS/GSAP based on breakpoint (900px, 640px, 300px) */
     aspect-ratio: 1 / 1; /* Ensures it's always a perfect square */
-    /* margin: 0 auto; */ /* Horizontal centering is handled by .services-section's align-items: stretch + align-self: center */
     perspective: 1200px; /* As specified in prompt */
     
     position: relative; 
@@ -574,6 +573,9 @@ html::before {
     
     z-index: 1; /* Cube is behind the heading */
     margin-top: 20px; /* IMPORTANT: Extra spacing if needed */
+    
+    max-width: 900px; /* IMPORTANT: Prevent over-stretching */
+    width: 100%;     /* IMPORTANT: Responsive width */
 }
 
 .cube {
