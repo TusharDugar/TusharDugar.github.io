@@ -575,28 +575,28 @@ html::before {
 
 /* Services Main Title (These styles are now moot as the element is removed from HTML) */
 .services-heading {
-    font-family: 'Poppins', sans-serif; 
-    font-size: clamp(2.5rem, 8vw, 8rem); 
-    line-height: 0.75em;
-    font-weight: 800;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    text-align: left;
-    position: relative;
-    z-index: 4; 
-    padding: 0;
-    width: 100%;
+    /* font-family: 'Poppins', sans-serif; */ 
+    /* font-size: clamp(2.5rem, 8vw, 8rem); */ 
+    /* line-height: 0.75em; */
+    /* font-weight: 800; */
+    /* margin-bottom: 20px; */
+    /* text-transform: uppercase; */
+    /* text-align: left; */
+    /* position: relative; */
+    /* z-index: 4; */ 
+    /* padding: 0; */
+    /* width: 100%; */
 }
-.services-heading .text-white { color: var(--text-light); display: block; } 
-.services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
+/* .services-heading .text-white { color: var(--text-light); display: block; } */ 
+/* .services-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } */ 
 
 /* Styling for the description in the left column (Moot) */
 .services-description {
-    font-size: clamp(0.875rem, 1.2vw, 1rem); 
-    line-height: 1.4; 
-    color: var(--text-medium);
-    text-align: left;
-    max-width: 100%;
+    /* font-size: clamp(0.875rem, 1.2vw, 1rem); */ 
+    /* line-height: 1.4; */ 
+    /* color: var(--text-medium); */
+    /* text-align: left; */
+    /* max-width: 100%; */
 }
 
 
