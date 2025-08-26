@@ -9,7 +9,6 @@
     --accent-primary-sawad: #FF6B00;
     --text-sub-heading-grey: #666666;
     --service-title-color: #9CFF33;
-    --service-bg-number-color: rgba(255, 255, 255, 0.05);
     --bg-tool-card: #1A1A1A;
     --tool-icon-bg: #F8F8F8;
     --shadow-color-card-white: rgba(0,0,0,0.25);
@@ -26,24 +25,24 @@ body {
     overflow-x: hidden;
 }
 
-/* Background Layers & Mouse Glow (Unchanged) */
+/* Background Layers & Mouse Glow */
 .site-background-image { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.079; background-image: url('./71976 (1).jpg'); background-repeat: repeat; background-size: 400px auto; }
 .background-color-gradient { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.05; background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); background-size: 400% 400%; animation: gradient 15s ease infinite; }
 @keyframes gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 .mouse-follower-glow { position: fixed; top: 0; left: 0; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, transparent 60%); filter: blur(50px); z-index: 100; pointer-events: none; transition: transform 0.1s ease-out; }
 
-/* Global Section & Reveal Animations (Unchanged) */
+/* Global Section & Reveal Animations */
 .section { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; padding: 80px 40px; }
 .reveal-item, .reveal-child, .reveal-stagger { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
 .reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
 
-/* Main Layout (Unchanged) */
+/* Main Layout */
 .main-layout-container { display: flex; justify-content: center; max-width: 1920px; margin: 0 auto; padding: 0 60px; gap: 60px; }
 .left-column-sticky { flex-shrink: 0; flex-basis: 370px; display: flex; align-items: center; justify-content: center; }
 @media (min-width: 1024px) { .left-column-sticky { position: sticky; top: 0; height: 100vh; } }
 .right-column-scroll { flex-grow: 1; padding-top: 50px; padding-bottom: 100px; }
 
-/* "About" Card Styles (Unchanged) */
+/* "About" Card Styles */
 .about-left-content { background-color: var(--bg-profile-card); color: var(--text-dark-card); border-radius: 20px; padding: 30px 25px; box-shadow: 0 10px 30px var(--shadow-color-card-white); width: 100%; max-width: 370px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; }
 .profile-image-container { width: calc(100% + 50px); max-width: 420px; height: 200px; border-radius: 15px; overflow: hidden; margin-bottom: 25px; position: relative; background-color: var(--accent-primary-sawad); }
 .profile-photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
@@ -61,97 +60,24 @@ body {
 .top-left-curve { width: 150px; height: 150px; top: -50px; left: -50px; border-top-color: transparent; border-left-color: transparent; transform: rotate(-10deg); }
 .bottom-right-curve { width: 150px; height: 150px; bottom: -50px; right: -50px; border-bottom-color: transparent; border-right-color: transparent; transform: rotate(10deg); }
 
-/* Hero Section (Unchanged) */
+/* Hero Section */
 .hero-heading { font-size: clamp(4rem, 10vw, 7.75em); line-height: 0.8em; font-weight: 900; margin-bottom: 20px; text-transform: uppercase; }
 .hero-heading .crafting { color: #ffffff; }
 .hero-heading .digital { color: var(--text-sub-heading-grey); }
 .hero-description { text-align: justify; line-height: 1.8; font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); }
 
-/* --- "MY SERVICES" SECTION --- */
-#services-pin-wrapper {
-    position: relative; 
-    width: 100%;
-    /* Height is set dynamically by JS */
-}
-
-.services-section {
-    position: relative;
-    width: 100%;
-    height: 100vh; /* Will be pinned to this height */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center the content vertically */
-    padding: 40px 20px;
-    box-sizing: border-box;
-    overflow: visible; /* Allow cube to feel like it's in the space */
-}
-
-.services-heading {
-    font-size: clamp(3rem, 10vw, 8rem); 
-    line-height: 0.8em;
-    font-weight: 800;
-    text-transform: uppercase;
-    text-align: left;
-    margin-bottom: 80px; /* Space between heading and cube */
-}
+/* Services Section */
+#services-pin-wrapper { position: relative; width: 100%; }
+.services-section { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 40px 20px; box-sizing: border-box; }
+.services-heading { font-size: clamp(3rem, 10vw, 8rem); line-height: 0.8em; font-weight: 800; text-transform: uppercase; text-align: left; margin-bottom: 80px; }
 .services-heading .text-white { display: block; }
 .services-heading .text-gray { display: block; color: var(--text-sub-heading-grey); } 
+.cube-container { width: 100%; max-width: 900px; height: 400px; margin: 0 auto; perspective: 1000px; position: relative; }
+.cube { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+.face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; border-radius: 24px; background: black; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid #333; }
+.service-title { font-size: clamp(1.5rem, 2.5vw, 2.2rem); font-weight: 300; line-height: 1.2; color: var(--service-title-color); margin-bottom: 1rem; }
+.service-description { font-size: clamp(1rem, 1.5vw, 1.2rem); font-weight: 400; line-height: 1.6; color: #cccccc; max-width: 80%; }
+.face-number { position: absolute; bottom: -40px; right: 20px; font-size: clamp(10rem, 25vw, 18rem); font-weight: 700; color: rgba(50, 50, 50, 0.5); z-index: -1; line-height: 1; }
 
-.cube-container {
-    width: 100%;
-    max-width: 900px;
-    height: 400px; /* Fixed height for consistent calculations */
-    margin: 0 auto;
-    perspective: 1000px;
-    position: relative;
-}
-
-.cube {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-}
-
-.face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 24px;
-    background: black;
-    padding: clamp(1.5rem, 4vw, 3rem);
-    border: 1px solid #333; /* Slightly more visible border */
-    overflow: hidden;
-}
-
-/* Typography from new design */
-.service-title {
-    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
-    font-weight: 300;
-    line-height: 1.2;
-    color: var(--service-title-color);
-    margin-bottom: 1rem;
-}
-.service-description {
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
-    font-weight: 400;
-    line-height: 1.6;
-    color: #cccccc;
-    max-width: 80%;
-}
-.face-number {
-    position: absolute;
-    bottom: -40px; /* Adjusted for better visibility */
-    right: 20px;
-    font-size: clamp(10rem, 25vw, 18rem);
-    font-weight: 700;
-    color: rgba(50, 50, 50, 0.5);
-    z-index: -1;
-    line-height: 1;
-}
-
-/* Other sections remain unchanged... */
+/* Premium Tools & Contact Sections (Unchanged) */
+/* ... styles for tools and contact ... */
