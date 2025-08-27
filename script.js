@@ -171,9 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupInitialCubeFaces(currentCubeDimension) { 
         let faceDepth = calculateFaceDepth(currentCubeDimension);
         
-        // --- NEW: Clamp faceDepth to ensure faces are not pushed too far back ---
-        // This prevents excessive shrinking and disappearance
-        const maxFaceDepthFactor = 0.75; // Adjust this factor (e.g., 0.6 to 0.8) as needed for visual impact
+        // --- NEW/Refined: Clamp faceDepth to ensure faces are not pushed too far back ---
+        // This prevents excessive shrinking and disappearance, keeping them closer and larger.
+        const maxFaceDepthFactor = 0.6; // Adjusted to 0.6 as per latest prompt
         if (faceDepth > currentCubeDimension * maxFaceDepthFactor) {
             faceDepth = currentCubeDimension * maxFaceDepthFactor; 
         }
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         faces.forEach((face, i) => {
             gsap.set(face, { 
-                // --- NEW: Explicitly set width and height of faces to fill the cube container ---
+                // --- NEW/Refined: Explicitly set width and height of faces to fill the cube container ---
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`,
@@ -240,9 +240,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Determine Max Desired Cube Size based on Breakpoints ---
         let maxDesiredCubeDimension = 300; // Default for mobile and smaller desktops
         if (largeDesktop) {
-            maxDesiredCubeDimension = 800; // Increased to allow faces to be larger
+            maxDesiredCubeDimension = 850; // NEW: Increased to allow faces to be larger
         } else if (mediumDesktop) {
-            maxDesiredCubeDimension = 600; // Increased
+            maxDesiredCubeDimension = 650; // NEW: Increased
         } 
         
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
@@ -258,16 +258,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // Adjusted buffer to give more vertical room for the cube, making faces larger without overlap
-            const additionalBuffer = 80; // Optimized buffer
+            // Optimized buffer to give more vertical room for the cube, making faces larger without overlap
+            const additionalBuffer = 80; // Maintained at 80px
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - additionalBuffer; 
 
             // The effective cube size should not exceed the max desired size nor the available vertical space
             effectiveCubeDimension = Math.min(availableVerticalSpace, maxDesiredCubeDimension);
             
-            // --- NEW: Enforce a minimum cube dimension for desktop ---
+            // --- NEW/Refined: Enforce a minimum cube dimension for desktop ---
             // This is crucial to ensure faces are always a readable size.
-            const minDesktopCubeDimension = 400; // Example minimum
+            const minDesktopCubeDimension = 550; // Adjusted to 550 as per latest prompt
             if (effectiveCubeDimension < minDesktopCubeDimension) {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
