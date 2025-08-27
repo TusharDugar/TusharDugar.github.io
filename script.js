@@ -64,7 +64,21 @@ function initIntersectionObserverAnimations() {
       }
     });
   }, observerOptions);
-  document.querySelectorAll(".reveal-item, .reveal-parent, .reveal-stagger-container").forEach(el => observer.observe(el));
+
+  // NEW: Exclude services-heading from IntersectionObserver animations
+  document.querySelectorAll(".reveal-item, .reveal-parent, .reveal-stagger-container").forEach(el => {
+    // Only observe if the element or its closest ancestor is NOT the services-heading
+    // We check '.services-heading' as it's the class on the h2 itself
+    if (!el.closest('.services-heading')) { 
+      observer.observe(el);
+    } else {
+        // If it's the services heading, ensure it's immediately visible and static
+        gsap.set(el, { opacity: 1, y: 0, x: 0, visibility: 'visible' });
+        if (el.matches('.services-heading')) { // If it's the h2 itself
+            gsap.set(el.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, visibility: 'visible' });
+        }
+    }
+  });
 }
 
 // Global constant for services cube scroll length
@@ -102,8 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fallback if essential elements are missing ---
     if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
-        // Ensure section is visible (no fade-in/scale-in)
-        gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
+        // Ensure servicesSection is visible (it's no longer animated by these specific fromTo's)
+        gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
         // Ensure heading is fully visible and static
         gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
         if (servicesHeading) {
@@ -119,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 transform: 'none', 
                 position: 'relative', 
                 transformStyle: 'flat',
-                clearProps: 'transform,opacity,visibility,position,transformStyle' // Clear GSAP inline styles (removed transition to avoid conflicts)
+                clearProps: 'transform,opacity,visibility,position,transformStyle' // Clear GSAP inline styles
             });
         });
         return; 
@@ -147,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 visibility: (i === 0) ? 'visible' : 'hidden',
                 position: 'absolute', // Ensure 3D positioning
                 transformStyle: 'preserve-3d', // Ensure backface-visibility works
-                // REMOVED CSS transition, GSAP will manage opacity directly
             });
         });
         // Ensure cube itself is in 3D mode and at its initial rotation
@@ -258,13 +271,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // 1. Initial fade-in and scale-up for the entire section and cube container
-            cubeAnimationTimeline.fromTo([servicesSection, cubeContainer], // Target both section and cubeContainer
+            // 1. Initial fade-in and scale-up for the servicesSection AND cubeContainer
+            cubeAnimationTimeline.fromTo([servicesSection, cubeContainer], 
                 { opacity: 0, scale: 0.8, visibility: 'hidden' }, 
-                { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); // At the very start of the pin scroll
-
-            // 2. Heading: NO ANIMATION - It will be visible because servicesSection is visible
-            //    and its default CSS makes it static.
+                { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); 
+            
+            // 2. Heading: NO ANIMATION. It's now statically visible by CSS and excluded from IO.
 
             // 3. Cube rotation and face visibility control (01 -> 08)
             faces.forEach((face, i) => {
