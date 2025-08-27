@@ -177,8 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // The transform-origin for the face itself should be its default 'center center' (not explicitly set here).
             gsap.set(face, { 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`,
-                opacity: (i === 0) ? 1 : 0,
-                visibility: (i === 0) ? 'visible' : 'hidden',
+                // Using autoAlpha for better visibility control
+                autoAlpha: (i === 0) ? 1 : 0, 
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
@@ -233,9 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Determine Max Desired Cube Size based on Breakpoints ---
         let maxDesiredCubeDimension = 300; // Default for mobile and smaller desktops
         if (largeDesktop) {
-            maxDesiredCubeDimension = 650; // More conservative to ensure ample space around heading
+            maxDesiredCubeDimension = 750; // Increased max size to allow for more visibility
         } else if (mediumDesktop) {
-            maxDesiredCubeDimension = 450; // More conservative
+            maxDesiredCubeDimension = 550; // Increased max size
         } 
         
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
@@ -251,8 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // INCREASED BUFFER SIGNIFICANTLY to ensure ample breathing room above the heading
-            const additionalBuffer = 150; // Added more buffer (e.g., from 80 to 150)
+            // Adjusted buffer to allow more vertical space for the cube, ensuring it's not too small
+            const additionalBuffer = 100; // Reduced buffer (e.g., from 150 to 100)
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - additionalBuffer; 
 
             // The effective cube size should not exceed the max desired size nor the available vertical space
@@ -285,16 +285,15 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,opacity,scale,visibility' });
             gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
-            gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: effectiveCubeDimension, height: effectiveCubeDimension, maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' }); // Used autoAlpha here for consistency
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
                     transform: 'none', 
-                    opacity: 1, 
-                    visibility: 'visible', 
+                    autoAlpha: 1, // Used autoAlpha here
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,opacity,visibility,position,transformStyle'
+                    clearProps: 'transform,autoAlpha,position,transformStyle' // Clear autoAlpha
                 });
             });
         } else {
@@ -303,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Ensure the servicesSection itself is visible immediately, not animated with opacity/scale
             // This is crucial for the heading to always be visible.
-            gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible' });
+            gsap.set(servicesSection, { autoAlpha: 1, scale: 1 }); // Used autoAlpha for section
 
             servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh';
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
@@ -330,8 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Only animate the cubeContainer into view. servicesSection (and heading) remains static.
             cubeAnimationTimeline.fromTo(cubeContainer,
-                { opacity: 0, scale: 0.8, visibility: 'hidden' },
-                { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); 
+                { autoAlpha: 0, scale: 0.8 }, // Used autoAlpha
+                { autoAlpha: 1, scale: 1, duration: 1, ease: "power2.out" }, 0); 
 
             // Heading is static by CSS and JS guard (not animated here).
 
@@ -349,9 +348,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     onStart: () => {
                         faces.forEach((f, idx) => {
                             if (idx === i) {
-                                gsap.to(f, { opacity: 1, visibility: 'visible', duration: 0.4, ease: "power2.out" });
+                                gsap.to(f, { autoAlpha: 1, duration: 0.4, ease: "power2.out" }); // Used autoAlpha
                             } else {
-                                gsap.to(f, { opacity: 0, visibility: 'hidden', duration: 0.4, ease: "power2.in" });
+                                gsap.to(f, { autoAlpha: 0, duration: 0.4, ease: "power2.in" }); // Used autoAlpha
                             }
                         });
                     }
@@ -364,13 +363,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 duration: 1,
                 ease: "power2.inOut",
                 onStart: () => {
-                    faces.forEach(f => gsap.to(f, { opacity: 0, visibility: 'hidden', duration: 0.4, ease: "power2.in" }));
+                    faces.forEach(f => gsap.to(f, { autoAlpha: 0, duration: 0.4, ease: "power2.in" })); // Used autoAlpha
                 }
             }, `endRotation-=0.5`);
 
             // Only fade out cubeContainer at the very end. servicesSection (and thus the heading) should remain visible.
             cubeAnimationTimeline.to([cubeContainer], 
-                { opacity: 0, scale: 0.8, visibility: 'hidden', duration: 1, ease: "power2.in" }, `endRotation`);
+                { autoAlpha: 0, scale: 0.8, duration: 1, ease: "power2.in" }, `endRotation`); // Used autoAlpha
         }
     });
 
