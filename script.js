@@ -171,9 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupInitialCubeFaces(currentCubeDimension) { 
         let faceDepth = calculateFaceDepth(currentCubeDimension);
         
-        // --- NEW/Refined: Clamp faceDepth to ensure faces are not pushed too far back ---
-        // This prevents excessive shrinking and disappearance, keeping them closer and larger.
-        const maxFaceDepthFactor = 0.6; // Adjusted to 0.6 as per latest prompt
+        // --- REFINED: Clamp faceDepth more aggressively ---
+        // This brings faces closer to the viewer, making them appear larger and preventing disappearance.
+        const maxFaceDepthFactor = 0.25; // Adjusted to 0.25 as per latest prompt
         if (faceDepth > currentCubeDimension * maxFaceDepthFactor) {
             faceDepth = currentCubeDimension * maxFaceDepthFactor; 
         }
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         faces.forEach((face, i) => {
             gsap.set(face, { 
-                // --- NEW/Refined: Explicitly set width and height of faces to fill the cube container ---
+                // --- REFINED: Explicitly set width and height of faces to fill the cube container ---
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`,
@@ -197,14 +197,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let cubeAnimationTimeline;
 
-    // GSAP Responsive Media Queries (matchMedia)
-    gsap.matchMedia().add({
+    // --- REFINED: Correct GSAP MatchMedia Instance ---
+    const mm = gsap.matchMedia(); // Instantiate once globally
+
+    mm.add({ // Use mm.add() for responsive logic
         "largeDesktop": "(min-width: 1201px)",
         "mediumDesktop": "(min-width: 769px) and (max-width: 1200px)",
         "mobile": "(max-width: 768px)",
         "reducedMotion": "(prefers-reduced-motion: reduce)"
 
-    }, (context) => {
+    }, (context) => { // context parameter correctly passed
         
         let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
         let effectiveCubeDimension = 300; // Will be calculated dynamically or set by breakpoint
@@ -240,9 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Determine Max Desired Cube Size based on Breakpoints ---
         let maxDesiredCubeDimension = 300; // Default for mobile and smaller desktops
         if (largeDesktop) {
-            maxDesiredCubeDimension = 850; // NEW: Increased to allow faces to be larger
+            maxDesiredCubeDimension = 850; // Maintained, allows larger faces
         } else if (mediumDesktop) {
-            maxDesiredCubeDimension = 650; // NEW: Increased
+            maxDesiredCubeDimension = 650; // Maintained
         } 
         
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
@@ -258,14 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // Optimized buffer to give more vertical room for the cube, making faces larger without overlap
-            const additionalBuffer = 80; // Maintained at 80px
+            // --- REFINED: Increased buffer for more vertical room, preventing heading overlap ---
+            const additionalBuffer = 200; // Adjusted to 200 as per latest prompt
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - additionalBuffer; 
 
             // The effective cube size should not exceed the max desired size nor the available vertical space
             effectiveCubeDimension = Math.min(availableVerticalSpace, maxDesiredCubeDimension);
             
-            // --- NEW/Refined: Enforce a minimum cube dimension for desktop ---
+            // --- REFINED: Enforce a minimum cube dimension for desktop ---
             // This is crucial to ensure faces are always a readable size.
             const minDesktopCubeDimension = 550; // Adjusted to 550 as per latest prompt
             if (effectiveCubeDimension < minDesktopCubeDimension) {
@@ -278,13 +280,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Apply cube container size based on the calculated dimension
-        // Crucially, increased perspective for less distortion and larger face appearance
+        // --- REFINED: Adjusted perspective for less distortion and larger face appearance ---
         gsap.set(cubeContainer, { 
             width: effectiveCubeDimension, 
             height: effectiveCubeDimension, 
             maxWidth: effectiveCubeDimension, 
             maxHeight: effectiveCubeDimension, 
-            perspective: 2500 // Significantly increased perspective
+            perspective: 1600 // Adjusted to 1600 as per latest prompt
         });
         
         // Initialize faces with the new calculated size
@@ -329,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     scrub: 0.8, // Increased scrub for more fluidity
                     snap: {
                         snapTo: "labels",
-                        duration: 0.6,    // Slightly longer snap duration for more momentum
+                        duration: 0.4,    // REFINED: Adjusted to 0.4 as per latest prompt
                         ease: "power3.out" // More pronounced ease for snap (e.g., elastic/overshoot feel)
                     },
                     pinSpacing: false,
@@ -357,11 +359,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     duration: 1, 
                     ease: "power2.inOut", 
                     onStart: () => {
+                        // --- REFINED: Keep inactive faces partially visible for continuity ---
+                        const inactiveAutoAlpha = 0.5; // Adjusted to 0.5 as per latest prompt
                         faces.forEach((f, idx) => {
                             if (idx === i) {
                                 gsap.to(f, { autoAlpha: 1, duration: 0.4, ease: "power2.out" }); 
                             } else {
-                                gsap.to(f, { autoAlpha: 0, duration: 0.4, ease: "power2.in" }); 
+                                gsap.to(f, { autoAlpha: inactiveAutoAlpha, duration: 0.4, ease: "power2.in" }); 
                             }
                         });
                     }
@@ -372,10 +376,11 @@ document.addEventListener('DOMContentLoaded', () => {
             cubeAnimationTimeline.to(cube, {
                 rotateX: totalRotation,
                 duration: 1,
-                ease: "power2.inOut",
-                onStart: () => {
-                    faces.forEach(f => gsap.to(f, { autoAlpha: 0, duration: 0.4, ease: "power2.in" })); 
-                }
+                ease: "power2.inOut"
+                // --- REFINED: REMOVED the onStart callback here ---
+                // The faces should not individually fade out to 0.
+                // Their inactiveAutoAlpha will remain at 0.5,
+                // and the cubeContainer's fade-out will handle the overall disappearance.
             }, `endRotation-=0.5`);
 
             // Only fade out cubeContainer at the very end. servicesSection (and thus the heading) should remain visible.
@@ -384,10 +389,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Refresh ScrollTrigger and re-evaluate matchMedia conditions on resize
+    // --- REFINED: Correct Resize Listener ---
+    // ScrollTrigger.refresh() is sufficient. gsap.matchMedia() handles its own re-evaluation.
     window.addEventListener("resize", () => {
-        ScrollTrigger.refresh();
-        gsap.matchMedia().revert(); 
-        gsap.matchMedia().add(gsap.matchMedia().conditions); 
+        ScrollTrigger.refresh(); 
     });
 });
