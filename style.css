@@ -122,7 +122,6 @@ html::before {
 }
 
 /* Global Section & Reveal Animations */
-.section { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; padding: 80px 40px; }
 .reveal-item, .reveal-child, .reveal-stagger { 
     opacity: 0; 
     transform: translateY(40px); 
