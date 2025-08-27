@@ -272,7 +272,7 @@ html::before {
     width: 100%; 
     /* Height is set dynamically by JS for pinning */
 }
-/* IMPORTANT: services-section is visible by default (no opacity/transform/visibility rules here) */
+/* REMOVED: Initial opacity, transform, visibility from .services-section so heading is static */
 .services-section { 
     position: relative; 
     width: 100%; 
@@ -285,11 +285,6 @@ html::before {
     box-sizing: border-box; 
     overflow: hidden; /* Important for containing 3D content */
     z-index: 2; /* Ensure it's above other background elements */
-
-    /* These are the initial states GSAP will animate from/to for the section */
-    opacity: 0; 
-    transform: scale(0.8); 
-    visibility: hidden; 
 }
 
 /* NEW: Force heading to always be visible (static) */
@@ -671,7 +666,7 @@ footer h2 {
         height: auto !important; 
         position: relative !important;
     }
-    /* NEW: Ensure services-section is visible and static */
+    /* Ensure services-section is visible and static */
     .services-section { 
         position: relative !important;
         top: auto !important;
@@ -688,7 +683,7 @@ footer h2 {
         opacity: 1 !important; 
         visibility: visible !important;
     }
-    /* NEW: Ensure heading and its spans are fully visible and static */
+    /* Ensure heading and its spans are fully visible and static */
     .services-heading {
         opacity: 1 !important; 
         transform: none !important; 
