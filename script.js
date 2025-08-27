@@ -1,5 +1,3 @@
-// script.js
-
 // Function to copy text to clipboard for contact buttons
 function copyToClipboard(button) {
     const value = button.dataset.contact || ''; 
@@ -65,7 +63,7 @@ function initIntersectionObserverAnimations() {
     });
   }, observerOptions);
 
-  // NEW: Exclude services-heading from IntersectionObserver animations
+  // Exclude services-heading from IntersectionObserver animations
   document.querySelectorAll(".reveal-item, .reveal-parent, .reveal-stagger-container").forEach(el => {
     // Only observe if the element or its closest ancestor is NOT the services-heading
     // We check '.services-heading' as it's the class on the h2 itself
