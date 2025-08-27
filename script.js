@@ -169,13 +169,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Set up initial 3D positioning of each face and cube
     function setupInitialCubeFaces(currentCubeDimension) { 
-        const faceDepth = calculateFaceDepth(currentCubeDimension);
+        let faceDepth = calculateFaceDepth(currentCubeDimension);
+        
+        // --- NEW: Clamp faceDepth to ensure faces are not pushed too far back ---
+        // This prevents excessive shrinking and disappearance
+        const maxFaceDepthFactor = 0.75; // Adjust this factor (e.g., 0.6 to 0.8) as needed for visual impact
+        if (faceDepth > currentCubeDimension * maxFaceDepthFactor) {
+            faceDepth = currentCubeDimension * maxFaceDepthFactor; 
+        }
+
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
         faces.forEach((face, i) => {
-            // Each face is rotated to its initial angular position, then translated outwards by the apothem.
-            // The transform-origin for the face itself should be its default 'center center'.
             gsap.set(face, { 
+                // --- NEW: Explicitly set width and height of faces to fill the cube container ---
+                width: currentCubeDimension + "px",  
+                height: currentCubeDimension + "px", 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`,
                 autoAlpha: (i === 0) ? 1 : 0, // Use autoAlpha for robust visibility
                 position: 'absolute',
@@ -256,10 +265,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // The effective cube size should not exceed the max desired size nor the available vertical space
             effectiveCubeDimension = Math.min(availableVerticalSpace, maxDesiredCubeDimension);
             
-            // Ensure a reasonable minimum size
-            if (effectiveCubeDimension < 200) effectiveCubeDimension = 200; 
+            // --- NEW: Enforce a minimum cube dimension for desktop ---
+            // This is crucial to ensure faces are always a readable size.
+            const minDesktopCubeDimension = 400; // Example minimum
+            if (effectiveCubeDimension < minDesktopCubeDimension) {
+                effectiveCubeDimension = minDesktopCubeDimension; 
+            }
         } else {
              // On mobile, just use the max desired size (which is 300 by default) for layout
+             // No minimum enforced here as mobile layout is stacked and responsive by CSS.
              effectiveCubeDimension = maxDesiredCubeDimension; 
         }
 
@@ -283,7 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,autoAlpha,scale' });
             gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
             gsap.set(servicesHeading.querySelectorAll('span'), { autoAlpha: 1, y: 0, x: 0 });
-            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' }); // Used autoAlpha here for consistency
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
@@ -291,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     autoAlpha: 1, 
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,autoAlpha,position,transformStyle'
+                    clearProps: 'transform,autoAlpha,position,transformStyle' // Clear autoAlpha
                 });
             });
         } else {
