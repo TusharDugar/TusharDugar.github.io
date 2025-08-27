@@ -272,6 +272,7 @@ html::before {
     width: 100%; 
     /* Height is set dynamically by JS for pinning */
 }
+/* IMPORTANT: services-section is visible by default (no opacity/transform/visibility rules here) */
 .services-section { 
     position: relative; 
     width: 100%; 
@@ -283,29 +284,36 @@ html::before {
     padding: 100px 20px; /* Adjusted padding */
     box-sizing: border-box; 
     overflow: hidden; /* Important for containing 3D content */
-    opacity: 0; /* Initial state for GSAP fade-in */
-    transform: scale(0.8); /* Initial state for GSAP scale-in */
-    visibility: hidden; /* Initial state for GSAP controlled visibility */
     z-index: 2; /* Ensure it's above other background elements */
+
+    /* These are the initial states GSAP will animate from/to for the section */
+    opacity: 0; 
+    transform: scale(0.8); 
+    visibility: hidden; 
 }
-.services-heading { 
-    font-size: clamp(2.5rem, 8vw, 8rem); /* Adjusted font size range for better responsiveness */
-    line-height: 0.75em; /* Adjusted line height */
-    font-weight: 800; 
-    text-transform: uppercase; 
-    text-align: left; /* Keep left-aligned as per requirement */
-    margin-bottom: 40px; /* Consistent spacing below heading */
-    align-self: flex-start; /* Ensure left alignment in flex container */
-    flex-shrink: 0; /* Prevent heading from shrinking */
-    width: 100%; /* Take full width to allow text-align: left */
-    z-index: 2; /* Ensure heading is above cube */
-    /* REMOVED: Initial opacity and transform from here - heading should be static */
+
+/* NEW: Force heading to always be visible (static) */
+.services-heading {
+  font-size: clamp(2.5rem, 8vw, 8rem);
+  line-height: 0.75em;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: left; /* Left-aligned on desktop */
+  margin-bottom: 40px;
+  align-self: flex-start; /* Left-aligned in flex container */
+  flex-shrink: 0; /* Prevent heading from shrinking */
+  width: 100%;
+  z-index: 2;
+  opacity: 1; /* Always visible */
+  transform: none; /* No transform */
+  visibility: visible; /* Always visible */
 }
-/* NEW: Ensure heading spans are blocks and visible by default (no animation on heading) */
+
 .services-heading .text-white,
 .services-heading .text-gray {
-    display: block; /* Ensure spans behave as blocks for layout */
-    /* REMOVED: opacity: 0; and transform: translateY(50px); from here */
+  display: block; /* Ensure spans behave as blocks */
+  opacity: 1 !important; /* Force always visible */
+  transform: none !important; /* Force no transform */
 }
 
 .services-heading .text-white { color: var(--text-light); }
@@ -331,9 +339,10 @@ html::before {
     max-width: 900px; /* Max width for desktop/tablet */
     width: 100%;     /* IMPORTANT: Responsive width */
 
-    opacity: 0; /* Initial state for GSAP fade-in */
-    transform: scale(0.8); /* Initial state for GSAP scale-in */
-    visibility: hidden; /* Initial state for GSAP controlled visibility */
+    /* These are the initial states GSAP will animate from/to */
+    opacity: 0; 
+    transform: scale(0.8); 
+    visibility: hidden; 
 }
 .cube { 
     position: relative; 
@@ -662,6 +671,7 @@ footer h2 {
         height: auto !important; 
         position: relative !important;
     }
+    /* NEW: Ensure services-section is visible and static */
     .services-section { 
         position: relative !important;
         top: auto !important;
@@ -718,9 +728,9 @@ footer h2 {
         transform-style: flat !important; 
         transform: none !important;
         transition: none !important;
-        display: flex; /* NEW: Ensure stacked layout */
+        display: flex; /* Ensure stacked layout */
         flex-direction: column;
-        gap: 20px; /* NEW: Consistent gap */
+        gap: 20px; /* Consistent gap */
         height: auto;
     }
     .face {
