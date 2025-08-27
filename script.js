@@ -260,8 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // --- REFINED: Increased buffer for more vertical room, preventing heading overlap ---
-            const additionalBuffer = 200; // Adjusted to 200 as per latest prompt
+            // --- REFINED: Smaller buffer so cube sits closer to heading ---
+            const additionalBuffer = 60; // Adjusted to 60 as per latest prompt
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - additionalBuffer; 
 
             // The effective cube size should not exceed the max desired size nor the available vertical space
@@ -269,10 +269,22 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // --- REFINED: Enforce a minimum cube dimension for desktop ---
             // This is crucial to ensure faces are always a readable size.
-            const minDesktopCubeDimension = 550; // Adjusted to 550 as per latest prompt
+            const minDesktopCubeDimension = 650; // Adjusted to 650 as per latest prompt
             if (effectiveCubeDimension < minDesktopCubeDimension) {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
+
+            // --- REFINED: Vertically push cube container right below heading ---
+            // This ensures correct vertical alignment and prevents the large gap.
+            const cubeTopOffset = headingHeight + headingMarginBottom + 40; // Calculated offset for vertical centering
+            gsap.set(cubeContainer, { 
+                marginTop: 0, // Reset any CSS margin-top
+                y: cubeTopOffset, // Use GSAP transform for positioning
+                xPercent: -50, // Center horizontally
+                left: "50%", // Center horizontally
+                position: "relative" // Ensure relative positioning for transforms
+            });
+
         } else {
              // On mobile, just use the max desired size (which is 300 by default) for layout
              // No minimum enforced here as mobile layout is stacked and responsive by CSS.
@@ -286,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
             height: effectiveCubeDimension, 
             maxWidth: effectiveCubeDimension, 
             maxHeight: effectiveCubeDimension, 
-            perspective: 1600 // Adjusted to 1600 as per latest prompt
+            perspective: 2000 // Adjusted to 2000 as per latest prompt
         });
         
         // Initialize faces with the new calculated size
