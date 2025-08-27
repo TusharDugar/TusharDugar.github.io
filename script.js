@@ -174,17 +174,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         faces.forEach((face, i) => {
             // Each face is rotated to its initial angular position, then translated outwards by the apothem.
-            // The transform-origin for the face itself should be its default 'center center' (not explicitly set here).
+            // The transform-origin for the face itself should be its default 'center center'.
             gsap.set(face, { 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`,
-                // Using autoAlpha for better visibility control
-                autoAlpha: (i === 0) ? 1 : 0, 
+                autoAlpha: (i === 0) ? 1 : 0, // Use autoAlpha for robust visibility
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
         });
         // Ensure cube itself is in 3D mode and at its initial rotation.
-        // Explicitly set transformOrigin for the cube for consistent rotation.
         gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, transformOrigin: 'center center' });
     }
 
@@ -212,19 +210,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Handle Reduced Motion First ---
         if (reducedMotion) {
             console.log("Reduced motion detected. Applying flat layout.");
-            gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
-            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
-            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
-            gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+            // Use autoAlpha consistently for visibility
+            gsap.set(servicesSection, { autoAlpha: 1, scale: 1, position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
+            gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
+            gsap.set(servicesHeading.querySelectorAll('span'), { autoAlpha: 1, y: 0, x: 0 });
+            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
                     transform: 'none', 
-                    opacity: 1, 
-                    visibility: 'visible', 
+                    autoAlpha: 1, // Use autoAlpha
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,opacity,visibility,position,transformStyle'
+                    clearProps: 'transform,autoAlpha,position,transformStyle'
                 });
             });
             return; 
@@ -233,32 +231,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Determine Max Desired Cube Size based on Breakpoints ---
         let maxDesiredCubeDimension = 300; // Default for mobile and smaller desktops
         if (largeDesktop) {
-            maxDesiredCubeDimension = 750; // Increased max size to allow for more visibility
+            maxDesiredCubeDimension = 800; // Increased to allow faces to be larger
         } else if (mediumDesktop) {
-            maxDesiredCubeDimension = 550; // Increased max size
+            maxDesiredCubeDimension = 600; // Increased
         } 
         
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
         if (!mobile) { // Only calculate for desktop where pinning/3D applies
             // Ensure the section and heading are visible to get correct computed styles for height calculation
-            gsap.set(servicesSection, { opacity: 1, visibility: 'visible', clearProps: 'opacity,visibility' }); 
+            gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
             const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop);
             const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
             
             // Re-set heading visibility/opacity just in case, for accurate height measurement
-            gsap.set(servicesHeading, { visibility: 'visible', opacity: 1, transform: 'none', clearProps: 'opacity,visibility,transform' });
+            gsap.set(servicesHeading, { autoAlpha: 1, transform: 'none', clearProps: 'autoAlpha,transform' });
             const headingHeight = servicesHeading.offsetHeight;
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // Adjusted buffer to allow more vertical space for the cube, ensuring it's not too small
-            const additionalBuffer = 100; // Reduced buffer (e.g., from 150 to 100)
+            // Adjusted buffer to give more vertical room for the cube, making faces larger without overlap
+            const additionalBuffer = 80; // Optimized buffer
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - additionalBuffer; 
 
             // The effective cube size should not exceed the max desired size nor the available vertical space
             effectiveCubeDimension = Math.min(availableVerticalSpace, maxDesiredCubeDimension);
             
-            // Ensure a reasonable minimum size, even with the buffer
+            // Ensure a reasonable minimum size
             if (effectiveCubeDimension < 200) effectiveCubeDimension = 200; 
         } else {
              // On mobile, just use the max desired size (which is 300 by default) for layout
@@ -266,13 +264,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Apply cube container size based on the calculated dimension
-        // Using maxHeight/maxWidth to prevent excessive growth, especially on very tall screens.
+        // Crucially, increased perspective for less distortion and larger face appearance
         gsap.set(cubeContainer, { 
             width: effectiveCubeDimension, 
             height: effectiveCubeDimension, 
             maxWidth: effectiveCubeDimension, 
             maxHeight: effectiveCubeDimension, 
-            perspective: 1200 
+            perspective: 2500 // Significantly increased perspective
         });
         
         // Initialize faces with the new calculated size
@@ -282,18 +280,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Setup Cube Animation & Pinning ---
         if (mobile) {
             console.log("Mobile layout active. Disabling 3D scroll animation.");
-            gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,opacity,scale,visibility' });
-            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
-            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
-            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' }); // Used autoAlpha here for consistency
+            gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,autoAlpha,scale' });
+            gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
+            gsap.set(servicesHeading.querySelectorAll('span'), { autoAlpha: 1, y: 0, x: 0 });
+            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
                     transform: 'none', 
-                    autoAlpha: 1, // Used autoAlpha here
+                    autoAlpha: 1, 
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,autoAlpha,position,transformStyle' // Clear autoAlpha
+                    clearProps: 'transform,autoAlpha,position,transformStyle'
                 });
             });
         } else {
@@ -301,8 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Desktop layout active. Cube size: ${effectiveCubeDimension}px. Setting up 3D animation.`);
 
             // Ensure the servicesSection itself is visible immediately, not animated with opacity/scale
-            // This is crucial for the heading to always be visible.
-            gsap.set(servicesSection, { autoAlpha: 1, scale: 1 }); // Used autoAlpha for section
+            gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
             servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh';
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
@@ -329,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Only animate the cubeContainer into view. servicesSection (and heading) remains static.
             cubeAnimationTimeline.fromTo(cubeContainer,
-                { autoAlpha: 0, scale: 0.8 }, // Used autoAlpha
+                { autoAlpha: 0, scale: 0.8 },
                 { autoAlpha: 1, scale: 1, duration: 1, ease: "power2.out" }, 0); 
 
             // Heading is static by CSS and JS guard (not animated here).
@@ -343,14 +340,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 cubeAnimationTimeline.to(cube, {
                     rotateX: currentFaceRotation,
-                    duration: 1, // Normalized duration for GSAP (will be scaled by scrub)
-                    ease: "power2.inOut", // Keep this ease for the main rotation tween
+                    duration: 1, 
+                    ease: "power2.inOut", 
                     onStart: () => {
                         faces.forEach((f, idx) => {
                             if (idx === i) {
-                                gsap.to(f, { autoAlpha: 1, duration: 0.4, ease: "power2.out" }); // Used autoAlpha
+                                gsap.to(f, { autoAlpha: 1, duration: 0.4, ease: "power2.out" }); 
                             } else {
-                                gsap.to(f, { autoAlpha: 0, duration: 0.4, ease: "power2.in" }); // Used autoAlpha
+                                gsap.to(f, { autoAlpha: 0, duration: 0.4, ease: "power2.in" }); 
                             }
                         });
                     }
@@ -363,20 +360,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 duration: 1,
                 ease: "power2.inOut",
                 onStart: () => {
-                    faces.forEach(f => gsap.to(f, { autoAlpha: 0, duration: 0.4, ease: "power2.in" })); // Used autoAlpha
+                    faces.forEach(f => gsap.to(f, { autoAlpha: 0, duration: 0.4, ease: "power2.in" })); 
                 }
             }, `endRotation-=0.5`);
 
             // Only fade out cubeContainer at the very end. servicesSection (and thus the heading) should remain visible.
             cubeAnimationTimeline.to([cubeContainer], 
-                { autoAlpha: 0, scale: 0.8, duration: 1, ease: "power2.in" }, `endRotation`); // Used autoAlpha
+                { autoAlpha: 0, scale: 0.8, duration: 1, ease: "power2.in" }, `endRotation`); 
         }
     });
 
     // Refresh ScrollTrigger and re-evaluate matchMedia conditions on resize
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh();
-        gsap.matchMedia().revert(); // Revert previous matchMedia to re-evaluate conditions
-        gsap.matchMedia().add(gsap.matchMedia().conditions); // Add them back to re-trigger
+        gsap.matchMedia().revert(); 
+        gsap.matchMedia().add(gsap.matchMedia().conditions); 
     });
 });
