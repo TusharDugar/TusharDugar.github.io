@@ -104,11 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fallback: ensure section and faces are visible if animation fails
         gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
         gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); // Ensure heading is visible and not animated
-        // NEW: Also reset initial state for heading spans
         if (servicesHeading) {
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0 });
         }
-        gsap.set(cubeContainer, { width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+        // FIX: Ensure cubeContainer is also visible in fallback
+        gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
         gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
             gsap.set(face, { 
@@ -182,11 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Reset styles to flat/stacked appearance for instant visibility
             gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
             gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
-            // NEW: Ensure heading spans are visible in reduced motion
             if (servicesHeading) {
                 gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0 });
             }
-            gsap.set(cubeContainer, { width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+            // FIX: Ensure cubeContainer is also visible in reduced motion
+            gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
@@ -218,20 +218,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Mobile layout active. Disabling 3D scroll animation.");
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,opacity,scale,visibility' });
             gsap.set(servicesHeading, { opacity: 1, y: 0 });
-            // NEW: Also set heading spans visible for mobile
             if (servicesHeading) {
                 gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0 });
             }
-            gsap.set(cubeContainer, { 
-                width: currentCubeSize, 
-                height: currentCubeSize, 
-                maxWidth: '100%', 
-                aspectRatio: 1, 
-                position: 'relative', 
-                top: 'auto', 
-                y: 0, 
-                perspective: 'none' 
-            });
+            // FIX: Ensure cubeContainer is visible for mobile (no 3D animation)
+            gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: currentCubeSize, height: currentCubeSize, maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
@@ -266,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ease: "power2.inOut" // Snap easing
                     },
                     pinSpacing: false, // Prevents ScrollTrigger from adding extra padding
-                    anticipatePin: 1, // NEW: Anticipate pinning for smoother start
+                    anticipatePin: 1, 
                     // markers: { startColor: "green", endColor: "red", indent: 20 }, // For debugging
                 }
             });
@@ -276,11 +267,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 { opacity: 0, scale: 0.8, visibility: 'hidden' }, 
                 { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); // At the very start of the pin scroll
 
+            // NEW: Add animation for cubeContainer to appear
+            cubeAnimationTimeline.fromTo(cubeContainer,
+                { opacity: 0, scale: 0.8, visibility: 'hidden' },
+                { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); // Start at the same time as the section fade-in
+
+
             // 2. Heading text animation (fade/move with stagger)
-            // Changed target to children spans and added stagger
             cubeAnimationTimeline.fromTo(servicesHeading.querySelectorAll('span'), 
                 { opacity: 0, y: 50 },
-                { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", stagger: 0.2 }, 0.2); // Start slightly after main section fade-in
+                { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", stagger: 0.2 }, 0.2); // Start slightly after main section/cube fade-in
 
 
             // 3. Cube rotation and face visibility control
@@ -320,8 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, `endRotation-=0.5`); // Start this slightly before the very end label
 
-            // 4. Fade out section at the very end of the pin wrapper scroll
-            cubeAnimationTimeline.to(servicesSection, 
+            // 4. Fade out section and cubeContainer at the very end of the pin wrapper scroll
+            cubeAnimationTimeline.to([servicesSection, cubeContainer], // Target both section and cubeContainer for fade out
                 { opacity: 0, scale: 0.8, visibility: 'hidden', duration: 1, ease: "power2.in" }, `endRotation`); // Fade out after last face animation
         }
     });
