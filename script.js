@@ -137,14 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fallback if essential elements are missing ---
     if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
-        // Ensure servicesSection is visible (it's no longer animated by these specific fromTo's)
         gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
-        // Ensure heading is fully visible and static
         gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
         if (servicesHeading) {
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
         }
-        // Ensure cube container and faces are fully visible and static (no 3D)
         gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
         gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
@@ -171,13 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Set up initial 3D positioning of each face and cube
-    function setupInitialCubeFaces(currentCubeDimension) { // Parameter renamed for clarity
+    function setupInitialCubeFaces(currentCubeDimension) { 
         const faceDepth = calculateFaceDepth(currentCubeDimension);
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
         faces.forEach((face, i) => {
             // Each face is rotated to its initial angular position, then translated outwards by the apothem.
-            // The transform-origin for the face itself should be its default 'center center' (not explicitly set).
+            // The transform-origin for the face itself should be its default 'center center' (not explicitly set here).
             gsap.set(face, { 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`,
                 opacity: (i === 0) ? 1 : 0,
@@ -187,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         // Ensure cube itself is in 3D mode and at its initial rotation.
-        // Explicitly set transformOrigin for the cube.
+        // Explicitly set transformOrigin for the cube for consistent rotation.
         gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, transformOrigin: 'center center' });
     }
 
@@ -236,9 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Determine Max Desired Cube Size based on Breakpoints ---
         let maxDesiredCubeDimension = 300; // Default for mobile and smaller desktops
         if (largeDesktop) {
-            maxDesiredCubeDimension = 700; // Reduced from 900 to ensure more space around the cube
+            maxDesiredCubeDimension = 650; // More conservative to ensure ample space around heading
         } else if (mediumDesktop) {
-            maxDesiredCubeDimension = 500; // Reduced from 640
+            maxDesiredCubeDimension = 450; // More conservative
         } 
         
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
@@ -254,26 +251,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // Calculate available space, subtracting section padding, heading space, and an additional buffer
-            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - 80; // Added 80px buffer for visual clearance
+            // INCREASED BUFFER SIGNIFICANTLY to ensure ample breathing room above the heading
+            const additionalBuffer = 150; // Added more buffer (e.g., from 80 to 150)
+            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - additionalBuffer; 
 
             // The effective cube size should not exceed the max desired size nor the available vertical space
             effectiveCubeDimension = Math.min(availableVerticalSpace, maxDesiredCubeDimension);
             
-            // Ensure a reasonable minimum size
+            // Ensure a reasonable minimum size, even with the buffer
             if (effectiveCubeDimension < 200) effectiveCubeDimension = 200; 
         } else {
              // On mobile, just use the max desired size (which is 300 by default) for layout
-             // The CSS media query handles stacking and making faces relative.
              effectiveCubeDimension = maxDesiredCubeDimension; 
         }
 
         // Apply cube container size based on the calculated dimension
+        // Using maxHeight/maxWidth to prevent excessive growth, especially on very tall screens.
         gsap.set(cubeContainer, { 
             width: effectiveCubeDimension, 
             height: effectiveCubeDimension, 
             maxWidth: effectiveCubeDimension, 
-            maxHeight: effectiveCubeDimension, // Ensure it doesn't exceed its height
+            maxHeight: effectiveCubeDimension, 
             perspective: 1200 
         });
         
@@ -318,11 +316,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     start: "top top",
                     end: "bottom bottom",
                     pin: servicesSection,
-                    scrub: 0.6,
+                    scrub: 0.8, // Increased scrub for more fluidity
                     snap: {
                         snapTo: "labels",
-                        duration: 0.5,
-                        ease: "power2.inOut"
+                        duration: 0.6,    // Slightly longer snap duration for more momentum
+                        ease: "power3.out" // More pronounced ease for snap (e.g., elastic/overshoot feel)
                     },
                     pinSpacing: false,
                     anticipatePin: 1, 
@@ -346,8 +344,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 cubeAnimationTimeline.to(cube, {
                     rotateX: currentFaceRotation,
-                    duration: 1,
-                    ease: "power2.inOut",
+                    duration: 1, // Normalized duration for GSAP (will be scaled by scrub)
+                    ease: "power2.inOut", // Keep this ease for the main rotation tween
                     onStart: () => {
                         faces.forEach((f, idx) => {
                             if (idx === i) {
@@ -376,10 +374,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Refresh ScrollTrigger and re-evaluate matchMedia conditions on resize
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh();
-        // Re-run matchMedia setup on resize to re-calculate cube size for responsive fitting
-        // This ensures the cube resizes correctly if the viewport dimensions change.
         gsap.matchMedia().revert(); // Revert previous matchMedia to re-evaluate conditions
         gsap.matchMedia().add(gsap.matchMedia().conditions); // Add them back to re-trigger
     });
