@@ -92,62 +92,45 @@ document.addEventListener('DOMContentLoaded', () => {
         let { isDesktop, reducedMotion } = context.conditions;
 
         if (!isDesktop || reducedMotion) {
-            // For mobile or reduced motion, stack faces naturally
             gsap.set(faces, { position: 'relative', transform: 'none', autoAlpha: 1 });
             return;
         }
 
-        const faceHeight = 220; // Height of each face
-        // Calculate depth to make faces form a circular array (polygon)
-        // For N faces, inner angle is (N-2)*180/N, so angle to center from face edge is 180/N
-        // If face width = 2*r*sin(180/N), depth = r*cos(180/N)
-        // Since we are rotating around X, we use faceHeight.
-        // We want the faces to form a cylinder, so their 'back' is at the center.
-        // The distance from the center of the cylinder to a face is the radius.
-        // The half-height of a face divided by sin(180/SERVICES_COUNT) gives the radius.
-        const radius = (faceHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+        const faceHeight = 220;
+        const faceDepth = (faceHeight / 2) / Math.sin(Math.PI / SERVICES_COUNT);
         
         faces.forEach((face, i) => {
-            // Calculate angle for each face to be evenly distributed around the X-axis
-            // Start from 0 degrees (face 0) and rotate clockwise.
             const angle = i * (360 / SERVICES_COUNT);
             gsap.set(face, {
-                // Rotate around the X-axis, then translate along Z-axis
-                transform: `rotateX(${angle}deg) translateZ(${radius}px)`
+                transform: `rotateX(${angle}deg) translateZ(${faceDepth}px)`
             });
         });
 
-        // Determine scroll length based on number of faces and desired spacing
-        const scrollLength = SERVICES_COUNT * faceHeight * 1.5; // Increased multiplier for more scroll room
+        const scrollLength = SERVICES_COUNT * faceHeight * 1.4;
         servicesPinWrapper.style.height = `${scrollLength}px`;
 
         gsap.fromTo(cube,
-            { rotateX: 0 }, // Start at 0 degrees (face 0 visible)
+            { rotateX: 0 },
             {
-                // Rotate to show faces 01 to 08 in order.
-                // Each step rotates by 360/SERVICES_COUNT degrees.
-                // To show face 'i', we rotate by -i * (360/SERVICES_COUNT).
-                // So for 8 faces, we need to rotate to show face 7, which is -7 * (360/8) = -7 * 45 = -315 degrees.
-                rotateX: `${-(SERVICES_COUNT - 1) * (360 / SERVICES_COUNT)}deg`,
+                rotateX: `-${(SERVICES_COUNT - 1) * (360 / SERVICES_COUNT)}`,
                 ease: "none",
                 scrollTrigger: {
                     trigger: servicesPinWrapper,
-                    start: "top top", // Pin when the top of the wrapper hits the top of the viewport
-                    end: "bottom bottom", // End when the bottom of the wrapper leaves the bottom of the viewport
+                    start: "top top",
+                    end: "bottom bottom",
                     scrub: 1,
-                    pin: servicesSection, // Pin the entire servicesSection, so the heading stays
+                    pin: servicesSection,
                     anticipatePin: 1
                 }
             }
         );
 
-        // Optional: Fade out cube container as it scrolls past
         gsap.to(cubeContainer, {
             autoAlpha: 0,
             scale: 0.9,
             scrollTrigger: {
                 trigger: servicesPinWrapper,
-                start: "bottom bottom-=200", // Start fading 200px before the end of the pin
+                start: "bottom bottom-=200",
                 end: "bottom bottom",
                 scrub: true
             }
