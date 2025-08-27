@@ -99,15 +99,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const faces = servicesSection ? servicesSection.querySelectorAll('.face') : [];
     const SERVICES_COUNT = faces.length;
 
+    // --- Fallback if essential elements are missing ---
     if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
-        // Fallback: ensure section and faces are visible if animation fails
+        // Ensure section is visible (no fade-in/scale-in)
         gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
-        gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); // Ensure heading is visible and not animated
+        // Ensure heading is fully visible and static
+        gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
         if (servicesHeading) {
-            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0 });
+            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
         }
-        // FIX: Ensure cubeContainer is also visible in fallback
+        // Ensure cube container and faces are fully visible and static (no 3D)
         gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
         gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
@@ -117,16 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 transform: 'none', 
                 position: 'relative', 
                 transformStyle: 'flat',
-                clearProps: 'transform,opacity,visibility,position,transformStyle,transition' // Clear GSAP inline styles
+                clearProps: 'transform,opacity,visibility,position,transformStyle' // Clear GSAP inline styles (removed transition to avoid conflicts)
             });
         });
         return; 
     }
 
-    // Calculate `translateZ` distance for faces
+    // --- Core 3D Cube Logic ---
+
+    // Calculate `translateZ` distance for faces (apothem of a regular polygon)
     function calculateFaceDepth(cubeHeight) {
         if (!cubeHeight || SERVICES_COUNT === 0) return 0;
-        // R = (H/2) / tan(PI/N) - Correct formula for apothem of a regular polygon
         return (cubeHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
     }
 
@@ -139,12 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const angleForFace = i * ROTATION_INCREMENT_DEG;
             gsap.set(face, { 
                 transform: `rotateX(${angleForFace}deg) translateZ(${faceDepth}px)`,
-                transformOrigin: `center center -${faceDepth}px`, // Critical for correct rotation
+                transformOrigin: `center center -${faceDepth}px`, // Critical for correct rotation around shared axis
                 opacity: (i === 0) ? 1 : 0, // Only first face visible initially
                 visibility: (i === 0) ? 'visible' : 'hidden',
                 position: 'absolute', // Ensure 3D positioning
                 transformStyle: 'preserve-3d', // Ensure backface-visibility works
-                transition: 'opacity 0.4s ease-in-out' // Add transition for smooth opacity changes
+                // REMOVED CSS transition, GSAP will manage opacity directly
             });
         });
         // Ensure cube itself is in 3D mode and at its initial rotation
@@ -155,21 +158,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // GSAP Responsive Media Queries (matchMedia)
     gsap.matchMedia().add({
-        // Desktop Large (min-width: 1201px) - Cube 900px
         "largeDesktop": "(min-width: 1201px)",
-        // Desktop Medium / Tablet Large (min-width: 769px and max-width: 1200px) - Cube 640px
         "mediumDesktop": "(min-width: 769px) and (max-width: 1200px)",
-        // Mobile / Tablet Small (max-width: 768px) - Cube 300px, stacked layout
         "mobile": "(max-width: 768px)",
-        // Reduced motion override (for all screen sizes)
         "reducedMotion": "(prefers-reduced-motion: reduce)"
 
     }, (context) => {
         
         let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
         let currentCubeSize = 300; // Default smallest size for mobile
-        
-        // --- Kill/Revert previous animations ---
+
+        // --- Kill/Revert previous animations for clean re-initialization ---
         if (cubeAnimationTimeline) {
             cubeAnimationTimeline.kill();
             cubeAnimationTimeline = null;
@@ -179,13 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Handle Reduced Motion First ---
         if (reducedMotion) {
             console.log("Reduced motion detected. Applying flat layout.");
-            // Reset styles to flat/stacked appearance for instant visibility
+            // Set elements to their final, non-animated, fully visible state
             gsap.set(servicesSection, { opacity: 1, scale: 1, visibility: 'visible', position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
-            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
-            if (servicesHeading) {
-                gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0 });
-            }
-            // FIX: Ensure cubeContainer is also visible in reduced motion
+            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); // Static heading
+            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 }); // Static heading spans
             gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
@@ -195,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     visibility: 'visible', 
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,opacity,visibility,position,transformStyle,transition'
+                    clearProps: 'transform,opacity,visibility,position,transformStyle'
                 });
             });
             return; 
@@ -206,22 +202,22 @@ document.addEventListener('DOMContentLoaded', () => {
             currentCubeSize = 900;
         } else if (mediumDesktop) {
             currentCubeSize = 640;
-        } // 'mobile' condition already defaults currentCubeSize to 300
-
+        } 
+        // 'mobile' condition (max-width: 768px) already implies currentCubeSize = 300
+        
         // Apply cube container size
         gsap.set(cubeContainer, { width: currentCubeSize, height: currentCubeSize, maxWidth: currentCubeSize, perspective: 1200 });
         setupInitialCubeFaces(currentCubeSize); // Initialize faces for 3D
 
         // --- Setup Cube Animation & Pinning ---
         if (mobile) {
-            // On mobile, keep the cube flat and remove pinning
             console.log("Mobile layout active. Disabling 3D scroll animation.");
+            // Clear any previous fixed/animation styles for the section
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,opacity,scale,visibility' });
-            gsap.set(servicesHeading, { opacity: 1, y: 0 });
-            if (servicesHeading) {
-                gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0 });
-            }
-            // FIX: Ensure cubeContainer is visible for mobile (no 3D animation)
+            // Ensure heading and its spans are fully visible and static
+            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
+            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
+            // Ensure cube container and faces are fully visible and static (no 3D)
             gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: currentCubeSize, height: currentCubeSize, maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
@@ -231,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     visibility: 'visible', 
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,opacity,visibility,position,transformStyle,transition'
+                    clearProps: 'transform,opacity,visibility,position,transformStyle'
                 });
             });
         } else {
@@ -262,26 +258,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // 1. Initial fade-in and scale-up for the entire section
-            cubeAnimationTimeline.fromTo(servicesSection, 
+            // 1. Initial fade-in and scale-up for the entire section and cube container
+            cubeAnimationTimeline.fromTo([servicesSection, cubeContainer], // Target both section and cubeContainer
                 { opacity: 0, scale: 0.8, visibility: 'hidden' }, 
                 { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); // At the very start of the pin scroll
 
-            // NEW: Add animation for cubeContainer to appear
-            cubeAnimationTimeline.fromTo(cubeContainer,
-                { opacity: 0, scale: 0.8, visibility: 'hidden' },
-                { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); // Start at the same time as the section fade-in
+            // 2. Heading: NO ANIMATION - It will be visible because servicesSection is visible
+            //    and its default CSS makes it static.
 
-
-            // 2. Heading text animation (fade/move with stagger)
-            cubeAnimationTimeline.fromTo(servicesHeading.querySelectorAll('span'), 
-                { opacity: 0, y: 50 },
-                { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", stagger: 0.2 }, 0.2); // Start slightly after main section/cube fade-in
-
-
-            // 3. Cube rotation and face visibility control
+            // 3. Cube rotation and face visibility control (01 -> 08)
             faces.forEach((face, i) => {
-                const currentFaceRotation = i * ROTATION_INCREMENT_DEG; // Positive rotation
+                const currentFaceRotation = i * ROTATION_INCREMENT_DEG; // Positive rotation for 01 -> 08
                 const labelProgress = i / SERVICES_COUNT; // Position label proportionally
 
                 cubeAnimationTimeline.addLabel(`face${i}`, labelProgress);
