@@ -301,11 +301,20 @@ html::before {
     width: 100%; /* Take full width to allow text-align: left */
     z-index: 2; /* Ensure heading is above cube */
 
-    opacity: 0; /* Initial state for GSAP fade-in */
-    transform: translateY(50px); /* Initial state for GSAP move-in */
+    /* REMOVED: Initial opacity and transform from here */
+    /* opacity: 0; */
+    /* transform: translateY(50px); */
 }
-.services-heading .text-white { display: block; color: var(--text-light); }
-.services-heading .text-gray { display: block; color: var(--text-sub-heading-grey); } 
+/* NEW: Apply initial animation states to the SPAN elements inside the heading */
+.services-heading .text-white,
+.services-heading .text-gray {
+    opacity: 0;
+    transform: translateY(50px);
+    display: block; /* Ensure spans behave as blocks for translateY to work */
+}
+
+.services-heading .text-white { color: var(--text-light); }
+.services-heading .text-gray { color: var(--text-sub-heading-grey); } 
 
 .cube-container { 
     /* width and height will be explicitly set by JS/GSAP based on breakpoint (900px, 640px, 300px) */
@@ -674,6 +683,18 @@ footer h2 {
         opacity: 1 !important; 
         visibility: visible !important;
     }
+    .services-heading {
+        /* Ensure these are reset for reduced motion, to allow individual spans to be visible */
+        opacity: 1 !important; 
+        transform: none !important; 
+        text-align: center !important;
+    }
+    .services-heading .text-white,
+    .services-heading .text-gray {
+        opacity: 1 !important; 
+        transform: none !important;
+        display: block !important;
+    }
     .services-heading, .cube-container { 
         flex-basis: auto !important; 
         max-width: 100% !important;
@@ -685,9 +706,6 @@ footer h2 {
         text-align: center !important;
         z-index: auto !important;
         align-self: center !important;
-    }
-    .services-heading {
-        text-align: center !important;
     }
     .cube-container {
         perspective: none !important; 
