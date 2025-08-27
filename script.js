@@ -271,11 +271,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // 1. Initial fade-in and scale-up for the servicesSection AND cubeContainer
-            cubeAnimationTimeline.fromTo([servicesSection, cubeContainer], 
+            // 1. Initial fade-in and scale-up for the servicesSection (its background) AND cubeContainer
+            cubeAnimationTimeline.fromTo(servicesSection, 
                 { opacity: 0, scale: 0.8, visibility: 'hidden' }, 
                 { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); 
             
+            // NEW: Only animate the cubeContainer into view. servicesSection already brought in.
+            cubeAnimationTimeline.fromTo(cubeContainer,
+                { opacity: 0, scale: 0.8, visibility: 'hidden' },
+                { opacity: 1, scale: 1, visibility: 'visible', duration: 1, ease: "power2.out" }, 0); 
+
             // 2. Heading: NO ANIMATION. It's now statically visible by CSS and excluded from IO.
 
             // 3. Cube rotation and face visibility control (01 -> 08)
@@ -316,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, `endRotation-=0.5`); // Start this slightly before the very end label
 
             // 4. Fade out section and cubeContainer at the very end of the pin wrapper scroll
-            cubeAnimationTimeline.to([servicesSection, cubeContainer], // Target both section and cubeContainer for fade out
+            cubeAnimationTimeline.to([servicesSection, cubeContainer], // Target both section (background) and cubeContainer for fade out
                 { opacity: 0, scale: 0.8, visibility: 'hidden', duration: 1, ease: "power2.in" }, `endRotation`); // Fade out after last face animation
         }
     });
