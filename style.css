@@ -15,7 +15,6 @@
     --tool-category-color: var(--text-medium);
     --shadow-color-card-white: rgba(0,0,0,0.25);
     --bg-section-card: #141414;
-    /* Added from previous full CSS for consistency/completeness, if not already used */
     --accent-secondary-sawad: #00FFC2; 
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); /* Dark gradient for cube faces */
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); /* Stronger shadow for cube faces */
@@ -295,22 +294,18 @@ html::before {
     font-weight: 800; 
     text-transform: uppercase; 
     text-align: left; /* Keep left-aligned as per requirement */
-    margin-bottom: 40px; /* Reduced from 60px for better spacing */
-    align-self: flex-start; /* NEW: Added flex-shrink: 0 and ensured align-self for flex item */
-    flex-shrink: 0; /* NEW: Prevent heading from shrinking */
+    margin-bottom: 40px; /* Consistent spacing below heading */
+    align-self: flex-start; /* Ensure left alignment in flex container */
+    flex-shrink: 0; /* Prevent heading from shrinking */
     width: 100%; /* Take full width to allow text-align: left */
     z-index: 2; /* Ensure heading is above cube */
-
-    /* REMOVED: Initial opacity and transform from here */
-    /* opacity: 0; */
-    /* transform: translateY(50px); */
+    /* REMOVED: Initial opacity and transform from here - heading should be static */
 }
-/* NEW: Apply initial animation states to the SPAN elements inside the heading */
+/* NEW: Ensure heading spans are blocks and visible by default (no animation on heading) */
 .services-heading .text-white,
 .services-heading .text-gray {
-    opacity: 0;
-    transform: translateY(50px);
-    display: block; /* Ensure spans behave as blocks for translateY to work */
+    display: block; /* Ensure spans behave as blocks for layout */
+    /* REMOVED: opacity: 0; and transform: translateY(50px); from here */
 }
 
 .services-heading .text-white { color: var(--text-light); }
@@ -333,7 +328,7 @@ html::before {
     z-index: 1; /* Cube is behind the heading */
     margin-top: 20px; /* Extra spacing if needed */
     
-    max-width: 900px; /* NEW: Removed fixed 800px, JS sets max width more granularly */
+    max-width: 900px; /* Max width for desktop/tablet */
     width: 100%;     /* IMPORTANT: Responsive width */
 
     opacity: 0; /* Initial state for GSAP fade-in */
@@ -359,7 +354,8 @@ html::before {
     border-radius: 20px;
     background: var(--bg-gradient-2); /* Changed to use variable */
     padding: clamp(1rem, 4vw, 2.5rem); /* Responsive padding */
-    border: none; /* Removed border to prevent issues with 3D math */
+    /* REMOVED: border: none; to ensure no gaps */
+    border: none; /* Ensure no border, crucial for tight alignment */
     overflow: hidden;
     box-sizing: border-box;
     text-align: left;
@@ -367,7 +363,7 @@ html::before {
 
     opacity: 0; /* Initial state for GSAP animation - only the active face will be visible */
     visibility: hidden;
-    transition: opacity 0.4s ease-in-out; /* Add transition for smooth opacity changes */
+    /* REMOVED: transition: opacity 0.4s ease-in-out; - GSAP handles opacity directly */
 }
 .face .service-content { 
     width: 100%; 
@@ -683,11 +679,11 @@ footer h2 {
         opacity: 1 !important; 
         visibility: visible !important;
     }
+    /* NEW: Ensure heading and its spans are fully visible and static */
     .services-heading {
-        /* Ensure these are reset for reduced motion, to allow individual spans to be visible */
         opacity: 1 !important; 
         transform: none !important; 
-        text-align: center !important;
+        text-align: center !important; /* Center on mobile, but static */
     }
     .services-heading .text-white,
     .services-heading .text-gray {
