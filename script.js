@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1, position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
             gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
             gsap.set(servicesHeading.querySelectorAll('span'), { autoAlpha: 1, y: 0, x: 0 });
-            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
@@ -254,12 +254,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation - NO buffer subtracted here
+            // REFINED: Available vertical space calculation - Removed fixed buffer subtraction
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
 
-            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.7); 
+            // REFINED: Clamp effectiveCubeDimension more aggressively
+            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.75); // REFINED: viewportHeight * 0.75
 
-            const minDesktopCubeDimension = 600; 
+            const minDesktopCubeDimension = 700; // REFINED: Changed min size to 700px
             if (effectiveCubeDimension < minDesktopCubeDimension) {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
@@ -341,7 +342,6 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
             // Cube animation timeline now starts with rotation directly
-            // This animation drives the overall cube rotation.
             cubeAnimationTimeline.to(cube, {
                 rotateY: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, 
                 ease: "none", // Main rotation should be linear for scrub
@@ -352,9 +352,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startRotation = i * ROTATION_INCREMENT_DEG;
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
-                // REFINED: Set up initial visibility for faces on the timeline
+                // Dim faces when they are not the primary active face
+                // REFINED: Set initial alpha for all faces on the timeline to 0.5 (except the very first)
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: (i === 0) ? 1 : 0.5, duration: 0.01 }, // Ensure first face is active, others dimmed
+                    { autoAlpha: (i === 0) ? 1 : 0.5, duration: 0.01 }, // Set initial alpha on timeline
                     startRotation / (totalRotation || 1) // Position it correctly in the timeline
                 );
 
