@@ -277,7 +277,8 @@ html::before {
     flex-direction: column;
     justify-content: flex-start; 
     align-items: center; 
-    padding: 100px 20px; 
+    /* REFINED: Reduced padding-top to harmonize with GSAP y-offset */
+    padding: 40px 20px; /* Reduced padding-top from 100px to 40px */
     box-sizing: border-box; 
     overflow: hidden; 
     z-index: 2; 
@@ -317,7 +318,7 @@ html::before {
     margin: 0 auto; /* Auto-center horizontally, GSAP y-offset handles vertical */
     
     position: relative; /* Crucial for GSAP transforms to work correctly */
-    /* REFINED: Removed overflow:hidden from cubeContainer to prevent clipping of larger faces */
+    /* REFINED: Changed to overflow:visible to prevent clipping of larger faces */
     overflow: visible; 
     will-change: transform, opacity;
     
@@ -343,7 +344,7 @@ html::before {
     height: 100%; 
     transform-style: preserve-3d; 
     will-change: transform;
-    /* REFINED: Removed overflow:hidden from cube as well, to prevent clipping */
+    /* REFINED: Changed to overflow:visible from cube as well, to prevent clipping */
     overflow: visible; 
 }
 .face {
