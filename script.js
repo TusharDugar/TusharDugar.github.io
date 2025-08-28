@@ -142,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (servicesHeading) {
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
         }
-        // Ensure cubeContainer fallback is also without scale
         gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
         gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
@@ -354,8 +353,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
                 // Dim faces when they are not the primary active face
-                gsap.to(face, { autoAlpha: (i === 0) ? 1 : 0.5, duration: 0.4 }); // Initial state
-                
+                // REFINED: Initial GSAP.to to set up initial visibility for all faces on the timeline
+                cubeAnimationTimeline.to(face, 
+                    { autoAlpha: (i === 0) ? 1 : 0.5, duration: 0.01 }, // Set initial alpha on timeline
+                    startRotation / (totalRotation || 1) // Position it correctly in the timeline
+                );
+
                 // Fully activate the current face as it rotates into view
                 cubeAnimationTimeline.to(face, 
                     { autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 
