@@ -256,7 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation - Removed fixed buffer subtraction
+            // REFINED: Available vertical space calculation - Removed fixed buffer subtraction (as y:40 covers it)
+            // Harmonize with CSS padding-top: 20px - ensure the total space available accounts for it.
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
 
             // REFINED: Clamp effectiveCubeDimension more aggressively
@@ -354,9 +355,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startRotation = i * ROTATION_INCREMENT_DEG;
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
-                // REFINED: Smoothly dim to 0.5 instead of an instant 0.01s step
+                // REFINED: Smoothly dim to 0.7 instead of an instant 0.01s step
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 0.5, duration: 0.3, ease: "power2.out" }, // REFINED: Duration 0.3, ease out
+                    { autoAlpha: 0.7, duration: 0.3, ease: "power2.out" }, // REFINED: Duration 0.3, ease out, to 0.7
                     startRotation / (totalRotation || 1) // Position it correctly in the timeline
                 );
 
@@ -368,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Dim the face again after it passes, but keep it visible
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 0.5, duration: 0.4, ease: "power2.in" }, 
+                    { autoAlpha: 0.7, duration: 0.4, ease: "power2.in" }, // REFINED: To 0.7
                     (endRotation / (totalRotation || 1)) - 0.05 // Slightly before next rotation completes
                 );
             });
