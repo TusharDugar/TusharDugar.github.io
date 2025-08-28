@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fallback if essential elements are missing ---
     if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
-        gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, visibility: 'visible' }); 
+        gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
         gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
         if (servicesHeading) {
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const viewportHeight = window.innerHeight;
             // REFINED: Available vertical space calculation - removed buffer subtraction (as y:40 covers it)
-            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; // REFINED: Removed -40 as y:40 will handle it
+            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - 40; // REFINED: Removed -40 as y:40 will handle it
 
             // REFINED: Clamp effectiveCubeDimension more aggressively
             effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.7); // REFINED: Use viewportHeight * 0.7
@@ -339,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // REFINED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out)
-            // Calculate y dynamically instead of hardcoding 40
             const cubeTopOffset = headingHeight + headingMarginBottom + 20; // Dynamic offset
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
@@ -355,22 +354,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
                 // Dim faces when they are not the primary active face
-                // No scale animation here
-                cubeAnimationTimeline.fromTo(face, 
-                    { autoAlpha: i === 0 ? 1 : 0.5 }, // Start active face at 1, others at 0.5
-                    { autoAlpha: 0.5, duration: 0.01 }, // Keep dim during its "inactive" phase
-                    startRotation / (totalRotation || 1) // Position it correctly in the timeline
-                );
-
+                gsap.to(face, { autoAlpha: (i === 0) ? 1 : 0.5, duration: 0.4 }); // Initial state
+                
                 // Fully activate the current face as it rotates into view
-                // No scale animation here
                 cubeAnimationTimeline.to(face, 
                     { autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 
                     (startRotation / (totalRotation || 1)) + 0.05 // Slightly after its rotation starts
                 );
 
                 // Dim the face again after it passes, but keep it visible
-                // No scale animation here
                 cubeAnimationTimeline.to(face, 
                     { autoAlpha: 0.5, duration: 0.4, ease: "power2.in" }, 
                     (endRotation / (totalRotation || 1)) - 0.05 // Slightly before next rotation completes
