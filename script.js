@@ -163,20 +163,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // `sideLength` here is the width/height of a square face.
     function calculateFaceDepth(sideLength) { 
         if (!sideLength || SERVICES_COUNT === 0) return 0;
-        // Formula for apothem (a) of a regular N-sided polygon, where S is the side length: a = S / (2 * tan(π/N))
-        return sideLength / (2 * Math.tan(Math.PI / SERVICES_COUNT));
+        // REFINED: Force cube-style depth regardless of polygon math
+        // This makes faces appear flat and close, like a cube face.
+        return sideLength / 2; // Fixed to sideLength / 2
     }
 
     // Set up initial 3D positioning of each face and cube
     function setupInitialCubeFaces(currentCubeDimension) { 
-        let faceDepth = calculateFaceDepth(currentCubeDimension);
+        // REVISED: Get cubeSize from cubeContainer's offsetWidth
+        const cubeSize = cubeContainer.offsetWidth; // Get dynamic width of cubeContainer
+        let faceDepth = calculateFaceDepth(cubeSize); // Use cubeSize for faceDepth calculation
         
-        // --- REFINED: Clamp faceDepth more aggressively ---
-        // This brings faces closer to the viewer, making them appear larger and preventing disappearance.
-        const maxFaceDepthFactor = 0.35; // REFINED: Adjusted to 0.35 as per latest prompt
-        if (faceDepth > currentCubeDimension * maxFaceDepthFactor) {
-            faceDepth = currentCubeDimension * maxFaceDepthFactor; 
-        }
+        // REVISED: Removed apothem clamping, as faceDepth is now fixed to cube-like depth
+        // const maxFaceDepthFactor = 0.35; 
+        // if (faceDepth > currentCubeDimension * maxFaceDepthFactor) {
+        //     faceDepth = currentCubeDimension * maxFaceDepthFactor; 
+        // }
 
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
@@ -184,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(face, { 
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
+                // REVISED: Ensure 45deg increments for 8 faces (360/8)
                 transform: `rotateY(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, 
                 autoAlpha: 1, // REFINED: Faces start fully visible, JS dims inactive ones
                 position: 'absolute',
@@ -246,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
         if (!mobile) { 
             // REFINED: Set .services-section padding-top to 0 or very small in CSS for optimal calculation.
-            // Dynamically calculate heading and surrounding spacing.
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
             const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop); // This will now be 0 from CSS
             const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
@@ -256,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); // This will now be 0 from CSS
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation simplified
+            // REFINED: Simplified Available vertical space calculation
             // As CSS padding-top and heading margin-bottom are now 0, cubeTopOffset becomes the primary spacer.
             const availableVerticalSpace = viewportHeight; // Simplified for calculation
             
@@ -356,10 +358,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startRotation = i * ROTATION_INCREMENT_DEG;
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
-                // REFINED: Smoothly dim to 0.7 instead of an instant 0.01s step
+                // REVISED: Initial face alpha set at the start of its rotation block
+                // This replaces the .01s instant dim, ensuring faces smoothly fade from active/dimmed to dimmed.
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 0.7, duration: 0.3, ease: "power2.out" }, // REFINED: Duration 0.3, ease out, to 0.7
-                    startRotation / (totalRotation || 1) // Position it correctly in the timeline
+                    { autoAlpha: (i === 0) ? 1 : 0.7, duration: 0.01 }, // Set initial alpha for each face when its block starts
+                    startRotation / (totalRotation || 1)
                 );
 
                 // Fully activate the current face as it rotates into view
@@ -370,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Dim the face again after it passes, but keep it visible
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 0.7, duration: 0.4, ease: "power2.in" }, // REFINED: To 0.7
+                    { autoAlpha: 0.7, duration: 0.4, ease: "power2.in" }, 
                     (endRotation / (totalRotation || 1)) - 0.05 // Slightly before next rotation completes
                 );
             });
