@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`,
-                autoAlpha: (i === 0) ? 1 : 0, // Use autoAlpha for robust visibility
+                autoAlpha: 1, // REFINED: Faces start fully visible, JS dims inactive ones
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
@@ -260,29 +260,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // --- REFINED: Smaller buffer so cube sits closer to heading ---
-            const additionalBuffer = 60; // Adjusted to 60 as per latest prompt
-            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - additionalBuffer; 
+            // The additional buffer is now effectively handled by CSS margin-top on .cube-container.
+            // This '40' represents a minimal spacing value for calculation, but CSS controls final gap.
+            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; // REFINED: Removed -40 as y:40 will handle it
 
             // The effective cube size should not exceed the max desired size nor the available vertical space
             effectiveCubeDimension = Math.min(availableVerticalSpace, maxDesiredCubeDimension);
             
             // --- REFINED: Enforce a minimum cube dimension for desktop ---
             // This is crucial to ensure faces are always a readable size.
-            const minDesktopCubeDimension = 650; // Adjusted to 650 as per latest prompt
+            const minDesktopCubeDimension = 600; // Adjusted to 600 as per latest prompt
             if (effectiveCubeDimension < minDesktopCubeDimension) {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
 
-            // --- REFINED: Vertically push cube container right below heading ---
-            // This ensures correct vertical alignment and prevents the large gap.
-            const cubeTopOffset = headingHeight + headingMarginBottom + 40; // Calculated offset for vertical centering
+            // --- REFINED: Simplified cubeContainer Positioning (for pinning compatibility) ---
+            // Removed JS positioning. Vertical/horizontal spacing now relies *entirely* on CSS margins.
+            // GSAP will exclusively handle transform properties.
             gsap.set(cubeContainer, { 
-                marginTop: 0, // Reset any CSS margin-top
-                y: cubeTopOffset, // Use GSAP transform for positioning
-                xPercent: -50, // Center horizontally
-                left: "50%", // Center horizontally
-                position: "relative" // Ensure relative positioning for transforms
+                // xPercent: -50, // Handled by CSS margin:auto
+                // left: "50%",   // Handled by CSS margin:auto
+                position: "relative" // Keep this for GSAP transforms to work correctly
             });
 
         } else {
@@ -311,12 +309,20 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,autoAlpha,scale' });
             gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
             gsap.set(servicesHeading.querySelectorAll('span'), { autoAlpha: 1, y: 0, x: 0 });
-            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' }); // Used autoAlpha here for consistency
+            // Ensure cubeContainer on mobile also has proper centering/positioning in flat mode
+            gsap.set(cubeContainer, { 
+                autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, 
+                maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none',
+                // Explicitly set these to avoid inheriting desktop transforms that don't apply
+                left: 'auto', // Reset left
+                xPercent: 0, // Reset xPercent
+                transform: 'none' // Reset any transform
+            }); 
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
                     transform: 'none', 
-                    autoAlpha: 1, 
+                    autoAlpha: 1, // Use autoAlpha
                     position: 'relative', 
                     transformStyle: 'flat',
                     clearProps: 'transform,autoAlpha,position,transformStyle' // Clear autoAlpha
@@ -352,10 +358,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Only animate the cubeContainer into view. servicesSection (and heading) remains static.
+            // --- REFINED: FromTo animation for cubeContainer ---
+            // Only animates autoAlpha and initial y offset, no scale.
             cubeAnimationTimeline.fromTo(cubeContainer,
-                { autoAlpha: 0, scale: 0.8 },
-                { autoAlpha: 1, scale: 1, duration: 1, ease: "power2.out" }, 0); 
+                { autoAlpha: 0, y: 40 }, // Initial y offset for spacing under heading
+                { autoAlpha: 1, y: 40, duration: 1, ease: "power2.out" }, 0); 
 
             // Heading is static by CSS and JS guard (not animated here).
 
@@ -375,9 +382,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         const inactiveAutoAlpha = 0.5; // Adjusted to 0.5 as per latest prompt
                         faces.forEach((f, idx) => {
                             if (idx === i) {
-                                gsap.to(f, { autoAlpha: 1, duration: 0.4, ease: "power2.out" }); 
+                                gsap.to(f, { autoAlpha: 1, duration: 0.4 }); // No scale, just autoAlpha
                             } else {
-                                gsap.to(f, { autoAlpha: inactiveAutoAlpha, duration: 0.4, ease: "power2.in" }); 
+                                gsap.to(f, { autoAlpha: inactiveAutoAlpha, duration: 0.4 }); // No scale, just autoAlpha
                             }
                         });
                     }
@@ -395,9 +402,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 // and the cubeContainer's fade-out will handle the overall disappearance.
             }, `endRotation-=0.5`);
 
-            // Only fade out cubeContainer at the very end. servicesSection (and thus the heading) should remain visible.
-            cubeAnimationTimeline.to([cubeContainer], 
-                { autoAlpha: 0, scale: 0.8, duration: 1, ease: "power2.in" }, `endRotation`); 
+            // --- REFINED: Final fade out for cubeContainer ---
+            // Only autoAlpha, no scale, consistent y offset.
+            cubeAnimationTimeline.to(cubeContainer, 
+                { autoAlpha: 0, y: 40, duration: 1, ease: "power2.in" }, `endRotation`); 
         }
     });
 
