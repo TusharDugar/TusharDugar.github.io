@@ -246,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
         if (!mobile) { 
             // REFINED: Set .services-section padding-top to 0 or very small in CSS for optimal calculation.
+            // Dynamically calculate heading and surrounding spacing.
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
             const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop); // This will now be 0 from CSS
             const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
@@ -355,7 +356,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startRotation = i * ROTATION_INCREMENT_DEG;
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
-                // Dim faces when they are not the primary active face
                 // REFINED: Smoothly dim to 0.7 instead of an instant 0.01s step
                 cubeAnimationTimeline.to(face, 
                     { autoAlpha: 0.7, duration: 0.3, ease: "power2.out" }, // REFINED: Duration 0.3, ease out, to 0.7
