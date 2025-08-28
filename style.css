@@ -279,7 +279,6 @@ html::before {
     align-items: center; 
     padding: 100px 20px; 
     box-sizing: border-box; 
-    /* REFINED: Keep overflow hidden for the section for overall container */
     overflow: hidden; 
     z-index: 2; 
 }
