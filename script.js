@@ -137,13 +137,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fallback if essential elements are missing ---
     if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
-        gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
+        gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, visibility: 'visible' }); 
         gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
         if (servicesHeading) {
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
         }
         // Ensure cubeContainer fallback is also without scale
-        gsap.set(cubeContainer, { opacity: 1, visibility: 'visible', width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+        gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
         gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
             gsap.set(face, { 
@@ -255,8 +255,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation - removed buffer subtraction
-            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
+            // REFINED: Available vertical space calculation - removed buffer subtraction (as y:40 covers it)
+            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; // REFINED: Removed -40 as y:40 will handle it
 
             // REFINED: Clamp effectiveCubeDimension more aggressively
             effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.7); // REFINED: Use viewportHeight * 0.7
@@ -266,8 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
 
-            // REFINED: Simplified cubeContainer Positioning (for pinning compatibility) ---
-            // CSS margin:auto handles horizontal centering. GSAP will manage 'y' transform.
+            // REFINED: CubeContainer Positioning - relies on CSS for horizontal, GSAP for y
             gsap.set(cubeContainer, { 
                 position: "relative" // Keep this for GSAP transforms to work correctly
             });
@@ -339,42 +338,53 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // --- REFINED: FromTo animation for cubeContainer ---
-            // Only animates autoAlpha and initial y offset, NO SCALE.
-            // Also, REFINED: Calculate y dynamically instead of hardcoding 40
+            // REFINED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out)
+            // Calculate y dynamically instead of hardcoding 40
             const cubeTopOffset = headingHeight + headingMarginBottom + 20; // Dynamic offset
-            cubeAnimationTimeline.fromTo(cubeContainer,
-                { autoAlpha: 0, y: cubeTopOffset }, // Initial y offset for spacing under heading
-                { autoAlpha: 1, y: cubeTopOffset, duration: 1, ease: "power2.out" }, 0); 
+            gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
-            // Cube rotation and face visibility control (01 -> 08)
-            faces.forEach((face, i) => {
-                const currentFaceRotation = i * ROTATION_INCREMENT_DEG;
-                const labelProgress = i / SERVICES_COUNT;
-
-                cubeAnimationTimeline.addLabel(`face${i}`, labelProgress);
-                
-                cubeAnimationTimeline.to(cube, {
-                    rotateY: currentFaceRotation, 
-                    duration: 1, 
-                    ease: "power2.inOut", 
-                    onStart: () => {
-                        const inactiveAutoAlpha = 0.5; 
-                        faces.forEach((f, idx) => {
-                            gsap.to(f, { autoAlpha: (idx === i) ? 1 : inactiveAutoAlpha, duration: 0.4 }); 
-                        });
-                    }
-                }, `face${i}`);
-            });
-            
-            cubeAnimationTimeline.addLabel(`endRotation`, 1);
+            // Cube animation timeline now starts with rotation directly
             cubeAnimationTimeline.to(cube, {
-                rotateY: totalRotation, 
-                duration: 1,
-                ease: "power2.inOut"
-            }, `endRotation-=0.5`);
+                rotateY: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, 
+                ease: "none", // Main rotation should be linear for scrub
+            });
 
-            // --- REFINED: Final fade out for cubeContainer ---
+            // REFINED: Loop through faces to control their autoAlpha based on scroll progress
+            faces.forEach((face, i) => {
+                const startRotation = i * ROTATION_INCREMENT_DEG;
+                const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
+                
+                // Dim faces when they are not the primary active face
+                // No scale animation here
+                cubeAnimationTimeline.fromTo(face, 
+                    { autoAlpha: i === 0 ? 1 : 0.5 }, // Start active face at 1, others at 0.5
+                    { autoAlpha: 0.5, duration: 0.01 }, // Keep dim during its "inactive" phase
+                    startRotation / (totalRotation || 1) // Position it correctly in the timeline
+                );
+
+                // Fully activate the current face as it rotates into view
+                // No scale animation here
+                cubeAnimationTimeline.to(face, 
+                    { autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 
+                    (startRotation / (totalRotation || 1)) + 0.05 // Slightly after its rotation starts
+                );
+
+                // Dim the face again after it passes, but keep it visible
+                // No scale animation here
+                cubeAnimationTimeline.to(face, 
+                    { autoAlpha: 0.5, duration: 0.4, ease: "power2.in" }, 
+                    (endRotation / (totalRotation || 1)) - 0.05 // Slightly before next rotation completes
+                );
+            });
+
+            // The main cube rotation should happen over the entire timeline
+            cubeAnimationTimeline.to(cube, {
+                rotateY: totalRotation, // Ensure it completes a full 360-degree rotation
+                duration: 1, // Normalized duration for GSAP (will be scaled by scrub)
+                ease: "none", // Keep linear for scrub to work smoothly
+            }, 0); // Start at the beginning of the timeline
+
+            // REFINED: Final fade out of the cube container at the end of the scroll trigger
             // Only autoAlpha, NO SCALE, consistent y offset.
             cubeAnimationTimeline.to([cubeContainer], 
                 { autoAlpha: 0, y: cubeTopOffset, duration: 1, ease: "power2.in" }, `endRotation`); 
