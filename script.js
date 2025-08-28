@@ -254,11 +254,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation - removed buffer subtraction (as y:40 covers it)
-            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - 40; // REFINED: Removed -40 as y:40 will handle it
+            // REFINED: Available vertical space calculation - NO buffer subtracted here
+            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
 
-            // REFINED: Clamp effectiveCubeDimension more aggressively
-            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.7); // REFINED: Use viewportHeight * 0.7
+            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.7); 
 
             const minDesktopCubeDimension = 600; 
             if (effectiveCubeDimension < minDesktopCubeDimension) {
@@ -337,11 +336,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // REFINED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out)
+            // REFINED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out, NO SCALE)
             const cubeTopOffset = headingHeight + headingMarginBottom + 20; // Dynamic offset
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
             // Cube animation timeline now starts with rotation directly
+            // This animation drives the overall cube rotation.
             cubeAnimationTimeline.to(cube, {
                 rotateY: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, 
                 ease: "none", // Main rotation should be linear for scrub
@@ -352,10 +352,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startRotation = i * ROTATION_INCREMENT_DEG;
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
-                // Dim faces when they are not the primary active face
-                // REFINED: Initial GSAP.to to set up initial visibility for all faces on the timeline
+                // REFINED: Set up initial visibility for faces on the timeline
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: (i === 0) ? 1 : 0.5, duration: 0.01 }, // Set initial alpha on timeline
+                    { autoAlpha: (i === 0) ? 1 : 0.5, duration: 0.01 }, // Ensure first face is active, others dimmed
                     startRotation / (totalRotation || 1) // Position it correctly in the timeline
                 );
 
@@ -379,10 +378,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 ease: "none", // Keep linear for scrub to work smoothly
             }, 0); // Start at the beginning of the timeline
 
-            // REFINED: Final fade out of the cube container at the end of the scroll trigger
-            // Only autoAlpha, NO SCALE, consistent y offset.
-            cubeAnimationTimeline.to([cubeContainer], 
-                { autoAlpha: 0, y: cubeTopOffset, duration: 1, ease: "power2.in" }, `endRotation`); 
+            // REFINED: Removed the final fade out for cubeContainer.
+            // The cubeContainer remains at autoAlpha:1 and y:cubeTopOffset until the pin ends.
+            // No explicit fade-out from the timeline.
         }
     });
 
