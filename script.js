@@ -247,17 +247,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!mobile) { 
             // REFINED: Set .services-section padding-top to 0 or very small in CSS for optimal calculation.
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
-            const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop);
+            const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop); // This will now be 0 from CSS
             const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
             
             gsap.set(servicesHeading, { autoAlpha: 1, transform: 'none', clearProps: 'autoAlpha,transform' });
             const headingHeight = servicesHeading.offsetHeight;
-            const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
+            const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); // This will now be 0 from CSS
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation - removed hardcoded buffer subtraction
-            // cubeTopOffset will dynamically handle the exact vertical spacing needed.
-            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
+            // REFINED: Available vertical space calculation simplified
+            // As CSS padding-top and heading margin-bottom are now 0, cubeTopOffset becomes the primary spacer.
+            const availableVerticalSpace = viewportHeight - sectionPaddingBottom - headingHeight; // Simplified calculation
 
             // REFINED: Clamp effectiveCubeDimension more aggressively
             effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8); // REFINED: Use viewportHeight * 0.8
@@ -340,7 +340,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // REFINED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out, NO SCALE)
-            const cubeTopOffset = headingHeight + headingMarginBottom + 20; // Dynamic offset (20px gap)
+            // REFINED: cubeTopOffset now relies purely on headingHeight + 20 (since CSS margins are 0)
+            const cubeTopOffset = headingHeight + 20; // Simplified
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
             // Cube animation timeline now starts with rotation directly
