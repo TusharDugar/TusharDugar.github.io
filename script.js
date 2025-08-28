@@ -257,9 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation - removed buffer subtraction
             // The initial y:40 will manage spacing.
-            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
+            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - 40; 
 
             effectiveCubeDimension = Math.min(availableVerticalSpace, maxDesiredCubeDimension);
             
@@ -268,12 +267,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
 
-            // --- REFINED: Simplified cubeContainer Positioning ---
-            // Rely entirely on CSS margin:auto for centering, and GSAP 'y' for vertical offset.
-            // CSS provides position: relative and margin: auto; GSAP adds 'y' transform.
+            // --- REFINED: Simplified cubeContainer Positioning (for pinning compatibility) ---
+            // Rely entirely on CSS margin:auto for horizontal centering.
+            // GSAP will manage 'y' transform (for vertical offset) and other transforms.
             gsap.set(cubeContainer, { 
-                // No specific positioning properties set here like left, xPercent as CSS margin handles it.
-                // position: "relative" is already in CSS.
+                position: "relative" // Keep this for GSAP transforms to work correctly
             });
 
         } else {
@@ -301,8 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(cubeContainer, { 
                 autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, 
                 maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none',
-                left: 'auto',
-                xPercent: 0,
+                left: 'auto', 
+                xPercent: 0, 
                 transform: 'none' 
             }); 
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
@@ -344,9 +342,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // --- REFINED: FromTo animation for cubeContainer ---
-            // Animates autoAlpha and initial y offset, NO SCALE.
+            // Only animates autoAlpha and initial y offset, NO SCALE.
             cubeAnimationTimeline.fromTo(cubeContainer,
-                { autoAlpha: 0, y: 40 }, 
+                { autoAlpha: 0, y: 40 }, // Initial y offset for spacing under heading (y:40 is correct here)
                 { autoAlpha: 1, y: 40, duration: 1, ease: "power2.out" }, 0); 
 
             // Cube rotation and face visibility control (01 -> 08)
@@ -362,13 +360,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     duration: 1, 
                     ease: "power2.inOut", 
                     onStart: () => {
+                        // --- REFINED: Keep inactive faces partially visible for continuity ---
                         const inactiveAutoAlpha = 0.5; 
                         faces.forEach((f, idx) => {
-                            if (idx === i) {
-                                gsap.to(f, { autoAlpha: 1, duration: 0.4 }); 
-                            } else {
-                                gsap.to(f, { autoAlpha: inactiveAutoAlpha, duration: 0.4 }); 
-                            }
+                            // REFINED: Use autoAlpha directly (no scale)
+                            gsap.to(f, { autoAlpha: (idx === i) ? 1 : inactiveAutoAlpha, duration: 0.4 }); 
                         });
                     }
                 }, `face${i}`);
