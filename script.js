@@ -257,11 +257,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const viewportHeight = window.innerHeight;
             // REFINED: Available vertical space calculation - Removed fixed buffer subtraction
-            // The `y` offset on `cubeContainer` will handle the specific gap.
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
 
             // REFINED: Clamp effectiveCubeDimension more aggressively
-            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.75); // REFINED: Use viewportHeight * 0.75
+            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8); // REFINED: Use viewportHeight * 0.8
 
             const minDesktopCubeDimension = 750; // REFINED: Changed min size to 750px
             if (effectiveCubeDimension < minDesktopCubeDimension) {
@@ -355,7 +354,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startRotation = i * ROTATION_INCREMENT_DEG;
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
-                // Dim faces when they are not the primary active face
                 // REFINED: Smoothly dim to 0.5 instead of an instant 0.01s step
                 cubeAnimationTimeline.to(face, 
                     { autoAlpha: 0.5, duration: 0.3, ease: "power2.out" }, // REFINED: Duration 0.3, ease out
