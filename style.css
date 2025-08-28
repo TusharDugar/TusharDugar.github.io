@@ -15,7 +15,7 @@
     --tool-category-color: var(--text-medium);
     --shadow-color-card-white: rgba(0,0,0,0.25);
     --bg-section-card: #141414;
-    --accent-secondary-sawad: #00FFC2; 
+    --accent-secondary-sawad: #00FFC2; /* Added this variable as it was present in script.js glow animation */
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); /* Dark gradient for cube faces */
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); /* Stronger shadow for cube faces */
     --cube-service-title-color: #9CFF33; /* Specific green for cube service titles */
@@ -122,6 +122,7 @@ html::before {
 }
 
 /* Global Section & Reveal Animations */
+.section { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; padding: 80px 40px; }
 .reveal-item, .reveal-child, .reveal-stagger { 
     opacity: 0; 
     transform: translateY(40px); 
@@ -313,30 +314,33 @@ html::before {
 .services-heading .text-white { color: var(--text-light); }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); } 
 
-.cube-container { 
+/* REFINED: .cube-container styles for proper positioning within pinned section */
+#services .cube-container { /* Added #services to target specifically in this section */
     /* width and height will be explicitly set by JS/GSAP based on breakpoint (900px, 640px, 300px) */
     aspect-ratio: 1 / 1; /* Ensures it's always a perfect square */
-    perspective: 1200px; /* As specified in prompt */
     
-    position: relative; 
+    /* NEW/REFINED: Margin-top for vertical spacing, margin: auto for horizontal centering */
+    margin: 40px auto 0 auto; /* top: 40px under heading, center horizontally, no left/transform conflict */
+    
+    position: relative; /* Required for GSAP transforms to work correctly */
     overflow: hidden; 
     will-change: transform, opacity;
     
     display: flex;
     justify-content: center; /* Center the cube visually within its own container */
     align-items: center;
-    align-self: center; /* IMPORTANT: Center the cube-container horizontally within the section */
+    /* align-self: center; REMOVED as margin: auto handles horizontal centering */
     
     z-index: 1; /* Cube is behind the heading */
-    margin-top: 20px; /* Extra spacing if needed */
     
-    max-width: 900px; /* Max width for desktop/tablet */
+    max-width: 900px; /* Max width for desktop/tablet (JS still sets specific width/height) */
     width: 100%;     /* IMPORTANT: Responsive width */
 
     /* These are the initial states GSAP will animate from/to */
-    opacity: 0; 
-    transform: scale(0.8); 
-    visibility: hidden; 
+    /* REFINED: Neutral visual state for CSS, GSAP will set autoAlpha/transform at runtime */
+    opacity: 1; 
+    transform: none; 
+    visibility: visible; 
 }
 .cube { 
     position: relative; 
@@ -363,8 +367,9 @@ html::before {
     text-align: left;
     box-shadow: var(--shadow-strong); /* Use shadow variable */
 
-    opacity: 0; /* Initial state for GSAP animation - only the active face will be visible */
-    visibility: hidden;
+    /* REFINED: Faces start fully visible in CSS, then JS dims inactive ones */
+    opacity: 1; /* Changed to 1 */
+    visibility: visible; /* Changed to visible */
     /* REMOVED: transition: opacity 0.4s ease-in-out; - GSAP handles opacity directly */
 }
 .face .service-content { 
@@ -422,6 +427,12 @@ html::before {
         perspective: none; /* Flatten perspective on mobile */
         align-self: center; /* Keep centered */
         min-height: 300px; /* Ensure min-height even when flattened */
+        margin-top: 30px; /* Smaller margin for mobile stacked cards */
+        /* Reset any desktop margin/transform properties that conflict with mobile flow */
+        margin-left: auto; /* Ensure horizontal centering on mobile */
+        margin-right: auto; /* Ensure horizontal centering on mobile */
+        left: auto; /* Reset left on mobile */
+        transform: none; /* Reset transform on mobile */
     }
     .cube {
         transform-style: flat; /* Flatten cube */
@@ -487,7 +498,7 @@ html::before {
     align-items: center; 
     gap: 20px; 
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); 
-    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1); 
     cursor: pointer;
     will-change: transform, opacity;
 }
@@ -603,7 +614,7 @@ footer h2 {
     gap: 8px; 
     box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
     cursor: pointer; 
-    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1); 
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1); 
     position: relative; 
     overflow: hidden; 
     width: auto;
@@ -710,13 +721,16 @@ footer h2 {
         perspective: none !important; 
         transform: none !important; 
         height: auto !important;
-        margin: 0 auto !important;
+        margin: 0 auto !important; /* Ensure reduced-motion also uses margin auto */
         position: relative !important;
         top: auto !important;
         overflow: visible !important;
         max-width: 100% !important;
         z-index: auto !important;
         aspect-ratio: auto !important; 
+        /* Reset margin-top and transform for mobile in reduced-motion */
+        margin-top: 0 !important; /* This will be handled by the margin: 0 auto 0 auto above */
+        transform: none !important;
     }
     .cube {
         transform-style: flat !important; 
