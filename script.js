@@ -247,18 +247,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!mobile) { 
             // REFINED: Set .services-section padding-top to 0 or very small in CSS for optimal calculation.
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
-            const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop); // This will now be 0 from CSS
+            // REFINED: Read sectionPaddingTop and Bottom, but don't subtract from availableVerticalSpace directly
+            const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop); 
             const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
             
             gsap.set(servicesHeading, { autoAlpha: 1, transform: 'none', clearProps: 'autoAlpha,transform' });
             const headingHeight = servicesHeading.offsetHeight;
-            const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); // This will now be 0 from CSS
+            // REFINED: headingMarginBottom is now 0 in CSS
+            const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); 
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation simplified
+            // REFINED: Simplified Available vertical space calculation
             // As CSS padding-top and heading margin-bottom are now 0, cubeTopOffset becomes the primary spacer.
-            const availableVerticalSpace = viewportHeight - sectionPaddingBottom - headingHeight; // Simplified calculation
-
+            const availableVerticalSpace = viewportHeight; // Simplified for calculation
+            
             // REFINED: Clamp effectiveCubeDimension more aggressively
             effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8); // REFINED: Use viewportHeight * 0.8
 
