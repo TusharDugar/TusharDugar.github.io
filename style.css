@@ -278,7 +278,7 @@ html::before {
     justify-content: flex-start; 
     align-items: center; 
     /* REFINED: Reduced padding-top to harmonize with GSAP y-offset */
-    padding: 40px 20px; /* Reduced padding-top from 100px to 40px */
+    padding: 20px 20px; /* Reduced padding-top from 100px to 20px */
     box-sizing: border-box; 
     overflow: hidden; 
     z-index: 2; 
@@ -314,11 +314,11 @@ html::before {
 #services .cube-container { 
     aspect-ratio: 1 / 1; 
     
-    /* REFINED: Margin for horizontal centering, NO vertical margin here */
+    /* REFINED: Margin for horizontal centering, NO vertical margin here (JS handles y) */
     margin: 0 auto; /* Auto-center horizontally, GSAP y-offset handles vertical */
     
     position: relative; /* Crucial for GSAP transforms to work correctly */
-    /* REFINED: Changed to overflow:visible to prevent clipping of larger faces */
+    /* REFINED: Removed overflow:hidden from cubeContainer to prevent clipping of larger faces */
     overflow: visible; 
     will-change: transform, opacity;
     
