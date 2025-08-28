@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation - Removed fixed buffer subtraction (as y:40 covers it)
+            // REFINED: Available vertical space calculation - Removed fixed buffer subtraction
             // Harmonize with CSS padding-top: 20px - ensure the total space available accounts for it.
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
 
