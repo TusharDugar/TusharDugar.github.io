@@ -142,7 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (servicesHeading) {
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
         }
-        gsap.set(cubeContainer, { opacity: 1, scale: 1, visibility: 'visible', width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
+        // Ensure cubeContainer fallback is also without scale
+        gsap.set(cubeContainer, { opacity: 1, visibility: 'visible', width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
         gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
             gsap.set(face, { 
@@ -173,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // --- REFINED: Clamp faceDepth more aggressively ---
         // This brings faces closer to the viewer, making them appear larger and preventing disappearance.
-        const maxFaceDepthFactor = 0.25; 
+        const maxFaceDepthFactor = 0.35; // REFINED: Adjusted to 0.35 as per latest prompt
         if (faceDepth > currentCubeDimension * maxFaceDepthFactor) {
             faceDepth = currentCubeDimension * maxFaceDepthFactor; 
         }
@@ -184,15 +185,12 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(face, { 
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
-                // --- CRITICAL FIX: Changed rotateX to rotateY here --- (if your desired rotation is horizontal)
                 transform: `rotateY(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, 
                 autoAlpha: 1, // REFINED: Faces start fully visible, JS dims inactive ones
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
         });
-        // Ensure cube itself is in 3D mode and at its initial rotation.
-        // --- CRITICAL FIX: Changed rotateX to rotateY here --- (if your desired rotation is horizontal)
         gsap.set(cube, { transformStyle: 'preserve-3d', rotateY: 0, transformOrigin: 'center center' }); 
     }
 
@@ -257,19 +255,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // The initial y:40 will manage spacing.
-            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom - 40; 
+            // REFINED: Available vertical space calculation - removed buffer subtraction
+            const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
 
-            effectiveCubeDimension = Math.min(availableVerticalSpace, maxDesiredCubeDimension);
-            
+            // REFINED: Clamp effectiveCubeDimension more aggressively
+            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.7); // REFINED: Use viewportHeight * 0.7
+
             const minDesktopCubeDimension = 600; 
             if (effectiveCubeDimension < minDesktopCubeDimension) {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
 
-            // --- REFINED: Simplified cubeContainer Positioning (for pinning compatibility) ---
-            // Rely entirely on CSS margin:auto for horizontal centering.
-            // GSAP will manage 'y' transform (for vertical offset) and other transforms.
+            // REFINED: Simplified cubeContainer Positioning (for pinning compatibility) ---
+            // CSS margin:auto handles horizontal centering. GSAP will manage 'y' transform.
             gsap.set(cubeContainer, { 
                 position: "relative" // Keep this for GSAP transforms to work correctly
             });
@@ -343,9 +341,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // --- REFINED: FromTo animation for cubeContainer ---
             // Only animates autoAlpha and initial y offset, NO SCALE.
+            // Also, REFINED: Calculate y dynamically instead of hardcoding 40
+            const cubeTopOffset = headingHeight + headingMarginBottom + 20; // Dynamic offset
             cubeAnimationTimeline.fromTo(cubeContainer,
-                { autoAlpha: 0, y: 40 }, // Initial y offset for spacing under heading (y:40 is correct here)
-                { autoAlpha: 1, y: 40, duration: 1, ease: "power2.out" }, 0); 
+                { autoAlpha: 0, y: cubeTopOffset }, // Initial y offset for spacing under heading
+                { autoAlpha: 1, y: cubeTopOffset, duration: 1, ease: "power2.out" }, 0); 
 
             // Cube rotation and face visibility control (01 -> 08)
             faces.forEach((face, i) => {
@@ -355,15 +355,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 cubeAnimationTimeline.addLabel(`face${i}`, labelProgress);
                 
                 cubeAnimationTimeline.to(cube, {
-                    // --- CRITICAL FIX: Changed rotateX to rotateY here ---
                     rotateY: currentFaceRotation, 
                     duration: 1, 
                     ease: "power2.inOut", 
                     onStart: () => {
-                        // --- REFINED: Keep inactive faces partially visible for continuity ---
                         const inactiveAutoAlpha = 0.5; 
                         faces.forEach((f, idx) => {
-                            // REFINED: Use autoAlpha directly (no scale)
                             gsap.to(f, { autoAlpha: (idx === i) ? 1 : inactiveAutoAlpha, duration: 0.4 }); 
                         });
                     }
@@ -372,7 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             cubeAnimationTimeline.addLabel(`endRotation`, 1);
             cubeAnimationTimeline.to(cube, {
-                // --- CRITICAL FIX: Changed rotateX to rotateY here ---
                 rotateY: totalRotation, 
                 duration: 1,
                 ease: "power2.inOut"
@@ -381,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // --- REFINED: Final fade out for cubeContainer ---
             // Only autoAlpha, NO SCALE, consistent y offset.
             cubeAnimationTimeline.to([cubeContainer], 
-                { autoAlpha: 0, y: 40, duration: 1, ease: "power2.in" }, `endRotation`); 
+                { autoAlpha: 0, y: cubeTopOffset, duration: 1, ease: "power2.in" }, `endRotation`); 
         }
     });
 
