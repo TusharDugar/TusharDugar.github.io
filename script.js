@@ -246,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
         if (!mobile) { 
             // REFINED: Set .services-section padding-top to 0 or very small in CSS for optimal calculation.
-            // Dynamically calculate heading and surrounding spacing.
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
             const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop); // This will now be 0 from CSS
             const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
