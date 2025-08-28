@@ -15,10 +15,10 @@
     --tool-category-color: var(--text-medium);
     --shadow-color-card-white: rgba(0,0,0,0.25);
     --bg-section-card: #141414;
-    --accent-secondary-sawad: #00FFC2; /* Added this variable as it was present in script.js glow animation */
-    --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); /* Dark gradient for cube faces */
-    --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); /* Stronger shadow for cube faces */
-    --cube-service-title-color: #9CFF33; /* Specific green for cube service titles */
+    --accent-secondary-sawad: #00FFC2; 
+    --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
+    --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
+    --cube-service-title-color: #9CFF33; 
 }
 
 /* Universal Box-Sizing & Body */
@@ -30,7 +30,7 @@ body {
     color: var(--text-light);
     background-color: var(--bg-main);
     overflow-x: hidden;
-    position: relative; /* Needed for body::before/::after to work relative to viewport */
+    position: relative; 
     scroll-behavior: smooth;
     min-height: 100vh;
 }
@@ -127,11 +127,11 @@ html::before {
     opacity: 0; 
     transform: translateY(40px); 
     transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); 
-    will-change: transform, opacity; /* Added will-change for performance */
+    will-change: transform, opacity; 
 }
 .reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
-.reveal-parent { position: relative; } /* Added for consistency */
-.reveal-stagger-container { position: relative; } /* Added for consistency */
+.reveal-parent { position: relative; } 
+.reveal-stagger-container { position: relative; } 
 
 
 /* Main Layout */
@@ -142,19 +142,17 @@ html::before {
     margin: 0 auto; 
     padding: 0 60px; 
     gap: 60px; 
-    min-height: 100vh; /* Ensure it takes full height */
-    padding-top: 20px; /* Small top offset */
+    min-height: 100vh; 
+    padding-top: 20px; 
 }
 .left-column-sticky { 
     flex-shrink: 0; 
     flex-basis: 370px; 
     display: flex; 
-    flex-direction: column; /* Ensure column for vertical centering */
+    flex-direction: column; 
     align-items: center; 
     justify-content: center; 
-    z-index: 2; /* Ensure it's above right column */
-
-    /* Default (Mobile/Tablet) positioning */
+    z-index: 2; 
     position: relative;
     top: auto;
     transform: none;
@@ -162,25 +160,25 @@ html::before {
     height: auto;
 }
 @media (min-width: 1024px) { 
-    .main-layout-container { align-items: flex-start; } /* Align to top for sticky to work */
+    .main-layout-container { align-items: flex-start; } 
     .left-column-sticky { 
         position: sticky; 
-        top: 50%; /* Center vertically in viewport */
+        top: 50%; 
         transform: translateY(-50%); 
-        height: calc(100vh - 100px); /* Give it a defined height */
-        margin: 0; /* Remove auto margins */
-        align-self: flex-start; /* Important for sticky in flex container */
+        height: calc(100vh - 100px); 
+        margin: 0; 
+        align-self: flex-start; 
     } 
 }
 .right-column-scroll { 
     flex-grow: 1; 
     padding-top: 50px; 
     padding-bottom: 100px; 
-    box-sizing: border-box; /* Ensure padding is inside */
-    min-height: 150vh; /* Ensure scrollability */
+    box-sizing: border-box; 
+    min-height: 150vh; 
     position: relative;
-    z-index: 0; /* Below sticky left column */
-    text-align: left; /* Default text align */
+    z-index: 0; 
+    text-align: left; 
 }
 
 /* "About" Card Styles */
@@ -216,14 +214,14 @@ html::before {
     height: 100%; 
     object-fit: cover; 
     object-position: center top; 
-    filter: brightness(0.01); /* Kept as per existing design */
+    filter: brightness(0.01); 
 }
 .about-left-content h3 { 
     font-size: 2.8em; 
     font-weight: 700; 
     margin: 0 0 20px 0; 
     line-height: 1.1;
-    color: var(--text-dark-card); /* Ensure color is dark on white card */
+    color: var(--text-dark-card); 
 }
 .fire-icon-with-line { position: relative; width: 100%; height: 40px; display: flex; justify-content: center; align-items: center; margin-bottom: 25px; }
 .fire-icon { background-color: var(--accent-primary-sawad); border-radius: 50%; padding: 8px; font-size: 1.1em; color: var(--text-light); box-shadow: 0 2px 8px rgba(0,0,0,0.5); z-index: 2; position: relative; }
@@ -231,7 +229,7 @@ html::before {
 .fire-icon-with-line::before { left: 0; width: calc(50% - 25px); }
 .fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
 .about-short-desc { 
-    line-height: 1.8; /* Changed from 1.7 for consistency */
+    line-height: 1.8; 
     font-size: 0.9em; 
     color: var(--text-medium-card); 
     margin-bottom: 25px; 
@@ -252,7 +250,7 @@ html::before {
     font-weight: 900; 
     margin-bottom: 20px; 
     text-transform: uppercase; 
-    text-align: left; /* Ensure left align */
+    text-align: left; 
 }
 .hero-heading .crafting { color: #ffffff; }
 .hero-heading .digital { color: var(--text-sub-heading-grey); }
@@ -270,74 +268,59 @@ html::before {
 #services-pin-wrapper { 
     position: relative; 
     width: 100%; 
-    /* Height is set dynamically by JS for pinning */
 }
-/* REMOVED: Initial opacity, transform, visibility from .services-section so heading is static */
 .services-section { 
     position: relative; 
     width: 100%; 
-    height: 100vh; /* Occupy full viewport height when active */
+    height: 100vh; 
     display: flex; 
     flex-direction: column;
-    justify-content: flex-start; /* Keep heading at top */
-    align-items: center; /* Center children horizontally */
-    padding: 100px 20px; /* Adjusted padding */
+    justify-content: flex-start; 
+    align-items: center; 
+    padding: 100px 20px; 
     box-sizing: border-box; 
-    overflow: hidden; /* Important for containing 3D content */
-    z-index: 2; /* Ensure it's above other background elements */
+    overflow: hidden; 
+    z-index: 2; 
 }
 
-/* NEW: Force heading to always be visible (static) */
 .services-heading {
   font-size: clamp(2.5rem, 8vw, 8rem);
   line-height: 0.75em;
   font-weight: 800;
   text-transform: uppercase;
-  text-align: left; /* Left-aligned on desktop */
+  text-align: left; 
   margin-bottom: 40px;
-  align-self: flex-start; /* Left-aligned in flex container */
-  flex-shrink: 0; /* Prevent heading from shrinking */
+  align-self: flex-start; 
+  flex-shrink: 0; 
   width: 100%;
   z-index: 2;
-  opacity: 1; /* Always visible */
-  transform: none; /* No transform */
-  visibility: visible; /* Always visible */
+  opacity: 1; 
+  transform: none; 
+  visibility: visible; 
 }
 
 .services-heading .text-white,
 .services-heading .text-gray {
-  display: block; /* Ensure spans behave as blocks */
-  opacity: 1 !important; /* Force always visible */
-  transform: none !important; /* Force no transform */
+  display: block; 
+  opacity: 1 !important; 
+  transform: none !important; 
 }
 
 .services-heading .text-white { color: var(--text-light); }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); } 
 
-/* REFINED: .cube-container styles for proper positioning within pinned section */
-#services .cube-container { /* Added #services to target specifically in this section */
-    /* width and height will be explicitly set by JS/GSAP based on breakpoint (900px, 640px, 300px) */
-    aspect-ratio: 1 / 1; /* Ensures it's always a perfect square */
-    
-    /* NEW/REFINED: Margin-top for vertical spacing, margin: auto for horizontal centering */
-    margin: 40px auto 0 auto; /* top: 40px under heading, center horizontally, no left/transform conflict */
-    
-    position: relative; /* Required for GSAP transforms to work correctly */
+#services .cube-container { 
+    aspect-ratio: 1 / 1; 
+    margin: 40px auto 0 auto; 
+    position: relative; 
     overflow: hidden; 
     will-change: transform, opacity;
-    
     display: flex;
-    justify-content: center; /* Center the cube visually within its own container */
+    justify-content: center; 
     align-items: center;
-    /* align-self: center; REMOVED as margin: auto handles horizontal centering */
-    
-    z-index: 1; /* Cube is behind the heading */
-    
-    max-width: 900px; /* Max width for desktop/tablet (JS still sets specific width/height) */
-    width: 100%;     /* IMPORTANT: Responsive width */
-
-    /* These are the initial states GSAP will animate from/to */
-    /* REFINED: Neutral visual state for CSS, GSAP will set autoAlpha/transform at runtime */
+    z-index: 1; 
+    max-width: 900px; 
+    width: 100%;     
     opacity: 1; 
     transform: none; 
     visibility: visible; 
@@ -348,7 +331,7 @@ html::before {
     height: 100%; 
     transform-style: preserve-3d; 
     will-change: transform;
-    overflow: hidden; /* Added overflow: hidden as safeguard */
+    overflow: hidden; 
 }
 .face {
     position: absolute;
@@ -359,18 +342,15 @@ html::before {
     flex-direction: column;
     justify-content: center;
     border-radius: 20px;
-    background: var(--bg-gradient-2); /* Changed to use variable */
-    padding: clamp(1rem, 4vw, 2.5rem); /* Responsive padding */
-    border: none; /* REMOVED: border to ensure no gaps between faces */
+    background: var(--bg-gradient-2); 
+    padding: clamp(1rem, 4vw, 2.5rem); 
+    border: none; 
     overflow: hidden;
     box-sizing: border-box;
     text-align: left;
-    box-shadow: var(--shadow-strong); /* Use shadow variable */
-
-    /* REFINED: Faces start fully visible in CSS, then JS dims inactive ones */
-    opacity: 1; /* Changed to 1 */
-    visibility: visible; /* Changed to visible */
-    /* REMOVED: transition: opacity 0.4s ease-in-out; - GSAP handles opacity directly */
+    box-shadow: var(--shadow-strong); 
+    opacity: 1; 
+    visibility: visible; 
 }
 .face .service-content { 
     width: 100%; 
@@ -380,19 +360,19 @@ html::before {
     justify-content: center; 
     align-items: flex-start; 
     text-align: left;
-    margin: 0; padding: 0; /* Ensure no external margins/padding */
+    margin: 0; padding: 0; 
 }
 .service-title { 
-    font-size: clamp(1rem, 1.8vw, 1.8rem); /* Responsive title font size */
+    font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: var(--cube-service-title-color); /* Used variable from Sawad palette */
-    margin-bottom: clamp(0.5rem, 1vw, 1rem); /* Responsive margin */
+    color: var(--cube-service-title-color); 
+    margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
-    font-size: clamp(0.875rem, 1.2vw, 1rem); /* Responsive description font size */
+    font-size: clamp(0.875rem, 1.2vw, 1rem); 
     line-height: 1.4; 
-    color: var(--text-medium); /* Changed from #cccccc to var */
+    color: var(--text-medium); 
     max-width: 100%; 
     text-align: left;
 }
@@ -400,9 +380,9 @@ html::before {
     position: absolute; 
     bottom: clamp(1rem, 2vw, 1.5rem); 
     right: clamp(1rem, 2vw, 1.5rem); 
-    font-size: clamp(3rem, 10vw, 6rem); /* Responsive font size */
-    font-weight: 500; /* Adjusted from 700 for better aesthetic */
-    color: rgba(255, 255, 255, 0.08); /* Adjusted for consistency */
+    font-size: clamp(3rem, 10vw, 6rem); 
+    font-weight: 500; 
+    color: rgba(255, 255, 255, 0.08); 
     z-index: 0; 
     line-height: 1; 
     pointer-events: none;
@@ -411,49 +391,48 @@ html::before {
     .services-section {
         justify-content: center;
         text-align: center;
-        height: auto; /* Allow height to adjust */
-        min-height: 100vh; /* Ensure it still takes up space */
+        height: auto; 
+        min-height: 100vh; 
         padding: 60px 20px;
-        gap: 30px; /* Space between heading and cube */
+        gap: 30px; 
     }
     .services-heading {
         margin-bottom: 40px;
-        align-self: center; /* Center heading on mobile */
+        align-self: center; 
         text-align: center;
     }
     .cube-container {
-        max-width: 100%; /* Allow to fill width */
-        height: auto; /* NEW: Allow height to adjust for stacked faces */
-        perspective: none; /* Flatten perspective on mobile */
-        align-self: center; /* Keep centered */
-        min-height: 300px; /* Ensure min-height even when flattened */
-        margin-top: 30px; /* Smaller margin for mobile stacked cards */
-        /* Reset any desktop margin/transform properties that conflict with mobile flow */
-        margin-left: auto; /* Ensure horizontal centering on mobile */
-        margin-right: auto; /* Ensure horizontal centering on mobile */
-        left: auto; /* Reset left on mobile */
-        transform: none; /* Reset transform on mobile */
+        max-width: 100%; 
+        height: auto; 
+        perspective: none; 
+        align-self: center; 
+        min-height: 300px; 
+        margin-top: 30px; 
+        margin-left: auto; 
+        margin-right: auto; 
+        left: auto; 
+        transform: none; 
     }
     .cube {
-        transform-style: flat; /* Flatten cube */
-        transform: none; /* Reset transforms */
-        display: flex; /* NEW: Stack faces vertically */
+        transform-style: flat; 
+        transform: none; 
+        display: flex; 
         flex-direction: column;
-        gap: 20px; /* NEW: Consistent gap between stacked faces */
+        gap: 20px; 
         height: auto;
     }
     .face {
-        position: relative; /* Make faces flow naturally */
-        transform: none !important; /* Override GSAP transform */
-        opacity: 1 !important; /* Make all faces visible */
+        position: relative; 
+        transform: none !important; 
+        opacity: 1 !important; 
         visibility: visible !important;
-        height: auto; /* NEW: Allow content to dictate height */
+        height: auto; 
         padding: 1rem;
         justify-content: center;
         align-items: center;
         text-align: center;
-        box-shadow: none; /* Remove shadow when flattened */
-        background: var(--bg-tool-card); /* Consistent background with tool cards */
+        box-shadow: none; 
+        background: var(--bg-tool-card); 
     }
     .face .service-content {
         justify-content: center;
@@ -461,20 +440,20 @@ html::before {
         text-align: center;
     }
     .service-title {
-        color: var(--text-light); /* Make title white on dark background */
+        color: var(--text-light); 
         text-align: center;
     }
     .service-description {
         text-align: center;
     }
     .face-number {
-        position: relative; /* Flow with content */
+        position: relative; 
         bottom: auto;
         right: auto;
         font-size: 0.8em;
         color: var(--text-medium);
         margin-top: 10px;
-        align-self: flex-end; /* Push number to bottom right of its own card */
+        align-self: flex-end; 
     }
 }
 
@@ -486,12 +465,12 @@ html::before {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
     gap: 20px; 
     margin-top: 60px; 
-    max-width: 900px; /* Added max-width for better control */
+    max-width: 900px; 
     margin-left: auto;
     margin-right: auto;
 }
 .tool-card { 
-    background: linear-gradient(145deg, #1c1c1c, #121212); /* Glossy gradient background */
+    background: linear-gradient(145deg, #1c1c1c, #121212); 
     border-radius: 15px; 
     padding: 25px; 
     display: flex; 
@@ -505,7 +484,7 @@ html::before {
 .tool-card:hover { 
     transform: translateY(-6px); 
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); 
-    background: linear-gradient(145deg, #2a2a2a, #1a1a1a); /* Slightly lighter on hover */
+    background: linear-gradient(145deg, #2a2a2a, #1a1a1a); 
 }
 .tool-icon-wrapper { 
     width: 50px; 
@@ -522,7 +501,7 @@ html::before {
     max-width: 70%; 
     max-height: 70%; 
     object-fit: contain; 
-    filter: brightness(0.01); /* Kept as per existing design */
+    filter: brightness(0.01); 
 }
 .tool-name { 
     font-size: 1.1em; 
@@ -550,7 +529,7 @@ html::before {
 }
 @media (max-width: 768px) {
     .tools-grid {
-        grid-template-columns: 1fr; /* Single column on mobile */
+        grid-template-columns: 1fr; 
         max-width: 400px;
         gap: 15px;
         margin-top: 40px;
@@ -575,12 +554,12 @@ footer#contact {
     background-color: var(--bg-section-card); 
     padding: 100px 40px; 
     text-align: center; 
-    color: var(--text-light); /* Ensure text color is light */
+    color: var(--text-light); 
 }
 footer h2 { 
     font-size: 3.2em; 
     margin-bottom: 25px; 
-    color: var(--text-light); /* Ensure heading color is light */
+    color: var(--text-light); 
     font-weight: 700;
     letter-spacing: 1.5px;
     text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
@@ -697,7 +676,7 @@ footer h2 {
     .services-heading {
         opacity: 1 !important; 
         transform: none !important; 
-        text-align: center !important; /* Center on mobile, but static */
+        text-align: center !important; 
     }
     .services-heading .text-white,
     .services-heading .text-gray {
@@ -721,24 +700,23 @@ footer h2 {
         perspective: none !important; 
         transform: none !important; 
         height: auto !important;
-        margin: 0 auto !important; /* Ensure reduced-motion also uses margin auto */
+        margin: 0 auto !important; 
         position: relative !important;
         top: auto !important;
         overflow: visible !important;
         max-width: 100% !important;
         z-index: auto !important;
         aspect-ratio: auto !important; 
-        /* Reset margin-top and transform for mobile in reduced-motion */
-        margin-top: 0 !important; /* This will be handled by the margin: 0 auto 0 auto above */
+        margin-top: 0 !important; 
         transform: none !important;
     }
     .cube {
         transform-style: flat !important; 
         transform: none !important;
         transition: none !important;
-        display: flex; /* Ensure stacked layout */
+        display: flex; 
         flex-direction: column;
-        gap: 20px; /* Consistent gap */
+        gap: 20px; 
         height: auto;
     }
     .face {
