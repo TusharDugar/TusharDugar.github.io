@@ -279,6 +279,7 @@ html::before {
     align-items: center; 
     padding: 100px 20px; 
     box-sizing: border-box; 
+    /* REFINED: Keep overflow hidden for the section for overall container */
     overflow: hidden; 
     z-index: 2; 
 }
@@ -309,16 +310,16 @@ html::before {
 .services-heading .text-white { color: var(--text-light); }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); } 
 
-/* REFINED: .cube-container styles for proper positioning within pinned section */
+/* REFINED: .cube-container styles for optimal positioning within pinned section */
 #services .cube-container { 
     aspect-ratio: 1 / 1; 
     
-    /* REFINED: Margin for vertical spacing and horizontal centering using margin:auto */
-    margin: 40px auto 0 auto; /* top: 40px under heading, auto-center horizontally */
+    /* REFINED: Margin for horizontal centering, NO vertical margin here */
+    margin: 0 auto; /* Auto-center horizontally, GSAP y-offset handles vertical */
     
-    position: relative; /* Required for GSAP transforms to work correctly */
+    position: relative; /* Crucial for GSAP transforms to work correctly */
     /* REFINED: Removed overflow:hidden to prevent clipping of larger faces */
-    /* overflow: hidden; */ 
+    overflow: visible; 
     will-change: transform, opacity;
     
     display: flex;
@@ -327,8 +328,10 @@ html::before {
     
     z-index: 1; 
     
-    max-width: 900px; 
-    width: 100%;     
+    /* REFINED: Let JS control width/height precisely */
+    max-width: none; /* Removed max-width */
+    width: auto;     /* Let JS set exact pixel width */
+    height: auto;    /* Let JS set exact pixel height */
     
     /* REFINED: Neutral visual state for CSS, GSAP will set autoAlpha/transform at runtime */
     opacity: 1; 
@@ -342,7 +345,7 @@ html::before {
     transform-style: preserve-3d; 
     will-change: transform;
     /* REFINED: Removed overflow:hidden from cube as well, to prevent clipping */
-    /* overflow: hidden; */ 
+    overflow: visible; 
 }
 .face {
     position: absolute;
@@ -420,7 +423,7 @@ html::before {
         perspective: none; 
         align-self: center; 
         min-height: 300px; 
-        margin-top: 30px; 
+        margin-top: 30px; /* Still apply margin on mobile for stacked cards */
         margin-left: auto; 
         margin-right: auto; 
         left: auto; 
@@ -751,13 +754,13 @@ footer h2 {
         align-items: center !important;
         text-align: center !important;
     }
-    .service-title {
+    .face .service-title {
         color: var(--text-light) !important; 
     }
-    .service-description {
+    .face .service-description {
         text-align: center !important;
     }
-    .face-number {
+    .face .face-number {
         position: relative !important;
         bottom: auto;
         right: auto;
