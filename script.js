@@ -245,6 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
         if (!mobile) { 
+            // REFINED: Set .services-section padding-top to 0 or very small in CSS for optimal calculation.
+            // Dynamically calculate heading and surrounding spacing.
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
             const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop);
             const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
@@ -255,12 +257,13 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const viewportHeight = window.innerHeight;
             // REFINED: Available vertical space calculation - Removed fixed buffer subtraction
+            // The `y` offset on `cubeContainer` will handle the specific gap.
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
 
             // REFINED: Clamp effectiveCubeDimension more aggressively
-            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.75); // REFINED: viewportHeight * 0.75
+            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.75); // REFINED: Use viewportHeight * 0.75
 
-            const minDesktopCubeDimension = 700; // REFINED: Changed min size to 700px
+            const minDesktopCubeDimension = 750; // REFINED: Changed min size to 750px
             if (effectiveCubeDimension < minDesktopCubeDimension) {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
@@ -353,9 +356,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
                 // Dim faces when they are not the primary active face
-                // REFINED: Set initial alpha for all faces on the timeline to 0.5 (except the very first)
+                // REFINED: Smoothly dim to 0.5 instead of an instant 0.01s step
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: (i === 0) ? 1 : 0.5, duration: 0.01 }, // Set initial alpha on timeline
+                    { autoAlpha: 0.5, duration: 0.3, ease: "power2.out" }, // REFINED: Duration 0.3, ease out
                     startRotation / (totalRotation || 1) // Position it correctly in the timeline
                 );
 
@@ -382,6 +385,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // REFINED: Removed the final fade out for cubeContainer.
             // The cubeContainer remains at autoAlpha:1 and y:cubeTopOffset until the pin ends.
             // No explicit fade-out from the timeline.
+            /*
+            cubeAnimationTimeline.to([cubeContainer], 
+                { autoAlpha: 0, y: cubeTopOffset, duration: 1, ease: "power2.in" }, `endRotation`); 
+            */
         }
     });
 
