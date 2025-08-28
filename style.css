@@ -265,7 +265,7 @@ html::before {
 }
 
 /* "MY SERVICES" Section */
-#services-pin-wrapper { 
+#services-pin-wrapper { /* This element is no longer used for pinning in JS */
     position: relative; 
     width: 100%; 
 }
