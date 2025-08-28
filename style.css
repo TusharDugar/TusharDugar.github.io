@@ -279,6 +279,7 @@ html::before {
     align-items: center; 
     padding: 100px 20px; 
     box-sizing: border-box; 
+    /* REFINED: Keep overflow hidden for the section for overall container */
     overflow: hidden; 
     z-index: 2; 
 }
@@ -687,7 +688,6 @@ footer h2 {
         opacity: 1 !important; 
         visibility: visible !important;
     }
-    /* Ensure heading and its spans are fully visible and static */
     .services-heading {
         opacity: 1 !important; 
         transform: none !important; 
