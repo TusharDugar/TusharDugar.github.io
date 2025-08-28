@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Services Section 3D Cube Animation (GSAP + ScrollTrigger) ---
     const servicesSection = document.getElementById('services');
-    const servicesPinWrapper = document.getElementById('services-pin-wrapper');
+    const servicesPinWrapper = servicesSection; // REFINED: servicesSection is now the pin wrapper directly
     const servicesHeading = servicesSection ? servicesSection.querySelector('.services-heading') : null;
     const cubeContainer = servicesSection ? servicesSection.querySelector('.cube-container') : null;
     const cube = servicesSection ? document.getElementById('services-cube') : null;
@@ -355,6 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startRotation = i * ROTATION_INCREMENT_DEG;
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
+                // Dim faces when they are not the primary active face
                 // REFINED: Smoothly dim to 0.7 instead of an instant 0.01s step
                 cubeAnimationTimeline.to(face, 
                     { autoAlpha: 0.7, duration: 0.3, ease: "power2.out" }, // REFINED: Duration 0.3, ease out, to 0.7
