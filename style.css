@@ -319,7 +319,7 @@ html::before {
     margin: 0 auto; /* Auto-center horizontally, GSAP y-offset handles vertical */
     
     position: relative; /* Crucial for GSAP transforms to work correctly */
-    /* REFINED: Changed to overflow:visible to prevent clipping of larger faces */
+    /* REFINED: Changed to overflow:visible from cubeContainer to prevent clipping of larger faces */
     overflow: visible; 
     will-change: transform, opacity;
     
