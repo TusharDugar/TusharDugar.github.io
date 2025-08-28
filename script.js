@@ -246,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
         if (!mobile) { 
             // REFINED: Set .services-section padding-top to 0 or very small in CSS for optimal calculation.
-            // Dynamically calculate heading and surrounding spacing.
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
             const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop);
             const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
@@ -256,8 +255,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom);
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation - Removed fixed buffer subtraction
-            // Harmonize with CSS padding-top: 20px - ensure the total space available accounts for it.
+            // REFINED: Available vertical space calculation - removed hardcoded buffer subtraction
+            // cubeTopOffset will dynamically handle the exact vertical spacing needed.
             const availableVerticalSpace = viewportHeight - sectionPaddingTop - sectionPaddingBottom - headingHeight - headingMarginBottom; 
 
             // REFINED: Clamp effectiveCubeDimension more aggressively
@@ -341,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // REFINED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out, NO SCALE)
-            const cubeTopOffset = headingHeight + headingMarginBottom + 20; // Dynamic offset
+            const cubeTopOffset = headingHeight + headingMarginBottom + 20; // Dynamic offset (20px gap)
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
             // Cube animation timeline now starts with rotation directly
@@ -384,10 +383,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // REFINED: Removed the final fade out for cubeContainer.
             // The cubeContainer remains at autoAlpha:1 and y:cubeTopOffset until the pin ends.
             // No explicit fade-out from the timeline.
-            /*
-            cubeAnimationTimeline.to([cubeContainer], 
-                { autoAlpha: 0, y: cubeTopOffset, duration: 1, ease: "power2.in" }, `endRotation`); 
-            */
         }
     });
 
