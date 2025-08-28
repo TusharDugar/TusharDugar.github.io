@@ -313,11 +313,12 @@ html::before {
 #services .cube-container { 
     aspect-ratio: 1 / 1; 
     
-    /* NEW/REFINED: Margin for vertical spacing and horizontal centering */
+    /* REFINED: Margin for vertical spacing and horizontal centering using margin:auto */
     margin: 40px auto 0 auto; /* top: 40px under heading, auto-center horizontally */
     
     position: relative; /* Required for GSAP transforms to work correctly */
-    overflow: hidden; 
+    /* REFINED: Removed overflow:hidden to prevent clipping of larger faces */
+    /* overflow: hidden; */ 
     will-change: transform, opacity;
     
     display: flex;
@@ -330,9 +331,9 @@ html::before {
     width: 100%;     
     
     /* REFINED: Neutral visual state for CSS, GSAP will set autoAlpha/transform at runtime */
-    opacity: 1; /* Faces start visible in CSS, JS dims inactive ones */
-    transform: none; /* No initial CSS transform to conflict with GSAP */
-    visibility: visible; /* Faces start visible in CSS */
+    opacity: 1; 
+    transform: none; 
+    visibility: visible; 
 }
 .cube { 
     position: relative; 
@@ -340,7 +341,8 @@ html::before {
     height: 100%; 
     transform-style: preserve-3d; 
     will-change: transform;
-    overflow: hidden; 
+    /* REFINED: Removed overflow:hidden from cube as well, to prevent clipping */
+    /* overflow: hidden; */ 
 }
 .face {
     position: absolute;
@@ -354,7 +356,7 @@ html::before {
     background: var(--bg-gradient-2); 
     padding: clamp(1rem, 4vw, 2.5rem); 
     border: none; 
-    overflow: hidden;
+    overflow: hidden; /* Keep overflow hidden for content inside face */
     box-sizing: border-box;
     text-align: left;
     box-shadow: var(--shadow-strong); 
@@ -749,13 +751,13 @@ footer h2 {
         align-items: center !important;
         text-align: center !important;
     }
-    .face .service-title {
+    .service-title {
         color: var(--text-light) !important; 
     }
-    .face .service-description {
+    .service-description {
         text-align: center !important;
     }
-    .face .face-number {
+    .face-number {
         position: relative !important;
         bottom: auto;
         right: auto;
