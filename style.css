@@ -15,10 +15,10 @@
     --tool-category-color: var(--text-medium);
     --shadow-color-card-white: rgba(0,0,0,0.25);
     --bg-section-card: #141414;
-    --accent-secondary-sawad: #00FFC2; /* Added this variable as it was present in script.js glow animation */
-    --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); /* Dark gradient for cube faces */
-    --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); /* Stronger shadow for cube faces */
-    --cube-service-title-color: #9CFF33; /* Specific green for cube service titles */
+    --accent-secondary-sawad: #00FFC2; 
+    --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
+    --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
+    --cube-service-title-color: #9CFF33; 
 }
 
 /* Universal Box-Sizing & Body */
@@ -30,7 +30,7 @@ body {
     color: var(--text-light);
     background-color: var(--bg-main);
     overflow-x: hidden;
-    position: relative; /* Needed for body::before/::after to work relative to viewport */
+    position: relative; 
     scroll-behavior: smooth;
     min-height: 100vh;
 }
@@ -127,11 +127,11 @@ html::before {
     opacity: 0; 
     transform: translateY(40px); 
     transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); 
-    will-change: transform, opacity; /* Added will-change for performance */
+    will-change: transform, opacity; 
 }
 .reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
-.reveal-parent { position: relative; } /* Added for consistency */
-.reveal-stagger-container { position: relative; } /* Added for consistency */
+.reveal-parent { position: relative; } 
+.reveal-stagger-container { position: relative; } 
 
 
 /* Main Layout */
@@ -142,19 +142,17 @@ html::before {
     margin: 0 auto; 
     padding: 0 60px; 
     gap: 60px; 
-    min-height: 100vh; /* Ensure it takes full height */
-    padding-top: 20px; /* Small top offset */
+    min-height: 100vh; 
+    padding-top: 20px; 
 }
 .left-column-sticky { 
     flex-shrink: 0; 
     flex-basis: 370px; 
     display: flex; 
-    flex-direction: column; /* Ensure column for vertical centering */
+    flex-direction: column; 
     align-items: center; 
     justify-content: center; 
-    z-index: 2; /* Ensure it's above right column */
-
-    /* Default (Mobile/Tablet) positioning */
+    z-index: 2; 
     position: relative;
     top: auto;
     transform: none;
@@ -162,25 +160,25 @@ html::before {
     height: auto;
 }
 @media (min-width: 1024px) { 
-    .main-layout-container { align-items: flex-start; } /* Align to top for sticky to work */
+    .main-layout-container { align-items: flex-start; } 
     .left-column-sticky { 
         position: sticky; 
-        top: 50%; /* Center vertically in viewport */
+        top: 50%; 
         transform: translateY(-50%); 
-        height: calc(100vh - 100px); /* Give it a defined height */
-        margin: 0; /* Remove auto margins */
-        align-self: flex-start; /* Important for sticky in flex container */
+        height: calc(100vh - 100px); 
+        margin: 0; 
+        align-self: flex-start; 
     } 
 }
 .right-column-scroll { 
     flex-grow: 1; 
     padding-top: 50px; 
     padding-bottom: 100px; 
-    box-sizing: border-box; /* Ensure padding is inside */
-    min-height: 150vh; /* Ensure scrollability */
+    box-sizing: border-box; 
+    min-height: 150vh; 
     position: relative;
-    z-index: 0; /* Below sticky left column */
-    text-align: left; /* Default text align */
+    z-index: 0; 
+    text-align: left; 
 }
 
 /* "About" Card Styles */
@@ -216,14 +214,14 @@ html::before {
     height: 100%; 
     object-fit: cover; 
     object-position: center top; 
-    filter: brightness(0.01); /* Kept as per existing design */
+    filter: brightness(0.01); 
 }
 .about-left-content h3 { 
     font-size: 2.8em; 
     font-weight: 700; 
     margin: 0 0 20px 0; 
     line-height: 1.1;
-    color: var(--text-dark-card); /* Ensure color is dark on white card */
+    color: var(--text-dark-card); 
 }
 .fire-icon-with-line { position: relative; width: 100%; height: 40px; display: flex; justify-content: center; align-items: center; margin-bottom: 25px; }
 .fire-icon { background-color: var(--accent-primary-sawad); border-radius: 50%; padding: 8px; font-size: 1.1em; color: var(--text-light); box-shadow: 0 2px 8px rgba(0,0,0,0.5); z-index: 2; position: relative; }
@@ -231,7 +229,7 @@ html::before {
 .fire-icon-with-line::before { left: 0; width: calc(50% - 25px); }
 .fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
 .about-short-desc { 
-    line-height: 1.8; /* Changed from 1.7 for consistency */
+    line-height: 1.8; 
     font-size: 0.9em; 
     color: var(--text-medium-card); 
     margin-bottom: 25px; 
@@ -252,7 +250,7 @@ html::before {
     font-weight: 900; 
     margin-bottom: 20px; 
     text-transform: uppercase; 
-    text-align: left; /* Ensure left align */
+    text-align: left; 
 }
 .hero-heading .crafting { color: #ffffff; }
 .hero-heading .digital { color: var(--text-sub-heading-grey); }
@@ -270,23 +268,60 @@ html::before {
 #services-pin-wrapper { 
     position: relative; 
     width: 100%; 
-    /* Height is set dynamically by JS for pinning */
 }
-/* REVISED CSS for .cube-container to work with JS positioning */
+.services-section { 
+    position: relative; 
+    width: 100%; 
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: center; 
+    padding: 100px 20px; 
+    box-sizing: border-box; 
+    overflow: hidden; 
+    z-index: 2; 
+}
+
+.services-heading {
+  font-size: clamp(2.5rem, 8vw, 8rem);
+  line-height: 0.75em;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: left; 
+  margin-bottom: 40px;
+  align-self: flex-start; 
+  flex-shrink: 0; 
+  width: 100%;
+  z-index: 2;
+  opacity: 1; 
+  transform: none; 
+  visibility: visible; 
+}
+
+.services-heading .text-white,
+.services-heading .text-gray {
+  display: block; 
+  opacity: 1 !important; 
+  transform: none !important; 
+}
+
+.services-heading .text-white { color: var(--text-light); }
+.services-heading .text-gray { color: var(--text-sub-heading-grey); } 
+
+/* REFINED: .cube-container styles for proper positioning within pinned section */
 #services .cube-container { 
     aspect-ratio: 1 / 1; 
     
-    /* REFINED: Removed conflicting CSS positioning */
-    /* margin: 40px auto 0 auto; */ /* No longer needed, JS manages y offset */
-    /* left: 50%; */ /* Removed, handled by GSAP center */
-    /* transform: translateX(-50%); REMOVED, GSAP will own transforms */
+    /* NEW/REFINED: Margin for vertical spacing and horizontal centering */
+    margin: 40px auto 0 auto; /* top: 40px under heading, auto-center horizontally */
     
-    position: relative; /* Keep this for GSAP transforms */
+    position: relative; /* Required for GSAP transforms to work correctly */
     overflow: hidden; 
     will-change: transform, opacity;
     
     display: flex;
-    justify-content: center; /* Centering via flexbox */
+    justify-content: center; /* Center the cube visually within its own container */
     align-items: center;
     
     z-index: 1; 
@@ -294,11 +329,11 @@ html::before {
     max-width: 900px; 
     width: 100%;     
     
-    opacity: 1; /* Neutral visual state */
-    transform: none; /* Neutral visual state */
-    visibility: visible; /* Neutral visual state */
+    /* REFINED: Neutral visual state for CSS, GSAP will set autoAlpha/transform at runtime */
+    opacity: 1; /* Faces start visible in CSS, JS dims inactive ones */
+    transform: none; /* No initial CSS transform to conflict with GSAP */
+    visibility: visible; /* Faces start visible in CSS */
 }
-
 .cube { 
     position: relative; 
     width: 100%; 
@@ -323,6 +358,8 @@ html::before {
     box-sizing: border-box;
     text-align: left;
     box-shadow: var(--shadow-strong); 
+
+    /* REFINED: Faces start fully visible in CSS, then JS dims inactive ones */
     opacity: 1; 
     visibility: visible; 
 }
@@ -650,7 +687,7 @@ footer h2 {
     .services-heading {
         opacity: 1 !important; 
         transform: none !important; 
-        text-align: center !important; /* Center on mobile, but static */
+        text-align: center !important; 
     }
     .services-heading .text-white,
     .services-heading .text-gray {
@@ -674,24 +711,23 @@ footer h2 {
         perspective: none !important; 
         transform: none !important; 
         height: auto !important;
-        margin: 0 auto !important; /* Ensure reduced-motion also uses margin auto */
+        margin: 0 auto !important; 
         position: relative !important;
         top: auto !important;
         overflow: visible !important;
         max-width: 100% !important;
         z-index: auto !important;
         aspect-ratio: auto !important; 
-        /* Reset margin-top and transform for mobile in reduced-motion */
-        margin-top: 0 !important; /* This will be handled by the margin: 0 auto 0 auto above */
+        margin-top: 0 !important; 
         transform: none !important;
     }
     .cube {
         transform-style: flat !important; 
         transform: none !important;
         transition: none !important;
-        display: flex; /* Ensure stacked layout */
+        display: flex; 
         flex-direction: column;
-        gap: 20px; /* Consistent gap */
+        gap: 20px; 
         height: auto;
     }
     .face {
@@ -721,8 +757,8 @@ footer h2 {
     }
     .face .face-number {
         position: relative !important;
-        bottom: auto !important;
-        right: auto !important;
+        bottom: auto;
+        right: auto;
         font-size: 0.8em !important;
         color: var(--text-medium) !important;
         margin-top: 10px;
