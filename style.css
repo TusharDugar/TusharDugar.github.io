@@ -134,7 +134,7 @@ html::before {
 .reveal-stagger-container { position: relative; } 
 
 
-/* Main Layout */
+/* Main Layout (Desktop Base) */
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
@@ -146,8 +146,7 @@ html::before {
     padding-top: 20px; 
 }
 
-/* --- Left Column Sticky & Animation --- */
-/* Parent provides 3D context for inner animated element */
+/* --- Left Column Sticky & Animation (Desktop Base) --- */
 .left-column-sticky { 
     flex-shrink: 0; 
     flex-basis: 370px; 
@@ -162,19 +161,18 @@ html::before {
     margin: 50px auto 0 auto; /* Base margin for non-sticky state */
     height: auto;
     
-    perspective: 1000px; /* Provides 3D context */
-    transform-style: preserve-3d; /* Allows child to animate in 3D */
-    filter: none; /* Removed the shadow as requested */
+    perspective: 1000px; 
+    transform-style: preserve-3d; 
+    filter: none; /* Shadow removed */
 
-    /* Animation applied directly to .left-column-sticky as requested */
     opacity: 0;
     transform: rotateX(30deg) scale(0.95) translateY(40px);
-    animation: leftColumnPopIn 1s ease-out forwards; /* Renamed keyframe */
+    animation: leftColumnPopIn 1s ease-out forwards; 
     animation-delay: 0.4s;
     will-change: transform, opacity;
 }
 
-/* NEW Keyframes for pop-in 3D effect on the entire left column */
+/* Keyframes for pop-in 3D effect on the entire left column */
 @keyframes leftColumnPopIn {
   0% {
     opacity: 0;
@@ -186,341 +184,170 @@ html::before {
   }
 }
 
-/* Inner wrapper no longer animates directly */
+/* Inner wrapper for card, now static */
 .left-card-3d {
-  animation: none !important; /* Disabled animation */
-  opacity: 1; /* Ensured visible */
-  transform: none; /* Ensured no transform */
-  will-change: auto; /* Revert will-change as it's not animating directly now */
-  width: 100%; /* Ensure it fills parent */
-  height: 100%; /* Ensure it fills parent */
+  animation: none !important; 
+  opacity: 1; 
+  transform: none; 
+  will-change: auto; 
+  width: 100%; 
+  height: 100%; 
   display: flex; 
   justify-content: center;
   align-items: center;
 }
 
-/* Accessibility: disable animations if user prefers reduced motion */
-@media (prefers-reduced-motion) {
-  .left-column-sticky {
-    animation: none !important;
-    transition-duration: 0s !important;
-    opacity: 1 !important; /* Ensure it's visible instantly */
-    transform: none !important; /* Ensure no initial transform */
-  }
-  .left-card-3d {
-    animation: none !important;
-    transition-duration: 0s !important;
-    opacity: 1 !important; /* Ensure it's visible instantly */
-    transform: none !important; /* Ensure no initial transform */
-  }
-}
-
+/* Desktop Styles (min-width: 1024px) */
 @media (min-width: 1024px) { 
-    .main-layout-container { align-items: flex-start; } 
+    .main-layout-container { 
+        align-items: flex-start; /* Aligns left column to the top */
+    } 
     .left-column-sticky { 
         position: sticky; 
         top: 50%; 
-        transform: translateY(-50%); /* Sticky transform */
-        height: calc(100vh - 100px); 
-        margin: 0; 
-        align-self: flex-start; 
-        /* Removed animation: none here to allow the initial animation to play and maintain its final state */
-        opacity: 1; /* Keep visible */
+        transform: translateY(-50%); /* Sticky transform to center vertically */
+        height: calc(100vh - 100px); /* Height for sticky container */
+        margin: 0; /* Remove default margin when sticky */
+        align-self: flex-start; /* Align to start of flex container */
+        /* Ensure animation state is maintained if sticky */
+        opacity: 1; 
+        transform: translateY(-50%); /* Final state includes sticky transform */
     } 
-    /* .left-card-3d is now explicitly static, as its parent handles the animation */
-}
-.right-column-scroll { 
-    flex-grow: 1; 
-    padding-top: 50px; 
-    padding-bottom: 100px; 
-    box-sizing: border-box; 
-    min-height: 150vh; 
-    position: relative;
-    z-index: 0; 
-    text-align: left; 
+    /* The .left-card-3d is implicitly static due to parent handling animation */
 }
 
-/* "About" Card Styles */
-.about-left-content { 
-    background-color: var(--bg-profile-card); 
-    color: var(--text-dark-card); 
-    border-radius: 20px; 
-    padding: 30px 25px; 
-    box-shadow: 0 10px 30px var(--shadow-color-card-white); 
-    width: 100%; 
-    max-width: 370px; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    text-align: center; 
-    position: relative; 
-    overflow: hidden; 
-    height: auto;
-    box-sizing: border-box;
-}
-.profile-image-container { 
-    width: calc(100% + 50px); 
-    max-width: 420px; 
-    height: 200px; 
-    border-radius: 15px; 
-    overflow: hidden; 
-    margin-bottom: 25px; 
-    position: relative; 
-    background-color: var(--accent-primary-sawad); 
-}
-.profile-photo { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-    object-position: center top; 
-    filter: brightness(0.01); 
-}
-.about-left-content h3 { 
-    font-size: 2.8em; 
-    font-weight: 700; 
-    margin: 0 0 20px 0; 
-    line-height: 1.1;
-    color: var(--text-dark-card); 
-}
-.fire-icon-with-line { position: relative; width: 100%; height: 40px; display: flex; justify-content: center; align-items: center; margin-bottom: 25px; }
-.fire-icon { background-color: var(--accent-primary-sawad); border-radius: 50%; padding: 8px; font-size: 1.1em; color: var(--text-light); box-shadow: 0 2px 8px rgba(0,0,0,0.5); z-index: 2; position: relative; }
-.fire-icon-with-line::before, .fire-icon-with-line::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); height: 2px; border-top: 2px dashed var(--accent-primary-sawad); z-index: 1; }
-.fire-icon-with-line::before { left: 0; width: calc(50% - 25px); }
-.fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
-.about-short-desc { 
-    line-height: 1.8; 
-    font-size: 0.9em; 
-    color: var(--text-medium-card); 
-    margin-bottom: 25px; 
-    max-width: 90%; 
-    word-spacing: 1px;
-}
-.about-social-icons { display: flex; justify-content: center; gap: 15px; margin-top: auto; padding-top: 10px; }
-.about-social-icons a { color: var(--accent-primary-sawad); font-size: 1.5em; transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
-.about-social-icons a:hover { transform: translateY(-2px); }
-.dashed-decoration { position: absolute; border: 2px dashed var(--accent-primary-sawad); border-radius: 50%; box-sizing: border-box; pointer-events: none; z-index: 0; }
-.top-left-curve { width: 150px; height: 150px; top: -50px; left: -50px; border-top-color: transparent; border-left-color: transparent; transform: rotate(-10deg); }
-.bottom-right-curve { width: 150px; height: 150px; bottom: -50px; right: -50px; border-bottom-color: transparent; border-right-color: transparent; transform: rotate(10deg); }
+/* Mobile & Tablet Styles (max-width: 1023px) */
+@media (max-width: 1023px) {
+    /* Main Layout */
+    .main-layout-container {
+        flex-direction: column; /* Stacks items vertically */
+        padding: 20px; /* Adjusts overall padding for smaller screens */
+        gap: 40px; /* Space between sections */
+        padding-top: 40px; /* More top padding for mobile */
+        align-items: center; /* Center content in the column */
+    }
 
-/* Hero Section */
-.hero-heading { 
-    font-size: clamp(4rem, 10vw, 7.75em); 
-    line-height: 0.8em; 
-    font-weight: 900; 
-    margin-bottom: 20px; 
-    text-transform: uppercase; 
-    text-align: left; 
-}
-.hero-heading .crafting { color: #ffffff; }
-.hero-heading .digital { color: var(--text-sub-heading-grey); }
-.hero-description { 
-    text-align: justify; 
-    line-height: 1.8; 
-    font-size: 1em; 
-    margin-bottom: 40px; 
-    max-width: 90%; 
-    color: var(--text-medium); 
-    word-spacing: 1px;
+    /* Left Column (appears on top, full-width, centered) */
+    .left-column-sticky {
+        position: relative; /* Removes sticky behavior */
+        top: auto;
+        transform: none; /* Removes any leftover transforms (sticky or animation) */
+        height: auto; /* Allows content to define height */
+        width: 100%;
+        max-width: 370px; /* Constrain card width for better look on larger tablets */
+        margin: 0 auto 40px auto; /* Center horizontally and add space below */
+        align-self: center; /* Ensure it's centered in the column flow */
+        
+        /* Ensure final state of animation is visible and static */
+        animation: none !important;
+        opacity: 1 !important;
+    }
+    .left-card-3d {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .about-left-content {
+        max-width: 100%; /* Fill the width of its parent (.left-column-sticky) */
+    }
+
+    /* Right Column (adjust padding for better spacing) */
+    .right-column-scroll {
+        padding-top: 0; /* Remove top padding as main-layout-container handles it */
+        padding-bottom: 50px; /* Adjust bottom padding */
+        min-height: auto; /* No fixed min-height needed on mobile */
+        width: 100%; /* Ensure it takes full width */
+        max-width: 700px; /* Optional: constrain content width for readability */
+        margin: 0 auto; /* Center right column content */
+    }
+
+    /* Headings left-aligned */
+    .hero-heading,
+    .services-heading,
+    .tools-heading {
+        text-align: left;
+        align-self: flex-start; /* Align to the left within the column */
+        margin-left: 0; /* Clear any previous centering margins */
+    }
+
+    /* "MY SERVICES" heading specific adjustments */
+    .services-heading {
+         margin-bottom: 20px; /* Tighter spacing below heading */
+    }
+
+    /* "MY PREMIUM TOOLS" heading matches "MY SERVICES" styling */
+    .tools-heading {
+        font-size: clamp(2.5rem, 8vw, 8rem); /* Match services-heading */
+        line-height: 0.75em; /* Match services-heading */
+        font-weight: 800; /* Match services-heading */
+        text-transform: uppercase; /* Match services-heading */
+        margin-bottom: 20px; /* Standard margin below heading */
+        width: 100%; /* Ensure it spans full width */
+    }
+    .tools-heading .text-white { color: var(--text-light); display: block; }
+    .tools-heading .text-gray { color: var(--text-sub-heading-grey); display: block; }
 }
 
-/* "MY SERVICES" Section */
-#services-pin-wrapper { /* This element is no longer used for pinning in JS */
-    position: relative; 
-    width: 100%; 
-}
-.services-section { 
-    position: relative; 
-    width: 100%; 
-    height: 100vh; 
-    display: flex; 
-    flex-direction: column;
-    justify-content: flex-start; 
-    align-items: center; 
-    padding: 0 20px; /* Changed from 20px 20px to 0 20px */
-    box-sizing: border-box; 
-    overflow: hidden; 
-    z-index: 2; 
-}
-
-.services-heading {
-  font-size: clamp(2.5rem, 8vw, 8rem);
-  line-height: 0.75em;
-  font-weight: 800;
-  text-transform: uppercase;
-  text-align: left; 
-  margin-bottom: 0; /* Changed from 40px to 0 */
-  align-self: flex-start; 
-  flex-shrink: 0; 
-  width: 100%;
-  z-index: 2;
-  opacity: 1; 
-  transform: none; 
-  visibility: visible; 
-}
-
-.services-heading .text-white,
-.services-heading .text-gray {
-  display: block; 
-  opacity: 1 !important; 
-  transform: none !important; 
-}
-
-.services-heading .text-white { color: var(--text-light); }
-.services-heading .text-gray { color: var(--text-sub-heading-grey); } 
-
-#services .cube-container { 
-    aspect-ratio: 1 / 1; 
-    margin: 0 auto; 
-    position: relative; 
-    overflow: visible; 
-    will-change: transform, opacity;
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    z-index: 1; 
-    max-width: none; 
-    width: auto;     
-    height: auto;    
-    opacity: 1; 
-    transform: none; 
-    visibility: visible; 
-    perspective: 1600px; /* Updated perspective as per all codes.txt */
-}
-.cube { 
-    position: relative; 
-    width: 100%; 
-    height: 100%; 
-    transform-style: preserve-3d; 
-    will-change: transform;
-    overflow: visible; 
-}
-.face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 20px;
-    background: var(--bg-gradient-2); 
-    padding: clamp(1rem, 4vw, 2.5rem); 
-    border: none; 
-    overflow: hidden; 
-    box-sizing: border-box;
-    text-align: left;
-    box-shadow: var(--shadow-strong); 
-    opacity: 1; /* Default CSS opacity, JS autoAlpha will control it */
-    visibility: visible; /* Default CSS visibility, JS autoAlpha will control it */
-}
-.face .service-content { 
-    width: 100%; 
-    flex-grow: 1; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: flex-start; 
-    text-align: left;
-    margin: 0; padding: 0; 
-}
-.service-title { 
-    font-size: clamp(1rem, 1.8vw, 1.8rem); 
-    font-weight: 700; 
-    line-height: 1.2; 
-    color: var(--cube-service-title-color); 
-    margin-bottom: clamp(0.5rem, 1vw, 1rem); 
-}
-.service-description { 
-    font-size: clamp(0.875rem, 1.2vw, 1rem); 
-    line-height: 1.4; 
-    color: var(--text-medium); 
-    max-width: 100%; 
-    text-align: left;
-}
-.face-number { 
-    position: absolute; 
-    bottom: clamp(1rem, 2vw, 1.5rem); 
-    right: clamp(1rem, 2vw, 1.5rem); 
-    font-size: clamp(3rem, 10vw, 6rem); 
-    font-weight: 500; 
-    color: rgba(255, 255, 255, 0.08); 
-    z-index: 0; 
-    line-height: 1; 
-    pointer-events: none;
-}
+/* Services section specific overrides for smaller mobiles (max-width: 768px) */
 @media (max-width: 768px) {
     .services-section {
-        justify-content: center;
-        text-align: center;
+        justify-content: flex-start; /* Align contents to top for headings */
+        text-align: left; /* Ensure section-level text alignment is left */
         height: auto; 
         min-height: 100vh; 
-        padding: 60px 20px;
+        padding: 60px 20px; 
         gap: 30px; 
     }
     .services-heading {
-        margin-bottom: 40px;
-        align-self: center; 
-        text-align: center;
+        margin-bottom: 40px; /* Restore original mobile margin */
+        align-self: flex-start; /* Align heading to left */
+        text-align: left !important; /* Force left-align text */
     }
     .cube-container {
-        max-width: 100%; 
-        height: auto; 
-        perspective: none; 
-        align-self: center; 
-        min-height: 300px; 
-        margin-top: 30px; 
-        margin-left: auto; 
-        margin-right: auto; 
-        left: auto; 
-        transform: none; 
+        align-self: flex-start; /* Align cube to left */
+        margin-left: 0;
+        margin-right: auto;
     }
     .cube {
-        transform-style: flat; 
-        transform: none; 
-        display: flex; 
-        flex-direction: column;
-        gap: 20px; 
-        height: auto;
+        align-items: flex-start; /* Align cube content left */
     }
     .face {
-        position: relative; 
-        transform: none !important; 
-        opacity: 1 !important; 
-        visibility: visible !important;
-        height: auto; 
-        padding: 1rem;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        box-shadow: none; 
-        background: var(--bg-tool-card); 
+        justify-content: center; /* Center content vertically */
+        align-items: flex-start; /* Align face content left */
+        text-align: left;
     }
     .face .service-content {
         justify-content: center;
-        align-items: center;
-        text-align: center;
+        align-items: flex-start;
+        text-align: left;
     }
     .service-title {
-        color: var(--text-light); 
-        text-align: center;
+        text-align: left;
     }
     .service-description {
-        text-align: center;
+        text-align: left;
     }
     .face-number {
-        position: relative; 
-        bottom: auto;
-        right: auto;
-        font-size: 0.8em;
-        color: var(--text-medium);
-        margin-top: 10px;
-        align-self: flex-end; 
+        align-self: flex-end; /* Keep face number to the right */
     }
 }
 
 
 /* Premium Tools Section */
+/* Global tools-heading styling now defines its look */
+.tools-heading {
+  font-size: clamp(2.5rem, 8vw, 8rem); 
+  line-height: 0.75em;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  width: 100%;
+}
 .tools-heading .text-white, .tools-heading .text-gray { display: block; }
+.tools-heading .text-white { color: var(--text-light); }
+.tools-heading .text-gray { color: var(--text-sub-heading-grey); }
+
+
 .tools-grid { 
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
@@ -711,12 +538,29 @@ footer h2 {
         animation: none !important;
         visibility: visible !important;
     }
+    
+    /* Left column - ensure static and visible */
+    .left-column-sticky {
+        animation: none !important;
+        transition-duration: 0s !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .left-column-sticky[style*="transform"] { /* Target cases where JS might add transform */
+        transform: none !important;
+    }
+    .left-card-3d {
+        animation: none !important;
+        transition-duration: 0s !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
     /* Services section specific overrides for reduced motion (CSS fallback) */
     #services-pin-wrapper { 
         height: auto !important; 
         position: relative !important;
     }
-    /* Ensure services-section is visible and static */
     .services-section { 
         position: relative !important;
         top: auto !important;
@@ -727,7 +571,7 @@ footer h2 {
         padding: 80px 40px !important; 
         pointer-events: auto !important;
         flex-direction: column !important; 
-        justify-content: flex-start !important;
+        justify-content: flex-start !important; /* Changed to flex-start */
         align-items: center !important;
         gap: 20px !important; 
         opacity: 1 !important; 
@@ -736,7 +580,8 @@ footer h2 {
     .services-heading {
         opacity: 1 !important; 
         transform: none !important; 
-        text-align: center !important; 
+        text-align: left !important; /* Force left alignment */
+        align-self: flex-start !important; /* Force left alignment */
     }
     .services-heading .text-white,
     .services-heading .text-gray {
@@ -751,16 +596,17 @@ footer h2 {
         padding-right: 0 !important;
         margin-bottom: 20px !important; 
         justify-content: center !important; 
-        align-items: center !important;
-        text-align: center !important;
+        /* Changed to flex-start for mobile/reduced motion */
+        align-items: flex-start !important; 
+        text-align: left !important; /* Changed to left */
         z-index: auto !important;
-        align-self: center !important;
+        align-self: flex-start !important; /* Changed to flex-start */
     }
     .cube-container {
         perspective: none !important; 
         transform: none !important; 
         height: auto !important;
-        margin: 0 auto !important; 
+        margin: 0 !important; /* Clear auto margins */
         position: relative !important;
         top: auto !important;
         overflow: visible !important;
@@ -769,6 +615,7 @@ footer h2 {
         aspect-ratio: auto !important; 
         margin-top: 0 !important; 
         transform: none !important;
+        align-self: flex-start !important; /* Force left align */
     }
     .cube {
         transform-style: flat !important; 
@@ -778,6 +625,7 @@ footer h2 {
         flex-direction: column;
         gap: 20px; 
         height: auto;
+        align-items: flex-start !important; /* Align cube content left */
     }
     .face {
         transition: none !important;
@@ -787,22 +635,23 @@ footer h2 {
         transform: none !important;
         height: auto !important;
         justify-content: center !important; 
-        align-items: center !important;
-        text-align: center !important;
+        align-items: flex-start !important; /* Align face content left */
+        text-align: left !important; /* Align face content text left */
         padding: 1rem !important; 
         box-shadow: none !important; 
         background: var(--bg-tool-card) !important; 
     }
     .face .service-content {
         justify-content: center !important;
-        align-items: center !important;
-        text-align: center !important;
+        align-items: flex-start !important; /* Align service content left */
+        text-align: left !important;
     }
     .face .service-title {
         color: var(--text-light) !important; 
+        text-align: left !important;
     }
     .face .service-description {
-        text-align: center !important;
+        text-align: left !important;
     }
     .face .face-number {
         position: relative !important;
@@ -812,5 +661,12 @@ footer h2 {
         color: var(--text-medium) !important;
         margin-top: 10px;
         align-self: flex-end !important;
+    }
+    /* Tools heading for reduced motion */
+    .tools-heading {
+        text-align: left !important;
+        align-self: flex-start !important;
+        opacity: 1 !important;
+        transform: none !important;
     }
 }
