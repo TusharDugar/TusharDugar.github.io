@@ -162,9 +162,8 @@ html::before {
     transform-style: preserve-3d; 
     filter: none; /* Shadow removed */
 
-    /* Animation applied to the entire left column */
-    opacity: 0; 
-    transform: rotateX(30deg) scale(0.95) translateY(40px); 
+    opacity: 0; /* Initial state for animation */
+    transform: rotateX(30deg) scale(0.95) translateY(40px); /* Initial transform for animation */
     animation: leftColumnPopIn 1s ease-out forwards; 
     animation-delay: 0.4s;
     will-change: transform, opacity;
@@ -567,7 +566,7 @@ footer h2 {
 /* Desktop Specific Styles (min-width: 1024px) */
 @media (min-width: 1024px) { 
     .main-layout-container { 
-        align-items: flex-start; /* Aligns left column to the top for sticky offset */
+        align-items: stretch; /* FIX: Ensures both columns take full height for sticky positioning */
     } 
     .left-column-sticky { 
         position: sticky; 
@@ -575,7 +574,7 @@ footer h2 {
         transform: translateY(-50%); /* Sticky transform to center vertically */
         height: calc(100vh - 100px); /* Height for sticky container */
         margin: 0; /* Remove default margin when sticky */
-        align-self: flex-start; /* Align to start of flex container */
+        align-self: flex-start; /* Aligns its own box to the start of the cross-axis, allowing sticky to operate */
         /* Animation will play, then sticky + final animation state apply */
     } 
 }
