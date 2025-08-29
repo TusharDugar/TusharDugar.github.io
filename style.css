@@ -145,6 +145,9 @@ html::before {
     min-height: 100vh; 
     padding-top: 20px; 
 }
+
+/* --- Left Column Animation as One Block --- */
+/* Parent provides 3D context */
 .left-column-sticky { 
     flex-shrink: 0; 
     flex-basis: 370px; 
@@ -153,30 +156,50 @@ html::before {
     align-items: center; 
     justify-content: center; 
     z-index: 2; 
+
     position: relative;
     top: auto;
-    transform: none;
+    transform: none; /* Base transform for non-sticky state */
     margin: 50px auto 0 auto;
     height: auto;
-    filter: drop-shadow(8.25rem 8.25rem 0.5rem #0005);
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-    animation: leftColumnEnter 1.5s ease-out forwards;
+    
+    /* NEW: 3D context for inner animated element */
+    perspective: 1000px;
+    transform-style: preserve-3d;
 }
 
-@keyframes leftColumnEnter {
-  to {
+/* Inner wrapper for the actual animation */
+.left-card-3d {
+  opacity: 0;
+  transform: rotateX(30deg) scale(0.95) translateY(40px);
+  animation: cardIntroPop 1s ease-out forwards;
+  animation-delay: 0.4s;
+  will-change: transform, opacity;
+}
+
+/* Keyframes for pop-in 3D effect */
+@keyframes cardIntroPop {
+  0% {
+    opacity: 0;
+    transform: rotateX(30deg) scale(0.95) translateY(40px);
+  }
+  100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: rotateX(0deg) scale(1) translateY(0);
   }
 }
 
+/* Accessibility: disable animations if user prefers reduced motion */
 @media (prefers-reduced-motion) {
-  .left-column-sticky {
+  .left-card-3d {
+    animation: none !important;
     transition-duration: 0s !important;
-    animation-duration: 0s !important;
-    opacity: 1 !important; 
-    transform: none !important; 
+    opacity: 1 !important; /* Ensure it's visible instantly */
+    transform: none !important; /* Ensure no initial transform */
+  }
+  .left-column-sticky { /* Also ensure parent is static */
+      animation: none !important;
+      transition-duration: 0s !important;
   }
 }
 
@@ -185,17 +208,28 @@ html::before {
     .left-column-sticky { 
         position: sticky; 
         top: 50%; 
-        transform: translateY(-50%); 
+        transform: translateY(-50%); /* Sticky transform */
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
+        
+        /* Reset animation properties when sticky */
         animation: none; 
-        opacity: 1;
-        transform: translateY(-50%); 
+        opacity: 1; /* Keep visible */
+        filter: none; /* Remove drop-shadow if it causes issues in sticky state */
     } 
+    /* Ensure inner card is also static when parent is sticky */
+    .left-card-3d {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
     @media (prefers-reduced-motion) {
         .left-column-sticky {
             transform: translateY(-50%) !important; 
+        }
+        .left-card-3d {
+            transform: none !important;
         }
     }
 }
@@ -306,7 +340,7 @@ html::before {
     flex-direction: column;
     justify-content: flex-start; 
     align-items: center; 
-    padding: 0 20px; /* Changed from 20px 20px to 0 20px */
+    padding: 0 20px; 
     box-sizing: border-box; 
     overflow: hidden; 
     z-index: 2; 
