@@ -570,9 +570,9 @@ footer h2 {
         align-items: stretch; 
     } 
     .left-column-sticky { 
-        position: sticky; /* FIX: Directly apply sticky */
-        top: 50%; /* FIX: Directly apply top */
-        transform: translateY(-50%); /* FIX: Directly apply sticky transform */
+        position: sticky; 
+        top: 50%; 
+        transform: translateY(-50%); /* This IS the desired sticky transform */
         animation: none !important; /* FIX: Crucially, disable the animation property to prevent conflicts */
         height: calc(100vh - 100px); 
         margin: 0; 
@@ -702,8 +702,8 @@ footer h2 {
     }
     .main-layout-container {
         padding: 15px;
-        gap: 30px;
-        padding-top: 30px;
+        gap: 30px; 
+        padding-top: 30px; 
     }
     .left-column-sticky {
         margin-bottom: 30px;
