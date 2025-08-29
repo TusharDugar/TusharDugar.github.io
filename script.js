@@ -103,7 +103,7 @@ function initIntersectionObserverAnimations() {
 }
 
 // Global constant for services cube scroll length
-const SCROLL_PER_FACE_VH = 400; // 400vh scroll space for each face rotation
+const SCROLL_PER_FACE_VH = 320; // UPDATED: Smoother scroll with just enough breathing room
 
 // Main execution block after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -236,9 +236,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Determine Max Desired Cube Size based on Breakpoints ---
         let maxDesiredCubeDimensionForContext = 300; // Base value
         if (largeDesktop) {
-            maxDesiredCubeDimensionForContext = 400; // New cap for large desktop
+            maxDesiredCubeDimensionForContext = 400; // Cap for large desktop
         } else if (mediumDesktop) {
-            maxDesiredCubeDimensionForContext = 350; // New cap for medium desktop
+            maxDesiredCubeDimensionForContext = 350; // Cap for medium desktop
         } 
         
         let effectiveCubeDimension = 300; // Default for mobile fallback
@@ -328,7 +328,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            const cubeTopOffset = servicesHeading.offsetHeight + 20;
+            // UPDATED: Tighter vertical alignment below heading
+            const cubeTopOffset = servicesHeading.offsetHeight + 10; 
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset });
 
             // The main cube rotation over the entire ScrollTrigger duration.
@@ -352,13 +353,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 cubeAnimationTimeline.to(faces, { autoAlpha: 0, duration: 0.1 }, label); // Hide all faces quickly
                 cubeAnimationTimeline.to(face, { autoAlpha: 1, duration: 0.4 }, label); // Make current face fully visible (slower fade)
 
-                // Make immediate adjacent faces slightly visible for a smooth transition and hint
+                // Make immediate adjacent faces barely visible
                 const prevFaceIndex = (i - 1 + SERVICES_COUNT) % SERVICES_COUNT; // Handle circularity
                 const nextFaceIndex = (i + 1) % SERVICES_COUNT; // Handle circularity
                 
-                // Set neighbors to a very low autoAlpha so they are barely visible but not distorting text
-                cubeAnimationTimeline.to(faces[prevFaceIndex], { autoAlpha: 0.1, duration: 0.4 }, label); // Slower fade for neighbors
-                cubeAnimationTimeline.to(faces[nextFaceIndex], { autoAlpha: 0.1, duration: 0.4 }, label); // Slower fade for neighbors
+                // UPDATED: Set neighbors to a very low autoAlpha (0.05) to be barely perceptible
+                cubeAnimationTimeline.to(faces[prevFaceIndex], { autoAlpha: 0.05, duration: 0.4 }, label); 
+                cubeAnimationTimeline.to(faces[nextFaceIndex], { autoAlpha: 0.05, duration: 0.4 }, label);
             });
         }
     });
