@@ -185,13 +185,15 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(face, { 
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
-                transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, // REVISED: rotateY changed to rotateX
+                // CRITICAL FIX: Changed rotateY to rotateX for vertical rotation
+                transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, 
                 autoAlpha: 1, // REFINED: Faces start fully visible, JS dims inactive ones
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
         });
-        gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, transformOrigin: 'center center' }); // REVISED: rotateY changed to rotateX
+        // CRITICAL FIX: Changed rotateY to rotateX for cube's initial orientation
+        gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, rotateY: 0, transformOrigin: 'center center' }); 
     }
 
     let cubeAnimationTimeline;
@@ -248,30 +250,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!mobile) { 
             // REFINED: Set .services-section padding-top to 0 in CSS.
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
-            const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop); // This will now be 0 from CSS
+            const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop); 
             const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
             
             gsap.set(servicesHeading, { autoAlpha: 1, transform: 'none', clearProps: 'autoAlpha,transform' });
             const headingHeight = servicesHeading.offsetHeight;
             // REFINED: headingMarginBottom is now 0 in CSS.
-            const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); // This will now be 0 from CSS
+            const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); 
             
             const viewportHeight = window.innerHeight;
-            // REVISED: Simplified Available vertical space calculation
-            // As CSS padding-top and heading margin-bottom are now 0, cubeTopOffset becomes the primary spacer.
             const availableVerticalSpace = viewportHeight; // Simplified for calculation
             
-            // REVISED: Clamp effectiveCubeDimension more aggressively
-            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8); // REVISED: Use viewportHeight * 0.8
+            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8); 
 
-            const minDesktopCubeDimension = 750; // REVISED: Changed min size to 750px
+            const minDesktopCubeDimension = 750; 
             if (effectiveCubeDimension < minDesktopCubeDimension) {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
 
-            // REVISED: CubeContainer Positioning - relies on CSS for horizontal, GSAP for y
             gsap.set(cubeContainer, { 
-                position: "relative" // Keep this for GSAP transforms to work correctly
+                position: "relative" 
             });
 
         } else {
@@ -342,13 +340,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // REVISED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out, NO SCALE)
-            // REVISED: cubeTopOffset now relies purely on headingHeight + 20 (since CSS margins are 0)
-            const cubeTopOffset = servicesHeading.offsetHeight + 20; // Simplified
+            const cubeTopOffset = servicesHeading.offsetHeight + 20; // Simplified and correct
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
-            // Cube animation timeline now starts with rotation directly
+            // Cube animation timeline now drives rotation
             cubeAnimationTimeline.to(cube, {
-                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, // REVISED: Changed to rotateX
+                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, // CRITICAL FIX: Changed rotateY to rotateX
                 ease: "none", // Main rotation should be linear for scrub
             });
 
@@ -357,9 +354,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startRotation = i * ROTATION_INCREMENT_DEG;
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
-                // REVISED: Smoothly dim to 0.7
+                // Set initial alpha for each face when its block starts
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 0.7, duration: 0.3, ease: "power2.out" }, 
+                    { autoAlpha: (i === 0) ? 1 : 0.7, duration: 0.01 }, // Ensure first face is active, others dimmed
                     startRotation / (totalRotation || 1) 
                 );
 
@@ -378,14 +375,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // The main cube rotation should happen over the entire timeline
             cubeAnimationTimeline.to(cube, {
-                rotateX: totalRotation, // REVISED: Changed to rotateX
+                rotateX: totalRotation, // CRITICAL FIX: Changed rotateY to rotateX
                 duration: 1, // Normalized duration for GSAP (will be scaled by scrub)
                 ease: "none", // Keep linear for scrub to work smoothly
             }, 0); // Start at the beginning of the timeline
 
             // REVISED: Removed the final fade out for cubeContainer.
             // The cubeContainer remains at autoAlpha:1 and y:cubeTopOffset until the pin ends.
-            // No explicit fade-out from the timeline.
         }
     });
 
