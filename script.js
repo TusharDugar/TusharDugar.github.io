@@ -105,7 +105,7 @@ function initIntersectionObserverAnimations() {
 }
 
 // Global constant for services cube scroll length
-const SCROLL_PER_FACE_VH = 240; // FIX: Reduced scroll area
+const SCROLL_PER_FACE_VH = 90; // FIX: Reduced scroll area further
 
 // Main execution block after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return; 
         }
 
-        // --- Left Column Fix for visibility and sticky ---
+        // --- FIX 1: Ensure Left Column is visible and sticky on desktop ---
         const leftCol = document.querySelector('.left-column-sticky');
         if (leftCol && !mobile) { // Apply this logic only for desktop/medium screens, not mobile
             // Desktop logic
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (mobile) {
             console.log("Mobile layout active. Disabling 3D scroll animation.");
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,autoAlpha,scale' });
-            gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
+            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
             gsap.set(cubeContainer, { 
                 autoAlpha: 1, scale: 1, width: effectiveCubeBaseDimension, height: effectiveCubeBaseDimension, // Square for mobile
@@ -362,8 +362,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Tighter vertical alignment below heading
-            const cubeTopOffset = servicesHeading.offsetHeight + 40; // FIX: Increased offset
+            // Tighter vertical alignment below heading (CSS margin-bottom on heading now handles the 80px gap)
+            const cubeTopOffset = servicesHeading.offsetHeight + 10; // Reverted to minimal offset for JS
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset });
 
             // The main cube rotation over the entire ScrollTrigger duration.
