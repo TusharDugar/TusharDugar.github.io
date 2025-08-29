@@ -321,7 +321,7 @@ html::before {
 .services-heading .text-gray { color: var(--text-sub-heading-grey); } 
 
 .cube-container { 
-    aspect-ratio: 1 / 1; 
+    aspect-ratio: 1 / 1; /* This will be overridden by JS for aspect ratio change */
     margin: 0 auto; 
     position: relative; 
     overflow: visible; 
@@ -356,9 +356,9 @@ html::before {
     justify-content: center;
     border-radius: 20px;
     background: var(--bg-gradient-2); 
-    padding: 0; /* FIX: Removed all internal padding for face itself */
-    margin: 0; /* FIX: Ensure no margin */
-    box-shadow: none; /* FIX: Remove box-shadow */
+    padding: 0; /* Removed all internal padding for face itself */
+    margin: 0; /* Ensure no margin */
+    box-shadow: none; /* Remove box-shadow */
     overflow: hidden; /* Keep internal text contained */
     box-sizing: border-box;
     text-align: left;
@@ -373,7 +373,7 @@ html::before {
     justify-content: center; 
     align-items: flex-start; 
     text-align: left;
-    padding: clamp(1rem, 4vw, 2.5rem); /* FIX: Moved padding here for internal content */
+    padding: clamp(1rem, 4vw, 2.5rem); /* Moved padding here for internal content */
     margin: 0; 
 }
 .service-title { 
@@ -573,7 +573,7 @@ footer h2 {
         position: sticky; 
         top: 50%; 
         transform: translateY(-50%); /* This IS the desired sticky transform */
-        animation: none !important; /* FIX: Crucially, disable the animation property to prevent conflicts */
+        animation: none; /* FIX: Remove !important as JS now clears the property after animation */
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
