@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Reduced motion detected. Applying flat layout for cube.");
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1, position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
             gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
-            gsap.set(servicesHeading.querySelectorAll('span'), { autoAlpha: 1, y: 0, x: 0 });
+            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
             gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
@@ -242,6 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (leftCol && !mobile) { // Only apply this fix on desktop/medium desktop
             gsap.set(leftCol, { 
                 opacity: 1, 
+                display: 'flex', // FIX: Explicitly ensure display is flex
                 transform: 'translateY(-50%)', // Set to the desired sticky transform
                 animation: 'none', // Remove animation property from inline styles
                 clearProps: 'animation', // Clear any other GSAP-applied animation properties
@@ -301,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Mobile layout active. Disabling 3D scroll animation.");
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,autoAlpha,scale' });
             gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
-            gsap.set(servicesHeading.querySelectorAll('span'), { autoAlpha: 1, y: 0, x: 0 });
+            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
             gsap.set(cubeContainer, { 
                 autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, 
                 maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none',
