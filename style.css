@@ -146,8 +146,8 @@ html::before {
     padding-top: 20px; 
 }
 
-/* --- Left Column Animation as One Block --- */
-/* Parent provides 3D context */
+/* --- Left Column Sticky & Animation --- */
+/* Parent provides 3D context for inner animated element */
 .left-column-sticky { 
     flex-shrink: 0; 
     flex-basis: 370px; 
@@ -159,22 +159,27 @@ html::before {
 
     position: relative;
     top: auto;
-    transform: none; /* Base transform for non-sticky state */
-    margin: 50px auto 0 auto;
+    margin: 50px auto 0 auto; /* Base margin for non-sticky state */
     height: auto;
     
-    /* NEW: 3D context for inner animated element */
-    perspective: 1000px;
-    transform-style: preserve-3d;
+    perspective: 1000px; /* NEW: Provides 3D context */
+    transform-style: preserve-3d; /* NEW: Allows child to animate in 3D */
+    /* REMOVED: Old animation properties that were replaced by .left-card-3d */
+    filter: drop-shadow(8.25rem 8.25rem 0.5rem #0005); /* Retained drop-shadow as it's not a transform */
 }
 
-/* Inner wrapper for the actual animation */
+/* NEW: Inner wrapper for the actual pop-in animation */
 .left-card-3d {
   opacity: 0;
   transform: rotateX(30deg) scale(0.95) translateY(40px);
   animation: cardIntroPop 1s ease-out forwards;
   animation-delay: 0.4s;
   will-change: transform, opacity;
+  width: 100%; /* Ensure it fills parent */
+  height: 100%; /* Ensure it fills parent */
+  display: flex; /* Allow its child (about-left-content) to expand */
+  justify-content: center;
+  align-items: center;
 }
 
 /* Keyframes for pop-in 3D effect */
@@ -200,6 +205,7 @@ html::before {
   .left-column-sticky { /* Also ensure parent is static */
       animation: none !important;
       transition-duration: 0s !important;
+      transform: none !important; /* Reset any lingering transforms on parent */
   }
 }
 
@@ -212,13 +218,12 @@ html::before {
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
-        
         /* Reset animation properties when sticky */
-        animation: none; 
+        animation: none; /* Disable default animation */
         opacity: 1; /* Keep visible */
         filter: none; /* Remove drop-shadow if it causes issues in sticky state */
     } 
-    /* Ensure inner card is also static when parent is sticky */
+    /* Ensure inner card is also static when parent is sticky (desktop) */
     .left-card-3d {
         animation: none;
         opacity: 1;
@@ -340,7 +345,7 @@ html::before {
     flex-direction: column;
     justify-content: flex-start; 
     align-items: center; 
-    padding: 0 20px; 
+    padding: 0 20px; /* Changed from 20px 20px to 0 20px */
     box-sizing: border-box; 
     overflow: hidden; 
     z-index: 2; 
@@ -352,7 +357,7 @@ html::before {
   font-weight: 800;
   text-transform: uppercase;
   text-align: left; 
-  margin-bottom: 0; 
+  margin-bottom: 0; /* Changed from 40px to 0 */
   align-self: flex-start; 
   flex-shrink: 0; 
   width: 100%;
