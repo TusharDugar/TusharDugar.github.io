@@ -166,10 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // `sideLength` here is the width/height of a square face.
     function calculateFaceDepth(sideLength) { 
         if (!sideLength || SERVICES_COUNT === 0) return 0;
-        // Using the apothem formula for a regular N-sided polygon
-        // This calculates the correct distance for faces to form an N-sided prism-like structure,
-        // which helps achieve the "cube-like" illusion with 8 faces and proper face alignment.
-        return (sideLength / 2) / Math.sin(Math.PI / SERVICES_COUNT);
+        // FIX: Changed from Math.sin to Math.tan for correct cube depth
+        return (sideLength / 2) / Math.tan(Math.PI / SERVICES_COUNT);
     }
 
     // Set up initial 3D positioning of each face and cube
@@ -325,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         duration: 0.4,    
                         ease: "power3.out" 
                     },
-                    pinSpacing: true, // FIX: Ensure space is reserved for content after pinned section
+                    pinSpacing: true, // Ensure space is reserved for content after pinned section
                     anticipatePin: 1, 
                 }
             });
@@ -341,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ease: "none", // Main rotation should be linear for scrub
             }, 0); // Start at the beginning of the timeline
 
-            // Add labels and manage face visibility more precisely to prevent distortion
+            // Add labels and manage face visibility more precisely (instant toggles)
             faces.forEach((face, i) => {
                 const rotationTarget = i * ROTATION_INCREMENT_DEG;
                 const label = `face${i + 1}`;
@@ -351,24 +349,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Add label to the timeline at the precise moment this face should be front-on
                 cubeAnimationTimeline.addLabel(label, progressPoint);
 
-                // Hide all faces, then show the current one at this label point
-                cubeAnimationTimeline.to(faces, { autoAlpha: 0, duration: 0.1 }, label); // Hide all faces quickly
-                cubeAnimationTimeline.to(face, { autoAlpha: 1, duration: 0.4 }, label); // Make current face fully visible (slower fade)
-
-                // Make immediate adjacent faces barely visible
-                const prevFaceIndex = (i - 1 + SERVICES_COUNT) % SERVICES_COUNT; // Handle circularity
-                const nextFaceIndex = (i + 1) % SERVICES_COUNT; // Handle circularity
-                
-                // Set neighbors to a very low autoAlpha (0.05) to be barely perceptible
-                cubeAnimationTimeline.to(faces[prevFaceIndex], { autoAlpha: 0.05, duration: 0.4 }, label); 
-                cubeAnimationTimeline.to(faces[nextFaceIndex], { autoAlpha: 0.05, duration: 0.4 }, label);
+                // FIX: Use .set for instant visibility toggle, no fading
+                cubeAnimationTimeline.set(faces, { autoAlpha: 0 }, label); // Hide all faces instantly
+                cubeAnimationTimeline.set(face, { autoAlpha: 1 }, label);  // Show current face instantly
+                // FIX: Removed autoAlpha: 0.05 for adjacent faces to prevent ghosting
             });
         }
     });
 
+    // FIX: Delay enabling sticky layout until animation finishes (desktop only)
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh(); 
+        const leftCol = document.querySelector('.left-column-sticky');
+        if (window.innerWidth >= 1024 && leftCol && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            // Apply sticky properties after animation (1s) and optional delay (0.4s)
+            // A small additional buffer ensures animation fully completes.
+            setTimeout(() => {
+                leftCol.style.position = 'sticky';
+                leftCol.style.top = '50%';
+                leftCol.style.transform = 'translateY(-50%)'; // Ensure final sticky transform
+                // Important: clear inline animation style if it was set by GSAP or browser
+                leftCol.style.animation = ''; 
+            }, 1400); // animation-delay (0.4s) + animation-duration (1s) = 1.4s
+        } else if (window.innerWidth < 1024 && leftCol) {
+             // For mobile/tablet, ensure it's not sticky
+            leftCol.style.position = 'relative';
+            leftCol.style.top = 'auto';
+            leftCol.style.transform = 'none';
+        }
     });
+
+    // Initial check for sticky behavior on page load
+    const leftColOnLoad = document.querySelector('.left-column-sticky');
+    if (window.innerWidth >= 1024 && leftColOnLoad && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        setTimeout(() => {
+            leftColOnLoad.style.position = 'sticky';
+            leftColOnLoad.style.top = '50%';
+            leftColOnLoad.style.transform = 'translateY(-50%)';
+            leftColOnLoad.style.animation = ''; // Clear animation after it should have run
+        }, 1400); // animation-delay (0.4s) + animation-duration (1s) = 1.4s
+    }
 
     // Fallback: Force all revealable elements to become visible after 2s if IO hasn't triggered them
     setTimeout(() => {
