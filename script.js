@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fallback if essential elements are missing ---
     if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
-        // Ensure elements are visible and static if animation is aborted
         gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
         gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
         if (servicesHeading) {
@@ -203,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "reducedMotion": "(prefers-reduced-motion: reduce)"
 
     }, (context) => { 
+        console.log("MatchMedia callback fired. Conditions:", context.conditions); // Debugging: Confirm matchMedia fires
         
         let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
 
@@ -210,12 +210,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cubeAnimationTimeline) {
             cubeAnimationTimeline.kill();
             cubeAnimationTimeline = null;
+            console.log("Existing cube animation timeline killed.");
         }
         ScrollTrigger.getById('servicesCubePin')?.kill(true);
+        console.log("Previous ScrollTrigger for cube pin killed.");
 
         // --- Handle Reduced Motion First ---
         if (reducedMotion) {
-            console.log("Reduced motion detected. Applying flat layout.");
+            console.log("Reduced motion detected. Applying flat layout for cube.");
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1, position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
             gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
             gsap.set(servicesHeading.querySelectorAll('span'), { autoAlpha: 1, y: 0, x: 0 });
@@ -302,9 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         } else {
-            // Desktop animation setup
-            console.log(`Desktop layout active. Cube size: ${effectiveCubeDimension}px. Setting up 3D animation.`);
-
+            console.log(`Desktop layout active. Cube size: ${effectiveCubeDimension}px. Setting up 3D animation.`); // Debugging: Confirm desktop branch
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
             servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh';
@@ -325,6 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     pinSpacing: true, // Ensure space is reserved for content after pinned section
                     anticipatePin: 1, 
+                    // markers: true, // DEBUG: Temporarily enable to visualize ScrollTrigger
                 }
             });
 
@@ -356,10 +357,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // FIX: Left column animation now purely CSS, with sticky also CSS.
-    // This JS only triggers ScrollTrigger.refresh() on resize.
+    // FIX 1: Left Section Visibility & Sticky behavior management
+    const manageLeftColumnSticky = () => {
+        const leftCol = document.querySelector('.left-column-sticky');
+        if (!leftCol) return;
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (window.innerWidth >= 1024 && !prefersReducedMotion) {
+            // Wait for the CSS animation to complete (1s duration + 0.4s delay = 1.4s)
+            // Then explicitly remove the 'animation' property and ensure visibility/transform
+            setTimeout(() => {
+                leftCol.style.animation = 'none'; // Clear the animation property
+                leftCol.style.opacity = '1';      // Ensure final visibility
+                leftCol.style.transform = 'translateY(-50%)'; // Explicitly apply the final sticky transform
+                // The CSS position: sticky; top: 50%; will then take effect
+                console.log("Left column: Animation cleared, sticky transform applied."); // Debugging
+            }, 1400); // Animation delay + duration
+        } else if (window.innerWidth < 1024 || prefersReducedMotion) {
+            // For mobile/tablet or reduced motion, ensure non-sticky state
+            leftCol.style.position = 'relative';
+            leftCol.style.top = 'auto';
+            leftCol.style.transform = 'none'; // Clear any transform from animation/sticky
+            leftCol.style.animation = 'none'; // Ensure animation is stopped if present
+            leftCol.style.opacity = '1'; // Ensure visible on non-desktop/reduced motion
+            console.log("Left column: Non-sticky/reduced motion state applied."); // Debugging
+        }
+    };
+
+    // Initial call on DOMContentLoaded
+    manageLeftColumnSticky();
+
+    // Call on resize and ScrollTrigger refresh
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh(); 
+        manageLeftColumnSticky();
+        console.log("Window resized. ScrollTrigger refreshed, Left column sticky re-evaluated."); // Debugging
     });
 
     // Fallback: Force all revealable elements to become visible after 2s if IO hasn't triggered them
@@ -368,6 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Only apply fallback if prefers-reduced-motion is NOT active
             if (!el.classList.contains('visible') && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 el.classList.add('visible');
+                console.log("Reveal fallback triggered for:", el); // Debugging
             }
         });
     }, 2000);
