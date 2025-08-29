@@ -185,13 +185,13 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(face, { 
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
-                transform: `rotateY(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, 
+                transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, // REVISED: rotateY changed to rotateX
                 autoAlpha: 1, // REFINED: Faces start fully visible, JS dims inactive ones
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
         });
-        gsap.set(cube, { transformStyle: 'preserve-3d', rotateY: 0, transformOrigin: 'center center' }); 
+        gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, transformOrigin: 'center center' }); // REVISED: rotateY changed to rotateX
     }
 
     let cubeAnimationTimeline;
@@ -342,13 +342,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // REVISED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out, NO SCALE)
-            // REVISED: cubeTopOffset relies purely on headingHeight + 20 (since CSS margins are 0)
+            // REVISED: cubeTopOffset now relies purely on headingHeight + 20 (since CSS margins are 0)
             const cubeTopOffset = servicesHeading.offsetHeight + 20; // Simplified
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
             // Cube animation timeline now starts with rotation directly
             cubeAnimationTimeline.to(cube, {
-                rotateY: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, 
+                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, // REVISED: Changed to rotateX
                 ease: "none", // Main rotation should be linear for scrub
             });
 
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // The main cube rotation should happen over the entire timeline
             cubeAnimationTimeline.to(cube, {
-                rotateY: totalRotation, // Ensure it completes a full 360-degree rotation
+                rotateX: totalRotation, // REVISED: Changed to rotateX
                 duration: 1, // Normalized duration for GSAP (will be scaled by scrub)
                 ease: "none", // Keep linear for scrub to work smoothly
             }, 0); // Start at the beginning of the timeline
