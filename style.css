@@ -145,6 +145,8 @@ html::before {
     min-height: 100vh; 
     padding-top: 20px; 
 }
+
+/* --- Left Column Animation as One Block --- */
 .left-column-sticky { 
     flex-shrink: 0; 
     flex-basis: 370px; 
@@ -153,12 +155,38 @@ html::before {
     align-items: center; 
     justify-content: center; 
     z-index: 2; 
+
+    /* Default (Mobile/Tablet) positioning */
     position: relative;
     top: auto;
     transform: none;
     margin: 50px auto 0 auto;
     height: auto;
+
+    /* New Animation for Left Column */
+    filter: drop-shadow(8.25rem 8.25rem 0.5rem #0005);
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    animation: leftColumnEnter 1.5s ease-out forwards;
 }
+
+@keyframes leftColumnEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Accessibility: disable animations if user prefers reduced motion */
+@media (prefers-reduced-motion) {
+  .left-column-sticky {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+    opacity: 1 !important; /* Ensure it's visible instantly */
+    transform: none !important; /* Ensure no initial transform */
+  }
+}
+
 @media (min-width: 1024px) { 
     .main-layout-container { align-items: flex-start; } 
     .left-column-sticky { 
@@ -168,7 +196,16 @@ html::before {
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
+        /* Reset animation on desktop sticky state if needed, or let forwards handle it */
+        animation: none; 
+        opacity: 1;
+        transform: translateY(-50%); /* Restore sticky transform */
     } 
+    @media (prefers-reduced-motion) {
+        .left-column-sticky {
+            transform: translateY(-50%) !important; /* Ensure reduced motion also gets correct sticky position */
+        }
+    }
 }
 .right-column-scroll { 
     flex-grow: 1; 
