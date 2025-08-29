@@ -162,13 +162,12 @@ html::before {
     margin: 50px auto 0 auto; /* Base margin for non-sticky state */
     height: auto;
     
-    perspective: 1000px; /* NEW: Provides 3D context */
-    transform-style: preserve-3d; /* NEW: Allows child to animate in 3D */
-    /* REMOVED: Old animation properties that were replaced by .left-card-3d */
-    filter: drop-shadow(8.25rem 8.25rem 0.5rem #0005); /* Retained drop-shadow as it's not a transform */
+    perspective: 1000px; /* Provides 3D context */
+    transform-style: preserve-3d; /* Allows child to animate in 3D */
+    filter: drop-shadow(8.25rem 8.25rem 0.5rem #0005);
 }
 
-/* NEW: Inner wrapper for the actual pop-in animation */
+/* Inner wrapper for the actual pop-in animation */
 .left-card-3d {
   opacity: 0;
   transform: rotateX(30deg) scale(0.95) translateY(40px);
@@ -218,16 +217,13 @@ html::before {
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
-        /* Reset animation properties when sticky */
-        animation: none; /* Disable default animation */
-        opacity: 1; /* Keep visible */
-        filter: none; /* Remove drop-shadow if it causes issues in sticky state */
+        /* filter: none; Removed as it's not strictly necessary and can be handled by JS or for initial state */
     } 
     /* Ensure inner card is also static when parent is sticky (desktop) */
     .left-card-3d {
-        animation: none;
-        opacity: 1;
-        transform: none;
+        /* animation: none;   <-- THIS LINE WAS REMOVED TO ALLOW ANIMATION ON LOAD */
+        opacity: 1; /* Ensure visible after animation */
+        transform: none; /* Ensure final transform state after animation */
     }
     @media (prefers-reduced-motion) {
         .left-column-sticky {
@@ -393,6 +389,7 @@ html::before {
     opacity: 1; 
     transform: none; 
     visibility: visible; 
+    perspective: 1600px; /* CRITICAL FIX: Changed from 2000px to 1600px */
 }
 .cube { 
     position: relative; 
@@ -418,8 +415,8 @@ html::before {
     box-sizing: border-box;
     text-align: left;
     box-shadow: var(--shadow-strong); 
-    opacity: 1; 
-    visibility: visible; 
+    opacity: 1; /* Default CSS opacity, JS autoAlpha will control it */
+    visibility: visible; /* Default CSS visibility, JS autoAlpha will control it */
 }
 .face .service-content { 
     width: 100%; 
