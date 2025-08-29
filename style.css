@@ -356,9 +356,9 @@ html::before {
     justify-content: center;
     border-radius: 20px;
     background: var(--bg-gradient-2); 
-    padding: 0; /* FIX: Removed all internal padding for face itself (no !important here) */
-    margin: 0; /* FIX: Ensure no margin (no !important here) */
-    box-shadow: none; /* FIX: Remove box-shadow (no !important here) */
+    padding: 0; /* FIX: Removed all internal padding for face itself */
+    margin: 0; /* FIX: Ensure no margin */
+    box-shadow: none; /* FIX: Remove box-shadow */
     overflow: hidden; /* Keep internal text contained */
     box-sizing: border-box;
     text-align: left;
@@ -573,7 +573,7 @@ footer h2 {
         position: sticky; /* FIX: Directly apply sticky */
         top: 50%; /* FIX: Directly apply top */
         transform: translateY(-50%); /* FIX: Directly apply sticky transform */
-        /* Rely on initial animation for opacity and transform: rotateX(0deg) scale(1) translateY(0) */
+        animation: none !important; /* FIX: Crucially, disable the animation property to prevent conflicts */
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
