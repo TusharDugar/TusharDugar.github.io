@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         duration: 0.4,    
                         ease: "power3.out" 
                     },
-                    pinSpacing: false,
+                    pinSpacing: true, // FIX: Ensure space is reserved for content after pinned section
                     anticipatePin: 1, 
                 }
             });
