@@ -306,7 +306,7 @@ html::before {
     flex-direction: column;
     justify-content: flex-start; 
     align-items: center; 
-    padding: 0 20px; 
+    padding: 0 20px; /* Changed from 20px 20px to 0 20px */
     box-sizing: border-box; 
     overflow: hidden; 
     z-index: 2; 
