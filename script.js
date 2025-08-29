@@ -349,46 +349,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Add label to the timeline at the precise moment this face should be front-on
                 cubeAnimationTimeline.addLabel(label, progressPoint);
 
-                // FIX: Use .set for instant visibility toggle, no fading
+                // FIX: Use .set for instant visibility toggle, no fading or ghosting
                 cubeAnimationTimeline.set(faces, { autoAlpha: 0 }, label); // Hide all faces instantly
                 cubeAnimationTimeline.set(face, { autoAlpha: 1 }, label);  // Show current face instantly
-                // FIX: Removed autoAlpha: 0.05 for adjacent faces to prevent ghosting
             });
         }
     });
 
-    // FIX: Delay enabling sticky layout until animation finishes (desktop only)
-    window.addEventListener("resize", () => {
-        ScrollTrigger.refresh(); 
+    // FIX: Replaced previous setTimeout with a dedicated function for sticky management
+    // This handles both initial load and resize events more robustly.
+    function manageLeftColumnSticky() {
         const leftCol = document.querySelector('.left-column-sticky');
-        if (window.innerWidth >= 1024 && leftCol && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            // Apply sticky properties after animation (1s) and optional delay (0.4s)
-            // A small additional buffer ensures animation fully completes.
+        if (!leftCol) return;
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (window.innerWidth >= 1024 && !prefersReducedMotion) {
+            // On desktop, after animation, apply sticky properties
+            // The animation-delay (0.4s) + animation-duration (1s) = 1.4s
+            // Give a small buffer (e.g., 100ms) for animation to fully settle.
             setTimeout(() => {
                 leftCol.style.position = 'sticky';
                 leftCol.style.top = '50%';
-                leftCol.style.transform = 'translateY(-50%)'; // Ensure final sticky transform
-                // Important: clear inline animation style if it was set by GSAP or browser
-                leftCol.style.animation = ''; 
-            }, 1400); // animation-delay (0.4s) + animation-duration (1s) = 1.4s
-        } else if (window.innerWidth < 1024 && leftCol) {
-             // For mobile/tablet, ensure it's not sticky
+                leftCol.style.transform = 'translateY(-50%)'; 
+                leftCol.style.animation = 'none'; // Clear animation property to prevent conflicts
+            }, 1500); 
+        } else {
+             // For mobile/tablet or reduced motion, ensure it's not sticky
             leftCol.style.position = 'relative';
             leftCol.style.top = 'auto';
-            leftCol.style.transform = 'none';
+            leftCol.style.transform = 'none'; // Clear any transform from animation/sticky
+            leftCol.style.animation = 'none'; // Ensure animation is not playing on mobile
         }
-    });
-
-    // Initial check for sticky behavior on page load
-    const leftColOnLoad = document.querySelector('.left-column-sticky');
-    if (window.innerWidth >= 1024 && leftColOnLoad && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        setTimeout(() => {
-            leftColOnLoad.style.position = 'sticky';
-            leftColOnLoad.style.top = '50%';
-            leftColOnLoad.style.transform = 'translateY(-50%)';
-            leftColOnLoad.style.animation = ''; // Clear animation after it should have run
-        }, 1400); // animation-delay (0.4s) + animation-duration (1s) = 1.4s
     }
+
+    // Call on DOMContentLoaded for initial load
+    manageLeftColumnSticky();
+
+    // Re-evaluate on resize and ScrollTrigger refresh
+    window.addEventListener("resize", () => {
+        ScrollTrigger.refresh(); 
+        manageLeftColumnSticky();
+    });
 
     // Fallback: Force all revealable elements to become visible after 2s if IO hasn't triggered them
     setTimeout(() => {
