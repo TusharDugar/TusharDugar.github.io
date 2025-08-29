@@ -105,7 +105,6 @@ html::before {
     -webkit-mask-repeat: repeat;
 }
 
-
 .mouse-follower-glow { 
     position: fixed; 
     top: 0; 
@@ -133,8 +132,7 @@ html::before {
 .reveal-parent { position: relative; } 
 .reveal-stagger-container { position: relative; } 
 
-
-/* Main Layout (Desktop Base) */
+/* Main Layout (Desktop First - Base Styles) */
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
@@ -146,7 +144,7 @@ html::before {
     padding-top: 20px; 
 }
 
-/* --- Left Column Sticky & Animation (Desktop Base) --- */
+/* --- Left Column Sticky & Animation --- */
 .left-column-sticky { 
     flex-shrink: 0; 
     flex-basis: 370px; 
@@ -156,40 +154,33 @@ html::before {
     justify-content: center; 
     z-index: 2; 
 
-    position: relative;
+    position: relative; /* Base for all screen sizes (non-sticky initially) */
     top: auto;
-    margin: 50px auto 0 auto; /* Base margin for non-sticky state */
     height: auto;
     
     perspective: 1000px; 
     transform-style: preserve-3d; 
     filter: none; /* Shadow removed */
 
-    opacity: 0; /* Initial state for animation */
-    transform: rotateX(30deg) scale(0.95) translateY(40px); /* Initial transform for animation */
+    /* Animation applied to the entire left column */
+    opacity: 0; 
+    transform: rotateX(30deg) scale(0.95) translateY(40px); 
     animation: leftColumnPopIn 1s ease-out forwards; 
     animation-delay: 0.4s;
     will-change: transform, opacity;
 }
 
-/* Keyframes for pop-in 3D effect on the entire left column */
 @keyframes leftColumnPopIn {
-  0% {
-    opacity: 0;
-    transform: rotateX(30deg) scale(0.95) translateY(40px);
-  }
-  100% {
-    opacity: 1;
-    transform: rotateX(0deg) scale(1) translateY(0);
-  }
+  0% { opacity: 0; transform: rotateX(30deg) scale(0.95) translateY(40px); }
+  100% { opacity: 1; transform: rotateX(0deg) scale(1) translateY(0); }
 }
 
-/* Inner wrapper for card, now static */
+/* Inner card wrapper (static) */
 .left-card-3d {
   animation: none; /* Ensure no animation on this wrapper */
-  opacity: 1; /* Make sure it's visible */
+  opacity: 1; /* Make sure it's visible after parent animation */
   transform: none; /* Clear any residual transforms */
-  will-change: auto; /* Revert will-change as it's not animating directly now */
+  will-change: auto; 
   width: 100%; 
   height: 100%; 
   display: flex; 
@@ -197,154 +188,232 @@ html::before {
   align-items: center;
 }
 
-/* Desktop Styles (min-width: 1024px) */
-@media (min-width: 1024px) { 
-    .main-layout-container { 
-        align-items: flex-start; /* Aligns left column to the top */
-    } 
-    .left-column-sticky { 
-        position: sticky; 
-        top: 50%; 
-        transform: translateY(-50%); /* Sticky transform to center vertically */
-        height: calc(100vh - 100px); /* Height for sticky container */
-        margin: 0; /* Remove default margin when sticky */
-        align-self: flex-start; /* Align to start of flex container */
-        /* Maintain opacity and transform state from animation, then apply sticky transform */
-        /* The `forwards` fill-mode on the animation handles `opacity: 1` and `transform: rotateX(0) scale(1) translateY(0)` */
-        /* Then the sticky `transform: translateY(-50%)` combines with it */
-    } 
+/* "About" Card Styles (general) */
+.about-left-content { 
+    background-color: var(--bg-profile-card); 
+    color: var(--text-dark-card); 
+    border-radius: 20px; 
+    padding: 30px 25px; 
+    box-shadow: 0 10px 30px var(--shadow-color-card-white); 
+    width: 100%; 
+    max-width: 370px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center; 
+    position: relative; 
+    overflow: hidden; 
+    height: auto;
+    box-sizing: border-box;
+}
+.profile-image-container { 
+    width: calc(100% + 50px); 
+    max-width: 420px; 
+    height: 200px; 
+    border-radius: 15px; 
+    overflow: hidden; 
+    margin-bottom: 25px; 
+    position: relative; 
+    background-color: var(--accent-primary-sawad); 
+}
+.profile-photo { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    object-position: center top; 
+    filter: brightness(0.01); 
+}
+.about-left-content h3 { 
+    font-size: 2.8em; 
+    font-weight: 700; 
+    margin: 0 0 20px 0; 
+    line-height: 1.1;
+    color: var(--text-dark-card); 
+}
+.fire-icon-with-line { position: relative; width: 100%; height: 40px; display: flex; justify-content: center; align-items: center; margin-bottom: 25px; }
+.fire-icon { background-color: var(--accent-primary-sawad); border-radius: 50%; padding: 8px; font-size: 1.1em; color: var(--text-light); box-shadow: 0 2px 8px rgba(0,0,0,0.5); z-index: 2; position: relative; }
+.fire-icon-with-line::before, .fire-icon-with-line::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); height: 2px; border-top: 2px dashed var(--accent-primary-sawad); z-index: 1; }
+.fire-icon-with-line::before { left: 0; width: calc(50% - 25px); }
+.fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
+.about-short-desc { 
+    line-height: 1.8; 
+    font-size: 0.9em; 
+    color: var(--text-medium-card); 
+    margin-bottom: 25px; 
+    max-width: 90%; 
+    word-spacing: 1px;
+}
+.about-social-icons { display: flex; justify-content: center; gap: 15px; margin-top: auto; padding-top: 10px; }
+.about-social-icons a { color: var(--accent-primary-sawad); font-size: 1.5em; transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+.about-social-icons a:hover { transform: translateY(-2px); }
+.dashed-decoration { position: absolute; border: 2px dashed var(--accent-primary-sawad); border-radius: 50%; box-sizing: border-box; pointer-events: none; z-index: 0; }
+.top-left-curve { width: 150px; height: 150px; top: -50px; left: -50px; border-top-color: transparent; border-left-color: transparent; transform: rotate(-10deg); }
+.bottom-right-curve { width: 150px; height: 150px; bottom: -50px; right: -50px; border-bottom-color: transparent; border-right-color: transparent; transform: rotate(10deg); }
+
+/* Right Column (general) */
+.right-column-scroll { 
+    flex-grow: 1; 
+    padding-top: 50px; 
+    padding-bottom: 100px; 
+    box-sizing: border-box; 
+    min-height: 150vh; 
+    position: relative;
+    z-index: 0; 
+    text-align: left; 
 }
 
-/* Mobile & Tablet Styles (max-width: 1023px) */
-@media (max-width: 1023px) {
-    /* Main Layout */
-    .main-layout-container {
-        flex-direction: column; /* Stacks items vertically */
-        padding: 20px; /* Adjusts overall padding for smaller screens */
-        gap: 40px; /* Space between sections */
-        padding-top: 40px; /* More top padding for mobile */
-        align-items: center; /* Center content in the column */
-    }
-
-    /* Left Column (appears on top, full-width, centered) */
-    .left-column-sticky {
-        position: relative; /* Removes sticky behavior */
-        top: auto;
-        transform: none; /* Removes any sticky or previous transforms */
-        height: auto; /* Allows content to define height */
-        width: 100%;
-        max-width: 370px; /* Constrain card width for better look on larger tablets */
-        margin: 0 auto 40px auto; /* Center horizontally and add space below */
-        align-self: center; /* Ensure it's centered in the column flow */
-        
-        /* IMPORTANT: DO NOT disable animation here. Let the base animation play. */
-        /* The `forwards` animation-fill-mode will keep it at opacity 1. */
-    }
-    .left-card-3d {
-        animation: none; /* Ensure no animation on this wrapper */
-        opacity: 1; /* Make sure it's visible */
-        transform: none; /* Clear any residual transforms */
-    }
-    .about-left-content {
-        max-width: 100%; /* Fill the width of its parent (.left-column-sticky) */
-    }
-
-    /* Right Column (adjust padding for better spacing) */
-    .right-column-scroll {
-        padding-top: 0; /* Remove top padding as main-layout-container handles it */
-        padding-bottom: 50px; /* Adjust bottom padding */
-        min-height: auto; /* No fixed min-height needed on mobile */
-        width: 100%; /* Ensure it takes full width */
-        max-width: 700px; /* Optional: constrain content width for readability */
-        margin: 0 auto; /* Center right column content */
-    }
-
-    /* Headings left-aligned */
-    .hero-heading,
-    .services-heading,
-    .tools-heading {
-        text-align: left;
-        align-self: flex-start; /* Align to the left within the column */
-        margin-left: 0; /* Clear any previous centering margins */
-    }
-
-    /* "MY SERVICES" heading specific adjustments */
-    .services-heading {
-         margin-bottom: 20px; /* Tighter spacing below heading */
-    }
-
-    /* "MY PREMIUM TOOLS" heading matches "MY SERVICES" styling */
-    .tools-heading {
-        font-size: clamp(2.5rem, 8vw, 8rem); /* Match services-heading */
-        line-height: 0.75em; /* Match services-heading */
-        font-weight: 800; /* Match services-heading */
-        text-transform: uppercase; /* Match services-heading */
-        margin-bottom: 20px; /* Standard margin below heading */
-        width: 100%; /* Ensure it spans full width */
-    }
-    .tools-heading .text-white { color: var(--text-light); display: block; }
-    .tools-heading .text-gray { color: var(--text-sub-heading-grey); display: block; }
+/* Hero Section (general) */
+.hero-heading { 
+    font-size: clamp(4rem, 10vw, 7.75em); 
+    line-height: 0.8em; 
+    font-weight: 900; 
+    margin-bottom: 20px; 
+    text-transform: uppercase; 
+    text-align: left; 
+}
+.hero-heading .crafting { color: #ffffff; }
+.hero-heading .digital { color: var(--text-sub-heading-grey); }
+.hero-description { 
+    text-align: justify; 
+    line-height: 1.8; 
+    font-size: 1em; 
+    margin-bottom: 40px; 
+    max-width: 90%; 
+    color: var(--text-medium); 
+    word-spacing: 1px;
 }
 
-/* Services section specific overrides for smaller mobiles (max-width: 768px) */
-@media (max-width: 768px) {
-    .services-section {
-        justify-content: flex-start; /* Align contents to top for headings */
-        text-align: left; /* Ensure section-level text alignment is left */
-        height: auto; 
-        min-height: 100vh; 
-        padding: 60px 20px; 
-        gap: 30px; 
-    }
-    .services-heading {
-        margin-bottom: 40px; /* Restore original mobile margin */
-        align-self: flex-start; /* Align heading to left */
-        text-align: left !important; /* Force left-align text */
-    }
-    .cube-container {
-        align-self: flex-start; /* Align cube to left */
-        margin-left: 0;
-        margin-right: auto;
-    }
-    .cube {
-        align-items: flex-start; /* Align cube content left */
-    }
-    .face {
-        justify-content: center; /* Center content vertically */
-        align-items: flex-start; /* Align face content left */
-        text-align: left;
-    }
-    .face .service-content {
-        justify-content: center;
-        align-items: flex-start;
-        text-align: left;
-    }
-    .service-title {
-        text-align: left;
-    }
-    .service-description {
-        text-align: left;
-    }
-    .face-number {
-        align-self: flex-end; /* Keep face number to the right */
-    }
+/* "MY SERVICES" Section (general) */
+.services-section { 
+    position: relative; 
+    width: 100%; 
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: center; /* Centered by default for desktop */
+    padding: 0 20px; 
+    box-sizing: border-box; 
+    overflow: hidden; 
+    z-index: 2; 
+}
+.services-heading {
+  font-size: clamp(2.5rem, 8vw, 8rem);
+  line-height: 0.75em;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: left; 
+  margin-bottom: 0; 
+  align-self: flex-start; 
+  flex-shrink: 0; 
+  width: 100%;
+  z-index: 2;
+  opacity: 1; 
+  transform: none; 
+  visibility: visible; 
+}
+.services-heading .text-white,
+.services-heading .text-gray {
+  display: block; 
+  opacity: 1 !important; 
+  transform: none !important; 
+}
+.services-heading .text-white { color: var(--text-light); }
+.services-heading .text-gray { color: var(--text-sub-heading-grey); } 
+
+.cube-container { 
+    aspect-ratio: 1 / 1; 
+    margin: 0 auto; 
+    position: relative; 
+    overflow: visible; 
+    will-change: transform, opacity;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    z-index: 1; 
+    max-width: none; 
+    width: auto;     
+    height: auto;    
+    opacity: 1; 
+    transform: none; 
+    visibility: visible; 
+    perspective: 1600px; /* Perspective as per all codes.txt */
+}
+.cube { 
+    position: relative; 
+    width: 100%; 
+    height: 100%; 
+    transform-style: preserve-3d; 
+    will-change: transform;
+    overflow: visible; 
+}
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 20px;
+    background: var(--bg-gradient-2); 
+    padding: clamp(1rem, 4vw, 2.5rem); 
+    border: none; 
+    overflow: hidden; 
+    box-sizing: border-box;
+    text-align: left;
+    box-shadow: var(--shadow-strong); 
+    opacity: 1; /* JS autoAlpha will control this for animation */
+    visibility: visible; /* JS autoAlpha will control this for animation */
+}
+.face .service-content { 
+    width: 100%; 
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: flex-start; 
+    text-align: left;
+    margin: 0; padding: 0; 
+}
+.service-title { 
+    font-size: clamp(1rem, 1.8vw, 1.8rem); 
+    font-weight: 700; 
+    line-height: 1.2; 
+    color: var(--cube-service-title-color); 
+    margin-bottom: clamp(0.5rem, 1vw, 1rem); 
+}
+.service-description { 
+    font-size: clamp(0.875rem, 1.2vw, 1rem); 
+    line-height: 1.4; 
+    color: var(--text-medium); 
+    max-width: 100%; 
+    text-align: left;
+}
+.face-number { 
+    position: absolute; 
+    bottom: clamp(1rem, 2vw, 1.5rem); 
+    right: clamp(1rem, 2vw, 1.5rem); 
+    font-size: clamp(3rem, 10vw, 6rem); 
+    font-weight: 500; 
+    color: rgba(255, 255, 255, 0.08); 
+    z-index: 0; 
+    line-height: 1; 
+    pointer-events: none;
 }
 
-
-/* Premium Tools Section */
-/* Global tools-heading styling now defines its look (moved out of media query for consistency) */
+/* Premium Tools Section (general styling for tools-heading and grid) */
 .tools-heading {
-  font-size: clamp(2.5rem, 8vw, 8rem); 
+  font-size: clamp(2.5rem, 8vw, 8rem); /* Matches services-heading base font-size */
   line-height: 0.75em;
   font-weight: 800;
   text-transform: uppercase;
   margin-bottom: 40px;
   width: 100%;
+  text-align: left; /* Default text alignment */
 }
-.tools-heading .text-white, .tools-heading .text-gray { display: block; }
-.tools-heading .text-white { color: var(--text-light); }
-.tools-heading .text-gray { color: var(--text-sub-heading-grey); }
-
+.tools-heading .text-white { color: var(--text-light); display: block; }
+.tools-heading .text-gray { color: var(--text-sub-heading-grey); display: block; }
 
 .tools-grid { 
     display: grid; 
@@ -402,40 +471,9 @@ html::before {
     margin: 0; 
     line-height: 1.2;
 }
-@media (max-width: 1200px) {
-    .tools-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        max-width: 600px;
-        gap: 15px;
-    }
-    .tool-card {
-        padding: 20px;
-        gap: 15px;
-    }
-}
-@media (max-width: 768px) {
-    .tools-grid {
-        grid-template-columns: 1fr; 
-        max-width: 400px;
-        gap: 15px;
-        margin-top: 40px;
-    }
-    .tool-card {
-        padding: 18px;
-        gap: 12px;
-    }
-}
-@media (max-width: 480px) {
-    .tools-grid {
-        gap: 10px;
-    }
-    .tool-card {
-        padding: 15px;
-        gap: 10px;
-    }
-}
 
-/* Contact Section */
+
+/* Contact Section (general) */
 footer#contact { 
     background-color: var(--bg-section-card); 
     padding: 100px 40px; 
@@ -523,7 +561,183 @@ footer h2 {
 .contact-button.copied .copied-text { transform: translateY(0); opacity: 1; }
 .social-links { margin-top: 30px; }
 
-/* Reduced Motion Override (always disable animations) */
+
+/* --- Media Queries --- */
+
+/* Desktop Specific Styles (min-width: 1024px) */
+@media (min-width: 1024px) { 
+    .main-layout-container { 
+        align-items: flex-start; /* Aligns left column to the top for sticky offset */
+    } 
+    .left-column-sticky { 
+        position: sticky; 
+        top: 50%; 
+        transform: translateY(-50%); /* Sticky transform to center vertically */
+        height: calc(100vh - 100px); /* Height for sticky container */
+        margin: 0; /* Remove default margin when sticky */
+        align-self: flex-start; /* Align to start of flex container */
+        /* Animation will play, then sticky + final animation state apply */
+    } 
+}
+
+/* Tablet & Mobile Layout (max-width: 1023px) */
+@media (max-width: 1023px) {
+    .section { /* General section adjustments for smaller screens */
+        padding: 60px 20px; /* Reduced padding for more content space */
+    }
+    .main-layout-container {
+        flex-direction: column; /* Stack items vertically */
+        padding: 20px; /* Adjusts overall padding for smaller screens */
+        gap: 40px; /* Space between sections */
+        padding-top: 40px; /* More top padding */
+        align-items: center; /* Center column content */
+    }
+    .left-column-sticky {
+        position: relative; /* Remove sticky behavior */
+        top: auto;
+        transform: none; /* Remove any sticky or previous transforms */
+        height: auto; /* Allow content to define height */
+        width: 100%;
+        max-width: 370px; /* Constrain card width for better look on larger tablets */
+        margin: 0 auto 40px auto; /* Center horizontally and add space below */
+        align-self: center; /* Ensure it's centered in the column flow */
+        /* The leftColumnPopIn animation will play normally here */
+    }
+    .about-left-content {
+        max-width: 100%; /* Fill the width of its parent */
+    }
+    .right-column-scroll {
+        padding-top: 0; /* Remove top padding as main-layout-container handles it */
+        padding-bottom: 50px; /* Adjust bottom padding */
+        min-height: auto; /* No fixed min-height needed */
+        width: 100%; 
+        max-width: 700px; /* Constrain content width for readability */
+        margin: 0 auto; /* Center right column content */
+    }
+
+    /* Headings left-aligned for mobile/tablet */
+    .hero-heading,
+    .services-heading,
+    .tools-heading {
+        text-align: left;
+        align-self: flex-start; /* Align to the left within the column */
+        margin-left: 0; /* Clear any previous centering margins */
+    }
+    .services-heading {
+         margin-bottom: 20px; /* Tighter spacing below heading */
+    }
+
+    /* Services Section adjustments for mobile/tablet */
+    .services-section {
+        height: auto; 
+        min-height: 100vh; /* Keep minimum height for scroll behavior if needed */
+        padding: 60px 20px; /* Adjusted padding */
+        gap: 30px; 
+        justify-content: flex-start; /* Align contents to top for headings */
+    }
+    .cube-container {
+        align-self: flex-start; /* Align cube to left */
+        margin-left: 0;
+        margin-right: auto;
+    }
+    .cube {
+        align-items: flex-start; /* Align cube content left */
+        transform-style: flat; /* Ensure flat appearance on mobile */
+        transform: none; /* No 3D rotation on mobile */
+        display: flex; /* Stack faces */
+        flex-direction: column;
+        gap: 20px; 
+        height: auto;
+    }
+    .face {
+        position: relative; /* Stack faces, not absolute */
+        transform: none !important; /* Ensure no 3D transform */
+        opacity: 1 !important; /* Fully visible */
+        visibility: visible !important;
+        height: auto; 
+        padding: 1rem;
+        justify-content: center;
+        align-items: flex-start; /* Align face content left */
+        text-align: left;
+        box-shadow: none; /* Less prominent on mobile stack */
+        background: var(--bg-tool-card); /* Consistent background for stacked cards */
+    }
+    .face .service-content {
+        align-items: flex-start;
+        text-align: left;
+    }
+    .service-title {
+        color: var(--text-light); /* Make title more visible on mobile background */
+        text-align: left;
+    }
+    .service-description {
+        text-align: left;
+    }
+    .face-number {
+        position: relative; 
+        bottom: auto;
+        right: auto;
+        font-size: 0.8em;
+        color: var(--text-medium);
+        margin-top: 10px;
+        align-self: flex-end; /* Keep face number to the right bottom of each card */
+    }
+
+    .tools-grid { /* Adjust tools grid for mobile/tablet */
+        grid-template-columns: 1fr; /* Single column */
+        max-width: 400px; /* Constrain width */
+        gap: 15px;
+        margin-top: 40px;
+    }
+}
+
+/* Smaller Mobile Screens (max-width: 767px - often considered phones) */
+@media (max-width: 767px) {
+    .section { /* Further reduce padding for small screens */
+        padding: 40px 15px;
+    }
+    .main-layout-container {
+        padding: 15px;
+        gap: 30px;
+        padding-top: 30px;
+    }
+    .left-column-sticky {
+        margin-bottom: 30px;
+    }
+    .hero-heading,
+    .services-heading,
+    .tools-heading {
+        font-size: clamp(2rem, 7vw, 6rem); /* Smaller font size for smaller screens */
+    }
+    .tools-grid {
+        gap: 10px;
+        margin-top: 30px;
+    }
+    .tool-card {
+        padding: 15px;
+        gap: 10px;
+    }
+    footer#contact {
+        padding: 60px 20px;
+    }
+    footer h2 {
+        font-size: 2.5em;
+    }
+    .contact-tagline {
+        font-size: 1em;
+    }
+    .contact-buttons {
+        flex-direction: column; /* Stack contact buttons on very small screens */
+        gap: 10px;
+    }
+    .contact-button {
+        width: 100%; /* Full width for stacked buttons */
+        justify-content: center;
+    }
+}
+
+
+/* Accessibility: Reduced Motion Override (should always disable animations) */
 @media (prefers-reduced-motion: reduce) {
     /* Global reveals */
     .reveal-item,
@@ -555,10 +769,6 @@ footer h2 {
     }
 
     /* Services section specific overrides for reduced motion (CSS fallback) */
-    #services-pin-wrapper { 
-        height: auto !important; 
-        position: relative !important;
-    }
     .services-section { 
         position: relative !important;
         top: auto !important;
