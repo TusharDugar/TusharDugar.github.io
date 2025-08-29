@@ -293,7 +293,7 @@ html::before {
     align-items: center; /* Centered by default for desktop */
     padding: 0 20px; 
     box-sizing: border-box; 
-    overflow: hidden; 
+    overflow: visible; /* FIX: Changed from hidden to visible */
     z-index: 2; 
 }
 .services-heading {
@@ -571,11 +571,12 @@ footer h2 {
     .left-column-sticky { 
         position: sticky; 
         top: 50%; 
-        transform: translateY(-50%); /* Sticky transform to center vertically */
+        /* FIX: Overrides animation's final transform to ensure sticky translateY works */
+        transform: translateY(-50%) !important; 
+        animation: none !important; /* FIX: Disables the initial animation after it completes to prevent transform conflicts */
         height: calc(100vh - 100px); /* Height for sticky container */
         margin: 0; /* Remove default margin when sticky */
         align-self: flex-start; /* Aligns its own box to the start of the cross-axis, allowing sticky to operate */
-        /* Animation will play, then sticky + final animation state apply */
     } 
 }
 
@@ -600,7 +601,7 @@ footer h2 {
         max-width: 370px; /* Constrain card width for better look on larger tablets */
         margin: 0 auto 40px auto; /* Center horizontally and add space below */
         align-self: center; /* Ensure it's centered in the column flow */
-        /* The leftColumnPopIn animation will play normally here */
+        /* The leftColumnPopIn animation will play normally here (not disabled by !important) */
     }
     .about-left-content {
         max-width: 100%; /* Fill the width of its parent */
