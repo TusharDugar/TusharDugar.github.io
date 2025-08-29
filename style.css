@@ -293,7 +293,7 @@ html::before {
     align-items: center; /* Centered by default for desktop */
     padding: 0 20px; 
     box-sizing: border-box; 
-    overflow: visible; /* FIX: Changed from hidden to visible */
+    overflow: visible; /* Corrected to visible for pinning */
     z-index: 2; 
 }
 .services-heading {
@@ -356,12 +356,12 @@ html::before {
     justify-content: center;
     border-radius: 20px;
     background: var(--bg-gradient-2); 
-    padding: clamp(1rem, 4vw, 2.5rem); 
-    border: none; 
-    overflow: hidden; 
+    padding: 0 !important; /* FIX: Removed all internal padding for face itself */
+    margin: 0 !important; /* FIX: Ensure no margin */
+    box-shadow: none !important; /* FIX: Remove box-shadow */
+    overflow: hidden; /* Keep internal text contained */
     box-sizing: border-box;
     text-align: left;
-    box-shadow: var(--shadow-strong); 
     opacity: 1; /* JS autoAlpha will control this for animation */
     visibility: visible; /* JS autoAlpha will control this for animation */
 }
@@ -373,7 +373,8 @@ html::before {
     justify-content: center; 
     align-items: flex-start; 
     text-align: left;
-    margin: 0; padding: 0; 
+    padding: clamp(1rem, 4vw, 2.5rem); /* FIX: Moved padding here for internal content */
+    margin: 0; 
 }
 .service-title { 
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
@@ -566,53 +567,52 @@ footer h2 {
 /* Desktop Specific Styles (min-width: 1024px) */
 @media (min-width: 1024px) { 
     .main-layout-container { 
-        align-items: stretch; /* FIX: Ensures both columns take full height for sticky positioning */
+        align-items: stretch; 
     } 
     .left-column-sticky { 
-        position: sticky; 
-        top: 50%; 
-        /* FIX: Overrides animation's final transform to ensure sticky translateY works */
-        transform: translateY(-50%) !important; 
-        animation: none !important; /* FIX: Disables the initial animation after it completes to prevent transform conflicts */
-        height: calc(100vh - 100px); /* Height for sticky container */
-        margin: 0; /* Remove default margin when sticky */
-        align-self: flex-start; /* Aligns its own box to the start of the cross-axis, allowing sticky to operate */
+        position: relative; /* Temporarily set to relative to allow animation to finish */
+        top: auto; /* Temporarily unset top */
+        transform: none; /* Temporarily unset transform */
+        /* JS will apply sticky properties after animation completes */
+        height: calc(100vh - 100px); 
+        margin: 0; 
+        align-self: flex-start; 
     } 
 }
 
 /* Tablet & Mobile Layout (max-width: 1023px) */
 @media (max-width: 1023px) {
-    .section { /* General section adjustments for smaller screens */
-        padding: 60px 20px; /* Reduced padding for more content space */
+    .section { 
+        padding: 60px 20px;
     }
     .main-layout-container {
-        flex-direction: column; /* Stack items vertically */
-        padding: 20px; /* Adjusts overall padding for smaller screens */
-        gap: 40px; /* Space between sections */
-        padding-top: 40px; /* More top padding */
-        align-items: center; /* Center column content */
+        flex-direction: column; 
+        padding: 20px; 
+        gap: 40px; 
+        padding-top: 40px; 
+        align-items: center; 
     }
     .left-column-sticky {
-        position: relative; /* Remove sticky behavior */
+        position: relative; 
         top: auto;
-        transform: none; /* Remove any sticky or previous transforms */
-        height: auto; /* Allow content to define height */
+        transform: none; 
+        height: auto; 
         width: 100%;
-        max-width: 370px; /* Constrain card width for better look on larger tablets */
-        margin: 0 auto 40px auto; /* Center horizontally and add space below */
-        align-self: center; /* Ensure it's centered in the column flow */
-        /* The leftColumnPopIn animation will play normally here (not disabled by !important) */
+        max-width: 370px; 
+        margin: 0 auto 40px auto; 
+        align-self: center; 
+        /* The leftColumnPopIn animation will play normally here */
     }
     .about-left-content {
-        max-width: 100%; /* Fill the width of its parent */
+        max-width: 100%; 
     }
     .right-column-scroll {
-        padding-top: 0; /* Remove top padding as main-layout-container handles it */
-        padding-bottom: 50px; /* Adjust bottom padding */
-        min-height: auto; /* No fixed min-height needed */
+        padding-top: 0; 
+        padding-bottom: 50px; 
+        min-height: auto; 
         width: 100%; 
-        max-width: 700px; /* Constrain content width for readability */
-        margin: 0 auto; /* Center right column content */
+        max-width: 700px; 
+        margin: 0 auto; 
     }
 
     /* Headings left-aligned for mobile/tablet */
@@ -620,54 +620,55 @@ footer h2 {
     .services-heading,
     .tools-heading {
         text-align: left;
-        align-self: flex-start; /* Align to the left within the column */
-        margin-left: 0; /* Clear any previous centering margins */
+        align-self: flex-start; 
+        margin-left: 0; 
     }
     .services-heading {
-         margin-bottom: 20px; /* Tighter spacing below heading */
+         margin-bottom: 20px; 
     }
 
     /* Services Section adjustments for mobile/tablet */
     .services-section {
         height: auto; 
-        min-height: 100vh; /* Keep minimum height for scroll behavior if needed */
-        padding: 60px 20px; /* Adjusted padding */
+        min-height: 100vh; 
+        padding: 60px 20px; 
         gap: 30px; 
-        justify-content: flex-start; /* Align contents to top for headings */
+        justify-content: flex-start; 
     }
     .cube-container {
-        align-self: flex-start; /* Align cube to left */
+        align-self: flex-start; 
         margin-left: 0;
         margin-right: auto;
     }
     .cube {
-        align-items: flex-start; /* Align cube content left */
-        transform-style: flat; /* Ensure flat appearance on mobile */
-        transform: none; /* No 3D rotation on mobile */
-        display: flex; /* Stack faces */
+        align-items: flex-start; 
+        transform-style: flat; 
+        transform: none; 
+        display: flex; 
         flex-direction: column;
         gap: 20px; 
         height: auto;
     }
     .face {
-        position: relative; /* Stack faces, not absolute */
-        transform: none !important; /* Ensure no 3D transform */
-        opacity: 1 !important; /* Fully visible */
+        position: relative; 
+        transform: none !important; 
+        opacity: 1 !important; 
         visibility: visible !important;
         height: auto; 
-        padding: 1rem;
+        padding: 1rem; /* Restore individual face padding for mobile stacked view */
         justify-content: center;
-        align-items: flex-start; /* Align face content left */
+        align-items: flex-start; 
         text-align: left;
-        box-shadow: none; /* Less prominent on mobile stack */
-        background: var(--bg-tool-card); /* Consistent background for stacked cards */
+        box-shadow: none; 
+        background: var(--bg-tool-card); 
     }
     .face .service-content {
         align-items: flex-start;
         text-align: left;
+        padding: 0; /* Remove internal padding here if face has it for mobile */
     }
     .service-title {
-        color: var(--text-light); /* Make title more visible on mobile background */
+        color: var(--text-light); 
         text-align: left;
     }
     .service-description {
@@ -680,12 +681,12 @@ footer h2 {
         font-size: 0.8em;
         color: var(--text-medium);
         margin-top: 10px;
-        align-self: flex-end; /* Keep face number to the right bottom of each card */
+        align-self: flex-end; 
     }
 
-    .tools-grid { /* Adjust tools grid for mobile/tablet */
-        grid-template-columns: 1fr; /* Single column */
-        max-width: 400px; /* Constrain width */
+    .tools-grid { 
+        grid-template-columns: 1fr; 
+        max-width: 400px; 
         gap: 15px;
         margin-top: 40px;
     }
@@ -693,7 +694,7 @@ footer h2 {
 
 /* Smaller Mobile Screens (max-width: 767px - often considered phones) */
 @media (max-width: 767px) {
-    .section { /* Further reduce padding for small screens */
+    .section { 
         padding: 40px 15px;
     }
     .main-layout-container {
@@ -707,7 +708,7 @@ footer h2 {
     .hero-heading,
     .services-heading,
     .tools-heading {
-        font-size: clamp(2rem, 7vw, 6rem); /* Smaller font size for smaller screens */
+        font-size: clamp(2rem, 7vw, 6rem); 
     }
     .tools-grid {
         gap: 10px;
@@ -727,11 +728,11 @@ footer h2 {
         font-size: 1em;
     }
     .contact-buttons {
-        flex-direction: column; /* Stack contact buttons on very small screens */
+        flex-direction: column; 
         gap: 10px;
     }
     .contact-button {
-        width: 100%; /* Full width for stacked buttons */
+        width: 100%; 
         justify-content: center;
     }
 }
@@ -756,9 +757,11 @@ footer h2 {
         animation: none !important;
         transition-duration: 0s !important;
         opacity: 1 !important;
-        transform: none !important; /* Clear base CSS animation transform AND sticky transform */
+        transform: none !important; 
+        position: relative !important; /* Ensure it's not sticky */
+        top: auto !important; /* Ensure top is not set */
     }
-    .left-column-sticky[style*="transform"] { /* Target cases where JS might add transform */
+    .left-column-sticky[style*="transform"] { 
         transform: none !important;
     }
     .left-card-3d {
@@ -852,6 +855,7 @@ footer h2 {
         justify-content: center !important;
         align-items: flex-start !important; 
         text-align: left !important;
+        padding: 0 !important; /* Ensure internal padding is removed */
     }
     .face .service-title {
         color: var(--text-light) !important; 
