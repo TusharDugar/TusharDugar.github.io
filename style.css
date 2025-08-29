@@ -356,9 +356,9 @@ html::before {
     justify-content: center;
     border-radius: 20px;
     background: var(--bg-gradient-2); 
-    padding: 0 !important; /* FIX: Removed all internal padding for face itself */
-    margin: 0 !important; /* FIX: Ensure no margin */
-    box-shadow: none !important; /* FIX: Remove box-shadow */
+    padding: 0; /* FIX: Removed all internal padding for face itself (no !important here) */
+    margin: 0; /* FIX: Ensure no margin (no !important here) */
+    box-shadow: none; /* FIX: Remove box-shadow (no !important here) */
     overflow: hidden; /* Keep internal text contained */
     box-sizing: border-box;
     text-align: left;
@@ -570,14 +570,17 @@ footer h2 {
         align-items: stretch; 
     } 
     .left-column-sticky { 
-        position: relative; /* Temporarily set to relative to allow animation to finish */
-        top: auto; /* Temporarily unset top */
-        transform: none; /* Temporarily unset transform */
-        /* JS will apply sticky properties after animation completes */
+        position: sticky; /* FIX: Directly apply sticky */
+        top: 50%; /* FIX: Directly apply top */
+        transform: translateY(-50%); /* FIX: Directly apply sticky transform */
+        /* Rely on initial animation for opacity and transform: rotateX(0deg) scale(1) translateY(0) */
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
     } 
+    .face {
+        transition: none !important; /* FIX: Prevent CSS transitions from interfering with GSAP .set() */
+    }
 }
 
 /* Tablet & Mobile Layout (max-width: 1023px) */
@@ -655,7 +658,7 @@ footer h2 {
         opacity: 1 !important; 
         visibility: visible !important;
         height: auto; 
-        padding: 1rem; /* Restore individual face padding for mobile stacked view */
+        padding: 1rem; /* FIX: Restore individual face padding for mobile stacked view */
         justify-content: center;
         align-items: flex-start; 
         text-align: left;
@@ -665,7 +668,7 @@ footer h2 {
     .face .service-content {
         align-items: flex-start;
         text-align: left;
-        padding: 0; /* Remove internal padding here if face has it for mobile */
+        padding: 0; /* FIX: Remove internal padding here if face itself has it for mobile */
     }
     .service-title {
         color: var(--text-light); 
@@ -758,8 +761,8 @@ footer h2 {
         transition-duration: 0s !important;
         opacity: 1 !important;
         transform: none !important; 
-        position: relative !important; /* Ensure it's not sticky */
-        top: auto !important; /* Ensure top is not set */
+        position: relative !important; 
+        top: auto !important; 
     }
     .left-column-sticky[style*="transform"] { 
         transform: none !important;
