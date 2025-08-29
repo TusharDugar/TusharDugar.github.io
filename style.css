@@ -158,7 +158,28 @@ html::before {
     transform: none;
     margin: 50px auto 0 auto;
     height: auto;
+    filter: drop-shadow(8.25rem 8.25rem 0.5rem #0005);
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    animation: leftColumnEnter 1.5s ease-out forwards;
 }
+
+@keyframes leftColumnEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion) {
+  .left-column-sticky {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+    opacity: 1 !important; 
+    transform: none !important; 
+  }
+}
+
 @media (min-width: 1024px) { 
     .main-layout-container { align-items: flex-start; } 
     .left-column-sticky { 
