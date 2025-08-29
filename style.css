@@ -165,8 +165,8 @@ html::before {
     transform-style: preserve-3d; 
     filter: none; /* Shadow removed */
 
-    opacity: 0;
-    transform: rotateX(30deg) scale(0.95) translateY(40px);
+    opacity: 0; /* Initial state for animation */
+    transform: rotateX(30deg) scale(0.95) translateY(40px); /* Initial transform for animation */
     animation: leftColumnPopIn 1s ease-out forwards; 
     animation-delay: 0.4s;
     will-change: transform, opacity;
@@ -186,10 +186,10 @@ html::before {
 
 /* Inner wrapper for card, now static */
 .left-card-3d {
-  animation: none !important; 
-  opacity: 1; 
-  transform: none; 
-  will-change: auto; 
+  animation: none; /* Ensure no animation on this wrapper */
+  opacity: 1; /* Make sure it's visible */
+  transform: none; /* Clear any residual transforms */
+  will-change: auto; /* Revert will-change as it's not animating directly now */
   width: 100%; 
   height: 100%; 
   display: flex; 
@@ -209,11 +209,10 @@ html::before {
         height: calc(100vh - 100px); /* Height for sticky container */
         margin: 0; /* Remove default margin when sticky */
         align-self: flex-start; /* Align to start of flex container */
-        /* Ensure animation state is maintained if sticky */
-        opacity: 1; 
-        transform: translateY(-50%); /* Final state includes sticky transform */
+        /* Maintain opacity and transform state from animation, then apply sticky transform */
+        /* The `forwards` fill-mode on the animation handles `opacity: 1` and `transform: rotateX(0) scale(1) translateY(0)` */
+        /* Then the sticky `transform: translateY(-50%)` combines with it */
     } 
-    /* The .left-card-3d is implicitly static due to parent handling animation */
 }
 
 /* Mobile & Tablet Styles (max-width: 1023px) */
@@ -231,21 +230,20 @@ html::before {
     .left-column-sticky {
         position: relative; /* Removes sticky behavior */
         top: auto;
-        transform: none; /* Removes any leftover transforms (sticky or animation) */
+        transform: none; /* Removes any sticky or previous transforms */
         height: auto; /* Allows content to define height */
         width: 100%;
         max-width: 370px; /* Constrain card width for better look on larger tablets */
         margin: 0 auto 40px auto; /* Center horizontally and add space below */
         align-self: center; /* Ensure it's centered in the column flow */
         
-        /* Ensure final state of animation is visible and static */
-        animation: none !important;
-        opacity: 1 !important;
+        /* IMPORTANT: DO NOT disable animation here. Let the base animation play. */
+        /* The `forwards` animation-fill-mode will keep it at opacity 1. */
     }
     .left-card-3d {
-        animation: none !important;
-        opacity: 1 !important;
-        transform: none !important;
+        animation: none; /* Ensure no animation on this wrapper */
+        opacity: 1; /* Make sure it's visible */
+        transform: none; /* Clear any residual transforms */
     }
     .about-left-content {
         max-width: 100%; /* Fill the width of its parent (.left-column-sticky) */
@@ -334,7 +332,7 @@ html::before {
 
 
 /* Premium Tools Section */
-/* Global tools-heading styling now defines its look */
+/* Global tools-heading styling now defines its look (moved out of media query for consistency) */
 .tools-heading {
   font-size: clamp(2.5rem, 8vw, 8rem); 
   line-height: 0.75em;
@@ -525,7 +523,7 @@ footer h2 {
 .contact-button.copied .copied-text { transform: translateY(0); opacity: 1; }
 .social-links { margin-top: 30px; }
 
-/* Reduced Motion Override */
+/* Reduced Motion Override (always disable animations) */
 @media (prefers-reduced-motion: reduce) {
     /* Global reveals */
     .reveal-item,
@@ -544,7 +542,7 @@ footer h2 {
         animation: none !important;
         transition-duration: 0s !important;
         opacity: 1 !important;
-        transform: none !important;
+        transform: none !important; /* Clear base CSS animation transform AND sticky transform */
     }
     .left-column-sticky[style*="transform"] { /* Target cases where JS might add transform */
         transform: none !important;
@@ -571,7 +569,7 @@ footer h2 {
         padding: 80px 40px !important; 
         pointer-events: auto !important;
         flex-direction: column !important; 
-        justify-content: flex-start !important; /* Changed to flex-start */
+        justify-content: flex-start !important; 
         align-items: center !important;
         gap: 20px !important; 
         opacity: 1 !important; 
@@ -580,8 +578,8 @@ footer h2 {
     .services-heading {
         opacity: 1 !important; 
         transform: none !important; 
-        text-align: left !important; /* Force left alignment */
-        align-self: flex-start !important; /* Force left alignment */
+        text-align: left !important; 
+        align-self: flex-start !important; 
     }
     .services-heading .text-white,
     .services-heading .text-gray {
@@ -596,17 +594,16 @@ footer h2 {
         padding-right: 0 !important;
         margin-bottom: 20px !important; 
         justify-content: center !important; 
-        /* Changed to flex-start for mobile/reduced motion */
         align-items: flex-start !important; 
-        text-align: left !important; /* Changed to left */
+        text-align: left !important; 
         z-index: auto !important;
-        align-self: flex-start !important; /* Changed to flex-start */
+        align-self: flex-start !important; 
     }
     .cube-container {
         perspective: none !important; 
         transform: none !important; 
         height: auto !important;
-        margin: 0 !important; /* Clear auto margins */
+        margin: 0 !important; 
         position: relative !important;
         top: auto !important;
         overflow: visible !important;
@@ -615,7 +612,7 @@ footer h2 {
         aspect-ratio: auto !important; 
         margin-top: 0 !important; 
         transform: none !important;
-        align-self: flex-start !important; /* Force left align */
+        align-self: flex-start !important; 
     }
     .cube {
         transform-style: flat !important; 
@@ -625,7 +622,7 @@ footer h2 {
         flex-direction: column;
         gap: 20px; 
         height: auto;
-        align-items: flex-start !important; /* Align cube content left */
+        align-items: flex-start !important; 
     }
     .face {
         transition: none !important;
@@ -635,15 +632,15 @@ footer h2 {
         transform: none !important;
         height: auto !important;
         justify-content: center !important; 
-        align-items: flex-start !important; /* Align face content left */
-        text-align: left !important; /* Align face content text left */
+        align-items: flex-start !important; 
+        text-align: left !important; 
         padding: 1rem !important; 
         box-shadow: none !important; 
         background: var(--bg-tool-card) !important; 
     }
     .face .service-content {
         justify-content: center !important;
-        align-items: flex-start !important; /* Align service content left */
+        align-items: flex-start !important; 
         text-align: left !important;
     }
     .face .service-title {
