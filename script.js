@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // REVISED: Removed apothem clamping, as faceDepth is now fixed to cube-like depth
         // const maxFaceDepthFactor = 0.35; 
         // if (faceDepth > currentCubeDimension * maxFaceDepthFactor) {
-        //     faceDepth = currentCubeDimension * maxFaceDepthFactor; 
+        //     faceDepth = currentCubeDimension * maxCubeDimension; // This line was corrected in previous step
         // }
 
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
@@ -257,19 +257,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); // This will now be 0 from CSS
             
             const viewportHeight = window.innerHeight;
-            // REFINED: Available vertical space calculation simplified
+            // REVISED: Simplified Available vertical space calculation
             // As CSS padding-top and heading margin-bottom are now 0, cubeTopOffset becomes the primary spacer.
             const availableVerticalSpace = viewportHeight; // Simplified for calculation
             
-            // REFINED: Clamp effectiveCubeDimension more aggressively
-            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8); // REFINED: Use viewportHeight * 0.8
+            // REVISED: Clamp effectiveCubeDimension more aggressively
+            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8); // REVISED: Use viewportHeight * 0.8
 
-            const minDesktopCubeDimension = 750; // REFINED: Changed min size to 750px
+            const minDesktopCubeDimension = 750; // REVISED: Changed min size to 750px
             if (effectiveCubeDimension < minDesktopCubeDimension) {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
 
-            // REFINED: CubeContainer Positioning - relies on CSS for horizontal, GSAP for y
+            // REVISED: CubeContainer Positioning - relies on CSS for horizontal, GSAP for y
             gsap.set(cubeContainer, { 
                 position: "relative" // Keep this for GSAP transforms to work correctly
             });
@@ -341,8 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // REFINED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out, NO SCALE)
-            // REFINED: cubeTopOffset now relies purely on headingHeight + 20 (since CSS margins are 0)
+            // REVISED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out, NO SCALE)
+            // REVISED: cubeTopOffset now relies purely on headingHeight + 20 (since CSS margins are 0)
             const cubeTopOffset = servicesHeading.offsetHeight + 20; // Simplified
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
@@ -352,27 +352,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 ease: "none", // Main rotation should be linear for scrub
             });
 
-            // REFINED: Loop through faces to control their autoAlpha based on scroll progress
+            // REVISED: Loop through faces to control their autoAlpha based on scroll progress
             faces.forEach((face, i) => {
                 const startRotation = i * ROTATION_INCREMENT_DEG;
                 const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
                 
-                // REFINED: Smoothly dim to 0.7 instead of an instant 0.01s step
+                // REVISED: Smoothly dim to 0.7
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 0.7, duration: 0.3, ease: "power2.out" }, // REFINED: Duration 0.3, ease out, to 0.7
-                    startRotation / (totalRotation || 1) // Position it correctly in the timeline
+                    { autoAlpha: 0.7, duration: 0.3, ease: "power2.out" }, 
+                    startRotation / (totalRotation || 1) 
                 );
 
                 // Fully activate the current face as it rotates into view
                 cubeAnimationTimeline.to(face, 
                     { autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 
-                    (startRotation / (totalRotation || 1)) + 0.05 // Slightly after its rotation starts
+                    (startRotation / (totalRotation || 1)) + 0.05 
                 );
 
                 // Dim the face again after it passes, but keep it visible
                 cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 0.7, duration: 0.4, ease: "power2.in" }, // REFINED: To 0.7
-                    (endRotation / (totalRotation || 1)) - 0.05 // Slightly before next rotation completes
+                    { autoAlpha: 0.7, duration: 0.4, ease: "power2.in" }, 
+                    (endRotation / (totalRotation || 1)) - 0.05 
                 );
             });
 
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ease: "none", // Keep linear for scrub to work smoothly
             }, 0); // Start at the beginning of the timeline
 
-            // REFINED: Removed the final fade out for cubeContainer.
+            // REVISED: Removed the final fade out for cubeContainer.
             // The cubeContainer remains at autoAlpha:1 and y:cubeTopOffset until the pin ends.
             // No explicit fade-out from the timeline.
         }
