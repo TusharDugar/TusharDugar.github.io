@@ -181,8 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, 
-                // Only the first face is visible initially. Others are hidden.
-                autoAlpha: i === 0 ? 1 : 0, 
+                // FIX: All faces start visible in 3D, relying on perspective to hide others
+                autoAlpha: 1, 
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
@@ -234,6 +234,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             return; 
         }
+
+        // --- FIX 1: Ensure Left Column is visible and sticky on desktop ---
+        // This GSAP.set will override the initial CSS animation properties on desktop (after initial load)
+        // and force the element to be visible, letting the CSS sticky rules then take effect.
+        const leftCol = document.querySelector('.left-column-sticky');
+        if (leftCol && !mobile) { // Only apply this fix on desktop/medium desktop
+            gsap.set(leftCol, { 
+                opacity: 1, 
+                transform: 'translateY(-50%)', // Set to the desired sticky transform
+                animation: 'none', // Remove animation property from inline styles
+                clearProps: 'animation', // Clear any other GSAP-applied animation properties
+                // Position and top are handled by CSS @media (min-width: 1024px)
+            });
+            console.log("Left column: Forcing desktop visibility and sticky transform via GSAP.set.");
+        }
+
 
         // --- Determine Max Desired Cube Size based on Breakpoints ---
         let maxDesiredCubeDimensionForContext = 300; // Base value
@@ -340,59 +356,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 ease: "none", // Main rotation should be linear for scrub
             }, 0); // Start at the beginning of the timeline
 
-            // Add labels and manage face visibility more precisely (instant toggles)
+            // FIX: Removed individual face autoAlpha toggling. All faces are always visible.
+            // The 3D perspective will naturally hide faces not facing the user.
             faces.forEach((face, i) => {
                 const rotationTarget = i * ROTATION_INCREMENT_DEG;
                 const label = `face${i + 1}`;
-                // Calculate progress point relative to the total rotation range for snapping
                 const progressPoint = rotationTarget / ((SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG || 1);
-
-                // Add label to the timeline at the precise moment this face should be front-on
                 cubeAnimationTimeline.addLabel(label, progressPoint);
-
-                // FIX: Use .set for instant visibility toggle, no fading or ghosting
-                cubeAnimationTimeline.set(faces, { autoAlpha: 0 }, label); // Hide all faces instantly
-                cubeAnimationTimeline.set(face, { autoAlpha: 1 }, label);  // Show current face instantly
             });
         }
     });
 
-    // FIX 1: Left Section Visibility & Sticky behavior management
-    const manageLeftColumnSticky = () => {
-        const leftCol = document.querySelector('.left-column-sticky');
-        if (!leftCol) return;
-
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        if (window.innerWidth >= 1024 && !prefersReducedMotion) {
-            // Wait for the CSS animation to complete (1s duration + 0.4s delay = 1.4s)
-            // Then explicitly remove the 'animation' property and ensure visibility/transform
-            setTimeout(() => {
-                leftCol.style.animation = 'none'; // Clear the animation property
-                leftCol.style.opacity = '1';      // Ensure final visibility
-                leftCol.style.transform = 'translateY(-50%)'; // Explicitly apply the final sticky transform
-                // The CSS position: sticky; top: 50%; will then take effect
-                console.log("Left column: Animation cleared, sticky transform applied."); // Debugging
-            }, 1400); // Animation delay + duration
-        } else if (window.innerWidth < 1024 || prefersReducedMotion) {
-            // For mobile/tablet or reduced motion, ensure non-sticky state
-            leftCol.style.position = 'relative';
-            leftCol.style.top = 'auto';
-            leftCol.style.transform = 'none'; // Clear any transform from animation/sticky
-            leftCol.style.animation = 'none'; // Ensure animation is stopped if present
-            leftCol.style.opacity = '1'; // Ensure visible on non-desktop/reduced motion
-            console.log("Left column: Non-sticky/reduced motion state applied."); // Debugging
-        }
-    };
-
-    // Initial call on DOMContentLoaded
-    manageLeftColumnSticky();
-
-    // Call on resize and ScrollTrigger refresh
+    // Call ScrollTrigger.refresh() on resize
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh(); 
-        manageLeftColumnSticky();
-        console.log("Window resized. ScrollTrigger refreshed, Left column sticky re-evaluated."); // Debugging
+        console.log("Window resized. ScrollTrigger refreshed."); // Debugging
     });
 
     // Fallback: Force all revealable elements to become visible after 2s if IO hasn't triggered them
