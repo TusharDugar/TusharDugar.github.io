@@ -257,8 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); // This will now be 0 from CSS
             
             const viewportHeight = window.innerHeight;
-            // REVISED: Simplified Available vertical space calculation
-            // As CSS padding-top and heading margin-bottom are now 0, cubeTopOffset becomes the primary spacer.
+            // REVISED: Simplified Available vertical space calculation - Only headingHeight is needed as CSS padding/margins are 0
             const availableVerticalSpace = viewportHeight; // Simplified for calculation
             
             // REVISED: Clamp effectiveCubeDimension more aggressively
