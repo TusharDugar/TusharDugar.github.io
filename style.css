@@ -164,25 +164,18 @@ html::before {
     
     perspective: 1000px; /* Provides 3D context */
     transform-style: preserve-3d; /* Allows child to animate in 3D */
-    filter: drop-shadow(8.25rem 8.25rem 0.5rem #0005);
+    filter: none; /* Removed the shadow as requested */
+
+    /* Animation applied directly to .left-column-sticky as requested */
+    opacity: 0;
+    transform: rotateX(30deg) scale(0.95) translateY(40px);
+    animation: leftColumnPopIn 1s ease-out forwards; /* Renamed keyframe */
+    animation-delay: 0.4s;
+    will-change: transform, opacity;
 }
 
-/* Inner wrapper for the actual pop-in animation */
-.left-card-3d {
-  opacity: 0;
-  transform: rotateX(30deg) scale(0.95) translateY(40px);
-  animation: cardIntroPop 1s ease-out forwards;
-  animation-delay: 0.4s;
-  will-change: transform, opacity;
-  width: 100%; /* Ensure it fills parent */
-  height: 100%; /* Ensure it fills parent */
-  display: flex; /* Allow its child (about-left-content) to expand */
-  justify-content: center;
-  align-items: center;
-}
-
-/* Keyframes for pop-in 3D effect */
-@keyframes cardIntroPop {
+/* NEW Keyframes for pop-in 3D effect on the entire left column */
+@keyframes leftColumnPopIn {
   0% {
     opacity: 0;
     transform: rotateX(30deg) scale(0.95) translateY(40px);
@@ -193,18 +186,32 @@ html::before {
   }
 }
 
+/* Inner wrapper no longer animates directly */
+.left-card-3d {
+  animation: none !important; /* Disabled animation */
+  opacity: 1; /* Ensured visible */
+  transform: none; /* Ensured no transform */
+  will-change: auto; /* Revert will-change as it's not animating directly now */
+  width: 100%; /* Ensure it fills parent */
+  height: 100%; /* Ensure it fills parent */
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+}
+
 /* Accessibility: disable animations if user prefers reduced motion */
 @media (prefers-reduced-motion) {
-  .left-card-3d {
+  .left-column-sticky {
     animation: none !important;
     transition-duration: 0s !important;
     opacity: 1 !important; /* Ensure it's visible instantly */
     transform: none !important; /* Ensure no initial transform */
   }
-  .left-column-sticky { /* Also ensure parent is static */
-      animation: none !important;
-      transition-duration: 0s !important;
-      transform: none !important; /* Reset any lingering transforms on parent */
+  .left-card-3d {
+    animation: none !important;
+    transition-duration: 0s !important;
+    opacity: 1 !important; /* Ensure it's visible instantly */
+    transform: none !important; /* Ensure no initial transform */
   }
 }
 
@@ -217,22 +224,10 @@ html::before {
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
-        /* filter: none; Removed as it's not strictly necessary and can be handled by JS or for initial state */
+        /* Removed animation: none here to allow the initial animation to play and maintain its final state */
+        opacity: 1; /* Keep visible */
     } 
-    /* Ensure inner card is also static when parent is sticky (desktop) */
-    .left-card-3d {
-        /* animation: none;   <-- THIS LINE WAS REMOVED TO ALLOW ANIMATION ON LOAD */
-        opacity: 1; /* Ensure visible after animation */
-        transform: none; /* Ensure final transform state after animation */
-    }
-    @media (prefers-reduced-motion) {
-        .left-column-sticky {
-            transform: translateY(-50%) !important; 
-        }
-        .left-card-3d {
-            transform: none !important;
-        }
-    }
+    /* .left-card-3d is now explicitly static, as its parent handles the animation */
 }
 .right-column-scroll { 
     flex-grow: 1; 
@@ -389,7 +384,7 @@ html::before {
     opacity: 1; 
     transform: none; 
     visibility: visible; 
-    perspective: 1600px; /* CRITICAL FIX: Changed from 2000px to 1600px */
+    perspective: 1600px; /* Updated perspective as per all codes.txt */
 }
 .cube { 
     position: relative; 
