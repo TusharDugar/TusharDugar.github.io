@@ -145,8 +145,6 @@ html::before {
     min-height: 100vh; 
     padding-top: 20px; 
 }
-
-/* --- Left Column Animation as One Block --- */
 .left-column-sticky { 
     flex-shrink: 0; 
     flex-basis: 370px; 
@@ -155,38 +153,12 @@ html::before {
     align-items: center; 
     justify-content: center; 
     z-index: 2; 
-
-    /* Default (Mobile/Tablet) positioning */
     position: relative;
     top: auto;
     transform: none;
     margin: 50px auto 0 auto;
     height: auto;
-
-    /* New Animation for Left Column */
-    filter: drop-shadow(8.25rem 8.25rem 0.5rem #0005);
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-    animation: leftColumnEnter 1.5s ease-out forwards;
 }
-
-@keyframes leftColumnEnter {
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Accessibility: disable animations if user prefers reduced motion */
-@media (prefers-reduced-motion) {
-  .left-column-sticky {
-    transition-duration: 0s !important;
-    animation-duration: 0s !important;
-    opacity: 1 !important; /* Ensure it's visible instantly */
-    transform: none !important; /* Ensure no initial transform */
-  }
-}
-
 @media (min-width: 1024px) { 
     .main-layout-container { align-items: flex-start; } 
     .left-column-sticky { 
@@ -196,14 +168,13 @@ html::before {
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
-        /* Reset animation on desktop sticky state if needed, or let forwards handle it */
         animation: none; 
         opacity: 1;
-        transform: translateY(-50%); /* Restore sticky transform */
+        transform: translateY(-50%); 
     } 
     @media (prefers-reduced-motion) {
         .left-column-sticky {
-            transform: translateY(-50%) !important; /* Ensure reduced motion also gets correct sticky position */
+            transform: translateY(-50%) !important; 
         }
     }
 }
@@ -314,8 +285,7 @@ html::before {
     flex-direction: column;
     justify-content: flex-start; 
     align-items: center; 
-    /* REFINED: Removed padding-top to harmonize with GSAP y-offset */
-    padding: 0 20px; /* Changed from 20px 20px to 0 20px */
+    padding: 0 20px; 
     box-sizing: border-box; 
     overflow: hidden; 
     z-index: 2; 
@@ -327,8 +297,7 @@ html::before {
   font-weight: 800;
   text-transform: uppercase;
   text-align: left; 
-  /* REVISED: margin-bottom set to 0; JS will dynamically add this spacing */
-  margin-bottom: 0; /* Changed from 40px to 0 */
+  margin-bottom: 0; 
   align-self: flex-start; 
   flex-shrink: 0; 
   width: 100%;
@@ -348,30 +317,19 @@ html::before {
 .services-heading .text-white { color: var(--text-light); }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); } 
 
-/* REFINED: .cube-container styles for optimal positioning within pinned section */
 #services .cube-container { 
     aspect-ratio: 1 / 1; 
-    
-    /* REFINED: Margin for horizontal centering, NO vertical margin here (JS handles y) */
-    margin: 0 auto; /* Auto-center horizontally, GSAP y-offset handles vertical */
-    
-    position: relative; /* Crucial for GSAP transforms to work correctly */
-    /* REFINED: Changed to overflow:visible from cubeContainer to prevent clipping of larger faces */
+    margin: 0 auto; 
+    position: relative; 
     overflow: visible; 
     will-change: transform, opacity;
-    
     display: flex;
-    justify-content: center; /* Center the cube visually within its own container */
+    justify-content: center; 
     align-items: center;
-    
     z-index: 1; 
-    
-    /* REFINED: Let JS control width/height precisely */
-    max-width: none; /* Removed max-width */
-    width: auto;     /* Let JS set exact pixel width */
-    height: auto;    /* Let JS set exact pixel height */
-    
-    /* REFINED: Neutral visual state for CSS, GSAP will set autoAlpha/transform at runtime */
+    max-width: none; 
+    width: auto;     
+    height: auto;    
     opacity: 1; 
     transform: none; 
     visibility: visible; 
@@ -382,7 +340,6 @@ html::before {
     height: 100%; 
     transform-style: preserve-3d; 
     will-change: transform;
-    /* REFINED: Changed to overflow:visible from cube as well, to prevent clipping */
     overflow: visible; 
 }
 .face {
@@ -397,12 +354,10 @@ html::before {
     background: var(--bg-gradient-2); 
     padding: clamp(1rem, 4vw, 2.5rem); 
     border: none; 
-    overflow: hidden; /* Keep overflow hidden for content inside face */
+    overflow: hidden; 
     box-sizing: border-box;
     text-align: left;
     box-shadow: var(--shadow-strong); 
-
-    /* REFINED: Faces start fully visible in CSS, then JS dims inactive ones */
     opacity: 1; 
     visibility: visible; 
 }
@@ -461,7 +416,7 @@ html::before {
         perspective: none; 
         align-self: center; 
         min-height: 300px; 
-        margin-top: 30px; /* Still apply margin on mobile for stacked cards */
+        margin-top: 30px; 
         margin-left: auto; 
         margin-right: auto; 
         left: auto; 
