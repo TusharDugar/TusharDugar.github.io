@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // `sideLength` here is the width/height of a square face.
     function calculateFaceDepth(sideLength) { 
         if (!sideLength || SERVICES_COUNT === 0) return 0;
-        // REVISED: Using the apothem formula for a regular N-sided polygon
+        // Using the apothem formula for a regular N-sided polygon
         // This calculates the correct distance for faces to form an N-sided prism-like structure,
         // which helps achieve the "cube-like" illusion with 8 faces and proper face alignment.
         return (sideLength / 2) / Math.sin(Math.PI / SERVICES_COUNT);
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, 
-                // CRITICAL FIX: Only the first face is visible initially. Others are hidden.
+                // Only the first face is visible initially. Others are hidden.
                 autoAlpha: i === 0 ? 1 : 0, 
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
@@ -205,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, (context) => { 
         
         let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
-        let effectiveCubeDimension = 300; 
 
         // --- Kill/Revert previous animations for clean re-initialization ---
         if (cubeAnimationTimeline) {
@@ -235,24 +234,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- Determine Max Desired Cube Size based on Breakpoints ---
-        let maxDesiredCubeDimension = 300; 
+        let maxDesiredCubeDimensionForContext = 300; // Base value
         if (largeDesktop) {
-            maxDesiredCubeDimension = 850; 
+            maxDesiredCubeDimensionForContext = 400; // New cap for large desktop
         } else if (mediumDesktop) {
-            maxDesiredCubeDimension = 650; 
+            maxDesiredCubeDimensionForContext = 350; // New cap for medium desktop
         } 
         
+        let effectiveCubeDimension = 300; // Default for mobile fallback
+
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
         if (!mobile) { 
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
             const headingHeight = servicesHeading.offsetHeight;
             const viewportHeight = window.innerHeight;
             
-            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8);
+            // Apply new scaling factor and caps
+            effectiveCubeDimension = Math.min(maxDesiredCubeDimensionForContext, viewportHeight * 0.6); 
 
-            const minDesktopCubeDimension = 750;
-            if (effectiveCubeDimension < minDesktopCubeDimension) {
-                effectiveCubeDimension = minDesktopCubeDimension; 
+            // Ensure a minimum size on desktop
+            const minAllowedCubeDimension = 300;
+            if (effectiveCubeDimension < minAllowedCubeDimension) {
+                effectiveCubeDimension = minAllowedCubeDimension;
             }
 
             gsap.set(cubeContainer, { 
@@ -260,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         } else {
-             effectiveCubeDimension = maxDesiredCubeDimension; 
+             effectiveCubeDimension = 300; // Keep mobile fixed at 300
         }
 
         // Apply cube container size based on the calculated dimension
@@ -269,8 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
             height: effectiveCubeDimension, 
             maxWidth: effectiveCubeDimension, 
             maxHeight: effectiveCubeDimension, 
-            // Perspective is now primarily set in CSS but can be overridden here if dynamic JS control is needed.
-            // For now, rely on CSS for perspective: 1600px.
+            // Perspective is now primarily set in CSS to 1600px.
         });
         
         setupInitialCubeFaces(effectiveCubeDimension); 
@@ -315,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     start: "top top",
                     end: "bottom bottom",
                     pin: servicesSection,
-                    scrub: 0.8, 
+                    scrub: 2, // Slower animation as requested
                     snap: {
                         snapTo: "labels", // Snap to defined labels for precise face transitions
                         duration: 0.4,    
@@ -347,16 +349,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 cubeAnimationTimeline.addLabel(label, progressPoint);
 
                 // Hide all faces, then show the current one at this label point
-                cubeAnimationTimeline.to(faces, { autoAlpha: 0, duration: 0.1 }, label); // Hide all faces with a short fade
-                cubeAnimationTimeline.to(face, { autoAlpha: 1, duration: 0.1 }, label); // Make current face fully visible
+                cubeAnimationTimeline.to(faces, { autoAlpha: 0, duration: 0.1 }, label); // Hide all faces quickly
+                cubeAnimationTimeline.to(face, { autoAlpha: 1, duration: 0.4 }, label); // Make current face fully visible (slower fade)
 
                 // Make immediate adjacent faces slightly visible for a smooth transition and hint
                 const prevFaceIndex = (i - 1 + SERVICES_COUNT) % SERVICES_COUNT; // Handle circularity
                 const nextFaceIndex = (i + 1) % SERVICES_COUNT; // Handle circularity
                 
                 // Set neighbors to a very low autoAlpha so they are barely visible but not distorting text
-                cubeAnimationTimeline.to(faces[prevFaceIndex], { autoAlpha: 0.1, duration: 0.1 }, label);
-                cubeAnimationTimeline.to(faces[nextFaceIndex], { autoAlpha: 0.1, duration: 0.1 }, label);
+                cubeAnimationTimeline.to(faces[prevFaceIndex], { autoAlpha: 0.1, duration: 0.4 }, label); // Slower fade for neighbors
+                cubeAnimationTimeline.to(faces[nextFaceIndex], { autoAlpha: 0.1, duration: 0.4 }, label); // Slower fade for neighbors
             });
         }
     });
