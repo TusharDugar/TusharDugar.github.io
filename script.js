@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Services Section 3D Cube Animation (GSAP + ScrollTrigger) ---
     const servicesSection = document.getElementById('services');
-    const servicesPinWrapper = servicesSection; // REFINED: servicesSection is now the pin wrapper directly
+    const servicesPinWrapper = servicesSection; // servicesSection is now the pin wrapper directly
     const servicesHeading = servicesSection ? servicesSection.querySelector('.services-heading') : null;
     const cubeContainer = servicesSection ? servicesSection.querySelector('.cube-container') : null;
     const cube = servicesSection ? document.getElementById('services-cube') : null;
@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fallback if essential elements are missing ---
     if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
+        // Ensure elements are visible and static if animation is aborted
         gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
         gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
         if (servicesHeading) {
@@ -163,36 +164,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // `sideLength` here is the width/height of a square face.
     function calculateFaceDepth(sideLength) { 
         if (!sideLength || SERVICES_COUNT === 0) return 0;
-        // REVISED: Force cube-style depth regardless of polygon math
-        // This makes faces appear flat and close, like a cube face.
-        return sideLength / 2; // Fixed to sideLength / 2
+        // REVISED: Using the apothem formula for a regular N-sided polygon
+        // This calculates the correct distance for faces to form an N-sided prism-like structure,
+        // which helps achieve the "cube-like" illusion with 8 faces and proper face alignment.
+        return (sideLength / 2) / Math.sin(Math.PI / SERVICES_COUNT);
     }
 
     // Set up initial 3D positioning of each face and cube
     function setupInitialCubeFaces(currentCubeDimension) { 
-        const cubeSize = currentCubeDimension; // The effectiveCubeDimension is the sideLength for faces
+        const cubeSize = currentCubeDimension; // effectiveCubeDimension is the sideLength for faces
         let faceDepth = calculateFaceDepth(cubeSize); // Use cubeSize for faceDepth calculation
         
-        // REVISED: Removed apothem clamping, as faceDepth is now fixed to cube-like depth
-        // const maxFaceDepthFactor = 0.35; 
-        // if (faceDepth > currentCubeDimension * maxFaceDepthFactor) {
-        //     faceDepth = currentCubeDimension * maxCubeDimension; 
-        // }
-
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
         faces.forEach((face, i) => {
             gsap.set(face, { 
                 width: currentCubeDimension + "px",  
                 height: currentCubeDimension + "px", 
-                // CRITICAL FIX: Changed rotateY to rotateX for vertical rotation
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, 
-                autoAlpha: 1, // REFINED: Faces start fully visible, JS dims inactive ones
+                // CRITICAL FIX: Only the first face is visible initially. Others are hidden.
+                autoAlpha: i === 0 ? 1 : 0, 
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
         });
-        // CRITICAL FIX: Changed rotateY to rotateX for cube's initial orientation
+        // Set up cube with preserve-3d and initial rotation (0)
         gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, rotateY: 0, transformOrigin: 'center center' }); 
     }
 
@@ -248,21 +244,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
         if (!mobile) { 
-            // REFINED: Set .services-section padding-top to 0 in CSS.
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
-            const sectionPaddingTop = parseFloat(getComputedStyle(servicesSection).paddingTop); 
-            const sectionPaddingBottom = parseFloat(getComputedStyle(servicesSection).paddingBottom);
-            
-            gsap.set(servicesHeading, { autoAlpha: 1, transform: 'none', clearProps: 'autoAlpha,transform' });
             const headingHeight = servicesHeading.offsetHeight;
-            const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); 
-            
             const viewportHeight = window.innerHeight;
-            const availableVerticalSpace = viewportHeight; 
             
-            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8); // REFINED: Use viewportHeight * 0.8
+            effectiveCubeDimension = Math.min(maxDesiredCubeDimension, viewportHeight * 0.8);
 
-            const minDesktopCubeDimension = 750; // REFINED: Changed min size to 750px
+            const minDesktopCubeDimension = 750;
             if (effectiveCubeDimension < minDesktopCubeDimension) {
                 effectiveCubeDimension = minDesktopCubeDimension; 
             }
@@ -281,7 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
             height: effectiveCubeDimension, 
             maxWidth: effectiveCubeDimension, 
             maxHeight: effectiveCubeDimension, 
-            perspective: 2000 
+            // Perspective is now primarily set in CSS but can be overridden here if dynamic JS control is needed.
+            // For now, rely on CSS for perspective: 1600px.
         });
         
         setupInitialCubeFaces(effectiveCubeDimension); 
@@ -318,7 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh';
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
-            const totalRotation = SERVICES_COUNT * ROTATION_INCREMENT_DEG;
 
             cubeAnimationTimeline = gsap.timeline({
                 scrollTrigger: {
@@ -329,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     pin: servicesSection,
                     scrub: 0.8, 
                     snap: {
-                        snapTo: "labels",
+                        snapTo: "labels", // Snap to defined labels for precise face transitions
                         duration: 0.4,    
                         ease: "power3.out" 
                     },
@@ -338,51 +326,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // REVISED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out, NO SCALE)
-            // REVISED: cubeTopOffset now relies purely on headingHeight + 20 (since CSS margins are 0)
-            const cubeTopOffset = servicesHeading.offsetHeight + 20; // Simplified
-            gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
+            const cubeTopOffset = servicesHeading.offsetHeight + 20;
+            gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset });
 
-            // Cube animation timeline now starts with rotation directly
+            // The main cube rotation over the entire ScrollTrigger duration.
+            // It rotates from 0deg (Face 01) up to the position of the last face.
             cubeAnimationTimeline.to(cube, {
-                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, // CRITICAL FIX: Changed rotateY to rotateX
+                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG,
                 ease: "none", // Main rotation should be linear for scrub
-            });
-
-            // REVISED: Loop through faces to control their autoAlpha based on scroll progress
-            faces.forEach((face, i) => {
-                const startRotation = i * ROTATION_INCREMENT_DEG;
-                const endRotation = (i + 1) * ROTATION_INCREMENT_DEG;
-                
-                // REVISED: Smoothly dim to 0.7
-                cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 0.7, duration: 0.3, ease: "power2.out" }, 
-                    startRotation / (totalRotation || 1) 
-                );
-
-                // Fully activate the current face as it rotates into view
-                cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 
-                    (startRotation / (totalRotation || 1)) + 0.05 
-                );
-
-                // Dim the face again after it passes, but keep it visible
-                cubeAnimationTimeline.to(face, 
-                    { autoAlpha: 0.7, duration: 0.4, ease: "power2.in" }, 
-                    (endRotation / (totalRotation || 1)) - 0.05 
-                );
-            });
-
-            // The main cube rotation should happen over the entire timeline
-            cubeAnimationTimeline.to(cube, {
-                rotateX: totalRotation, // CRITICAL FIX: Changed rotateY to rotateX
-                duration: 1, // Normalized duration for GSAP (will be scaled by scrub)
-                ease: "none", // Keep linear for scrub to work smoothly
             }, 0); // Start at the beginning of the timeline
 
-            // REVISED: Removed the final fade out for cubeContainer.
-            // The cubeContainer remains at autoAlpha:1 and y:cubeTopOffset until the pin ends.
-            // No explicit fade-out from the timeline.
+            // Add labels and manage face visibility more precisely to prevent distortion
+            faces.forEach((face, i) => {
+                const rotationTarget = i * ROTATION_INCREMENT_DEG;
+                const label = `face${i + 1}`;
+                // Calculate progress point relative to the total rotation range for snapping
+                const progressPoint = rotationTarget / ((SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG || 1);
+
+                // Add label to the timeline at the precise moment this face should be front-on
+                cubeAnimationTimeline.addLabel(label, progressPoint);
+
+                // Hide all faces, then show the current one at this label point
+                cubeAnimationTimeline.to(faces, { autoAlpha: 0, duration: 0.1 }, label); // Hide all faces with a short fade
+                cubeAnimationTimeline.to(face, { autoAlpha: 1, duration: 0.1 }, label); // Make current face fully visible
+
+                // Make immediate adjacent faces slightly visible for a smooth transition and hint
+                const prevFaceIndex = (i - 1 + SERVICES_COUNT) % SERVICES_COUNT; // Handle circularity
+                const nextFaceIndex = (i + 1) % SERVICES_COUNT; // Handle circularity
+                
+                // Set neighbors to a very low autoAlpha so they are barely visible but not distorting text
+                cubeAnimationTimeline.to(faces[prevFaceIndex], { autoAlpha: 0.1, duration: 0.1 }, label);
+                cubeAnimationTimeline.to(faces[nextFaceIndex], { autoAlpha: 0.1, duration: 0.1 }, label);
+            });
         }
     });
 
