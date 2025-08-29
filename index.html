@@ -11,7 +11,7 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=28"> <!-- Incremented version -->
+    <link rel="stylesheet" href="style.css?v=29"> <!-- Incremented version -->
 
     <!-- GSAP & ScrollTrigger CDNs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -32,20 +32,20 @@
     <div class="main-layout-container">
         <!-- Left Column (Sticky) -->
         <div class="left-column-sticky">
-            <div class="left-card-3d"> <!-- NEW: Wrapper for one-time animation -->
-                <section id="about" class="section about-left-content"> <!-- REMOVED: reveal-parent class -->
+            <div class="left-card-3d">
+                <section id="about" class="section about-left-content">
                     <div class="profile-card-wrapper"> 
                         <div class="dashed-decoration top-left-curve"></div>
                         <div class="dashed-decoration bottom-right-curve"></div>
-                        <div class="profile-image-container"> <!-- REMOVED: reveal-child class -->
+                        <div class="profile-image-container">
                             <img src="images/profile.jpg" alt="Tushar Dugar Profile" class="profile-photo">
                         </div>
-                        <h3>Tushar Dugar</h3> <!-- REMOVED: reveal-child class -->
-                        <div class="fire-icon-with-line"> <!-- REMOVED: reveal-child class -->
+                        <h3>Tushar Dugar</h3>
+                        <div class="fire-icon-with-line">
                             <span class="fire-icon"><i class="fas fa-fire"></i></span>
                         </div>
-                        <p class="about-short-desc">A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.</p> <!-- REMOVED: reveal-child class -->
-                        <div class="about-social-icons"> <!-- REMOVED: reveal-child class -->
+                        <p class="about-short-desc">A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.</p>
+                        <div class="about-social-icons">
                             <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
                             <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
                             <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </section>
-            </div> <!-- END NEW: Wrapper for one-time animation -->
+            </div>
         </div>
 
         <!-- Right Column (Scrolling) -->
@@ -89,7 +89,7 @@
 
             <!-- Premium Tools Section -->
             <section id="tools" class="section reveal-item">
-                <h2 class="tools-heading reveal-item">
+                <h2 class="tools-heading"> <!-- Added tools-heading class directly here -->
                     <span class="text-white">PREMIUM</span>
                     <span class="text-gray">TOOLS</span>
                 </h2>
