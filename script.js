@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // REVISED: Removed apothem clamping, as faceDepth is now fixed to cube-like depth
         // const maxFaceDepthFactor = 0.35; 
         // if (faceDepth > currentCubeDimension * maxFaceDepthFactor) {
-        //     faceDepth = currentCubeDimension * maxCubeDimension; // This line was corrected in previous step
+        //     faceDepth = currentCubeDimension * maxCubeDimension; 
         // }
 
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
@@ -257,7 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const headingMarginBottom = parseFloat(getComputedStyle(servicesHeading).marginBottom); // This will now be 0 from CSS
             
             const viewportHeight = window.innerHeight;
-            // REVISED: Simplified Available vertical space calculation - Only headingHeight is needed as CSS padding/margins are 0
+            // REVISED: Simplified Available vertical space calculation
+            // As CSS padding-top and heading margin-bottom are now 0, cubeTopOffset becomes the primary spacer.
             const availableVerticalSpace = viewportHeight; // Simplified for calculation
             
             // REVISED: Clamp effectiveCubeDimension more aggressively
@@ -341,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // REVISED: Initial GSAP.set for cubeContainer (always visible at start, no fade-in/out, NO SCALE)
-            // REVISED: cubeTopOffset now relies purely on headingHeight + 20 (since CSS margins are 0)
+            // REVISED: cubeTopOffset relies purely on headingHeight + 20 (since CSS margins are 0)
             const cubeTopOffset = servicesHeading.offsetHeight + 20; // Simplified
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset }); // Always visible, positioned, NO SCALE
 
