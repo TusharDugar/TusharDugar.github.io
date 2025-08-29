@@ -356,40 +356,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // FIX: Replaced previous setTimeout with a dedicated function for sticky management
-    // This handles both initial load and resize events more robustly.
-    function manageLeftColumnSticky() {
-        const leftCol = document.querySelector('.left-column-sticky');
-        if (!leftCol) return;
-
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        if (window.innerWidth >= 1024 && !prefersReducedMotion) {
-            // On desktop, after animation, apply sticky properties
-            // The animation-delay (0.4s) + animation-duration (1s) = 1.4s
-            // Give a small buffer (e.g., 100ms) for animation to fully settle.
-            setTimeout(() => {
-                leftCol.style.position = 'sticky';
-                leftCol.style.top = '50%';
-                leftCol.style.transform = 'translateY(-50%)'; 
-                leftCol.style.animation = 'none'; // Clear animation property to prevent conflicts
-            }, 1500); 
-        } else {
-             // For mobile/tablet or reduced motion, ensure it's not sticky
-            leftCol.style.position = 'relative';
-            leftCol.style.top = 'auto';
-            leftCol.style.transform = 'none'; // Clear any transform from animation/sticky
-            leftCol.style.animation = 'none'; // Ensure animation is not playing on mobile
-        }
-    }
-
-    // Call on DOMContentLoaded for initial load
-    manageLeftColumnSticky();
-
-    // Re-evaluate on resize and ScrollTrigger refresh
+    // FIX: Left column animation now purely CSS, with sticky also CSS.
+    // This JS only triggers ScrollTrigger.refresh() on resize.
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh(); 
-        manageLeftColumnSticky();
     });
 
     // Fallback: Force all revealable elements to become visible after 2s if IO hasn't triggered them
