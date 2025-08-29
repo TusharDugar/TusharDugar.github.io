@@ -105,7 +105,7 @@ function initIntersectionObserverAnimations() {
 }
 
 // Global constant for services cube scroll length
-const SCROLL_PER_FACE_VH = 320; // Smoother scroll with just enough breathing room
+const SCROLL_PER_FACE_VH = 240; // FIX: Reduced scroll area
 
 // Main execution block after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (reducedMotion) {
             console.log("Reduced motion detected. Applying flat layout for cube.");
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1, position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
-            gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
+            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
             gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' });
             gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
@@ -236,31 +236,32 @@ document.addEventListener('DOMContentLoaded', () => {
             return; 
         }
 
-        // --- FIX 1: Ensure Left Column is visible and sticky on desktop ---
-        // This GSAP.set will override the initial CSS animation properties on desktop (after initial load)
-        // and force the element to be visible, letting the CSS sticky rules then take effect.
+        // --- Left Column Fix for visibility and sticky ---
         const leftCol = document.querySelector('.left-column-sticky');
-        if (leftCol && !mobile) { // Only apply this fix on desktop/medium desktop
-            gsap.set(leftCol, { 
-                opacity: 1, 
-                display: 'flex', // FIX: Explicitly ensure display is flex
-                transform: 'translateY(-50%)', // Set to the desired sticky transform
-                animation: 'none', // Remove animation property from inline styles
-                clearProps: 'animation', // Clear any other GSAP-applied animation properties
-                // Position and top are handled by CSS @media (min-width: 1024px)
-            });
-            console.log("Left column: Forcing desktop visibility and sticky transform via GSAP.set.");
-        } else if (leftCol && mobile) { // Ensure correct non-sticky state for mobile
+        if (leftCol && !mobile) { // Apply this logic only for desktop/medium screens, not mobile
+            // Desktop logic
+            // The initial CSS animation runs. After it finishes, its animation properties
+            // (opacity:1, transform: translateY(0)) are its final state due to 'forwards'.
+            // Here, we ensure the browser applies the sticky properties and remove the CSS animation property.
+            // This is to combat any caching or browser quirks where 'animation' property might interfere with 'sticky'.
+            setTimeout(() => {
+                leftCol.style.animation = 'none'; // Clear animation property
+                leftCol.style.opacity = '1';      // Explicitly ensure opacity is 1
+                leftCol.style.transform = 'translateY(-50%)'; // Ensure final sticky transform is applied
+                leftCol.style.display = 'flex'; // FIX: Explicitly ensure display is flex
+                console.log("Left column: Animation cleared, sticky transform & display flex applied by JS.");
+            }, 1400); // animation-delay (0.4s) + animation-duration (1s) = 1.4s
+        } else if (leftCol && mobile) { // Ensure correct non-sticky state for mobile, clearing any desktop influence
             gsap.set(leftCol, {
                 opacity: 1,
-                display: 'flex',
+                display: 'flex', // Ensure display is flex for mobile layout
                 transform: 'none',
                 position: 'relative',
                 top: 'auto',
                 animation: 'none',
-                clearProps: 'all'
+                clearProps: 'all' // Clear all GSAP/CSS applied styles
             });
-            console.log("Left column: Set to non-sticky, visible for mobile.");
+            console.log("Left column: Set to non-sticky, visible for mobile via GSAP.set.");
         }
 
 
@@ -297,8 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // NEW: Define cubeWidth and cubeHeight based on effectiveCubeBaseDimension
-        const cubeHeight = effectiveCubeBaseDimension;
-        const cubeWidth = effectiveCubeBaseDimension * 1.5; // FIX: 1.5x wider than height, adjustable ratio
+        const cubeHeight = effectiveCubeBaseDimension * 0.85; // FIX: Reduced height by 15%
+        const cubeWidth = effectiveCubeBaseDimension * 1.5; // Adjusted ratio (1.5x wider)
 
         // Apply cube container size based on the calculated dimensions
         gsap.set(cubeContainer, { 
@@ -339,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); // Debugging: Confirm desktop branch
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
-            servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh';
+            servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh'; // FIX: Using new SCROLL_PER_FACE_VH
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
             cubeAnimationTimeline = gsap.timeline({
@@ -349,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     start: "top top",
                     end: "bottom bottom",
                     pin: servicesSection,
-                    scrub: 2, // Slower animation as requested
+                    scrub: 1, // FIX: Faster animation
                     snap: {
                         snapTo: "labels", // Snap to defined labels for precise face transitions
                         duration: 0.4,    
@@ -362,13 +363,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Tighter vertical alignment below heading
-            const cubeTopOffset = servicesHeading.offsetHeight + 10; 
+            const cubeTopOffset = servicesHeading.offsetHeight + 40; // FIX: Increased offset
             gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset });
 
             // The main cube rotation over the entire ScrollTrigger duration.
             // It rotates from 0deg (Face 01) up to the position of the last face.
             cubeAnimationTimeline.to(cube, {
-                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG,
+                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, // Sequential order is correct here
                 ease: "none", // Main rotation should be linear for scrub
             }, 0); // Start at the beginning of the timeline
 
