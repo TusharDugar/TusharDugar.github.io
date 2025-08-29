@@ -109,7 +109,8 @@ const SCROLL_PER_FACE_VH = 320; // Smoother scroll with just enough breathing ro
 
 // Main execution block after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    
+    console.log("DOMContentLoaded fired."); // Debugging: Confirm DOM is ready
+
     // Mouse Follower Glow
     const mouseFollowerGlow = document.querySelector('.mouse-follower-glow');
     if (mouseFollowerGlow) {
@@ -163,23 +164,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Calculate `translateZ` distance for faces (apothem of a regular polygon)
     // `sideLength` here is the width/height of a square face.
-    function calculateFaceDepth(sideLength) { 
-        if (!sideLength || SERVICES_COUNT === 0) return 0;
+    function calculateFaceDepth(sideHeight) { // Renamed parameter to sideHeight
+        if (!sideHeight || SERVICES_COUNT === 0) return 0;
         // FIX: Changed from Math.sin to Math.tan for correct cube depth
-        return (sideLength / 2) / Math.tan(Math.PI / SERVICES_COUNT);
+        return (sideHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
     }
 
     // Set up initial 3D positioning of each face and cube
-    function setupInitialCubeFaces(currentCubeDimension) { 
-        const cubeSize = currentCubeDimension; // effectiveCubeDimension is the sideLength for faces
-        let faceDepth = calculateFaceDepth(cubeSize); // Use cubeSize for faceDepth calculation
+    function setupInitialCubeFaces(currentCubeWidth, currentCubeHeight) { 
+        console.log(`Setting up initial cube faces with width: ${currentCubeWidth}, height: ${currentCubeHeight}`); // Debugging
+        let faceDepth = calculateFaceDepth(currentCubeHeight); // Use currentCubeHeight for depth calculation
         
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
         faces.forEach((face, i) => {
             gsap.set(face, { 
-                width: currentCubeDimension + "px",  
-                height: currentCubeDimension + "px", 
+                width: currentCubeWidth + "px",  
+                height: currentCubeHeight + "px", 
                 transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, 
                 // FIX: All faces start visible in 3D, relying on perspective to hide others
                 autoAlpha: 1, 
@@ -249,32 +250,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Position and top are handled by CSS @media (min-width: 1024px)
             });
             console.log("Left column: Forcing desktop visibility and sticky transform via GSAP.set.");
+        } else if (leftCol && mobile) { // Ensure correct non-sticky state for mobile
+            gsap.set(leftCol, {
+                opacity: 1,
+                display: 'flex',
+                transform: 'none',
+                position: 'relative',
+                top: 'auto',
+                animation: 'none',
+                clearProps: 'all'
+            });
+            console.log("Left column: Set to non-sticky, visible for mobile.");
         }
 
 
         // --- Determine Max Desired Cube Size based on Breakpoints ---
-        let maxDesiredCubeDimensionForContext = 300; // Base value
+        let maxDesiredCubeBaseDimension = 300; // Base value for height
         if (largeDesktop) {
-            maxDesiredCubeDimensionForContext = 400; // Cap for large desktop
+            maxDesiredCubeBaseDimension = 400; // Cap for large desktop
         } else if (mediumDesktop) {
-            maxDesiredCubeDimensionForContext = 350; // Cap for medium desktop
+            maxDesiredCubeBaseDimension = 350; // Cap for medium desktop
         } 
         
-        let effectiveCubeDimension = 300; // Default for mobile fallback
+        let effectiveCubeBaseDimension = 300; // Default for mobile fallback
 
-        // --- Calculate Dynamic effectiveCubeDimension to fit within viewport ---
+        // --- Calculate Dynamic effectiveCubeBaseDimension to fit within viewport ---
         if (!mobile) { 
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
-            const headingHeight = servicesHeading.offsetHeight;
             const viewportHeight = window.innerHeight;
             
             // Apply new scaling factor and caps
-            effectiveCubeDimension = Math.min(maxDesiredCubeDimensionForContext, viewportHeight * 0.6); 
+            effectiveCubeBaseDimension = Math.min(maxDesiredCubeBaseDimension, viewportHeight * 0.6); 
 
             // Ensure a minimum size on desktop
             const minAllowedCubeDimension = 300;
-            if (effectiveCubeDimension < minAllowedCubeDimension) {
-                effectiveCubeDimension = minAllowedCubeDimension;
+            if (effectiveCubeBaseDimension < minAllowedCubeDimension) {
+                effectiveCubeBaseDimension = minAllowedCubeDimension;
             }
 
             gsap.set(cubeContainer, { 
@@ -282,19 +293,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         } else {
-             effectiveCubeDimension = 300; // Keep mobile fixed at 300
+             effectiveCubeBaseDimension = 300; // Keep mobile fixed at 300
         }
 
-        // Apply cube container size based on the calculated dimension
+        // NEW: Define cubeWidth and cubeHeight based on effectiveCubeBaseDimension
+        const cubeHeight = effectiveCubeBaseDimension;
+        const cubeWidth = effectiveCubeBaseDimension * 1.5; // FIX: 1.5x wider than height, adjustable ratio
+
+        // Apply cube container size based on the calculated dimensions
         gsap.set(cubeContainer, { 
-            width: effectiveCubeDimension, 
-            height: effectiveCubeDimension, 
-            maxWidth: effectiveCubeDimension, 
-            maxHeight: effectiveCubeDimension, 
+            width: cubeWidth, 
+            height: cubeHeight, 
+            maxWidth: cubeWidth, 
+            maxHeight: cubeHeight, 
             // Perspective is now primarily set in CSS to 1600px.
         });
         
-        setupInitialCubeFaces(effectiveCubeDimension); 
+        setupInitialCubeFaces(cubeWidth, cubeHeight); // Pass calculated width and height
 
 
         // --- Setup Cube Animation & Pinning ---
@@ -304,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(servicesHeading, { autoAlpha: 1, y: 0, x: 0 });
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
             gsap.set(cubeContainer, { 
-                autoAlpha: 1, scale: 1, width: effectiveCubeDimension, height: effectiveCubeDimension, 
+                autoAlpha: 1, scale: 1, width: effectiveCubeBaseDimension, height: effectiveCubeBaseDimension, // Square for mobile
                 maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none',
                 left: 'auto', 
                 xPercent: 0, 
@@ -321,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         } else {
-            console.log(`Desktop layout active. Cube size: ${effectiveCubeDimension}px. Setting up 3D animation.`); // Debugging: Confirm desktop branch
+            console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); // Debugging: Confirm desktop branch
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
             servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh';
