@@ -132,21 +132,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const faces = servicesSection ? servicesSection.querySelectorAll('.face') : [];
     const SERVICES_COUNT = faces.length;
 
-    // --- NEW: Select new cube related wrappers ---
     const scrollArea = servicesSection ? servicesSection.querySelector('.scroll-area') : null;
     const stickyCubeWrapper = servicesSection ? servicesSection.querySelector('.sticky-cube-wrapper') : null;
-    const cubeContainer = stickyCubeWrapper ? stickyCubeWrapper.querySelector('.cube-container') : null; // RE-SELECTED: correct parent for cubeContainer
+    const cubeContainer = stickyCubeWrapper ? stickyCubeWrapper.querySelector('.cube-container') : null; 
 
 
     // --- Fallback if essential elements are missing ---
-    if (!servicesSection || !servicesHeading || !cubeContainer || !cube || !scrollArea || !stickyCubeWrapper || SERVICES_COUNT === 0) { // Added checks for new elements
+    if (!servicesSection || !servicesHeading || !cubeContainer || !cube || !scrollArea || !stickyCubeWrapper || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
         gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
         gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
         if (servicesHeading) {
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
         }
-        if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', perspective: 'none' }); // Ensure visible
+        if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', perspective: 'none' }); 
         if (cube) gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
             gsap.set(face, { 
@@ -158,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearProps: 'transform,opacity,visibility,position,transformStyle'
             });
         });
-        // Also ensure scrollArea and stickyWrapper for reduced motion/mobile are static
         if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' });
         if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
         return; 
@@ -181,12 +179,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         faces.forEach((face, i) => {
             const rotation = i * ROTATION_INCREMENT_DEG;
-            const correctedRotation = rotation; 
-
+            // The initial rotation is already included in the setup, so we only rotate on X axis.
+            // No need for a correctedRotation beyond the initial `i * ROTATION_INCREMENT_DEG`
             gsap.set(face, { 
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
-                transform: `rotateX(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
+                transform: `rotateX(${rotation}deg) translateZ(${faceDepth}px)`, 
                 opacity: 1, 
                 visibility: 'visible',
                 position: 'absolute',
@@ -199,28 +197,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const mm = gsap.matchMedia(); 
 
     mm.add({ 
-        "largeDesktop": "(min-width: 1201px)",
-        "mediumDesktop": "(min-width: 769px) and (max-width: 1200px)",
-        "mobile": "(max-width: 768px)",
+        "desktop": "(min-width: 1024px)", // Unified desktop breakpoint with CSS
+        "mobile": "(max-width: 1023px)",   // Unified mobile breakpoint with CSS
         "reducedMotion": "(prefers-reduced-motion: reduce)"
 
     }, (context) => { 
         console.log("MatchMedia callback fired. Conditions:", context.conditions); 
         
-        let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
+        let { desktop, mobile, reducedMotion } = context.conditions;
 
+        // Kill any existing ScrollTriggers for the cube to prevent duplicates
         ScrollTrigger.getById('servicesCubePin')?.kill(true);
         console.log("Previous ScrollTrigger for cube pin killed.");
 
-        if (reducedMotion) {
-            console.log("Reduced motion detected. Applying flat layout for cube.");
-            gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
-            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
+        // If reduced motion or mobile, flatten the cube layout and return
+        if (reducedMotion || mobile) {
+            console.log("Reduced motion or mobile detected. Applying flat layout for cube.");
+            gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,autoAlpha,scale' }); 
+            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0, clearProps: 'opacity,y,x' }); 
             if (servicesHeading) {
-                gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
+                gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, clearProps: 'opacity,y,x' });
             }
-            if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', perspective: 'none' });
-            if (cube) gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
+            if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', perspective: 'none', clearProps: 'all' });
+            if (cube) gsap.set(cube, { transform: 'none', transformStyle: 'flat', clearProps: 'all' });
             faces.forEach(face => {
                 gsap.set(face, { 
                     transform: 'none', 
@@ -228,176 +227,105 @@ document.addEventListener('DOMContentLoaded', () => {
                     visibility: 'visible', 
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,opacity,visibility,position,transformStyle',
-                    filter: 'none' // Reset filter for reduced motion
+                    filter: 'none', // Reset filter for reduced motion/mobile
+                    clearProps: 'transform,opacity,visibility,position,transformStyle,filter'
                 });
             });
-            if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' }); 
-            if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
+            if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative', clearProps: 'height,position' }); 
+            if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none', clearProps: 'position,top,height,perspective' });
             return; 
         }
 
-        const stripedRevealMask = document.querySelector('.striped-reveal-mask');
-        if (stripedRevealMask && !mobile && !reducedMotion) {
-            const revealObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                        console.log("Left column striped overlay removed."); 
+        // --- Desktop 3D Cube Animation Logic (only if not mobile or reduced motion) ---
+        console.log(`Desktop layout active. Setting up 3D animation.`); 
+        gsap.set(servicesSection, { autoAlpha: 1, scale: 1, clearProps: 'autoAlpha,scale' });
 
-                        gsap.from(".about-left-content .reveal-stagger-child", {
-                            opacity: 0,
-                            y: 25,            
-                            duration: 0.5,    
-                            stagger: 0.1,     
-                            delay: 0.2,       
-                            ease: "power2.out",
-                            clearProps: "all"
-                        });
-                        console.log("Left column children staggered reveal triggered with GSAP.");
-                        observer.unobserve(entry.target); 
-                    }
-                });
-            }, { rootMargin: "0px", threshold: 0.1 });
-            revealObserver.observe(stripedRevealMask);
-        } else if (stripedRevealMask) {
-            stripedRevealMask.classList.add('revealed');
-            console.log("Left column striped reveal instantly revealed (mobile or reduced motion).");
-            gsap.set(".about-left-content .reveal-stagger-child", { opacity: 1, y: 0, clearProps: "all" });
-        }
+        const viewportHeight = window.innerHeight;
+        const maxDesiredCubeBaseDimension = 400; // Unified for desktop sizes
+        let effectiveCubeBaseDimension = Math.min(maxDesiredCubeBaseDimension, viewportHeight * 0.6); 
+        const minAllowedCubeDimension = 300;
+        effectiveCubeBaseDimension = Math.max(effectiveCubeBaseDimension, minAllowedCubeDimension); // Ensure minimum size
 
-
-        let maxDesiredCubeBaseDimension = 300; 
-        if (largeDesktop) {
-            maxDesiredCubeBaseDimension = 400; 
-        } else if (mediumDesktop) {
-            maxDesiredCubeBaseDimension = 350; 
-        } 
-        
-        let effectiveCubeBaseDimension = 300; 
-
-        if (!mobile) { 
-            gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
-            const viewportHeight = window.innerHeight;
-            
-            effectiveCubeBaseDimension = Math.min(maxDesiredCubeBaseDimension, viewportHeight * 0.6); 
-
-            const minAllowedCubeDimension = 300;
-            if (effectiveCubeBaseDimension < minAllowedCubeDimension) {
-                effectiveCubeBaseDimension = minAllowedCubeDimension;
-            }
-
-            if (scrollArea) {
-                const faceCount = faces.length;
-                const fixedFaceHeight = 250; // Matches CSS .face height
-                const scrollMultiplier = 1; // 1x viewport height per face transition
-                const totalScrollLength = (faceCount - 1) * fixedFaceHeight * scrollMultiplier; 
-
-                scrollArea.style.height = `${totalScrollLength}px`;
-                console.log(`Scroll area height set to: ${totalScrollLength}px`);
-            }
-
-        } else {
-             effectiveCubeBaseDimension = 300; 
-             if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' }); 
-             if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
-        }
-
-        const cubeHeight = effectiveCubeBaseDimension * 0.8; // FIX: Reduced height by 20%
-        const cubeWidth = effectiveCubeBaseDimension * 1.5; 
+        const fixedFaceHeight = 250; // Matches CSS .face height
+        const cubeHeight = fixedFaceHeight; // Cube's overall height is defined by face height
+        const cubeWidth = effectiveCubeBaseDimension * 1.5; // Width is still proportionally calculated
 
         gsap.set(cubeContainer, { 
             width: cubeWidth, 
             height: cubeHeight, 
             maxWidth: cubeWidth, 
             maxHeight: cubeHeight, 
-            zIndex: 1, // Cube is behind heading (z-index 2)
+            zIndex: 1, 
+            clearProps: 'width,height,maxWidth,maxHeight,zIndex'
         });
         
         setupInitialCubeFaces(cubeWidth, cubeHeight); 
 
-        if (mobile) {
-            console.log("Mobile layout active. Disabling 3D scroll animation.");
-            gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,autoAlpha,scale' });
-            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
-            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
-            if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', perspective: 'none' });
-            if (cube) gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
-            faces.forEach(face => {
-                gsap.set(face, { 
-                    transform: 'none', 
-                    opacity: 1, 
-                    visibility: 'visible', 
-                    position: 'relative', 
-                    transformStyle: 'flat',
-                    clearProps: 'transform,opacity,visibility,position,transformStyle'
+        // Calculate total scroll length for the cube based on face height and count
+        const totalScrollLength = (SERVICES_COUNT - 1) * fixedFaceHeight; 
+        scrollArea.style.height = `${totalScrollLength}px`;
+        console.log(`Scroll area height set to: ${totalScrollLength}px`);
+        
+        // Set initial state for cube (hidden for fade-in)
+        gsap.set(cube, { opacity: 0, y: 100, scale: 0.8, clearProps: 'opacity,y,scale' });
+
+        // Cube entry animation (fade-in and scale up)
+        gsap.fromTo(cube,
+            { opacity: 0, y: 100, scale: 0.8 }, 
+            { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", 
+                scrollTrigger: {
+                    trigger: servicesSection, 
+                    start: "top 80%", 
+                    end: "top 40%", 
+                    scrub: false, 
+                    toggleActions: "play none none reverse", 
+                    onEnter: () => console.log("Cube entry animation triggered (fromTo)."),
+                    onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."),
+                }
+            }
+        );
+
+        // Main cube rotation animation
+        gsap.to(cube, {
+          rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Total rotation to land on Face 08 (315deg)
+          ease: "none",
+          scrollTrigger: {
+            id: 'servicesCubePin',
+            trigger: scrollArea, 
+            start: "top top",
+            end: `+=${totalScrollLength}`, // Use the calculated pixel length for end
+            scrub: true,        
+            pin: stickyCubeWrapper, 
+            anticipatePin: 1,
+            snap: {
+                snapTo: 1 / (SERVICES_COUNT - 1),
+                duration: 0.8, // Slightly reduced duration for snappier feel
+                ease: "power2.inOut"
+            },
+            onUpdate: (self) => {
+              let activeFaceIndex = Math.round(self.progress * (SERVICES_COUNT - 1)); 
+              activeFaceIndex = Math.max(0, Math.min(activeFaceIndex, SERVICES_COUNT - 1)); // Ensure valid index
+
+              faces.forEach((f, i) => {
+                const isActive = (i === activeFaceIndex);
+                gsap.to(f, {
+                    filter: isActive ? "brightness(1.1)" : "brightness(0.3)", // Active face is bright, others dim
+                    duration: 0.3,
+                    ease: "power1.inOut"
                 });
-            });
-        } else {
-            console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); 
-            gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
-
-            // Set initial state for cube (hidden for fade-in)
-            gsap.set(cube, { opacity: 0, y: 100, scale: 0.8 }); // FIX: Initialize cube, not cubeContainer
-
-            gsap.fromTo(cube, // Target cube itself for initial fade-in/scale up
-                { opacity: 0, y: 100, scale: 0.8 }, 
-                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", 
-                    scrollTrigger: {
-                        trigger: servicesSection, 
-                        start: "top 80%", 
-                        end: "top 40%", 
-                        scrub: false, 
-                        toggleActions: "play none none reverse", 
-                        onEnter: () => console.log("Cube entry animation triggered (fromTo)."),
-                        onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."),
-                    }
-                }
-            );
-
-            gsap.to(cube, {
-              rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Total rotation to land on Face 08
-              ease: "none",
-              scrollTrigger: {
-                id: 'servicesCubePin',
-                trigger: scrollArea, // Trigger on the scroll-area wrapper
-                start: "top top",
-                end: `+=${(SERVICES_COUNT - 1) * window.innerHeight * 0.95}`, // FIX: Dynamic end to eliminate blank space. Pacing adjustment.
-                scrub: true,        
-                pin: stickyCubeWrapper, 
-                anticipatePin: 1,
-                snap: {
-                    snapTo: 1 / (SERVICES_COUNT - 1),
-                    duration: 1, // Increased duration for smoother snap
-                    ease: "power2.inOut"             // Gentler easing
-                },
-                onUpdate: (self) => {
-                  let idx = Math.round(self.progress * (SERVICES_COUNT - 1)); 
-                  idx = Math.min(idx, SERVICES_COUNT - 1); 
-
-                  faces.forEach((f, i) => {
-                    const isBright = (i === 0 || i === 4); // Face 01 (index 0) and Face 05 (index 4)
-                    gsap.to(f, {
-                        filter: isBright ? "brightness(1.1)" : "brightness(0.3)", // Apply brightness filter
-                        opacity: 1, // Keep opacity at 1
-                        visibility: "visible", // Ensure visibility is always set to visible
-                        duration: 0.3,
-                        ease: "power1.inOut"
-                    });
-                  });
-                },
-                onLeave: () => { 
-                    gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); // FIX: Target cube itself
-                    console.log("Cube animating out onLeave.");
-                },
-                onEnterBack: () => { 
-                    gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }); // FIX: Target cube itself
-                    console.log("Cube animating in onEnterBack.");
-                }
-              }
-            });
-            console.log("Desktop cube animation setup complete with new logic."); 
-        }
+              });
+            },
+            onLeave: () => { 
+                gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
+                console.log("Cube animating out onLeave.");
+            },
+            onEnterBack: () => { 
+                gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" });
+                console.log("Cube animating in onEnterBack.");
+            }
+          }
+        });
+        console.log("Desktop cube animation setup complete with new logic."); 
     });
 
     window.addEventListener("resize", () => {
