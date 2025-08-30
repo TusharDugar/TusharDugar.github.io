@@ -236,32 +236,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return; 
         }
 
-        // --- FIX 1: Ensure Left Column is visible and sticky on desktop ---
-        const leftCol = document.querySelector('.left-column-sticky');
-        if (leftCol && !mobile) { // Apply this logic only for desktop/medium screens, not mobile
-            // Desktop logic
-            // The initial CSS animation runs. After it finishes, its animation properties
-            // (opacity:1, transform: translateY(0)) are its final state due to 'forwards'.
-            // Here, we ensure the browser applies the sticky properties and remove the CSS animation property.
-            // This is to combat any caching or browser quirks where 'animation' property might interfere with 'sticky'.
-            setTimeout(() => {
-                leftCol.style.animation = 'none'; // Clear animation property
-                leftCol.style.opacity = '1';      // Explicitly ensure opacity is 1
-                leftCol.style.transform = 'translateY(-50%)'; // Ensure final sticky transform is applied
-                leftCol.style.display = 'flex'; // FIX: Explicitly ensure display is flex
-                console.log("Left column: Animation cleared, sticky transform & display flex applied by JS.");
-            }, 1400); // animation-delay (0.4s) + animation-duration (1s) = 1.4s
-        } else if (leftCol && mobile) { // Ensure correct non-sticky state for mobile, clearing any desktop influence
-            gsap.set(leftCol, {
-                opacity: 1,
-                display: 'flex', // Ensure display is flex for mobile layout
-                transform: 'none',
-                position: 'relative',
-                top: 'auto',
-                animation: 'none',
-                clearProps: 'all' // Clear all GSAP/CSS applied styles
+        // --- FIX 1: Left Block One-Time Animation on Page Load ---
+        // Moved here to ensure it's evaluated within matchMedia context for desktop/mobile differentiation
+        const leftBlockContent = document.querySelector(".about-left-content");
+        if (leftBlockContent && !mobile && !reducedMotion) {
+            // Adjust delay to occur after the striped mask is mostly or fully revealed
+            gsap.from(leftBlockContent, {
+                opacity: 0,
+                y: 40,
+                scale: 0.9,
+                duration: 1, // 1 second duration
+                delay: 1.5,   // Start after the 1.5s striped reveal animation (which has 0.4s delay)
+                ease: "power3.out"
             });
-            console.log("Left column: Set to non-sticky, visible for mobile via GSAP.set.");
+            console.log("Left block content animation set to play on desktop.");
+        } else if (leftBlockContent) {
+            // If mobile or reduced motion, ensure it's visible instantly
+            gsap.set(leftBlockContent, { opacity: 1, y: 0, scale: 1 });
+            console.log("Left block content set to visible (mobile or reduced motion).");
         }
 
 
