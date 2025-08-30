@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Calculate `translateZ` distance for faces (apothem of a regular polygon)
     // `sideLength` here is the width/height of a square face.
-    function calculateFaceDepth(sideHeight) { // Renamed parameter to sideHeight
+    function calculateFaceDepth(sideHeight) { 
         if (!sideHeight || SERVICES_COUNT === 0) return 0;
         // FIX: Changed from Math.sin to Math.tan for correct cube depth
         return (sideHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
@@ -178,11 +178,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
         faces.forEach((face, i) => {
+            const rotation = i * ROTATION_INCREMENT_DEG;
+            // FIX: Adjust the initial rotation offset so Face 01 (i=0) is oriented to the front.
+            // Subtracting 90 degrees if rotating on X-axis, because 0deg is usually the "top" not "front"
+            // for CSS 3D transforms. For a face to be "front-facing", it often needs to be at -90deg or 270deg.
+            const correctedRotation = rotation - 90; // Apply a -90 degree offset
+
             gsap.set(face, { 
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
-                transform: `rotateX(${i * ROTATION_INCREMENT_DEG}deg) translateZ(${faceDepth}px)`, 
-                // FIX: All faces start visible in 3D, relying on perspective to hide others
+                transform: `rotateX(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
                 autoAlpha: 1, 
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
@@ -361,7 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // The main cube rotation over the entire ScrollTrigger duration.
             // It rotates from 0deg (Face 01) up to the position of the last face.
             cubeAnimationTimeline.to(cube, {
-                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, // Sequential order is correct here
+                // Adjust total rotation amount based on the corrected initial rotation for each face
+                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, 
                 ease: "none", // Main rotation should be linear for scrub
             }, 0); // Start at the beginning of the timeline
 
