@@ -180,14 +180,15 @@ document.addEventListener('DOMContentLoaded', () => {
         faces.forEach((face, i) => {
             const rotation = i * ROTATION_INCREMENT_DEG;
             // FIX: Adjust the initial rotation offset so Face 01 (i=0) is oriented to the front.
-            // Subtracting 90 degrees if rotating on X-axis, because 0deg is usually the "top" not "front"
-            // for CSS 3D transforms. For a face to be "front-facing", it often needs to be at -90deg or 270deg.
+            // When rotating on the X-axis, 0deg usually points up. To point front, we need an offset.
+            // A -90 degree offset should make Face 01 face the camera initially.
             const correctedRotation = rotation - 90; // Apply a -90 degree offset
 
             gsap.set(face, { 
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
                 transform: `rotateX(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
+                // FIX: All faces start visible in 3D, relying on perspective to hide others
                 autoAlpha: 1, 
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
@@ -365,11 +366,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // The main cube rotation over the entire ScrollTrigger duration.
             // It rotates from 0deg (Face 01) up to the position of the last face.
-            cubeAnimationTimeline.to(cube, {
-                // Adjust total rotation amount based on the corrected initial rotation for each face
-                rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, 
-                ease: "none", // Main rotation should be linear for scrub
-            }, 0); // Start at the beginning of the timeline
+            cubeAnimationTimeline.fromTo(cube, // FIX: Use fromTo to explicitly set starting rotation
+              { rotateX: 0 }, // Start at 0 rotation
+              { rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, ease: "none" }, // Animate to final rotation
+              0 // Start at the beginning of the timeline
+            );
 
             // FIX: Removed individual face autoAlpha toggling. All faces are always visible.
             // The 3D perspective will naturally hide faces not facing the user.
