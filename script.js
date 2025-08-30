@@ -236,24 +236,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return; 
         }
 
-        // --- FIX 1: Left Block One-Time Animation on Page Load ---
-        // Moved here to ensure it's evaluated within matchMedia context for desktop/mobile differentiation
-        const leftBlockContent = document.querySelector(".about-left-content");
-        if (leftBlockContent && !mobile && !reducedMotion) {
-            // Adjust delay to occur after the striped mask is mostly or fully revealed
-            gsap.from(leftBlockContent, {
-                opacity: 0,
-                y: 40,
-                scale: 0.9,
-                duration: 1, // 1 second duration
-                delay: 1.5,   // Start after the 1.5s striped reveal animation (which has 0.4s delay)
-                ease: "power3.out"
-            });
-            console.log("Left block content animation set to play on desktop.");
-        } else if (leftBlockContent) {
-            // If mobile or reduced motion, ensure it's visible instantly
-            gsap.set(leftBlockContent, { opacity: 1, y: 0, scale: 1 });
-            console.log("Left block content set to visible (mobile or reduced motion).");
+        // --- Left Column Striped Reveal Activation ---
+        const stripedRevealMask = document.querySelector('.striped-reveal-mask');
+        if (stripedRevealMask && !mobile && !reducedMotion) {
+            // Use IntersectionObserver to trigger the reveal when it enters the viewport
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        console.log("Left column striped reveal triggered.");
+                        observer.unobserve(entry.target); // Stop observing once revealed
+                    }
+                });
+            }, { rootMargin: "0px", threshold: 0.1 });
+            revealObserver.observe(stripedRevealMask);
+        } else if (stripedRevealMask) {
+            // For mobile or reduced motion, ensure it's immediately revealed (no animation)
+            stripedRevealMask.classList.add('revealed');
+            console.log("Left column striped reveal instantly revealed (mobile or reduced motion).");
         }
 
 
