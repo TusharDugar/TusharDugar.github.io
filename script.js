@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
                 transform: `rotateX(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
-                autoAlpha: 1, // All faces start visible, relying on perspective to hide others
+                autoAlpha: 1, 
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
@@ -285,12 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 effectiveCubeBaseDimension = minAllowedCubeDimension;
             }
 
-            if (scrollArea) { // Only set height if scrollArea exists
-                // The fixed height from CSS is overridden dynamically
+            if (scrollArea) {
                 const faceCount = faces.length;
                 const fixedFaceHeight = 250; // Matches CSS .face height
                 const scrollMultiplier = 1; // 1x viewport height per face transition
-                const totalScrollLength = (faceCount - 1) * fixedFaceHeight * scrollMultiplier; // Total scroll needed for 01-08
+                const totalScrollLength = (faceCount - 1) * fixedFaceHeight * scrollMultiplier; 
 
                 scrollArea.style.height = `${totalScrollLength}px`;
                 console.log(`Scroll area height set to: ${totalScrollLength}px`);
@@ -302,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
              if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
         }
 
-        const cubeHeight = effectiveCubeBaseDimension * 0.8; // Reduced height by 20%
+        const cubeHeight = effectiveCubeBaseDimension * 0.8; // FIX: Reduced height by 20%
         const cubeWidth = effectiveCubeBaseDimension * 1.5; 
 
         gsap.set(cubeContainer, { 
@@ -345,29 +344,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", // Final state
                     scrollTrigger: {
                         trigger: servicesSection, // Trigger on the main services section
-                        start: "top 30%", // Start when top of section is 30% from top of viewport
-                        toggleActions: "play none none reverse", // Play on enter, reverse on leave back
+                        start: "top 80%", // Start when top of section is 80% from top of viewport
+                        end: "top 40%", // Finish before pin starts
+                        scrub: false, 
+                        toggleActions: "play none none reverse", 
                         onEnter: () => console.log("Cube entry animation triggered (fromTo)."),
                         onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."),
-                        // markers: true, // DEBUG
                     }
                 }
             );
 
             gsap.to(cube, {
-              rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Total rotation to land on Face 08
+              rotateX: 360, 
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: scrollArea, // Trigger on the scroll-area wrapper
                 start: "top top",
-                end: `+=${(SERVICES_COUNT - 1) * window.innerHeight * 0.95}`, // FIX: Dynamic end to eliminate blank space. Pacing adjustment.
-                scrub: 1,        
-                pin: stickyCubeWrapper, // FIX: Pin the sticky-cube-wrapper
+                end: `+=${(SERVICES_COUNT - 1) * window.innerHeight}`, // FIX: Dynamic end to eliminate blank space.
+                scrub: true,        
+                pin: stickyCubeWrapper, 
                 anticipatePin: 1,
                 snap: {
-                    snapTo: 1 / (SERVICES_COUNT - 1),
-                    duration: 1, // FIX: Increased duration for smoother snap
+                    snapTo: 1 / (SERVICES_COUNT - 1), 
+                    duration: 2, // FIX: Increased duration for smoother snap
                     ease: "power2.inOut"             // Gentler easing
                 },
                 onUpdate: (self) => {
@@ -375,7 +375,12 @@ document.addEventListener('DOMContentLoaded', () => {
                   idx = Math.min(idx, SERVICES_COUNT - 1); 
 
                   faces.forEach((f, i) => {
-                    gsap.to(f, { autoAlpha: i === idx ? 1 : 0.6, duration: 0.3, ease: "power1.inOut" }); 
+                    gsap.to(f, { 
+                        opacity: i === idx ? 1 : 0.6, 
+                        visibility: "visible", // Ensure visibility is set here
+                        duration: 0.3, 
+                        ease: "power1.inOut" 
+                    }); 
                   });
                 },
                 onLeave: () => { 
