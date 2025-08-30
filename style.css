@@ -809,9 +809,15 @@ footer h2 {
     .left-column-sticky[style*="transform"] { 
         transform: none !important;
     }
-    .left-card-3d {
+    .striped-reveal-mask .striped-overlay { /* Ensure overlay is off for reduced motion */
         animation: none !important;
-        transition-duration: 0s !important;
+        display: none !important;
+    }
+    .striped-reveal-mask.revealed .striped-overlay {
+        display: none !important;
+    }
+    .about-left-content .reveal-stagger-child { /* Ensure children are visible for reduced motion */
+        animation: none !important;
         opacity: 1 !important;
         transform: none !important;
     }
