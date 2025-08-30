@@ -347,14 +347,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
             // Start state: Face 01 fully visible
-            gsap.set(faces, { autoAlpha: 0.2 }); // FIX: Dim all faces more strongly initially
+            gsap.set(faces, { autoAlpha: 0.2 }); // Dim all faces more strongly initially
             gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
 
             // FIX: Add a fade-in animation for the entire cube container when it enters the pinned section
             gsap.from(cubeContainer, {
                 opacity: 0,
                 y: 50, // Slightly move up from bottom
-                duration: 1.5, // FIX: Increased duration for a slower fade-in
+                duration: 1.5, // Increased duration for a slower fade-in
                 delay: 0.2, // Small delay after section pins
                 ease: "power2.out",
                 scrollTrigger: { // Use a separate, immediate ScrollTrigger for its entry
@@ -370,13 +370,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             gsap.to(cube, {
-              rotateX: 360, // FIX: Total rotation for a full 360 vertical cycle
+              rotateX: 360, // Total rotation for a full 360 vertical cycle
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: servicesPinWrapper, // Pin the section wrapper
                 start: "top top",
-                end: `+=${(SERVICES_COUNT - 1) * 150}%`, // FIX: Slower per-face scroll. Now 1.5 viewports per transition.
+                end: `+=${(SERVICES_COUNT - 1) * 200}%`, // FIX: Slower per-face scroll. Now 2 viewports per transition.
                 scrub: true,        // Ensures forward/backward sync with scroll
                 pin: servicesSection, // Pin the visible services section
                 anticipatePin: 1,
@@ -388,13 +388,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 onUpdate: (self) => {
                   // Calculate active face index based on scroll progress
                   // Math.round is more appropriate here to snap to the closest face visually
-                  let idx = Math.round(self.progress * (SERVICES_COUNT)); // FIX: Map progress to total 360 degrees
+                  let idx = Math.round(self.progress * (SERVICES_COUNT - 1)); // Map progress to (SERVICES_COUNT - 1) for 0-7 index range
                   idx = Math.min(idx, SERVICES_COUNT - 1); // Clamp to max index (0-7) for highlighting
 
                   faces.forEach((f, i) => {
                     // Highlight the active face, dim others
                     gsap.set(f, { autoAlpha: i === idx ? 1 : 0.2 }); 
                   });
+                },
+                onLeave: () => { // Add onLeave for smooth cube exit
+                    gsap.to(cubeContainer, { opacity: 0, y: -100, duration: 0.6, ease: "power2.out" });
+                    console.log("Cube container animating out onLeave.");
+                },
+                onEnterBack: () => { // Add onEnterBack for smooth cube re-entry
+                    gsap.fromTo(cubeContainer, { opacity: 0, y: -100 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" });
+                    console.log("Cube container animating in onEnterBack.");
                 }
               }
             });
