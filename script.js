@@ -192,11 +192,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 transformStyle: 'preserve-3d',
             });
         });
-        // Clear specific props on the cube before setting its 3D properties.
-        // The CSS rule for .cube `transform-style: preserve-3d` will act as a fallback.
+        // ✅ KEY FIX: Explicitly set transformStyle: 'preserve-3d' via GSAP.
+        // This will override any conflicting CSS rules on the live site.
         gsap.set(cube, { 
             clearProps: 'transform,transformStyle,transformOrigin,rotateX,rotateY',
-            // transformStyle: 'preserve-3d', // Removed, rely on CSS for resilience
+            transformStyle: 'preserve-3d', // Re-introduced this to be set inline by GSAP
             rotateX: 0, 
             rotateY: 0, 
             transformOrigin: 'center center' 
@@ -284,14 +284,14 @@ document.addEventListener('DOMContentLoaded', () => {
             transform: 'none' // Clear any residual transforms
         });
         
-        // This will set initial rotateX/translateZ on faces, and rotateX: 0 on cube.
-        // It relies on CSS for .cube `transform-style: preserve-3d`.
+        // This will set initial rotateX/translateZ on faces, and rotateX: 0 on cube,
+        // AND now explicitly apply transformStyle: 'preserve-3d' via GSAP.
         setupInitialCubeFaces(cubeWidth, cubeHeight); 
 
         // Calculate total scroll length for the cube based on face height and count
         const totalScrollLength = (SERVICES_COUNT - 1) * fixedFaceHeight; 
         scrollArea.style.height = `${totalScrollLength}px`;
-        console.log("ScrollTrigger is initializing with end:", totalScrollLength); // ✅ Logging for Debugging
+        console.log("ScrollTrigger is initializing with end:", totalScrollLength); 
         
         // Cube entry animation (fade-in and scale up from defined initial state)
         // Explicitly set rotateX: 0 in the 'from' state to guarantee a consistent start.
