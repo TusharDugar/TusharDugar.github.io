@@ -68,9 +68,9 @@ function initIntersectionObserverAnimations() {
   document.querySelectorAll(".reveal-item, .reveal-parent, .reveal-stagger-container").forEach(el => {
     if (el.closest('.services-heading')) {
       // If it's the services heading, ensure it's immediately visible and static (as per previous requirements)
-      gsap.set(el, { opacity: 1, y: 0, x: 0, visibility: 'visible' });
+      gsap.set(el, { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' }); // Added clearProps: 'all' to ensure no previous transforms
       if (el.matches('.services-heading')) { 
-          gsap.set(el.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, visibility: 'visible' });
+          gsap.set(el.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' }); // Added clearProps: 'all'
       }
     } else {
       // For all other reveal elements:
@@ -140,12 +140,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fallback if essential elements are missing ---
     if (!servicesSection || !servicesHeading || !cubeContainer || !cube || !scrollArea || !stickyCubeWrapper || SERVICES_COUNT === 0) {
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
-        gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
-        gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
+        gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible', clearProps: 'all' }); 
+        gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0, clearProps: 'all' }); 
         if (servicesHeading) {
-            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
+            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, clearProps: 'all' });
         }
-        if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', perspective: 'none' }); 
+        if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', perspective: 'none', transform: 'none' }); 
         if (cube) gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
             gsap.set(face, { 
@@ -179,8 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         faces.forEach((face, i) => {
             const rotation = i * ROTATION_INCREMENT_DEG;
-            // The initial rotation is already included in the setup, so we only rotate on X axis.
-            // No need for a correctedRotation beyond the initial `i * ROTATION_INCREMENT_DEG`
             gsap.set(face, { 
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
@@ -189,9 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 visibility: 'visible',
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
+                clearProps: 'transform,opacity,visibility,position,transformStyle' // Clear previous inline styles before setting
             });
         });
-        gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, rotateY: 0, transformOrigin: 'center center' }); 
+        // Ensure cube itself is a 3D container, starting at 0 rotation
+        gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, rotateY: 0, transformOrigin: 'center center', clearProps: 'transform,transformStyle,transformOrigin,rotateX,rotateY' }); 
     }
 
     const mm = gsap.matchMedia(); 
@@ -213,13 +213,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // If reduced motion or mobile, flatten the cube layout and return
         if (reducedMotion || mobile) {
             console.log("Reduced motion or mobile detected. Applying flat layout for cube.");
+            // Explicitly set flat, visible, non-3D states. Avoid aggressive clearProps: 'all'.
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,autoAlpha,scale' }); 
             gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0, clearProps: 'opacity,y,x' }); 
             if (servicesHeading) {
                 gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, clearProps: 'opacity,y,x' });
             }
-            if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', perspective: 'none', clearProps: 'all' });
-            if (cube) gsap.set(cube, { transform: 'none', transformStyle: 'flat', clearProps: 'all' });
+            if (cubeContainer) {
+                gsap.set(cubeContainer, { 
+                    opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', 
+                    position: 'relative', top: 'auto', perspective: 'none', transform: 'none', clearProps: 'all' // Clear props of the container that GSAP might have set
+                });
+            }
+            if (cube) { // Flatten cube element
+                gsap.set(cube, { transform: 'none', transformStyle: 'flat', clearProps: 'all' }); // Clear all props of the cube itself
+            }
             faces.forEach(face => {
                 gsap.set(face, { 
                     transform: 'none', 
@@ -266,13 +274,10 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollArea.style.height = `${totalScrollLength}px`;
         console.log(`Scroll area height set to: ${totalScrollLength}px`);
         
-        // Set initial state for cube (hidden for fade-in)
-        gsap.set(cube, { opacity: 0, y: 100, scale: 0.8, clearProps: 'opacity,y,scale' });
-
-        // Cube entry animation (fade-in and scale up)
+        // Cube entry animation (fade-in and scale up from defined initial state)
         gsap.fromTo(cube,
-            { opacity: 0, y: 100, scale: 0.8 }, 
-            { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", 
+            { opacity: 0, y: 100, scale: 0.8 }, // From these values
+            { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", // To these values
                 scrollTrigger: {
                     trigger: servicesSection, 
                     start: "top 80%", 
