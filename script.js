@@ -187,7 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
                 transform: `rotateX(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
-                autoAlpha: 1, 
+                opacity: 1, // All faces start visible, brightness filter handles dimming
+                visibility: 'visible',
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
@@ -227,7 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     visibility: 'visible', 
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,opacity,visibility,position,transformStyle'
+                    clearProps: 'transform,opacity,visibility,position,transformStyle',
+                    filter: 'none' // Reset filter for reduced motion
                 });
             });
             if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' }); 
@@ -301,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
              if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
         }
 
-        const cubeHeight = effectiveCubeBaseDimension * 0.8; // FIX: Reduced height by 20%
+        const cubeHeight = effectiveCubeBaseDimension * 0.8; // Reduced height by 20%
         const cubeWidth = effectiveCubeBaseDimension * 1.5; 
 
         gsap.set(cubeContainer, { 
@@ -335,11 +337,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); 
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
-            gsap.set(faces, { autoAlpha: 0.6 }); // All faces readable
-            gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
+            // Initial state for cube container (hidden for fade-in)
+            gsap.set(cubeContainer, { opacity: 0, y: 50 }); // Set initial state for cubeContainer (used by entry animation)
 
-            // FIX: Add a fade-in animation for the entire cube container when it enters the pinned section
-            gsap.from(cube, // Target cube itself for initial animation
+            gsap.fromTo(cubeContainer, // Target cubeContainer for initial fade-in/scale up
                 { opacity: 0, y: 100, scale: 0.8 }, // Smaller initial scale, moves up
                 { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", // Final state
                     scrollTrigger: {
@@ -348,26 +349,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         end: "top 40%", // Finish before pin starts
                         scrub: false, 
                         toggleActions: "play none none reverse", 
-                        onEnter: () => console.log("Cube entry animation triggered (fromTo)."),
-                        onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."),
+                        onEnter: () => console.log("Cube container entry animation triggered (fromTo)."),
+                        onLeaveBack: () => console.log("Cube container entry animation reversed (fromTo)."),
                     }
                 }
             );
 
             gsap.to(cube, {
-              rotateX: 360, 
+              rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Total rotation to land on Face 08
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: scrollArea, // Trigger on the scroll-area wrapper
                 start: "top top",
-                end: `+=${(SERVICES_COUNT - 1) * window.innerHeight}`, // FIX: Dynamic end to eliminate blank space.
+                end: `+=${(SERVICES_COUNT - 1) * window.innerHeight * 0.95}`, // FIX: Dynamic end to eliminate blank space. Pacing adjustment.
                 scrub: true,        
                 pin: stickyCubeWrapper, 
                 anticipatePin: 1,
                 snap: {
-                    snapTo: 1 / (SERVICES_COUNT - 1), 
-                    duration: 2, // FIX: Increased duration for smoother snap
+                    snapTo: 1 / (SERVICES_COUNT - 1),
+                    duration: 1, // Increased duration for smoother snap
                     ease: "power2.inOut"             // Gentler easing
                 },
                 onUpdate: (self) => {
@@ -375,21 +376,23 @@ document.addEventListener('DOMContentLoaded', () => {
                   idx = Math.min(idx, SERVICES_COUNT - 1); 
 
                   faces.forEach((f, i) => {
-                    gsap.to(f, { 
-                        opacity: i === idx ? 1 : 0.6, 
-                        visibility: "visible", // Ensure visibility is set here
-                        duration: 0.3, 
-                        ease: "power1.inOut" 
-                    }); 
+                    const isBright = (i === 0 || i === 4); // Face 01 (index 0) and Face 05 (index 4)
+                    gsap.to(f, {
+                        filter: isBright ? "brightness(1.1)" : "brightness(0.3)", // Apply brightness filter
+                        opacity: 1, // Keep opacity at 1
+                        visibility: "visible", // Ensure visibility is always set to visible
+                        duration: 0.3,
+                        ease: "power1.inOut"
+                    });
                   });
                 },
                 onLeave: () => { 
-                    gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
-                    console.log("Cube animating out onLeave.");
+                    gsap.to(cubeContainer, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
+                    console.log("Cube container animating out onLeave.");
                 },
                 onEnterBack: () => { 
-                    gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }); 
-                    console.log("Cube animating in onEnterBack.");
+                    gsap.fromTo(cubeContainer, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }); 
+                    console.log("Cube container animating in onEnterBack.");
                 }
               }
             });
