@@ -371,11 +371,11 @@ html::before {
     margin-bottom: 0; /* Remove bottom margin */
     padding-bottom: 0; /* Remove bottom padding */
 }
-.cube { 
+#services-cube { /* Targeting by ID for higher specificity */
     position: relative; 
     width: 100%; 
     height: 100%; 
-    transform-style: preserve-3d !important; /* ✅ ADDED: CRITICAL CSS BACKUP FIX */
+    transform-style: preserve-3d !important; /* ✅ Added: CRITICAL CSS BACKUP FIX with !important */
     will-change: transform;
     overflow: visible; 
 }
@@ -674,8 +674,8 @@ footer h2 {
         z-index: auto !important;
         aspect-ratio: auto !important;
     }
-    .cube { 
-        transform-style: flat !important; 
+    #services-cube { /* Using ID for specificity, matches JS */
+        transform-style: flat !important; /* Enforce flat on mobile */
         transform: none !important; 
         display: flex !important; 
         flex-direction: column !important; 
@@ -861,7 +861,7 @@ footer h2 {
         top: auto !important;
         transform: none !important;
     }
-    .cube {
+    #services-cube { /* Using ID for specificity, matches JS */
         transform-style: flat !important; 
         transform: none !important;
         transition: none !important;
