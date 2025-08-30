@@ -104,9 +104,6 @@ function initIntersectionObserverAnimations() {
   });
 }
 
-// Global constant for services cube scroll length (this constant is no longer used, as ScrollTrigger end property manages spacing)
-const SCROLL_PER_FACE_VH = 90; // Value for ScrollTrigger end calculation
-
 // Main execution block after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOMContentLoaded fired."); // Debugging: Confirm DOM is ready
@@ -357,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.from(cubeContainer, {
                 opacity: 0,
                 y: 50, // Slightly move up from bottom
-                duration: 0.8,
+                duration: 1.5, // FIX: Increased duration for a slower fade-in
                 delay: 0.2, // Small delay after section pins
                 ease: "power2.out",
                 scrollTrigger: { // Use a separate, immediate ScrollTrigger for its entry
@@ -380,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 trigger: servicesPinWrapper, // Pin the section wrapper
                 start: "top top",
                 end: `+=${(SERVICES_COUNT - 1) * 100}%`, // FIX: Proportional scroll length (1 viewport height per face)
-                scrub: true,        // Faster scrub
+                scrub: true,        // Ensures forward/backward sync with scroll
                 pin: servicesSection, // Pin the visible services section
                 anticipatePin: 1,
                 // markers: true, // DEBUG: Temporarily enable to debug ScrollTrigger
@@ -392,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                   faces.forEach((f, i) => {
                     // Highlight the active face, dim others
-                    gsap.set(f, { autoAlpha: i === idx ? 1 : 0.5 });
+                    gsap.set(f, { autoAlpha: i === idx ? 1 : 0.2 }); // FIX: More obvious dimming
                   });
                 }
               }
