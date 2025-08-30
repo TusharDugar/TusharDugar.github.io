@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
                 transform: `rotateX(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
-                opacity: 1, // All faces start visible, brightness filter handles dimming
+                opacity: 1, 
                 visibility: 'visible',
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
@@ -303,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
              if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
         }
 
-        const cubeHeight = effectiveCubeBaseDimension * 0.8; // Reduced height by 20%
+        const cubeHeight = effectiveCubeBaseDimension * 0.8; // FIX: Reduced height by 20%
         const cubeWidth = effectiveCubeBaseDimension * 1.5; 
 
         gsap.set(cubeContainer, { 
@@ -337,20 +337,20 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); 
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
-            // Initial state for cube container (hidden for fade-in)
-            gsap.set(cubeContainer, { opacity: 0, y: 50 }); // Set initial state for cubeContainer (used by entry animation)
+            // Set initial state for cube (hidden for fade-in)
+            gsap.set(cube, { opacity: 0, y: 100, scale: 0.8 }); // FIX: Initialize cube, not cubeContainer
 
-            gsap.fromTo(cubeContainer, // Target cubeContainer for initial fade-in/scale up
-                { opacity: 0, y: 100, scale: 0.8 }, // Smaller initial scale, moves up
-                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", // Final state
+            gsap.fromTo(cube, // Target cube itself for initial fade-in/scale up
+                { opacity: 0, y: 100, scale: 0.8 }, 
+                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", 
                     scrollTrigger: {
-                        trigger: servicesSection, // Trigger on the main services section
-                        start: "top 80%", // Start when top of section is 80% from top of viewport
-                        end: "top 40%", // Finish before pin starts
+                        trigger: servicesSection, 
+                        start: "top 80%", 
+                        end: "top 40%", 
                         scrub: false, 
                         toggleActions: "play none none reverse", 
-                        onEnter: () => console.log("Cube container entry animation triggered (fromTo)."),
-                        onLeaveBack: () => console.log("Cube container entry animation reversed (fromTo)."),
+                        onEnter: () => console.log("Cube entry animation triggered (fromTo)."),
+                        onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."),
                     }
                 }
             );
@@ -387,12 +387,12 @@ document.addEventListener('DOMContentLoaded', () => {
                   });
                 },
                 onLeave: () => { 
-                    gsap.to(cubeContainer, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
-                    console.log("Cube container animating out onLeave.");
+                    gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); // FIX: Target cube itself
+                    console.log("Cube animating out onLeave.");
                 },
                 onEnterBack: () => { 
-                    gsap.fromTo(cubeContainer, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }); 
-                    console.log("Cube container animating in onEnterBack.");
+                    gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }); // FIX: Target cube itself
+                    console.log("Cube animating in onEnterBack.");
                 }
               }
             });
