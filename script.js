@@ -209,16 +209,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }, (context) => {
         const screenWidth = window.innerWidth;
         const reducedMotion = context.conditions.reducedMotion;
-        const isMobileDevice = /Mobi|Android|iPhone|iPad|Mobile|Tablet/i.test(navigator.userAgent);
+        // Removed isMobileDevice from userAgent for more reliable desktop detection.
+        // Mobile is now defined purely by screen width or reduced motion.
 
-        // Desktop is when screen is wide, it's not detected as a mobile device, AND not reduced motion.
-        const desktop = screenWidth > 1023 && !isMobileDevice && !reducedMotion;
-        // Mobile is simply when it's NOT desktop (covers true mobile, narrow desktop windows, or user agent-detected mobile).
+        // Desktop is when screen is wide AND not reduced motion.
+        const desktop = screenWidth > 1023 && !reducedMotion;
+        // Mobile is when screen is NOT desktop (i.e., narrow width OR reduced motion).
         const mobile = !desktop; 
 
         console.log("Device Detection:", {
             screenWidth,
-            isMobileDevice,
             desktop,
             mobile,
             reducedMotion
@@ -349,26 +349,4 @@ document.addEventListener('DOMContentLoaded', () => {
                     // console.log("Cube animating out onLeave."); // Debugging removed
                 },
                 onEnterBack: () => { 
-                    gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" });
-                    // console.log("Cube animating in onEnterBack."); // Debugging removed
-                }
-              }
-            });
-            // console.log("Desktop cube animation setup complete with new logic."); // Debugging removed
-        }
-    });
-
-    window.addEventListener("resize", () => {
-        ScrollTrigger.refresh(); 
-        // console.log("Window resized. ScrollTrigger refreshed."); // Debugging removed
-    });
-
-    setTimeout(() => {
-        document.querySelectorAll('.reveal-item, .reveal-child, .reveal-stagger').forEach(el => {
-            if (!el.classList.contains('visible') && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                el.classList.add("visible");
-                // console.log("Reveal fallback triggered for:", el); // Debugging removed
-            }
-        });
-    }, 2000);
-});
+                    gsap.
