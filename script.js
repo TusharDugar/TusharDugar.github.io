@@ -105,7 +105,7 @@ function initIntersectionObserverAnimations() {
 }
 
 // Global constant for services cube scroll length (now unused, replaced by ScrollTrigger end property)
-const SCROLL_PER_FACE_VH = 90; 
+const SCROLL_PER_FACE_VH = 90; // Value for ScrollTrigger end calculation
 
 // Main execution block after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -346,22 +346,22 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); // Debugging: Confirm desktop branch
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
-            // No manual servicesPinWrapper height needed; ScrollTrigger 'end' manages spacing.
+            // FIX: Removed manual servicesPinWrapper height assignment. ScrollTrigger 'end' manages spacing.
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
             // Start state: only face 01 fully visible
-            gsap.set(faces, { autoAlpha: 0.5 });
+            gsap.set(faces, { autoAlpha: 0.5 }); // Dim all faces initially
             gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
 
             gsap.to(cube, {
-              rotateY: 315, // FIX: 360 * (7/8) for 8 faces (0-7), total 7 steps of 45 degrees
+              rotateY: 315, // FIX: Total rotation for 8 faces (0-7), 7 steps of 45 degrees
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: servicesPinWrapper, // Pin the section wrapper
                 start: "top top",
-                end: "+=2500", // FIX: ~2.5 screens for smooth compressed scroll (pixels not vh for robustness)
-                scrub: true, // Use true for continuous scrubbing
+                end: "+=250vh", // FIX: 2.5 screens worth of scroll for the animation
+                scrub: 1,        // Faster scrub
                 pin: servicesSection, // Pin the visible services section
                 anticipatePin: 1,
                 // markers: true, // DEBUG: Temporarily enable to debug ScrollTrigger
