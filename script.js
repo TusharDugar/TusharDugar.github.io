@@ -174,7 +174,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Set up initial 3D positioning of each face and cube
     function setupInitialCubeFaces(currentCubeWidth, currentCubeHeight) { 
-        // console.log(`Setting up initial cube faces with width: ${currentCubeWidth}, height: ${currentCubeHeight}`); // Debugging removed
         let faceDepth = calculateFaceDepth(currentCubeHeight); 
         
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
@@ -203,15 +202,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mm = gsap.matchMedia(); 
 
-    // ✅ FINAL CORRECTED MATCHMEDIA LOGIC FOR ROBUST DEVICE DETECTION
+    // ✅ FINAL CORRECTED MATCHMEDIA LOGIC WITH PROPER CLOSURE
     mm.add({
       reducedMotion: "(prefers-reduced-motion: reduce)"
     }, (context) => {
         const screenWidth = window.innerWidth;
         const reducedMotion = context.conditions.reducedMotion;
-        // Removed isMobileDevice from userAgent for more reliable desktop detection.
-        // Mobile is now defined purely by screen width or reduced motion.
-
+        
         // Desktop is when screen is wide AND not reduced motion.
         const desktop = screenWidth > 1023 && !reducedMotion;
         // Mobile is when screen is NOT desktop (i.e., narrow width OR reduced motion).
@@ -222,12 +219,11 @@ document.addEventListener('DOMContentLoaded', () => {
             desktop,
             mobile,
             reducedMotion
-        }); // ✅ Keep this log for final verification!
+        }); 
 
         // Kill any existing ScrollTriggers for the cube to prevent duplicates
         ScrollTrigger.getById('servicesCubePin')?.kill(true);
-        // console.log("Previous ScrollTrigger for cube pin killed."); // Debugging removed
-
+        
         // IMPORTANT: Aggressively clear ALL GSAP-set inline styles on key elements
         // at the start of ANY matchMedia callback. This ensures no lingering
         // styles from a previous breakpoint conflict with the new one.
@@ -237,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         if (reducedMotion || mobile) {
-            // console.log("Reduced motion or mobile detected. Applying flat layout for cube."); // Debugging removed
             // Explicitly set non-3D, flat properties for mobile/reduced motion.
             gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
             gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
@@ -254,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 gsap.set(cube, { transform: 'none', transformStyle: 'flat', rotateX: 0, rotateY: 0, scale: 1, opacity: 1 });
             }
             faces.forEach(face => {
-                // Faces now rely on the .reveal-item class for their mobile animation (HTML already updated)
                 gsap.set(face, { 
                     transform: 'none', 
                     opacity: 1, 
@@ -271,7 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- Desktop 3D Cube Animation Logic (only if desktop = true) ---
         if (desktop) { 
-            // console.log(`Desktop layout active. Setting up 3D animation.`); // Debugging removed
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
             const viewportHeight = window.innerHeight;
@@ -298,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const totalScrollLength = (SERVICES_COUNT - 1) * fixedFaceHeight; 
             scrollArea.style.height = `${totalScrollLength}px`;
-            // console.log("ScrollTrigger is initializing with end:", totalScrollLength); // Debugging removed
             
             gsap.fromTo(cube,
                 { opacity: 0, y: 100, scale: 0.8, rotateX: 0 },
@@ -309,8 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         end: "top 40%", 
                         scrub: false, 
                         toggleActions: "play none none reverse", 
-                        // onEnter: () => console.log("Cube entry animation triggered (fromTo)."), // Debugging removed
-                        // onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."), // Debugging removed
                     }
                 }
             );
@@ -346,7 +336,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 onLeave: () => { 
                     gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
-                    // console.log("Cube animating out onLeave."); // Debugging removed
                 },
                 onEnterBack: () => { 
-                    gsap.
+                    gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" });
+                }
+              }
+            });
+        } // <- ✅ CLOSED: if (desktop) block
+    }); // <- ✅ CLOSED: mm.add() method call
+
+    window.addEventListener("resize", () => {
+        ScrollTrigger.refresh(); 
+    });
+
+    setTimeout(() => {
+        document.querySelectorAll('.reveal-item, .reveal-child, .reveal-stagger').forEach(el => {
+            if (!el.classList.contains('visible') && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                el.classList.add("visible");
+            }
+        });
+    }, 2000);
+});
