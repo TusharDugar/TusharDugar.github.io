@@ -205,15 +205,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mm = gsap.matchMedia(); 
 
-    mm.add({ 
-        "desktop": "(min-width: 1024px)", // Unified desktop breakpoint with CSS
-        "mobile": "(max-width: 1023px)",   // Unified mobile breakpoint with CSS
-        "reducedMotion": "(prefers-reduced-motion: reduce)"
+    // ✅ UPDATED MATCHMEDIA LOGIC FOR ROBUST DEVICE DETECTION
+    mm.add({
+      // No explicit min/max width conditions here, they will be handled by custom logic
+      reducedMotion: "(prefers-reduced-motion: reduce)"
+    }, (context) => {
+        // More robust device detection
+        const isMobileDevice = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+        const reducedMotion = context.conditions.reducedMotion;
 
-    }, (context) => { 
-        console.log("MatchMedia callback fired. Conditions:", context.conditions); 
-        
-        let { desktop, mobile, reducedMotion } = context.conditions;
+        // Define `desktop` and `mobile` based on user agent and reduced motion
+        // Desktop is when it's not a mobile device AND not reduced motion.
+        const desktop = !isMobileDevice && !reducedMotion;
+        // Mobile is when it's a mobile device OR the window is narrow (fallback for unusual cases).
+        const mobile = isMobileDevice || window.innerWidth <= 1023; // Keeping 1023px for visual consistency with CSS media query
+
+        console.log("Device detection — desktop:", desktop, "mobile:", mobile, "reducedMotion:", reducedMotion); // ✅ Debugging
 
         // Kill any existing ScrollTriggers for the cube to prevent duplicates
         ScrollTrigger.getById('servicesCubePin')?.kill(true);
@@ -227,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   { clearProps: 'all' });
 
 
-        if (reducedMotion || mobile) {
+        if (reducedMotion || mobile) { // Now `mobile` is more accurately detected
             console.log("Reduced motion or mobile detected. Applying flat layout for cube.");
             // Explicitly set non-3D, flat properties for mobile/reduced motion.
             gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
@@ -256,101 +263,106 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' }); 
             if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' }); // Explicitly remove perspective
+            // ✅ At this point, you could add your mobile reveal animations here for faces
+            // by adding `.reveal-item` or `.reveal-stagger` to faces.
+            // Currently, they just appear statically (as before) in the fallback layout.
             return; 
         }
 
-        // --- Desktop 3D Cube Animation Logic (only if not mobile or reduced motion) ---
-        console.log(`Desktop layout active. Setting up 3D animation.`); 
-        gsap.set(servicesSection, { autoAlpha: 1, scale: 1 }); // Ensure services section is visible and scaled
+        // --- Desktop 3D Cube Animation Logic (only if desktop = true) ---
+        if (desktop) { // Explicitly ensure this only runs for desktop
+            console.log(`Desktop layout active. Setting up 3D animation.`); 
+            gsap.set(servicesSection, { autoAlpha: 1, scale: 1 }); // Ensure services section is visible and scaled
 
-        const viewportHeight = window.innerHeight;
-        const maxDesiredCubeBaseDimension = 400; // Unified for desktop sizes
-        let effectiveCubeBaseDimension = Math.min(maxDesiredCubeBaseDimension, viewportHeight * 0.6); 
-        const minAllowedCubeDimension = 300;
-        effectiveCubeBaseDimension = Math.max(effectiveCubeBaseDimension, minAllowedCubeDimension); // Ensure minimum size
+            const viewportHeight = window.innerHeight;
+            const maxDesiredCubeBaseDimension = 400; // Unified for desktop sizes
+            let effectiveCubeBaseDimension = Math.min(maxDesiredCubeBaseDimension, viewportHeight * 0.6); 
+            const minAllowedCubeDimension = 300;
+            effectiveCubeBaseDimension = Math.max(effectiveCubeBaseDimension, minAllowedCubeDimension); // Ensure minimum size
 
-        const fixedFaceHeight = 250; // Matches CSS .face height
-        const cubeHeight = fixedFaceHeight; // Cube's overall height is defined by face height
-        const cubeWidth = effectiveCubeBaseDimension * 1.5; // Width is still proportionally calculated
+            const fixedFaceHeight = 250; // Matches CSS .face height
+            const cubeHeight = fixedFaceHeight; // Cube's overall height is defined by face height
+            const cubeWidth = effectiveCubeBaseDimension * 1.5; // Width is still proportionally calculated
 
-        // Ensure cubeContainer has its desktop properties
-        gsap.set(cubeContainer, { 
-            width: cubeWidth, 
-            height: cubeHeight, 
-            maxWidth: cubeWidth, 
-            maxHeight: cubeHeight, 
-            zIndex: 1, 
-            perspective: 'none', // Important: perspective should be on sticky-cube-wrapper, not cubeContainer
-            transform: 'none' // Clear any residual transforms
-        });
-        
-        // This will set initial rotateX/translateZ on faces, and rotateX: 0 on cube,
-        // AND now explicitly apply transformStyle: 'preserve-3d' via GSAP.
-        setupInitialCubeFaces(cubeWidth, cubeHeight); 
+            // Ensure cubeContainer has its desktop properties
+            gsap.set(cubeContainer, { 
+                width: cubeWidth, 
+                height: cubeHeight, 
+                maxWidth: cubeWidth, 
+                maxHeight: cubeHeight, 
+                zIndex: 1, 
+                perspective: 'none', // Important: perspective should be on sticky-cube-wrapper, not cubeContainer
+                transform: 'none' // Clear any residual transforms
+            });
+            
+            // This will set initial rotateX/translateZ on faces, and rotateX: 0 on cube,
+            // AND now explicitly apply transformStyle: 'preserve-3d' via GSAP.
+            setupInitialCubeFaces(cubeWidth, cubeHeight); 
 
-        // Calculate total scroll length for the cube based on face height and count
-        const totalScrollLength = (SERVICES_COUNT - 1) * fixedFaceHeight; 
-        scrollArea.style.height = `${totalScrollLength}px`;
-        console.log("ScrollTrigger is initializing with end:", totalScrollLength); 
-        
-        // Cube entry animation (fade-in and scale up from defined initial state)
-        // Explicitly set rotateX: 0 in the 'from' state to guarantee a consistent start.
-        gsap.fromTo(cube,
-            { opacity: 0, y: 100, scale: 0.8, rotateX: 0 }, // From these values
-            { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", // To these values
-                scrollTrigger: {
-                    trigger: servicesSection, 
-                    start: "top 80%", 
-                    end: "top 40%", 
-                    scrub: false, 
-                    toggleActions: "play none none reverse", 
-                    onEnter: () => console.log("Cube entry animation triggered (fromTo)."),
-                    onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."),
+            // Calculate total scroll length for the cube based on face height and count
+            const totalScrollLength = (SERVICES_COUNT - 1) * fixedFaceHeight; 
+            scrollArea.style.height = `${totalScrollLength}px`;
+            console.log("ScrollTrigger is initializing with end:", totalScrollLength); 
+            
+            // Cube entry animation (fade-in and scale up from defined initial state)
+            // Explicitly set rotateX: 0 in the 'from' state to guarantee a consistent start.
+            gsap.fromTo(cube,
+                { opacity: 0, y: 100, scale: 0.8, rotateX: 0 }, // From these values
+                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", // To these values
+                    scrollTrigger: {
+                        trigger: servicesSection, 
+                        start: "top 80%", 
+                        end: "top 40%", 
+                        scrub: false, 
+                        toggleActions: "play none none reverse", 
+                        onEnter: () => console.log("Cube entry animation triggered (fromTo)."),
+                        onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."),
+                    }
                 }
-            }
-        );
+            );
 
-        // Main cube rotation animation
-        gsap.to(cube, {
-          rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Total rotation to land on Face 08 (315deg)
-          ease: "none",
-          scrollTrigger: {
-            id: 'servicesCubePin',
-            trigger: scrollArea, 
-            start: "top top",
-            end: `+=${totalScrollLength}`, // Use the calculated pixel length for end
-            scrub: true,        
-            pin: stickyCubeWrapper, 
-            anticipatePin: 1,
-            snap: {
-                snapTo: 1 / (SERVICES_COUNT - 1),
-                duration: 0.8, 
-                ease: "power2.inOut"
-            },
-            onUpdate: (self) => {
-              let activeFaceIndex = Math.round(self.progress * (SERVICES_COUNT - 1)); 
-              activeFaceIndex = Math.max(0, Math.min(activeFaceIndex, SERVICES_COUNT - 1)); 
+            // Main cube rotation animation
+            gsap.to(cube, {
+              rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Total rotation to land on Face 08 (315deg)
+              ease: "none",
+              scrollTrigger: {
+                id: 'servicesCubePin',
+                trigger: scrollArea, 
+                start: "top top",
+                end: `+=${totalScrollLength}`, // Use the calculated pixel length for end
+                scrub: true,        
+                pin: stickyCubeWrapper, 
+                anticipatePin: 1,
+                snap: {
+                    snapTo: 1 / (SERVICES_COUNT - 1),
+                    duration: 0.8, 
+                    ease: "power2.inOut"
+                },
+                onUpdate: (self) => {
+                  let activeFaceIndex = Math.round(self.progress * (SERVICES_COUNT - 1)); 
+                  activeFaceIndex = Math.max(0, Math.min(activeFaceIndex, SERVICES_COUNT - 1)); 
 
-              faces.forEach((f, i) => {
-                const isActive = (i === activeFaceIndex);
-                gsap.to(f, {
-                    filter: isActive ? "brightness(1.1)" : "brightness(0.3)", 
-                    duration: 0.3,
-                    ease: "power1.inOut"
-                });
-              });
-            },
-            onLeave: () => { 
-                gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
-                console.log("Cube animating out onLeave.");
-            },
-            onEnterBack: () => { 
-                gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" });
-                console.log("Cube animating in onEnterBack.");
-            }
-          }
-        });
-        console.log("Desktop cube animation setup complete with new logic."); 
+                  faces.forEach((f, i) => {
+                    const isActive = (i === activeFaceIndex);
+                    gsap.to(f, {
+                        filter: isActive ? "brightness(1.1)" : "brightness(0.3)", 
+                        duration: 0.3,
+                        ease: "power1.inOut"
+                    });
+                  });
+                },
+                onLeave: () => { 
+                    gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
+                    console.log("Cube animating out onLeave.");
+                },
+                onEnterBack: () => { 
+                    gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" });
+                    console.log("Cube animating in onEnterBack.");
+                }
+              }
+            });
+            console.log("Desktop cube animation setup complete with new logic."); 
+        }
     });
 
     window.addEventListener("resize", () => {
