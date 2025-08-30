@@ -94,6 +94,11 @@ html::before {
         linear-gradient(to bottom, transparent 99.85%, white 0.15%),
         linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
         linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
+    -webkit-mask-image:
+        linear-gradient(to right, transparent 99.85%, white 0.15%),
+        linear-gradient(to bottom, transparent 99.85%, white 0.15%),
+        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
+        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
     mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
     -webkit-mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
     mask-repeat: repeat;
@@ -157,9 +162,9 @@ html::before {
     transform-style: preserve-3d; 
     filter: none; /* Shadow removed */
 
-    opacity: 1; /* FIX: Default to visible, mask will hide/reveal */
-    transform: none; /* FIX: Default to no transform, mask will animate */
-    animation: none; /* FIX: Base animation moved to .striped-reveal-mask */
+    opacity: 1; /* Default to visible, mask will hide/reveal */
+    transform: none; /* Default to no transform, mask will animate */
+    animation: none; /* Base animation moved to .striped-reveal-mask */
     will-change: auto; /* Handled by mask now */
 }
 
@@ -172,7 +177,7 @@ html::before {
     display: flex; /* Ensure inner content lays out correctly */
 }
 
-.striped-overlay { /* NEW: The actual overlay element for horizontal strips */
+.striped-overlay { /* The actual overlay element for horizontal strips */
   position: absolute;
   inset: 0;
   z-index: 5;
@@ -189,8 +194,8 @@ html::before {
   width: 100%;
   height: 100%;
 
-  animation: stripeSlideDown 1.5s cubic-bezier(0.22,1,0.36,1) forwards;
-  animation-delay: 0.4s;
+  animation: stripeSlideDown 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; /* FIX: Smoother, slower animation */
+  animation-delay: 0.6s; /* FIX: Adjusted delay */
 }
 
 @keyframes stripeSlideDown {
@@ -204,19 +209,28 @@ html::before {
   display: none;
 }
 
+/* NEW: Staggered fade-in for children of the profile card */
+.reveal-stagger-child {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.reveal-stagger-child:nth-child(1) { animation-delay: 1.0s; } /* Profile Image Container */
+.reveal-stagger-child:nth-child(2) { animation-delay: 1.2s; } /* H3 Name */
+.reveal-stagger-child:nth-child(3) { animation-delay: 1.4s; } /* Fire Icon */
+.reveal-stagger-child:nth-child(4) { animation-delay: 1.6s; } /* Description */
+.reveal-stagger-child:nth-child(5) { animation-delay: 1.8s; } /* Social Icons */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 
 /* Inner card wrapper (static) - .left-card-3d is now mostly redundant/internal */
-.left-card-3d {
-  animation: none; 
-  opacity: 1; 
-  transform: none; 
-  will-change: auto; 
-  width: 100%; 
-  height: 100%; 
-  display: flex; 
-  justify-content: center;
-  align-items: center;
-}
+/* REMOVED .left-card-3d (it's no longer used and caused unnecessary nesting) */
+
 
 /* "About" Card Styles (general) */
 .about-left-content { 
@@ -227,7 +241,7 @@ html::before {
     box-shadow: 0 10px 30px var(--shadow-color-card-white); 
     width: 100%; 
     max-width: 370px; 
-    display: flex; 
+    display: flex; /* IMPORTANT: Maintain flex for staggering children */
     flex-direction: column; 
     align-items: center; 
     text-align: center; 
@@ -662,7 +676,7 @@ footer h2 {
         margin-left: 0; 
     }
     .services-heading {
-         margin-bottom: 20px; 
+         margin-bottom: 40px; /* FIX: Mobile margin-bottom for heading */
     }
 
     /* Services Section adjustments for mobile/tablet */
@@ -677,6 +691,7 @@ footer h2 {
         align-self: flex-start; 
         margin-left: 0;
         margin-right: auto;
+        margin-top: 20px; /* FIX: Mobile margin-top for cube container */
     }
     .cube {
         align-items: flex-start; 
@@ -693,20 +708,21 @@ footer h2 {
         opacity: 1 !important; 
         visibility: visible !important;
         height: auto; 
-        padding: 1rem; /* FIX: Restore individual face padding for mobile stacked view */
+        padding: 1rem; /* Restore individual face padding for mobile stacked view */
         justify-content: center;
         align-items: flex-start; 
         text-align: left;
         box-shadow: none; 
         background: var(--bg-tool-card); 
+        margin-bottom: 20px; /* FIX: Margin between stacked cards */
     }
     .face .service-content {
         align-items: flex-start;
         text-align: left;
-        padding: 0; /* FIX: Remove internal padding here if face itself has it for mobile */
+        padding: 0; /* Remove internal padding here if face itself has it for mobile */
     }
     .service-title {
-        color: var(--text-light); 
+        color: var(--text-light); /* Make title more visible on mobile background */
         text-align: left;
     }
     .service-description {
