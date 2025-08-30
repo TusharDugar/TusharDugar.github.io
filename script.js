@@ -179,8 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         faces.forEach((face, i) => {
             const rotation = i * ROTATION_INCREMENT_DEG;
-            // FIX: Removed the -90 degree offset from individual faces here.
-            // Individual faces are now positioned without an additional local offset.
+            // FIX: Individual faces are positioned without an additional local offset.
+            // The cube's global rotation will handle the initial alignment.
             const correctedRotation = rotation; 
 
             gsap.set(face, { 
@@ -249,7 +249,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('revealed');
-                        console.log("Left column striped reveal triggered.");
+                        console.log("Left column striped overlay removed."); // Overlay is hidden by CSS 'revealed' class
+
+                        // Animate children after overlay is gone
+                        gsap.from(".about-left-content .reveal-stagger-child", {
+                            opacity: 0,
+                            y: 40,
+                            duration: 0.8,        // Slower overall animation for children
+                            stagger: 0.15,        // Delay each child a bit more
+                            delay: 0.5,           // Start a bit after overlay removal
+                            ease: "power2.out",
+                            clearProps: "all"     // Remove GSAP styles after animation
+                        });
+                        console.log("Left column children staggered reveal triggered with GSAP.");
                         observer.unobserve(entry.target); // Stop observing once revealed
                     }
                 });
@@ -259,6 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // For mobile or reduced motion, ensure it's immediately revealed (no animation)
             stripedRevealMask.classList.add('revealed');
             console.log("Left column striped reveal instantly revealed (mobile or reduced motion).");
+            // Also ensure children are visible if no stagger animation is intended
+            gsap.set(".about-left-content .reveal-stagger-child", { opacity: 1, y: 0, clearProps: "all" });
         }
 
 
@@ -337,48 +351,53 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); // Debugging: Confirm desktop branch
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
-            servicesPinWrapper.style.height = (SERVICES_COUNT * SCROLL_PER_FACE_VH) + 'vh'; // FIX: Using new SCROLL_PER_FACE_VH
+            // No manual wrapper height — let ScrollTrigger handle spacing
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
+            // FIX: Sequential cube rotation order 01 → 08
+            // Initialize faces visibility (all visible, active one fully opaque)
+            gsap.set(faces, { autoAlpha: 0.7 }); // Dim all faces initially
+            gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
+
+            // Create ScrollTrigger timeline for cube rotation
             cubeAnimationTimeline = gsap.timeline({
-                scrollTrigger: {
-                    id: 'servicesCubePin',
-                    trigger: servicesPinWrapper,
-                    start: "top top",
-                    end: "bottom bottom",
-                    pin: servicesSection,
-                    scrub: 1, // FIX: Faster animation
-                    snap: {
-                        snapTo: "labels", // Snap to defined labels for precise face transitions
-                        duration: 0.4,    
-                        ease: "power3.out" 
-                    },
-                    pinSpacing: true, // Ensure space is reserved for content after pinned section
-                    anticipatePin: 1, 
-                    // markers: true, // DEBUG: Temporarily enable to visualize ScrollTrigger
+              scrollTrigger: {
+                id: 'servicesCubePin',
+                trigger: servicesPinWrapper, // Pin the section wrapper
+                start: "top top",
+                end: "+=" + (SERVICES_COUNT * SCROLL_PER_FACE_VH) + "vh", // FIX: Use end property for scroll distance
+                scrub: 1,        // FIX: Faster scrub
+                pin: servicesSection, // Pin the visible services section
+                anticipatePin: 1,
+                // markers: true, // DEBUG: Temporarily enable to debug ScrollTrigger
+                onUpdate: (self) => {
+                  // Calculate active face index based on scroll progress
+                  let idx = Math.floor(self.progress * SERVICES_COUNT); // Determine which face should be active
+                  idx = Math.min(idx, SERVICES_COUNT - 1); // Clamp to max index
+
+                  faces.forEach((f, i) => {
+                    // Highlight the active face, dim others
+                    gsap.set(f, { autoAlpha: i === idx ? 1 : 0.7 });
+                  });
                 }
+              }
             });
 
-            // Tighter vertical alignment below heading (CSS margin-bottom on heading now handles the 80px gap)
-            const cubeTopOffset = servicesHeading.offsetHeight + 10; // Reverted to minimal offset for JS
-            gsap.set(cubeContainer, { autoAlpha: 1, y: cubeTopOffset });
+            // Animate the cube's rotation globally
+            cubeAnimationTimeline.to(cube, {
+              rotateY: 360, // FIX: Full rotation for cube (assuming Y-axis based on previous snippets)
+              duration: SERVICES_COUNT * 0.4, // Duration to make onUpdate's idx calculation smooth
+              ease: "none" // Linear ease for scrubbing
+            });
 
-            // The main cube rotation over the entire ScrollTrigger duration.
-            // It rotates from 0deg (Face 01) up to the position of the last face.
-            cubeAnimationTimeline.fromTo(cube, 
-              { rotateX: 0 }, // FIX: Start the entire cube at 0deg rotation to align Face 01 to the front
-              { rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, ease: "none" }, // Animate to final rotation
-              0 // Start at the beginning of the timeline
-            );
-
-            // FIX: Removed individual face autoAlpha toggling. All faces are always visible.
-            // The 3D perspective will naturally hide faces not facing the user.
+            // Add labels for snapping to each face's position
             faces.forEach((face, i) => {
-                const rotationTarget = i * ROTATION_INCREMENT_DEG;
-                const label = `face${i + 1}`;
-                const progressPoint = i / (SERVICES_COUNT - 1); // FIX: Simplified progressPoint calculation
-                cubeAnimationTimeline.addLabel(label, progressPoint);
+              // Progress point is simply the normalized index for snapping
+              const progressPoint = i / (SERVICES_COUNT - 1); // FIX: Simplified progressPoint calculation
+              cubeAnimationTimeline.addLabel(`face${i + 1}`, progressPoint);
             });
+
+            console.log("Desktop cube animation setup complete."); // Debugging
         }
     });
 
