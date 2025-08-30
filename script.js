@@ -104,7 +104,7 @@ function initIntersectionObserverAnimations() {
   });
 }
 
-// Global constant for services cube scroll length (now unused, replaced by ScrollTrigger end property)
+// Global constant for services cube scroll length (this constant is no longer used, as ScrollTrigger end property manages spacing)
 const SCROLL_PER_FACE_VH = 90; // Value for ScrollTrigger end calculation
 
 // Main execution block after DOM is loaded
@@ -186,8 +186,8 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(face, { 
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
-                // Using rotateY for horizontal spin, translateZ for depth
-                transform: `rotateY(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
+                // Using rotateX for vertical spin, translateZ for depth
+                transform: `rotateX(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
                 autoAlpha: 1, // All faces start visible, relying on perspective to hide others
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
@@ -349,25 +349,26 @@ document.addEventListener('DOMContentLoaded', () => {
             // No manual servicesPinWrapper height needed; ScrollTrigger 'end' manages spacing.
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
-            // Start state: only face 01 fully visible
+            // Start state: Face 01 fully visible
             gsap.set(faces, { autoAlpha: 0.5 }); // Dim all faces initially
             gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
 
             gsap.to(cube, {
-              rotateY: 315, // Total rotation for 8 faces (0-7), 7 steps of 45 degrees (360/8 = 45 * 7 = 315)
+              rotateX: 315, // FIX: Total rotation for 8 faces (0-7), 7 steps of 45 degrees = 315 degrees
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: servicesPinWrapper, // Pin the section wrapper
                 start: "top top",
-                end: `+=${SERVICES_COUNT * 30}vh`, // FIX: Dynamic end based on SERVICES_COUNT and a reasonable VH per step
+                end: "+=" + (SERVICES_COUNT * 100) + "%", // FIX: Proportional scroll length (1 viewport height per face)
                 scrub: 1,        // Faster scrub
                 pin: servicesSection, // Pin the visible services section
                 anticipatePin: 1,
                 // markers: true, // DEBUG: Temporarily enable to debug ScrollTrigger
                 onUpdate: (self) => {
                   // Calculate active face index based on scroll progress
-                  let idx = Math.floor(self.progress * SERVICES_COUNT); // Determine which face should be active
+                  // Math.round is more appropriate here to snap to the closest face visually
+                  let idx = Math.round(self.progress * (SERVICES_COUNT - 1)); 
                   idx = Math.min(idx, SERVICES_COUNT - 1); // Clamp to max index (0-7)
 
                   faces.forEach((f, i) => {
