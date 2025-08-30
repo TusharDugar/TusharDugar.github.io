@@ -189,14 +189,14 @@ html::before {
   width: 100%;
   height: 100%;
 
-  animation: stripeSlideDown 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; /* FIX: Smoother, slower animation */
-  animation-delay: 0.8s; /* FIX: Adjusted delay */
+  animation: stripeSlideDown 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; /* Smoother, slower animation */
+  animation-delay: 0.8s; /* Adjusted delay */
 }
 
 @keyframes stripeSlideDown {
-  0%   { transform: translateY(0%); opacity: 1; }
+  0%   { transform: translateY(0%); opacity: 1; height: 100%; } /* Added height for collapse */
   80%  { transform: translateY(100%); opacity: 1; }
-  100% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(100%); opacity: 0; height: 0; } /* Added height for collapse */
 }
 
 /* This class will be added by JS once the animation finishes */
@@ -322,7 +322,7 @@ html::before {
 .services-section { 
     position: relative; 
     width: 100%; 
-    height: 100vh; 
+    min-height: 100vh; /* Set min-height to accommodate scroll-area */
     display: flex; 
     flex-direction: column;
     justify-content: flex-start; 
@@ -331,8 +331,9 @@ html::before {
     box-sizing: border-box; 
     overflow: visible; /* Corrected to visible for pinning */
     z-index: 2; 
-    padding-bottom: 0; /* FIX: Remove bottom padding */
-    margin-bottom: 0; /* FIX: Remove bottom margin */
+    padding-bottom: 0; /* Remove bottom padding */
+    margin-bottom: 0; /* Remove bottom margin */
+    /* REMOVED height: 100vh; */ /* height will be managed by scroll-area */
 }
 .services-heading {
   font-size: clamp(2.5rem, 8vw, 8rem);
@@ -340,11 +341,12 @@ html::before {
   font-weight: 800;
   text-transform: uppercase;
   text-align: left; 
-  margin-bottom: 80px; /* FIX: Increased margin for spacing above cube */
+  margin-bottom: 120px; /* FIX: Increased margin for spacing above cube */
   align-self: flex-start; 
   flex-shrink: 0; 
   width: 100%;
-  z-index: 2;
+  position: relative; /* Ensure z-index works */
+  z-index: 2; /* FIX: Ensure heading is above cube */
   opacity: 1; 
   transform: none; 
   visibility: visible; 
@@ -358,7 +360,30 @@ html::before {
 .services-heading .text-white { color: var(--text-light); }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); } 
 
-.cube-container { 
+/* NEW: Styles for the scrollable area wrapper for the cube */
+.scroll-area {
+  height: 400vh; /* This defines the total scroll duration for the cube section */
+  position: relative;
+  width: 100%; /* Ensure it takes full width of services-section */
+  display: flex; /* Helps center its children */
+  justify-content: center;
+}
+
+/* NEW: Styles for the sticky wrapper that holds the cube */
+.sticky-cube-wrapper {
+  position: sticky;
+  top: 0; /* Pins to the top of the viewport */
+  height: 100vh; /* Takes up one full viewport height when pinned */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1600px; /* Perspective applied here for sticky cube */
+  width: 100%; /* Take full width of scroll-area */
+  overflow: visible; /* Allow cube's 3D transforms to extend */
+}
+
+
+.cube-container { /* This element is now nested inside sticky-cube-wrapper */
     aspect-ratio: 1 / 1; /* This will be overridden by JS for aspect ratio change */
     margin: 0 auto; 
     position: relative; 
@@ -367,16 +392,16 @@ html::before {
     display: flex;
     justify-content: center; 
     align-items: center;
-    z-index: 1; 
+    z-index: 1; /* FIX: Ensure cube is behind heading (relative to section) */
     max-width: none; 
     width: auto;     
     height: auto;    
     opacity: 1; 
     transform: none; 
     visibility: visible; 
-    perspective: 1600px; /* Perspective as per all codes.txt */
-    margin-bottom: 0; /* FIX: Remove bottom margin */
-    padding-bottom: 0; /* FIX: Remove bottom padding */
+    /* REMOVED perspective: 1600px; - moved to sticky-cube-wrapper */
+    margin-bottom: 0; /* Remove bottom margin */
+    padding-bottom: 0; /* Remove bottom padding */
 }
 .cube { 
     position: relative; 
@@ -389,7 +414,8 @@ html::before {
 .face {
     position: absolute;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */ /* REMOVED: JS calculates this now, then forced by !important */
+    height: 250px !important; /* FIX: Enforce fixed height for faces */
     backface-visibility: hidden;
     display: flex;
     flex-direction: column;
@@ -404,6 +430,7 @@ html::before {
     text-align: left;
     opacity: 1; /* JS autoAlpha will control this for animation */
     visibility: visible; /* JS autoAlpha will control this for animation */
+    transition: opacity 0.4s ease-in-out; /* FIX: Gentle fade transition for opacity changes */
 }
 .face .service-content { 
     width: 100%; 
@@ -413,14 +440,14 @@ html::before {
     justify-content: center; 
     align-items: flex-start; 
     text-align: left;
-    padding: clamp(1rem, 4vw, 2.5rem); /* Moved padding here for internal content */
+    padding: clamp(1rem, 3vw, 2rem); /* FIX: Adjusted padding for better fit with fixed height */
     margin: 0; 
 }
 .service-title { 
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: #fff7ed; /* FIX: Updated to #fff7ed */
+    color: #fff7ed; /* Updated to #fff7ed */
     margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
@@ -613,13 +640,13 @@ footer h2 {
         position: sticky; 
         top: 50%; 
         transform: translateY(-50%); /* This IS the desired sticky transform */
-        animation: none !important; /* FIX: Crucially, disable the animation property to prevent conflicts */
+        animation: none !important; /* Crucially, disable the animation property to prevent conflicts */
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
     } 
     .face {
-        transition: none !important; /* FIX: Prevent CSS transitions from interfering with GSAP .set() */
+        transition: opacity 0.4s ease-in-out !important; /* FIX: Ensure transition is present for smooth dimming */
     }
 }
 
@@ -667,7 +694,7 @@ footer h2 {
         margin-left: 0; 
     }
     .services-heading {
-         margin-bottom: 40px; /* FIX: Mobile margin-bottom for heading */
+         margin-bottom: 40px; /* Mobile margin-bottom for heading */
     }
 
     /* Services Section adjustments for mobile/tablet */
@@ -678,48 +705,52 @@ footer h2 {
         gap: 30px; 
         justify-content: flex-start; 
     }
-    .cube-container {
+    /* REMOVED .cube-container, .cube, .face, .service-content specific mobile overrides for width/height/margin/padding, 
+       as new sticky-cube-wrapper and scroll-area will handle flow better.
+       Base styles for these elements apply, and if any explicit mobile styles are needed, they should be added here. */
+    .cube-container { /* Re-adding minimal mobile specific styles for cube container */
         align-self: flex-start; 
         margin-left: 0;
         margin-right: auto;
-        margin-top: 20px; /* FIX: Mobile margin-top for cube container */
+        margin-top: 20px; 
+        perspective: none; /* No 3D perspective on mobile */
     }
-    .cube {
-        align-items: flex-start; 
+    .cube { /* Re-adding minimal mobile specific styles for cube */
         transform-style: flat; 
         transform: none; 
         display: flex; 
         flex-direction: column;
         gap: 20px; 
         height: auto;
+        align-items: flex-start; 
     }
-    .face {
+    .face { /* Re-adding minimal mobile specific styles for face */
         position: relative; 
         transform: none !important; 
         opacity: 1 !important; 
         visibility: visible !important;
-        height: auto; 
-        padding: 1rem; /* Restore individual face padding for mobile stacked view */
+        height: auto !important; /* Auto height on mobile, overrides fixed desktop height */
+        padding: 1rem; 
         justify-content: center;
         align-items: flex-start; 
         text-align: left;
         box-shadow: none; 
         background: var(--bg-tool-card); 
-        margin-bottom: 20px; /* FIX: Margin between stacked cards */
+        margin-bottom: 20px; 
     }
-    .face .service-content {
+    .face .service-content { /* Re-adding minimal mobile specific styles for service content */
         align-items: flex-start;
         text-align: left;
-        padding: 0; /* Remove internal padding here if face itself has it for mobile */
+        padding: 0; 
     }
-    .service-title {
-        color: var(--text-light); /* Make title more visible on mobile background */
+    .service-title { /* Re-adding minimal mobile specific styles for service title */
+        color: var(--text-light); 
         text-align: left;
     }
-    .service-description {
+    .service-description { /* Re-adding minimal mobile specific styles for service description */
         text-align: left;
     }
-    .face-number {
+    .face-number { /* Re-adding minimal mobile specific styles for face number */
         position: relative; 
         bottom: auto;
         right: auto;
