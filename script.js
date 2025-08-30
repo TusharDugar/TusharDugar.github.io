@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
             // Start state: Face 01 fully visible
-            gsap.set(faces, { autoAlpha: 0.5 }); // Dim all faces initially
+            gsap.set(faces, { autoAlpha: 0.2 }); // FIX: Dim all faces more strongly initially
             gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
 
             // FIX: Add a fade-in animation for the entire cube container when it enters the pinned section
@@ -370,26 +370,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             gsap.to(cube, {
-              rotateX: (SERVICES_COUNT - 1) * 45, // FIX: Total rotation for 8 faces (0-7), 7 steps of 45 degrees = 315 degrees
+              rotateX: 360, // FIX: Total rotation for a full 360 vertical cycle
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: servicesPinWrapper, // Pin the section wrapper
                 start: "top top",
-                end: `+=${(SERVICES_COUNT - 1) * 100}%`, // FIX: Proportional scroll length (1 viewport height per face)
+                end: `+=${(SERVICES_COUNT - 1) * 150}%`, // FIX: Slower per-face scroll. Now 1.5 viewports per transition.
                 scrub: true,        // Ensures forward/backward sync with scroll
                 pin: servicesSection, // Pin the visible services section
                 anticipatePin: 1,
-                // markers: true, // DEBUG: Temporarily enable to debug ScrollTrigger
+                snap: {
+                    snapTo: 1 / (SERVICES_COUNT - 1), // Snaps to each face (0 to 7)
+                    duration: 0.3,                   // Duration of the snap animation
+                    ease: "power1.inOut"             // Easing for a smooth snap
+                },
                 onUpdate: (self) => {
                   // Calculate active face index based on scroll progress
                   // Math.round is more appropriate here to snap to the closest face visually
-                  let idx = Math.round(self.progress * (SERVICES_COUNT - 1)); 
-                  idx = Math.min(idx, SERVICES_COUNT - 1); // Clamp to max index (0-7)
+                  let idx = Math.round(self.progress * (SERVICES_COUNT)); // FIX: Map progress to total 360 degrees
+                  idx = Math.min(idx, SERVICES_COUNT - 1); // Clamp to max index (0-7) for highlighting
 
                   faces.forEach((f, i) => {
                     // Highlight the active face, dim others
-                    gsap.set(f, { autoAlpha: i === idx ? 1 : 0.2 }); // FIX: More obvious dimming
+                    gsap.set(f, { autoAlpha: i === idx ? 1 : 0.2 }); 
                   });
                 }
               }
