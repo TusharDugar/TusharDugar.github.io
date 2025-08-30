@@ -94,11 +94,6 @@ html::before {
         linear-gradient(to bottom, transparent 99.85%, white 0.15%),
         linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
         linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
-    -webkit-mask-image:
-        linear-gradient(to right, transparent 99.85%, white 0.15%),
-        linear-gradient(to bottom, transparent 99.85%, white 0.15%),
-        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
-        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
     mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
     -webkit-mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
     mask-repeat: repeat;
@@ -194,8 +189,8 @@ html::before {
   width: 100%;
   height: 100%;
 
-  animation: stripeSlideDown 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; /* FIX: Smoother, slower animation */
-  animation-delay: 0.6s; /* FIX: Adjusted delay */
+  animation: stripeSlideDown 3.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; /* FIX: Smoother, slower animation */
+  animation-delay: 0.8s; /* FIX: Adjusted delay */
 }
 
 @keyframes stripeSlideDown {
@@ -216,20 +211,16 @@ html::before {
   animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.reveal-stagger-child:nth-child(1) { animation-delay: 1.0s; } /* Profile Image Container */
-.reveal-stagger-child:nth-child(2) { animation-delay: 1.2s; } /* H3 Name */
-.reveal-stagger-child:nth-child(3) { animation-delay: 1.4s; } /* Fire Icon */
-.reveal-stagger-child:nth-child(4) { animation-delay: 1.6s; } /* Description */
-.reveal-stagger-child:nth-child(5) { animation-delay: 1.8s; } /* Social Icons */
+.reveal-stagger-child:nth-child(1) { animation-delay: 1.2s; } /* Profile Image Container */
+.reveal-stagger-child:nth-child(2) { animation-delay: 1.6s; } /* H3 Name */
+.reveal-stagger-child:nth-child(3) { animation-delay: 2.0s; } /* Fire Icon */
+.reveal-stagger-child:nth-child(4) { animation-delay: 2.4s; } /* Description */
+.reveal-stagger-child:nth-child(5) { animation-delay: 2.8s; } /* Social Icons */
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-
-/* Inner card wrapper (static) - .left-card-3d is now mostly redundant/internal */
-/* REMOVED .left-card-3d (it's no longer used and caused unnecessary nesting) */
 
 
 /* "About" Card Styles (general) */
@@ -429,7 +420,7 @@ html::before {
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: #fed8b1; /* FIX: Updated from green to #fed8b1 */
+    color: #fff7ed; /* FIX: Updated to #fff7ed */
     margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
