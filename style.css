@@ -162,23 +162,59 @@ html::before {
     transform-style: preserve-3d; 
     filter: none; /* Shadow removed */
 
-    opacity: 0; /* Initial state for animation */
-    transform: rotateX(30deg) scale(0.95) translateY(40px); /* Initial transform for animation */
-    animation: leftColumnPopIn 1s ease-out forwards; 
+    opacity: 1; /* FIX: Default to visible, mask will hide/reveal */
+    transform: none; /* FIX: Default to no transform, mask will animate */
+    animation: none; /* FIX: Base animation moved to .striped-reveal-mask */
+    will-change: auto; /* Handled by mask now */
+}
+
+/* NEW: Styles for the striped reveal mask wrapper */
+.striped-reveal-mask {
+    position: relative;
+    overflow: hidden; /* Crucial for clipping the pseudo-element */
+    width: 100%;
+    height: 100%;
+    display: flex; /* Ensure inner content lays out correctly */
+}
+
+.striped-reveal-mask::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /* Use a repeating linear gradient to create the vertical strips */
+    background: repeating-linear-gradient(
+        to right,
+        var(--bg-main) 0px, /* Color of the strip */
+        var(--bg-main) 12.5%, /* Width of the strip (100% / 8 strips = 12.5%) */
+        transparent 12.5%, /* Start transparent gap */
+        transparent 25% /* End transparent gap */
+    );
+    background-size: 100% 100%; /* Ensure gradient covers full width/height */
+    z-index: 5; /* Ensure it's above the content */
+    /* Animate clip-path to reveal the content from left to right in strips */
+    animation: stripeReveal 1.5s ease-out forwards;
     animation-delay: 0.4s;
-    will-change: transform, opacity;
+    pointer-events: none; /* Allow interaction with content underneath */
 }
 
-@keyframes leftColumnPopIn {
-  0% { opacity: 0; transform: rotateX(30deg) scale(0.95) translateY(40px); }
-  100% { opacity: 1; transform: rotateX(0deg) scale(1) translateY(0); }
+@keyframes stripeReveal {
+    0% {
+        clip-path: inset(0 0 0 100%); /* Start completely hidden to the right */
+    }
+    100% {
+        clip-path: inset(0 0 0 0); /* End fully revealed */
+    }
 }
 
-/* Inner card wrapper (static) */
+
+/* Inner card wrapper (static) - .left-card-3d is now mostly redundant/internal */
 .left-card-3d {
-  animation: none; /* Ensure no animation on this wrapper */
-  opacity: 1; /* Make sure it's visible after parent animation */
-  transform: none; /* Clear any residual transforms */
+  animation: none; 
+  opacity: 1; 
+  transform: none; 
   will-change: auto; 
   width: 100%; 
   height: 100%; 
