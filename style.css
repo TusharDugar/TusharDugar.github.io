@@ -162,9 +162,9 @@ html::before {
     transform-style: preserve-3d; 
     filter: none; /* Shadow removed */
 
-    opacity: 1; /* FIX: Default to visible, mask will hide/reveal */
-    transform: none; /* FIX: Default to no transform, mask will animate */
-    animation: none; /* FIX: Base animation moved to .striped-reveal-mask */
+    opacity: 1; /* Default to visible, mask will hide/reveal */
+    transform: none; /* Default to no transform, mask will animate */
+    animation: none; /* Base animation moved to .striped-reveal-mask */
     will-change: auto; /* Handled by mask now */
 }
 
@@ -177,36 +177,36 @@ html::before {
     display: flex; /* Ensure inner content lays out correctly */
 }
 
-.striped-reveal-mask::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    /* Use a repeating linear gradient to create the vertical strips */
-    background: repeating-linear-gradient(
-        to right,
-        var(--bg-main) 0px, /* Color of the strip */
-        var(--bg-main) 12.5%, /* Width of the strip (100% / 8 strips = 12.5%) */
-        transparent 12.5%, /* Start transparent gap */
-        transparent 25% /* End transparent gap */
-    );
-    background-size: 100% 100%; /* Ensure gradient covers full width/height */
-    z-index: 5; /* Ensure it's above the content */
-    /* Animate clip-path to reveal the content from left to right in strips */
-    animation: stripeReveal 1.5s ease-out forwards;
-    animation-delay: 0.4s;
-    pointer-events: none; /* Allow interaction with content underneath */
+.striped-overlay { /* NEW: The actual overlay element for horizontal strips */
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+
+  background: repeating-linear-gradient(
+    to bottom, /* Changed to bottom for horizontal stripes */
+    var(--bg-main) 0%,
+    var(--bg-main) 12.5%, /* 100% / 8 strips = 12.5% */
+    transparent 12.5%,
+    transparent 25%
+  );
+
+  width: 100%;
+  height: 100%;
+
+  animation: stripeSlideDown 1.5s cubic-bezier(0.22,1,0.36,1) forwards;
+  animation-delay: 0.4s;
 }
 
-@keyframes stripeReveal {
-    0% {
-        clip-path: inset(0 0 0 100%); /* Start completely hidden to the right */
-    }
-    100% {
-        clip-path: inset(0 0 0 0); /* End fully revealed */
-    }
+@keyframes stripeSlideDown {
+  0%   { transform: translateY(0%); opacity: 1; }
+  80%  { transform: translateY(100%); opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+/* This class will be added by JS once the animation finishes */
+.striped-reveal-mask.revealed .striped-overlay {
+  display: none;
 }
 
 
@@ -420,7 +420,7 @@ html::before {
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: var(--cube-service-title-color); 
+    color: #fed8b1; /* FIX: Updated from green to #fed8b1 */
     margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
