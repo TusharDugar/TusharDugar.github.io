@@ -34,7 +34,13 @@ function copyToClipboard(button) {
 
 // Unified Function to reveal elements on scroll (Intersection Observer)
 function initIntersectionObserverAnimations() {
-  const observerOptions = { root: null, rootMargin: "0px", threshold: 0.1 };
+  // ✅ Mobile-specific threshold for earlier reveals if window is narrow
+  const observerOptions = { 
+    root: null, 
+    rootMargin: "0px", 
+    threshold: window.innerWidth < 1024 ? 0.05 : 0.1 // Adjust threshold for smaller screens
+  };
+
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -66,15 +72,16 @@ function initIntersectionObserverAnimations() {
   }, observerOptions);
 
   document.querySelectorAll(".reveal-item, .reveal-parent, .reveal-stagger-container").forEach(el => {
+    // Exclude services-heading from standard reveal-item check if it's already handled
+    // The services-heading is made visible via gsap.set inside the matchMedia block
     if (el.closest('.services-heading')) {
-      // If it's the services heading, ensure it's immediately visible and static (as per previous requirements)
+      // For the services-heading, ensure it's immediately visible and static
       gsap.set(el, { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' });
       if (el.matches('.services-heading')) { 
           gsap.set(el.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' });
       }
     } else {
       // For all other reveal elements:
-      // Check if the element is already in the viewport on page load
       const rect = el.getBoundingClientRect();
       const isInitiallyVisible = (
           rect.top < window.innerHeight &&
@@ -84,20 +91,14 @@ function initIntersectionObserverAnimations() {
       );
 
       if (isInitiallyVisible) {
-          // If it's initially visible, immediately set it to its final visible state using GSAP.
-          // This prevents elements at the top from staying invisible if IO doesn't trigger fast enough.
-          // We also don't observe it, as it's already "revealed".
           if (el.classList.contains("reveal-item")) {
               gsap.set(el, { opacity: 1, y: 0, x: 0, visibility: 'visible' });
           } else if (el.classList.contains("reveal-parent")) {
-              // For reveal-parent, explicitly set all its reveal-child elements
               gsap.set(el.querySelectorAll(".reveal-child"), { opacity: 1, y: 0, x: 0, visibility: 'visible' });
           } else if (el.classList.contains("reveal-stagger-container")) {
-              // For reveal-stagger-container, explicitly set all its reveal-stagger elements
               gsap.set(el.querySelectorAll(".reveal-stagger"), { opacity: 1, y: 0, x: 0, visibility: 'visible' });
           }
       } else {
-          // If not initially visible, observe it for scroll animation as normal.
           observer.observe(el);
       }
     }
@@ -106,7 +107,7 @@ function initIntersectionObserverAnimations() {
 
 // Main execution block after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOMContentLoaded fired."); // Debugging: Confirm DOM is ready
+    console.log("DOMContentLoaded fired.");
 
     // Mouse Follower Glow
     const mouseFollowerGlow = document.querySelector('.mouse-follower-glow');
@@ -173,14 +174,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Set up initial 3D positioning of each face and cube
     function setupInitialCubeFaces(currentCubeWidth, currentCubeHeight) { 
-        console.log(`Setting up initial cube faces with width: ${currentCubeWidth}, height: ${currentCubeHeight}`); // Debugging
+        console.log(`Setting up initial cube faces with width: ${currentCubeWidth}, height: ${currentCubeHeight}`);
         let faceDepth = calculateFaceDepth(currentCubeHeight); 
         
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
         faces.forEach((face, i) => {
             const rotation = i * ROTATION_INCREMENT_DEG;
-            // Clear specific props before setting to ensure a clean state for each face
             gsap.set(face, { 
                 clearProps: 'transform,opacity,visibility,position,transformStyle', 
                 width: currentCubeWidth + "px",  
@@ -192,11 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 transformStyle: 'preserve-3d',
             });
         });
-        // ✅ KEY FIX: Explicitly set transformStyle: 'preserve-3d' via GSAP.
-        // This will override any conflicting CSS rules on the live site.
         gsap.set(cube, { 
             clearProps: 'transform,transformStyle,transformOrigin,rotateX,rotateY',
-            transformStyle: 'preserve-3d', // Re-introduced this to be set inline by GSAP
+            transformStyle: 'preserve-3d', 
             rotateX: 0, 
             rotateY: 0, 
             transformOrigin: 'center center' 
@@ -205,26 +203,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mm = gsap.matchMedia(); 
 
-    // ✅ UPDATED MATCHMEDIA LOGIC FOR ROBUST DEVICE DETECTION
+    // ✅ UPDATED MATCHMEDIA LOGIC FOR ROBUST DEVICE DETECTION (Final Version)
     mm.add({
-      // No explicit min/max width conditions here, they will be handled by custom logic
       reducedMotion: "(prefers-reduced-motion: reduce)"
     }, (context) => {
-        // More robust device detection
         const isMobileDevice = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
         const reducedMotion = context.conditions.reducedMotion;
 
-        // Define `desktop` and `mobile` based on user agent and reduced motion
-        // Desktop is when it's not a mobile device AND not reduced motion.
+        // Desktop is when it's NOT a mobile device AND NOT reduced motion.
         const desktop = !isMobileDevice && !reducedMotion;
-        // Mobile is when it's a mobile device OR the window is narrow (fallback for unusual cases).
-        const mobile = isMobileDevice || window.innerWidth <= 1023; // Keeping 1023px for visual consistency with CSS media query
+        // Mobile is when it IS a mobile device OR the window is narrow (fallback for unusual cases).
+        // Using 1023px for consistency with your CSS media query.
+        const mobile = isMobileDevice || window.innerWidth <= 1023; 
 
-        console.log("Device detection — desktop:", desktop, "mobile:", mobile, "reducedMotion:", reducedMotion); // ✅ Debugging
+        // console.log("Device detection — desktop:", desktop, "mobile:", mobile, "reducedMotion:", reducedMotion); // Debugging removed for final code
 
         // Kill any existing ScrollTriggers for the cube to prevent duplicates
         ScrollTrigger.getById('servicesCubePin')?.kill(true);
-        console.log("Previous ScrollTrigger for cube pin killed.");
+        // console.log("Previous ScrollTrigger for cube pin killed."); // Debugging removed
 
         // IMPORTANT: Aggressively clear ALL GSAP-set inline styles on key elements
         // at the start of ANY matchMedia callback. This ensures no lingering
@@ -234,8 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   { clearProps: 'all' });
 
 
-        if (reducedMotion || mobile) { // Now `mobile` is more accurately detected
-            console.log("Reduced motion or mobile detected. Applying flat layout for cube.");
+        if (reducedMotion || mobile) {
+            // console.log("Reduced motion or mobile detected. Applying flat layout for cube."); // Debugging removed
             // Explicitly set non-3D, flat properties for mobile/reduced motion.
             gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
             gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
@@ -245,91 +241,83 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cubeContainer) {
                 gsap.set(cubeContainer, { 
                     opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', 
-                    position: 'relative', top: 'auto', transform: 'none', perspective: 'none' // Ensure no 3D on container
+                    position: 'relative', top: 'auto', transform: 'none', perspective: 'none'
                 });
             }
             if (cube) { // Flatten cube element
-                gsap.set(cube, { transform: 'none', transformStyle: 'flat', rotateX: 0, rotateY: 0, scale: 1, opacity: 1 }); // Explicit flat state
+                gsap.set(cube, { transform: 'none', transformStyle: 'flat', rotateX: 0, rotateY: 0, scale: 1, opacity: 1 });
             }
             faces.forEach(face => {
+                // Faces now rely on the .reveal-item class for their mobile animation
+                // GSAP just ensures they are flat and visible initially.
                 gsap.set(face, { 
                     transform: 'none', 
                     opacity: 1, 
                     visibility: 'visible', 
                     position: 'relative', 
-                    transformStyle: 'flat', // Explicitly flat
+                    transformStyle: 'flat', 
                     filter: 'none' 
                 });
             });
             if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' }); 
-            if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' }); // Explicitly remove perspective
-            // ✅ At this point, you could add your mobile reveal animations here for faces
-            // by adding `.reveal-item` or `.reveal-stagger` to faces.
-            // Currently, they just appear statically (as before) in the fallback layout.
+            if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
             return; 
         }
 
         // --- Desktop 3D Cube Animation Logic (only if desktop = true) ---
         if (desktop) { // Explicitly ensure this only runs for desktop
-            console.log(`Desktop layout active. Setting up 3D animation.`); 
-            gsap.set(servicesSection, { autoAlpha: 1, scale: 1 }); // Ensure services section is visible and scaled
+            // console.log(`Desktop layout active. Setting up 3D animation.`); // Debugging removed
+            gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
             const viewportHeight = window.innerHeight;
-            const maxDesiredCubeBaseDimension = 400; // Unified for desktop sizes
+            const maxDesiredCubeBaseDimension = 400;
             let effectiveCubeBaseDimension = Math.min(maxDesiredCubeBaseDimension, viewportHeight * 0.6); 
             const minAllowedCubeDimension = 300;
-            effectiveCubeBaseDimension = Math.max(effectiveCubeBaseDimension, minAllowedCubeDimension); // Ensure minimum size
+            effectiveCubeBaseDimension = Math.max(effectiveCubeBaseDimension, minAllowedCubeDimension);
 
-            const fixedFaceHeight = 250; // Matches CSS .face height
-            const cubeHeight = fixedFaceHeight; // Cube's overall height is defined by face height
-            const cubeWidth = effectiveCubeBaseDimension * 1.5; // Width is still proportionally calculated
+            const fixedFaceHeight = 250;
+            const cubeHeight = fixedFaceHeight;
+            const cubeWidth = effectiveCubeBaseDimension * 1.5;
 
-            // Ensure cubeContainer has its desktop properties
             gsap.set(cubeContainer, { 
                 width: cubeWidth, 
                 height: cubeHeight, 
                 maxWidth: cubeWidth, 
                 maxHeight: cubeHeight, 
                 zIndex: 1, 
-                perspective: 'none', // Important: perspective should be on sticky-cube-wrapper, not cubeContainer
-                transform: 'none' // Clear any residual transforms
+                perspective: 'none', 
+                transform: 'none'
             });
             
-            // This will set initial rotateX/translateZ on faces, and rotateX: 0 on cube,
-            // AND now explicitly apply transformStyle: 'preserve-3d' via GSAP.
             setupInitialCubeFaces(cubeWidth, cubeHeight); 
 
-            // Calculate total scroll length for the cube based on face height and count
             const totalScrollLength = (SERVICES_COUNT - 1) * fixedFaceHeight; 
             scrollArea.style.height = `${totalScrollLength}px`;
-            console.log("ScrollTrigger is initializing with end:", totalScrollLength); 
+            // console.log("ScrollTrigger is initializing with end:", totalScrollLength); // Debugging removed
             
-            // Cube entry animation (fade-in and scale up from defined initial state)
-            // Explicitly set rotateX: 0 in the 'from' state to guarantee a consistent start.
             gsap.fromTo(cube,
-                { opacity: 0, y: 100, scale: 0.8, rotateX: 0 }, // From these values
-                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", // To these values
+                { opacity: 0, y: 100, scale: 0.8, rotateX: 0 },
+                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out",
                     scrollTrigger: {
                         trigger: servicesSection, 
                         start: "top 80%", 
                         end: "top 40%", 
                         scrub: false, 
                         toggleActions: "play none none reverse", 
-                        onEnter: () => console.log("Cube entry animation triggered (fromTo)."),
-                        onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."),
+                        // onEnter: () => console.log("Cube entry animation triggered (fromTo)."), // Debugging removed
+                        // onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."), // Debugging removed
                     }
                 }
             );
 
-            // Main cube rotation animation
             gsap.to(cube, {
-              rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Total rotation to land on Face 08 (315deg)
+              rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT),
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: scrollArea, 
                 start: "top top",
-                end: `+=${totalScrollLength}`, // Use the calculated pixel length for end
+                end: `+=${totalScrollLength}`,
                 scrub: true,        
                 pin: stickyCubeWrapper, 
                 anticipatePin: 1,
@@ -353,28 +341,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 onLeave: () => { 
                     gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
-                    console.log("Cube animating out onLeave.");
+                    // console.log("Cube animating out onLeave."); // Debugging removed
                 },
                 onEnterBack: () => { 
                     gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" });
-                    console.log("Cube animating in onEnterBack.");
+                    // console.log("Cube animating in onEnterBack."); // Debugging removed
                 }
               }
             });
-            console.log("Desktop cube animation setup complete with new logic."); 
+            // console.log("Desktop cube animation setup complete with new logic."); // Debugging removed
         }
     });
 
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh(); 
-        console.log("Window resized. ScrollTrigger refreshed."); 
+        // console.log("Window resized. ScrollTrigger refreshed."); // Debugging removed
     });
 
     setTimeout(() => {
         document.querySelectorAll('.reveal-item, .reveal-child, .reveal-stagger').forEach(el => {
             if (!el.classList.contains('visible') && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 el.classList.add("visible");
-                console.log("Reveal fallback triggered for:", el);
+                // console.log("Reveal fallback triggered for:", el); // Debugging removed
             }
         });
     }, 2000);
