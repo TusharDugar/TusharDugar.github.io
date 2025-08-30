@@ -376,14 +376,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: 'servicesCubePin',
                 trigger: servicesPinWrapper, // Pin the section wrapper
                 start: "top top",
-                end: `+=${(SERVICES_COUNT - 1) * 200}%`, // FIX: Slower per-face scroll. Now 2 viewports per transition.
+                end: `+=${(SERVICES_COUNT - 1) * 300}%`, // FIX: Slower per-face scroll. Now 3 viewports per transition.
                 scrub: true,        // Ensures forward/backward sync with scroll
                 pin: servicesSection, // Pin the visible services section
                 anticipatePin: 1,
                 snap: {
                     snapTo: 1 / (SERVICES_COUNT - 1), // Snaps to each face (0 to 7)
-                    duration: 0.3,                   // Duration of the snap animation
-                    ease: "power1.inOut"             // Easing for a smooth snap
+                    duration: 1,                   // FIX: Increased duration for smoother snap
+                    ease: "power3.inOut"             // FIX: Smoother easing for snap
                 },
                 onUpdate: (self) => {
                   // Calculate active face index based on scroll progress
