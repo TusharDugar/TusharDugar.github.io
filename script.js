@@ -104,8 +104,8 @@ function initIntersectionObserverAnimations() {
   });
 }
 
-// Global constant for services cube scroll length
-const SCROLL_PER_FACE_VH = 90; // FIX: Reduced scroll area further
+// Global constant for services cube scroll length (now unused, replaced by ScrollTrigger end property)
+const SCROLL_PER_FACE_VH = 90; 
 
 // Main execution block after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // `sideLength` here is the width/height of a square face.
     function calculateFaceDepth(sideHeight) { 
         if (!sideHeight || SERVICES_COUNT === 0) return 0;
-        // FIX: Changed from Math.sin to Math.tan for correct cube depth
+        // Corrected to Math.tan for proper 3D depth
         return (sideHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
     }
 
@@ -179,16 +179,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         faces.forEach((face, i) => {
             const rotation = i * ROTATION_INCREMENT_DEG;
-            // FIX: Individual faces are positioned without an additional local offset.
-            // The cube's global rotation will handle the initial alignment.
+            // Faces are positioned relative to the cube's center without an additional local offset.
+            // The cube's global rotation (in the ScrollTrigger) will handle initial alignment.
             const correctedRotation = rotation; 
 
             gsap.set(face, { 
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
-                transform: `rotateX(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
-                // FIX: All faces start visible in 3D, relying on perspective to hide others
-                autoAlpha: 1, 
+                // Using rotateY for horizontal spin, translateZ for depth
+                transform: `rotateY(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
+                autoAlpha: 1, // All faces start visible, relying on perspective to hide others
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
@@ -197,8 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
         gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, rotateY: 0, transformOrigin: 'center center' }); 
     }
 
-    let cubeAnimationTimeline;
-
+    // No longer using cubeAnimationTimeline directly with MatchMedia for this specific cube logic
+    // Instead, defining the ScrollTrigger directly.
     const mm = gsap.matchMedia(); 
 
     mm.add({ 
@@ -212,12 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
 
-        // --- Kill/Revert previous animations for clean re-initialization ---
-        if (cubeAnimationTimeline) {
-            cubeAnimationTimeline.kill();
-            cubeAnimationTimeline = null;
-            console.log("Existing cube animation timeline killed.");
-        }
+        // --- Kill/Revert previous ScrollTrigger for clean re-initialization ---
         ScrollTrigger.getById('servicesCubePin')?.kill(true);
         console.log("Previous ScrollTrigger for cube pin killed.");
 
@@ -309,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // NEW: Define cubeWidth and cubeHeight based on effectiveCubeBaseDimension
-        const cubeHeight = effectiveCubeBaseDimension * 0.85; // FIX: Reduced height by 15%
+        const cubeHeight = effectiveCubeBaseDimension * 0.85; // Reduced height by 15%
         const cubeWidth = effectiveCubeBaseDimension * 1.5; // Adjusted ratio (1.5x wider)
 
         // Apply cube container size based on the calculated dimensions
@@ -351,53 +346,38 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); // Debugging: Confirm desktop branch
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
-            // No manual wrapper height — let ScrollTrigger handle spacing
+            // No manual servicesPinWrapper height needed; ScrollTrigger 'end' manages spacing.
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
-            // FIX: Sequential cube rotation order 01 → 08
-            // Initialize faces visibility (all visible, active one fully opaque)
-            gsap.set(faces, { autoAlpha: 0.7 }); // Dim all faces initially
+            // Start state: only face 01 fully visible
+            gsap.set(faces, { autoAlpha: 0.5 });
             gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
 
-            // Create ScrollTrigger timeline for cube rotation
-            cubeAnimationTimeline = gsap.timeline({
+            gsap.to(cube, {
+              rotateY: 315, // FIX: 360 * (7/8) for 8 faces (0-7), total 7 steps of 45 degrees
+              ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: servicesPinWrapper, // Pin the section wrapper
                 start: "top top",
-                end: "+=" + (SERVICES_COUNT * SCROLL_PER_FACE_VH) + "vh", // FIX: Use end property for scroll distance
-                scrub: 1,        // FIX: Faster scrub
+                end: "+=2500", // FIX: ~2.5 screens for smooth compressed scroll (pixels not vh for robustness)
+                scrub: true, // Use true for continuous scrubbing
                 pin: servicesSection, // Pin the visible services section
                 anticipatePin: 1,
                 // markers: true, // DEBUG: Temporarily enable to debug ScrollTrigger
                 onUpdate: (self) => {
                   // Calculate active face index based on scroll progress
                   let idx = Math.floor(self.progress * SERVICES_COUNT); // Determine which face should be active
-                  idx = Math.min(idx, SERVICES_COUNT - 1); // Clamp to max index
+                  idx = Math.min(idx, SERVICES_COUNT - 1); // Clamp to max index (0-7)
 
                   faces.forEach((f, i) => {
                     // Highlight the active face, dim others
-                    gsap.set(f, { autoAlpha: i === idx ? 1 : 0.7 });
+                    gsap.set(f, { autoAlpha: i === idx ? 1 : 0.5 });
                   });
                 }
               }
             });
-
-            // Animate the cube's rotation globally
-            cubeAnimationTimeline.to(cube, {
-              rotateY: 360, // FIX: Full rotation for cube (assuming Y-axis based on previous snippets)
-              duration: SERVICES_COUNT * 0.4, // Duration to make onUpdate's idx calculation smooth
-              ease: "none" // Linear ease for scrubbing
-            });
-
-            // Add labels for snapping to each face's position
-            faces.forEach((face, i) => {
-              // Progress point is simply the normalized index for snapping
-              const progressPoint = i / (SERVICES_COUNT - 1); // FIX: Simplified progressPoint calculation
-              cubeAnimationTimeline.addLabel(`face${i + 1}`, progressPoint);
-            });
-
-            console.log("Desktop cube animation setup complete."); // Debugging
+            console.log("Desktop cube animation setup complete with new logic."); // Debugging
         }
     });
 
