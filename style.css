@@ -94,11 +94,6 @@ html::before {
         linear-gradient(to bottom, transparent 99.85%, white 0.15%),
         linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
         linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
-    -webkit-mask-image:
-        linear-gradient(to right, transparent 99.85%, white 0.15%),
-        linear-gradient(to bottom, transparent 99.85%, white 0.15%),
-        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
-        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
     mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
     -webkit-mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
     mask-repeat: repeat;
@@ -162,9 +157,9 @@ html::before {
     transform-style: preserve-3d; 
     filter: none; /* Shadow removed */
 
-    opacity: 1; /* Default to visible, mask will hide/reveal */
-    transform: none; /* Default to no transform, mask will animate */
-    animation: none; /* Base animation moved to .striped-reveal-mask */
+    opacity: 1; /* FIX: Default to visible, mask will hide/reveal */
+    transform: none; /* FIX: Default to no transform, mask will animate */
+    animation: none; /* FIX: Base animation moved to .striped-reveal-mask */
     will-change: auto; /* Handled by mask now */
 }
 
@@ -436,7 +431,7 @@ html::before {
     right: clamp(1rem, 2vw, 1.5rem); 
     font-size: clamp(3rem, 10vw, 6rem); 
     font-weight: 500; 
-    color: rgba(255, 255, 255, 0.08); 
+    color: rgba(255, 255, 255, 0.08); /* Confirmed: stays gray */
     z-index: 0; 
     line-height: 1; 
     pointer-events: none;
