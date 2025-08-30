@@ -127,23 +127,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Services Section 3D Cube Animation (GSAP + ScrollTrigger) ---
     const servicesSection = document.getElementById('services');
-    const servicesPinWrapper = servicesSection; // servicesSection is now the pin wrapper directly
     const servicesHeading = servicesSection ? servicesSection.querySelector('.services-heading') : null;
-    const cubeContainer = servicesSection ? servicesSection.querySelector('.cube-container') : null;
     const cube = servicesSection ? document.getElementById('services-cube') : null;
     const faces = servicesSection ? servicesSection.querySelectorAll('.face') : [];
     const SERVICES_COUNT = faces.length;
 
+    // --- NEW: Select new cube related wrappers ---
+    const scrollArea = servicesSection ? servicesSection.querySelector('.scroll-area') : null;
+    const stickyCubeWrapper = servicesSection ? servicesSection.querySelector('.sticky-cube-wrapper') : null;
+    const cubeContainer = stickyCubeWrapper ? stickyCubeWrapper.querySelector('.cube-container') : null; // RE-SELECTED: correct parent for cubeContainer
+
+
     // --- Fallback if essential elements are missing ---
-    if (!servicesSection || !servicesPinWrapper || !servicesHeading || !cubeContainer || !cube || SERVICES_COUNT === 0) {
+    if (!servicesSection || !servicesHeading || !cubeContainer || !cube || !scrollArea || !stickyCubeWrapper || SERVICES_COUNT === 0) { // Added checks for new elements
         console.error("Missing key elements for Services 3D cube animation. Aborting GSAP setup.");
         gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
         gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
         if (servicesHeading) {
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
         }
-        gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', y: 0, perspective: 'none' });
-        gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
+        if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', position: 'relative', top: 'auto', perspective: 'none' }); // Ensure visible
+        if (cube) gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
         faces.forEach(face => {
             gsap.set(face, { 
                 opacity: 1, 
@@ -154,48 +158,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearProps: 'transform,opacity,visibility,position,transformStyle'
             });
         });
+        // Also ensure scrollArea and stickyWrapper for reduced motion/mobile are static
+        if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' });
+        if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
         return; 
     }
 
     // --- Core 3D Cube Logic ---
 
     // Calculate `translateZ` distance for faces (apothem of a regular polygon)
-    // `sideLength` here is the width/height of a square face.
     function calculateFaceDepth(sideHeight) { 
         if (!sideHeight || SERVICES_COUNT === 0) return 0;
-        // Corrected to Math.tan for proper 3D depth
         return (sideHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
     }
 
     // Set up initial 3D positioning of each face and cube
     function setupInitialCubeFaces(currentCubeWidth, currentCubeHeight) { 
         console.log(`Setting up initial cube faces with width: ${currentCubeWidth}, height: ${currentCubeHeight}`); // Debugging
-        let faceDepth = calculateFaceDepth(currentCubeHeight); // Use currentCubeHeight for depth calculation
+        let faceDepth = calculateFaceDepth(currentCubeHeight); 
         
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
         faces.forEach((face, i) => {
             const rotation = i * ROTATION_INCREMENT_DEG;
-            // Faces are positioned relative to the cube's center without an additional local offset.
-            // The cube's global rotation (in the ScrollTrigger) will handle initial alignment.
             const correctedRotation = rotation; 
 
             gsap.set(face, { 
                 width: currentCubeWidth + "px",  
                 height: currentCubeHeight + "px", 
-                // Using rotateX for vertical spin, translateZ for depth
                 transform: `rotateX(${correctedRotation}deg) translateZ(${faceDepth}px)`, 
                 autoAlpha: 1, // All faces start visible, relying on perspective to hide others
                 position: 'absolute',
                 transformStyle: 'preserve-3d',
             });
         });
-        // Set up cube with preserve-3d and initial rotation (0)
         gsap.set(cube, { transformStyle: 'preserve-3d', rotateX: 0, rotateY: 0, transformOrigin: 'center center' }); 
     }
 
-    // No longer using cubeAnimationTimeline directly with MatchMedia for this specific cube logic
-    // Instead, defining the ScrollTrigger directly.
     const mm = gsap.matchMedia(); 
 
     mm.add({ 
@@ -205,224 +204,204 @@ document.addEventListener('DOMContentLoaded', () => {
         "reducedMotion": "(prefers-reduced-motion: reduce)"
 
     }, (context) => { 
-        console.log("MatchMedia callback fired. Conditions:", context.conditions); // Debugging: Confirm matchMedia fires
+        console.log("MatchMedia callback fired. Conditions:", context.conditions); 
         
         let { largeDesktop, mediumDesktop, mobile, reducedMotion } = context.conditions;
 
-        // --- Kill/Revert previous ScrollTrigger for clean re-initialization ---
         ScrollTrigger.getById('servicesCubePin')?.kill(true);
         console.log("Previous ScrollTrigger for cube pin killed.");
 
-        // --- Handle Reduced Motion First ---
         if (reducedMotion) {
             console.log("Reduced motion detected. Applying flat layout for cube.");
-            gsap.set(servicesSection, { autoAlpha: 1, scale: 1, position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0 });
-            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
-            gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
-            gsap.set(cubeContainer, { autoAlpha: 1, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none' });
-            gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
+            gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
+            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
+            if (servicesHeading) {
+                gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
+            }
+            if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', perspective: 'none' });
+            if (cube) gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
                     transform: 'none', 
-                    autoAlpha: 1, 
+                    opacity: 1, 
+                    visibility: 'visible', 
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,autoAlpha,position,transformStyle'
+                    clearProps: 'transform,opacity,visibility,position,transformStyle'
                 });
             });
+            if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' }); 
+            if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
             return; 
         }
 
-        // --- Left Column Striped Reveal Activation ---
         const stripedRevealMask = document.querySelector('.striped-reveal-mask');
         if (stripedRevealMask && !mobile && !reducedMotion) {
-            // Use IntersectionObserver to trigger the reveal when it enters the viewport
             const revealObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('revealed');
-                        console.log("Left column striped overlay removed."); // Overlay is hidden by CSS 'revealed' class
+                        console.log("Left column striped overlay removed."); 
 
-                        // Animate children after overlay is gone
                         gsap.from(".about-left-content .reveal-stagger-child", {
                             opacity: 0,
-                            y: 40,
-                            duration: 0.8,        // Slower overall animation for children
-                            stagger: 0.15,        // Delay each child a bit more
-                            delay: 0.5,           // Start a bit after overlay removal
+                            y: 25,            
+                            duration: 0.5,    
+                            stagger: 0.1,     
+                            delay: 0.2,       
                             ease: "power2.out",
-                            clearProps: "all"     // Remove GSAP styles after animation
+                            clearProps: "all"
                         });
                         console.log("Left column children staggered reveal triggered with GSAP.");
-                        observer.unobserve(entry.target); // Stop observing once revealed
+                        observer.unobserve(entry.target); 
                     }
                 });
             }, { rootMargin: "0px", threshold: 0.1 });
             revealObserver.observe(stripedRevealMask);
         } else if (stripedRevealMask) {
-            // For mobile or reduced motion, ensure it's immediately revealed (no animation)
             stripedRevealMask.classList.add('revealed');
             console.log("Left column striped reveal instantly revealed (mobile or reduced motion).");
-            // Also ensure children are visible if no stagger animation is intended
             gsap.set(".about-left-content .reveal-stagger-child", { opacity: 1, y: 0, clearProps: "all" });
         }
 
 
-        // --- Determine Max Desired Cube Size based on Breakpoints ---
-        let maxDesiredCubeBaseDimension = 300; // Base value for height
+        let maxDesiredCubeBaseDimension = 300; 
         if (largeDesktop) {
-            maxDesiredCubeBaseDimension = 400; // Cap for large desktop
+            maxDesiredCubeBaseDimension = 400; 
         } else if (mediumDesktop) {
-            maxDesiredCubeBaseDimension = 350; // Cap for medium desktop
+            maxDesiredCubeBaseDimension = 350; 
         } 
         
-        let effectiveCubeBaseDimension = 300; // Default for mobile fallback
+        let effectiveCubeBaseDimension = 300; 
 
-        // --- Calculate Dynamic effectiveCubeBaseDimension to fit within viewport ---
         if (!mobile) { 
             gsap.set(servicesSection, { autoAlpha: 1, clearProps: 'autoAlpha' }); 
             const viewportHeight = window.innerHeight;
             
-            // Apply new scaling factor and caps
             effectiveCubeBaseDimension = Math.min(maxDesiredCubeBaseDimension, viewportHeight * 0.6); 
 
-            // Ensure a minimum size on desktop
             const minAllowedCubeDimension = 300;
             if (effectiveCubeBaseDimension < minAllowedCubeDimension) {
                 effectiveCubeBaseDimension = minAllowedCubeDimension;
             }
 
-            gsap.set(cubeContainer, { 
-                position: "relative" 
-            });
+            if (scrollArea) { // Only set height if scrollArea exists
+                // The fixed height from CSS is overridden dynamically
+                const faceCount = faces.length;
+                const fixedFaceHeight = 250; // Matches CSS .face height
+                const scrollMultiplier = 1; // 1x viewport height per face transition
+                const totalScrollLength = (faceCount - 1) * fixedFaceHeight * scrollMultiplier; // Total scroll needed for 01-08
+
+                scrollArea.style.height = `${totalScrollLength}px`;
+                console.log(`Scroll area height set to: ${totalScrollLength}px`);
+            }
 
         } else {
-             effectiveCubeBaseDimension = 300; // Keep mobile fixed at 300
+             effectiveCubeBaseDimension = 300; 
+             if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' }); 
+             if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
         }
 
-        // NEW: Define cubeWidth and cubeHeight based on effectiveCubeBaseDimension
-        const cubeHeight = effectiveCubeBaseDimension * 0.85; // Reduced height by 15%
-        const cubeWidth = effectiveCubeBaseDimension * 1.5; // Adjusted ratio (1.5x wider)
+        const cubeHeight = effectiveCubeBaseDimension * 0.8; // Reduced height by 20%
+        const cubeWidth = effectiveCubeBaseDimension * 1.5; 
 
-        // Apply cube container size based on the calculated dimensions
         gsap.set(cubeContainer, { 
             width: cubeWidth, 
             height: cubeHeight, 
             maxWidth: cubeWidth, 
             maxHeight: cubeHeight, 
-            // Perspective is now primarily set in CSS to 1600px.
+            zIndex: 1, // Cube is behind heading (z-index 2)
         });
         
-        setupInitialCubeFaces(cubeWidth, cubeHeight); // Pass calculated width and height
+        setupInitialCubeFaces(cubeWidth, cubeHeight); 
 
-
-        // --- Setup Cube Animation & Pinning ---
         if (mobile) {
             console.log("Mobile layout active. Disabling 3D scroll animation.");
             gsap.set(servicesSection, { clearProps: 'position,top,left,width,max-width,transform,z-index,padding,autoAlpha,scale' });
             gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 });
             gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
-            gsap.set(cubeContainer, { 
-                autoAlpha: 1, scale: 1, width: effectiveCubeBaseDimension, height: effectiveCubeBaseDimension, // Square for mobile
-                maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', y: 0, perspective: 'none',
-                left: 'auto', 
-                xPercent: 0, 
-                transform: 'none' 
-            }); 
-            gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
+            if (cubeContainer) gsap.set(cubeContainer, { opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 1, position: 'relative', top: 'auto', perspective: 'none' });
+            if (cube) gsap.set(cube, { transform: 'none', transformStyle: 'flat' });
             faces.forEach(face => {
                 gsap.set(face, { 
                     transform: 'none', 
-                    autoAlpha: 1, 
+                    opacity: 1, 
+                    visibility: 'visible', 
                     position: 'relative', 
                     transformStyle: 'flat',
-                    clearProps: 'transform,autoAlpha,position,transformStyle'
+                    clearProps: 'transform,opacity,visibility,position,transformStyle'
                 });
             });
         } else {
-            console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); // Debugging: Confirm desktop branch
+            console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); 
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
-            // No manual servicesPinWrapper height needed; ScrollTrigger 'end' manages spacing.
-            const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
-
-            // Start state: Face 01 fully visible
-            gsap.set(faces, { autoAlpha: 0.2 }); // Dim all faces more strongly initially
+            gsap.set(faces, { autoAlpha: 0.6 }); // All faces readable
             gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
 
             // FIX: Add a fade-in animation for the entire cube container when it enters the pinned section
-            gsap.from(cubeContainer, {
-                opacity: 0,
-                y: 50, // Slightly move up from bottom
-                duration: 1.5, // Increased duration for a slower fade-in
-                delay: 0.2, // Small delay after section pins
-                ease: "power2.out",
-                scrollTrigger: { // Use a separate, immediate ScrollTrigger for its entry
-                    trigger: servicesPinWrapper,
-                    start: "top bottom", // Trigger when the top of the trigger hits bottom of viewport
-                    end: "top top+=10%", // Finishes quickly
-                    scrub: false, // Not scrubbed, it's a 'from' animation on entry
-                    toggleActions: "play none none none", // Play once on entry
-                    onEnter: () => console.log("Cube container fade-in triggered."),
-                    onLeaveBack: () => gsap.set(cubeContainer, { opacity: 0, y: 50 }), // Reset if scrolled back up
+            gsap.from(cube, // Target cube itself for initial animation
+                { opacity: 0, y: 100, scale: 0.8 }, // Smaller initial scale, moves up
+                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out", // Final state
+                    scrollTrigger: {
+                        trigger: servicesSection, // Trigger on the main services section
+                        start: "top 30%", // Start when top of section is 30% from top of viewport
+                        toggleActions: "play none none reverse", // Play on enter, reverse on leave back
+                        onEnter: () => console.log("Cube entry animation triggered (fromTo)."),
+                        onLeaveBack: () => console.log("Cube entry animation reversed (fromTo)."),
+                        // markers: true, // DEBUG
+                    }
                 }
-            });
-
+            );
 
             gsap.to(cube, {
-              rotateX: 360, // Total rotation for a full 360 vertical cycle
+              rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Total rotation to land on Face 08
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
-                trigger: servicesPinWrapper, // Pin the section wrapper
+                trigger: scrollArea, // Trigger on the scroll-area wrapper
                 start: "top top",
-                end: `+=${(SERVICES_COUNT - 1) * window.innerHeight}`, // FIX: Dynamic end to eliminate blank space.
-                scrub: true,        // Ensures forward/backward sync with scroll
-                pin: servicesSection, // Pin the visible services section
+                end: `+=${(SERVICES_COUNT - 1) * window.innerHeight * 0.95}`, // FIX: Dynamic end to eliminate blank space. Pacing adjustment.
+                scrub: 1,        
+                pin: stickyCubeWrapper, // FIX: Pin the sticky-cube-wrapper
                 anticipatePin: 1,
                 snap: {
-                    snapTo: 1 / (SERVICES_COUNT - 1), // Snaps to each face (0 to 7)
-                    duration: 1,                   // Increased duration for smoother snap
-                    ease: "power3.inOut"             // Smoother easing for snap
+                    snapTo: 1 / (SERVICES_COUNT - 1),
+                    duration: 1, // FIX: Increased duration for smoother snap
+                    ease: "power2.inOut"             // Gentler easing
                 },
                 onUpdate: (self) => {
-                  // Calculate active face index based on scroll progress
-                  // Math.round is more appropriate here to snap to the closest face visually
-                  let idx = Math.round(self.progress * (SERVICES_COUNT - 1)); // Map progress to (SERVICES_COUNT - 1) for 0-7 index range
-                  idx = Math.min(idx, SERVICES_COUNT - 1); // Clamp to max index (0-7) for highlighting
+                  let idx = Math.round(self.progress * (SERVICES_COUNT - 1)); 
+                  idx = Math.min(idx, SERVICES_COUNT - 1); 
 
                   faces.forEach((f, i) => {
-                    // Highlight the active face, dim others
-                    gsap.set(f, { autoAlpha: i === idx ? 1 : 0.2 }); 
+                    gsap.to(f, { autoAlpha: i === idx ? 1 : 0.6, duration: 0.3, ease: "power1.inOut" }); 
                   });
                 },
-                onLeave: () => { // Add onLeave for smooth cube exit
-                    gsap.to(cubeContainer, { opacity: 0, y: -100, duration: 0.6, ease: "power2.out" });
-                    console.log("Cube container animating out onLeave.");
+                onLeave: () => { 
+                    gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
+                    console.log("Cube animating out onLeave.");
                 },
-                onEnterBack: () => { // Add onEnterBack for smooth cube re-entry
-                    gsap.fromTo(cubeContainer, { opacity: 0, y: -100 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" });
-                    console.log("Cube container animating in onEnterBack.");
+                onEnterBack: () => { 
+                    gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }); 
+                    console.log("Cube animating in onEnterBack.");
                 }
               }
             });
-            console.log("Desktop cube animation setup complete with new logic."); // Debugging
+            console.log("Desktop cube animation setup complete with new logic."); 
         }
     });
 
-    // Call ScrollTrigger.refresh() on resize
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh(); 
-        console.log("Window resized. ScrollTrigger refreshed."); // Debugging
+        console.log("Window resized. ScrollTrigger refreshed."); 
     });
 
-    // Fallback: Force all revealable elements to become visible after 2s if IO hasn't triggered them
     setTimeout(() => {
         document.querySelectorAll('.reveal-item, .reveal-child, .reveal-stagger').forEach(el => {
-            // Only apply fallback if prefers-reduced-motion is NOT active
             if (!el.classList.contains('visible') && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                el.classList.add('visible');
-                console.log("Reveal fallback triggered for:", el); // Debugging
+                el.classList.add("visible");
+                console.log("Reveal fallback triggered for:", el);
             }
         });
     }, 2000);
