@@ -353,15 +353,34 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(faces, { autoAlpha: 0.5 }); // Dim all faces initially
             gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
 
+            // FIX: Add a fade-in animation for the entire cube container when it enters the pinned section
+            gsap.from(cubeContainer, {
+                opacity: 0,
+                y: 50, // Slightly move up from bottom
+                duration: 0.8,
+                delay: 0.2, // Small delay after section pins
+                ease: "power2.out",
+                scrollTrigger: { // Use a separate, immediate ScrollTrigger for its entry
+                    trigger: servicesPinWrapper,
+                    start: "top bottom", // Trigger when the top of the trigger hits bottom of viewport
+                    end: "top top+=10%", // Finishes quickly
+                    scrub: false, // Not scrubbed, it's a 'from' animation on entry
+                    toggleActions: "play none none none", // Play once on entry
+                    onEnter: () => console.log("Cube container fade-in triggered."),
+                    onLeaveBack: () => gsap.set(cubeContainer, { opacity: 0, y: 50 }), // Reset if scrolled back up
+                }
+            });
+
+
             gsap.to(cube, {
-              rotateX: 315, // FIX: Total rotation for 8 faces (0-7), 7 steps of 45 degrees = 315 degrees
+              rotateX: (SERVICES_COUNT - 1) * 45, // FIX: Total rotation for 8 faces (0-7), 7 steps of 45 degrees = 315 degrees
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: servicesPinWrapper, // Pin the section wrapper
                 start: "top top",
-                end: "+=" + (SERVICES_COUNT * 100) + "%", // FIX: Proportional scroll length (1 viewport height per face)
-                scrub: 1,        // Faster scrub
+                end: `+=${(SERVICES_COUNT - 1) * 100}%`, // FIX: Proportional scroll length (1 viewport height per face)
+                scrub: true,        // Faster scrub
                 pin: servicesSection, // Pin the visible services section
                 anticipatePin: 1,
                 // markers: true, // DEBUG: Temporarily enable to debug ScrollTrigger
