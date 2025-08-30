@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`Desktop layout active. Cube size: ${cubeWidth}x${cubeHeight}px. Setting up 3D animation.`); // Debugging: Confirm desktop branch
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
-            // FIX: Removed manual servicesPinWrapper height assignment. ScrollTrigger 'end' manages spacing.
+            // No manual servicesPinWrapper height needed; ScrollTrigger 'end' manages spacing.
             const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
 
             // Start state: only face 01 fully visible
@@ -354,13 +354,13 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(faces[0], { autoAlpha: 1 }); // Start with face 01 (index 0) highlighted
 
             gsap.to(cube, {
-              rotateY: 315, // FIX: Total rotation for 8 faces (0-7), 7 steps of 45 degrees
+              rotateY: 315, // Total rotation for 8 faces (0-7), 7 steps of 45 degrees (360/8 = 45 * 7 = 315)
               ease: "none",
               scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: servicesPinWrapper, // Pin the section wrapper
                 start: "top top",
-                end: "+=250vh", // FIX: 2.5 screens worth of scroll for the animation
+                end: `+=${SERVICES_COUNT * 30}vh`, // FIX: Dynamic end based on SERVICES_COUNT and a reasonable VH per step
                 scrub: 1,        // Faster scrub
                 pin: servicesSection, // Pin the visible services section
                 anticipatePin: 1,
