@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Set up initial 3D positioning of each face and cube
     function setupInitialCubeFaces(currentCubeWidth, currentCubeHeight) { 
-        console.log(`Setting up initial cube faces with width: ${currentCubeWidth}, height: ${currentCubeHeight}`);
+        // console.log(`Setting up initial cube faces with width: ${currentCubeWidth}, height: ${currentCubeHeight}`); // Debugging removed
         let faceDepth = calculateFaceDepth(currentCubeHeight); 
         
         const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
@@ -203,20 +203,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mm = gsap.matchMedia(); 
 
-    // ✅ UPDATED MATCHMEDIA LOGIC FOR ROBUST DEVICE DETECTION (Final Version)
+    // ✅ FINAL CORRECTED MATCHMEDIA LOGIC FOR ROBUST DEVICE DETECTION
     mm.add({
       reducedMotion: "(prefers-reduced-motion: reduce)"
     }, (context) => {
-        const isMobileDevice = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+        const screenWidth = window.innerWidth;
         const reducedMotion = context.conditions.reducedMotion;
+        const isMobileDevice = /Mobi|Android|iPhone|iPad|Mobile|Tablet/i.test(navigator.userAgent);
 
-        // Desktop is when it's NOT a mobile device AND NOT reduced motion.
-        const desktop = !isMobileDevice && !reducedMotion;
-        // Mobile is when it IS a mobile device OR the window is narrow (fallback for unusual cases).
-        // Using 1023px for consistency with your CSS media query.
-        const mobile = isMobileDevice || window.innerWidth <= 1023; 
+        // Desktop is when screen is wide, it's not detected as a mobile device, AND not reduced motion.
+        const desktop = screenWidth > 1023 && !isMobileDevice && !reducedMotion;
+        // Mobile is simply when it's NOT desktop (covers true mobile, narrow desktop windows, or user agent-detected mobile).
+        const mobile = !desktop; 
 
-        // console.log("Device detection — desktop:", desktop, "mobile:", mobile, "reducedMotion:", reducedMotion); // Debugging removed for final code
+        console.log("Device Detection:", {
+            screenWidth,
+            isMobileDevice,
+            desktop,
+            mobile,
+            reducedMotion
+        }); // ✅ Keep this log for final verification!
 
         // Kill any existing ScrollTriggers for the cube to prevent duplicates
         ScrollTrigger.getById('servicesCubePin')?.kill(true);
@@ -248,8 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 gsap.set(cube, { transform: 'none', transformStyle: 'flat', rotateX: 0, rotateY: 0, scale: 1, opacity: 1 });
             }
             faces.forEach(face => {
-                // Faces now rely on the .reveal-item class for their mobile animation
-                // GSAP just ensures they are flat and visible initially.
+                // Faces now rely on the .reveal-item class for their mobile animation (HTML already updated)
                 gsap.set(face, { 
                     transform: 'none', 
                     opacity: 1, 
@@ -265,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // --- Desktop 3D Cube Animation Logic (only if desktop = true) ---
-        if (desktop) { // Explicitly ensure this only runs for desktop
+        if (desktop) { 
             // console.log(`Desktop layout active. Setting up 3D animation.`); // Debugging removed
             gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
 
