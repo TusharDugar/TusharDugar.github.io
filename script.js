@@ -179,8 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         faces.forEach((face, i) => {
             const rotation = i * ROTATION_INCREMENT_DEG;
-            // FIX: Remove the -90 degree offset from individual faces here.
-            // The cube's initial rotation (from the fromTo) will now be responsible for aligning Face 01.
+            // FIX: Removed the -90 degree offset from individual faces here.
+            // Individual faces are now positioned without an additional local offset.
             const correctedRotation = rotation; 
 
             gsap.set(face, { 
@@ -365,9 +365,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // The main cube rotation over the entire ScrollTrigger duration.
             // It rotates from 0deg (Face 01) up to the position of the last face.
-            cubeAnimationTimeline.fromTo(cube, // FIX: Use fromTo to explicitly set starting rotation
-              { rotateX: -90 }, // FIX: Start the entire cube at -90deg rotation to bring Face 01 (local 0deg) to the front
-              { rotateX: (-90 + (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG), ease: "none" }, // Animate from -90deg to final rotation
+            cubeAnimationTimeline.fromTo(cube, 
+              { rotateX: 0 }, // FIX: Start the entire cube at 0deg rotation to align Face 01 to the front
+              { rotateX: (SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG, ease: "none" }, // Animate to final rotation
               0 // Start at the beginning of the timeline
             );
 
@@ -376,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
             faces.forEach((face, i) => {
                 const rotationTarget = i * ROTATION_INCREMENT_DEG;
                 const label = `face${i + 1}`;
-                const progressPoint = rotationTarget / ((SERVICES_COUNT - 1) * ROTATION_INCREMENT_DEG || 1);
+                const progressPoint = i / (SERVICES_COUNT - 1); // FIX: Simplified progressPoint calculation
                 cubeAnimationTimeline.addLabel(label, progressPoint);
             });
         }
