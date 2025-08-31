@@ -165,10 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- FIX: Add reveal-item class to faces for mobile animations ---
-    // This allows the IntersectionObserver to handle fade-ins for individual service cards on mobile.
+    // (This is technically redundant if already in HTML, but harmless)
     faces.forEach(face => face.classList.add('reveal-item'));
 
-    // Updated matchMedia block with fixes
     const mm = gsap.matchMedia();
 
     mm.add({
@@ -191,10 +190,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ], { clearProps: 'transform, rotateX, rotateY, scale, width, height, maxWidth, maxHeight, position, top, perspective, zIndex, transformStyle, opacity, visibility, filter' });
 
         if (mobile || reducedMotion) {
+            console.log("✅ Mobile/Reduced Motion cube fallback active...");
             // Mobile fallback: Flat stacked layout. IO will handle fade-in due to 'reveal-item' class.
             gsap.set(cube, { transformStyle: 'flat', transform: 'none' });
             faces.forEach(face => {
-                // Ensure faces are relative and flat, IO handles initial opacity/visibility
+                // Ensure faces are relative and flat; IO handles initial opacity/visibility
                 gsap.set(face, {
                     position: 'relative',
                     transform: 'none',
@@ -216,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Desktop Mode: Cube Rotation
+        console.log("✅ Desktop cube animation initializing...");
         const cubeHeight = 250; // Fixed height for faces
         const cubeWidth = 400;  // Fixed width for faces
         // FIX: Calculate the apothem based on face HEIGHT (for rotateX)
@@ -243,7 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 position: 'absolute', // Absolute positioning for 3D stack
                 transformStyle: 'preserve-3d',
                 opacity: 1, // Ensure faces are initially visible for desktop setup
-                visibility: 'visible' // Ensure faces are initially visible for desktop setup
+                visibility: 'visible', // Ensure faces are initially visible for desktop setup
+                backfaceVisibility: 'visible' // FIX: Ensure backface is visible
             });
         });
 
