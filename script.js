@@ -164,9 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return; 
     }
 
-    // --- FIX: Add reveal-item class to faces for mobile animations ---
-    // (This is technically redundant if already in HTML, but harmless)
-    faces.forEach(face => face.classList.add('reveal-item'));
+    // --- The HTML already has 'reveal-item' on faces, so no JS modification needed here. ---
+    // faces.forEach(face => face.classList.add('reveal-item')); // This line is now effectively redundant.
 
     const mm = gsap.matchMedia();
 
