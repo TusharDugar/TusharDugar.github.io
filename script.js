@@ -34,7 +34,7 @@ function copyToClipboard(button) {
 
 // Unified Function to reveal elements on scroll (Intersection Observer)
 function initIntersectionObserverAnimations() {
-  // ✅ Mobile-specific threshold for earlier reveals if window is narrow
+  // Mobile-specific threshold for earlier reveals if window is narrow
   const observerOptions = { 
     root: null, 
     rootMargin: "0px", 
@@ -164,186 +164,150 @@ document.addEventListener('DOMContentLoaded', () => {
         return; 
     }
 
-    // --- Core 3D Cube Logic ---
+    // --- FIX: Add reveal-item class to faces for mobile animations ---
+    // This allows the IntersectionObserver to handle fade-ins for individual service cards on mobile.
+    faces.forEach(face => face.classList.add('reveal-item'));
 
-    // Calculate `translateZ` distance for faces (apothem of a regular polygon)
-    function calculateFaceDepth(sideHeight) { 
-        if (!sideHeight || SERVICES_COUNT === 0) return 0;
-        return (sideHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
-    }
+    // Updated matchMedia block with fixes
+    const mm = gsap.matchMedia();
 
-    // Set up initial 3D positioning of each face and cube
-    function setupInitialCubeFaces(currentCubeWidth, currentCubeHeight) { 
-        let faceDepth = calculateFaceDepth(currentCubeHeight); 
-        
-        const ROTATION_INCREMENT_DEG = 360 / SERVICES_COUNT;
-
-        faces.forEach((face, i) => {
-            const rotation = i * ROTATION_INCREMENT_DEG;
-            gsap.set(face, { 
-                clearProps: 'transform,opacity,visibility,position,transformStyle', 
-                width: currentCubeWidth + "px",  
-                height: currentCubeHeight + "px", 
-                transform: `rotateX(${rotation}deg) translateZ(${faceDepth}px)`, 
-                opacity: 1, 
-                visibility: 'visible',
-                position: 'absolute',
-                transformStyle: 'preserve-3d',
-            });
-        });
-        gsap.set(cube, { 
-            clearProps: 'transform,transformStyle,transformOrigin,rotateX,rotateY',
-            transformStyle: 'preserve-3d', 
-            rotateX: 0, 
-            rotateY: 0, 
-            transformOrigin: 'center center' 
-        }); 
-    }
-
-    const mm = gsap.matchMedia(); 
-
-    // ✅ FINAL CORRECTED MATCHMEDIA LOGIC WITH PROPER CLOSURE
     mm.add({
       reducedMotion: "(prefers-reduced-motion: reduce)"
     }, (context) => {
         const screenWidth = window.innerWidth;
         const reducedMotion = context.conditions.reducedMotion;
-        
-        // Desktop is when screen is wide AND not reduced motion.
         const desktop = screenWidth > 1023 && !reducedMotion;
-        // Mobile is when screen is NOT desktop (i.e., narrow width OR reduced motion).
-        const mobile = !desktop; 
+        const mobile = !desktop;
 
         console.log("Device Detection:", {
-            screenWidth,
-            desktop,
-            mobile,
-            reducedMotion
-        }); 
+            screenWidth, desktop, mobile, reducedMotion
+        });
 
-        // Kill any existing ScrollTriggers for the cube to prevent duplicates
         ScrollTrigger.getById('servicesCubePin')?.kill(true);
-        
-        // IMPORTANT: Aggressively clear ALL GSAP-set inline styles on key elements
-        // at the start of ANY matchMedia callback. This ensures no lingering
-        // styles from a previous breakpoint conflict with the new one.
-        gsap.set([servicesSection, servicesHeading, servicesHeading.querySelectorAll('span'), 
-                  cubeContainer, cube, faces, scrollArea, stickyCubeWrapper], 
-                  { clearProps: 'all' });
 
+        // Don't clear all props – only the transforms and relevant GSAP-applied properties
+        gsap.set([
+            servicesHeading, cube, cubeContainer, ...faces, scrollArea, stickyCubeWrapper
+        ], { clearProps: 'transform, rotateX, rotateY, scale, width, height, maxWidth, maxHeight, position, top, perspective, zIndex, transformStyle, opacity, visibility, filter' });
 
-        if (reducedMotion || mobile) {
-            // Explicitly set non-3D, flat properties for mobile/reduced motion.
-            gsap.set(servicesSection, { position: 'relative', top: 'auto', left: 'auto', x: 0, y: 0, opacity: 1, scale: 1, visibility: 'visible' }); 
-            gsap.set(servicesHeading, { opacity: 1, y: 0, x: 0 }); 
-            if (servicesHeading) {
-                gsap.set(servicesHeading.querySelectorAll('span'), { opacity: 1, y: 0, x: 0 });
-            }
-            if (cubeContainer) {
-                gsap.set(cubeContainer, { 
-                    opacity: 1, y: 0, scale: 1, width: '100%', height: 'auto', maxWidth: '100%', aspectRatio: 'auto', 
-                    position: 'relative', top: 'auto', transform: 'none', perspective: 'none'
-                });
-            }
-            if (cube) { // Flatten cube element
-                gsap.set(cube, { transform: 'none', transformStyle: 'flat', rotateX: 0, rotateY: 0, scale: 1, opacity: 1 });
-            }
+        if (mobile || reducedMotion) {
+            // Mobile fallback: Flat stacked layout. IO will handle fade-in due to 'reveal-item' class.
+            gsap.set(cube, { transformStyle: 'flat', transform: 'none' });
             faces.forEach(face => {
-                gsap.set(face, { 
-                    transform: 'none', 
-                    opacity: 1, 
-                    visibility: 'visible', 
-                    position: 'relative', 
-                    transformStyle: 'flat', 
-                    filter: 'none' 
+                // Ensure faces are relative and flat, IO handles initial opacity/visibility
+                gsap.set(face, {
+                    position: 'relative',
+                    transform: 'none',
+                    transformStyle: 'flat',
+                    filter: 'none' // Ensure filter is off for mobile/reduced motion
                 });
             });
-            if (scrollArea) gsap.set(scrollArea, { height: 'auto', position: 'relative' }); 
-            if (stickyCubeWrapper) gsap.set(stickyCubeWrapper, { position: 'relative', top: 'auto', height: 'auto', perspective: 'none' });
-            return; 
+            gsap.set(cubeContainer, {
+                position: 'relative',
+                transform: 'none',
+                width: '100%',
+                height: 'auto',
+                opacity: 1, // Ensure container is visible
+                visibility: 'visible' // Ensure container is visible
+            });
+            gsap.set(scrollArea, { height: 'auto', position: 'relative' });
+            gsap.set(stickyCubeWrapper, { position: 'relative', height: 'auto', perspective: 'none' });
+            return;
         }
 
-        // --- Desktop 3D Cube Animation Logic (only if desktop = true) ---
-        if (desktop) { 
-            gsap.set(servicesSection, { autoAlpha: 1, scale: 1 });
+        // Desktop Mode: Cube Rotation
+        const cubeHeight = 250; // Fixed height for faces
+        const cubeWidth = 400;  // Fixed width for faces
+        // FIX: Calculate the apothem based on face HEIGHT (for rotateX)
+        const faceDepth = (cubeHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
 
-            const viewportHeight = window.innerHeight;
-            const maxDesiredCubeBaseDimension = 400;
-            let effectiveCubeBaseDimension = Math.min(maxDesiredCubeBaseDimension, viewportHeight * 0.6); 
-            const minAllowedCubeDimension = 300;
-            effectiveCubeBaseDimension = Math.max(effectiveCubeBaseDimension, minAllowedCubeDimension);
+        gsap.set(cubeContainer, {
+            width: cubeWidth,
+            height: cubeHeight,
+            perspective: 1600, // Apply perspective here for the container
+            // Ensure no lingering `position` or `transform` from mobile setup
+            position: 'relative', 
+            transform: 'none',
+            opacity: 1,
+            visibility: 'visible',
+            zIndex: 1 // Ensure cube is visible if something else resets z-index
+        });
 
-            const fixedFaceHeight = 250;
-            const cubeHeight = fixedFaceHeight;
-            const cubeWidth = effectiveCubeBaseDimension * 1.5;
-
-            gsap.set(cubeContainer, { 
-                width: cubeWidth, 
-                height: cubeHeight, 
-                maxWidth: cubeWidth, 
-                maxHeight: cubeHeight, 
-                zIndex: 1, 
-                perspective: 'none', 
-                transform: 'none'
+        faces.forEach((face, i) => {
+            const rotation = i * (360 / SERVICES_COUNT);
+            gsap.set(face, {
+                width: cubeWidth,
+                height: cubeHeight,
+                // Faces rotate around their center, then translate out
+                transform: `rotateX(${rotation}deg) translateZ(${faceDepth}px)`,
+                position: 'absolute', // Absolute positioning for 3D stack
+                transformStyle: 'preserve-3d',
+                opacity: 1, // Ensure faces are initially visible for desktop setup
+                visibility: 'visible' // Ensure faces are initially visible for desktop setup
             });
-            
-            setupInitialCubeFaces(cubeWidth, cubeHeight); 
+        });
 
-            const totalScrollLength = (SERVICES_COUNT - 1) * fixedFaceHeight; 
-            scrollArea.style.height = `${totalScrollLength}px`;
-            
-            gsap.fromTo(cube,
-                { opacity: 0, y: 100, scale: 0.8, rotateX: 0 },
-                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: servicesSection, 
-                        start: "top 80%", 
-                        end: "top 40%", 
-                        scrub: false, 
-                        toggleActions: "play none none reverse", 
-                    }
+        gsap.set(cube, {
+            transformStyle: 'preserve-3d',
+            rotateX: 0,
+            rotateY: 0, // Ensure no unintended Y rotation
+            transformOrigin: 'center center' // Crucial for correct rotation
+        });
+
+        // Set scroll area height to allow for pinning and scrolling through faces
+        scrollArea.style.height = `${(SERVICES_COUNT - 1) * cubeHeight}px`;
+        
+        // Initial reveal of the cube, similar to other reveal-items
+        gsap.fromTo(cubeContainer, // Animate the container for initial appearance
+            { opacity: 0, y: 100, scale: 0.8 },
+            { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out",
+                scrollTrigger: {
+                    trigger: servicesSection, // Trigger when services section starts
+                    start: "top 80%",
+                    end: "top 40%",
+                    scrub: false,
+                    toggleActions: "play none none reverse",
+                    once: true 
                 }
-            );
+            }
+        );
 
-            gsap.to(cube, {
-              rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT),
-              ease: "none",
-              scrollTrigger: {
+        // Main cube rotation animation
+        gsap.to(cube, {
+            rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Rotate to show all faces
+            ease: 'none',
+            scrollTrigger: {
                 id: 'servicesCubePin',
-                trigger: scrollArea, 
-                start: "top top",
-                end: `+=${totalScrollLength}`,
-                scrub: true,        
-                pin: stickyCubeWrapper, 
+                trigger: scrollArea,
+                start: 'top top',
+                end: `+=${(SERVICES_COUNT - 1) * cubeHeight}`,
+                scrub: true,
+                pin: stickyCubeWrapper,
                 anticipatePin: 1,
                 snap: {
                     snapTo: 1 / (SERVICES_COUNT - 1),
-                    duration: 0.8, 
+                    duration: 0.8,
                     ease: "power2.inOut"
                 },
                 onUpdate: (self) => {
-                  let activeFaceIndex = Math.round(self.progress * (SERVICES_COUNT - 1)); 
-                  activeFaceIndex = Math.max(0, Math.min(activeFaceIndex, SERVICES_COUNT - 1)); 
-
-                  faces.forEach((f, i) => {
-                    const isActive = (i === activeFaceIndex);
-                    gsap.to(f, {
-                        filter: isActive ? "brightness(1.1)" : "brightness(0.3)", 
-                        duration: 0.3,
-                        ease: "power1.inOut"
+                    const activeFace = Math.round(self.progress * (SERVICES_COUNT - 1));
+                    faces.forEach((face, i) => {
+                        gsap.to(face, {
+                            filter: i === activeFace ? "brightness(1.1)" : "brightness(0.3)",
+                            duration: 0.3,
+                            overwrite: true // Prevent conflicting animations on filter
+                        });
                     });
-                  });
                 },
-                onLeave: () => { 
-                    gsap.to(cube, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" }); 
+                onLeave: () => {
+                    gsap.to(cubeContainer, { opacity: 0, y: -150, duration: 1.2, ease: "power2.out" });
                 },
-                onEnterBack: () => { 
-                    gsap.fromTo(cube, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" });
+                onEnterBack: () => {
+                    gsap.fromTo(cubeContainer, { opacity: 0, y: -150 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" });
                 }
-              }
-            });
-        } // <- ✅ CLOSED: if (desktop) block
-    }); // <- ✅ CLOSED: mm.add() method call
+            }
+        });
+    });
 
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh(); 
