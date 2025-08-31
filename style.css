@@ -688,8 +688,8 @@ footer h2 {
     .face { 
         position: relative !important; /* Stack faces, not absolute */
         transform: none !important; /* No 3D transform */
-        opacity: 1 !important; 
-        visibility: visible !important;
+        opacity: 0; /* Let IO handle fade-in via 'reveal-item' */
+        visibility: hidden; /* Let IO handle visibility via 'reveal-item' */
         height: auto !important; /* Auto height on mobile, overrides fixed desktop height */
         padding: 1rem !important; 
         justify-content: center;
@@ -698,6 +698,8 @@ footer h2 {
         box-shadow: none !important; 
         background: var(--bg-tool-card) !important; 
         margin-bottom: 0 !important; /* Managed by parent gap */
+        transform-style: flat !important; /* Explicitly flat */
+        filter: none !important; /* No brightness filter */
     }
     .face .service-content { 
         align-items: flex-start;
@@ -884,6 +886,8 @@ footer h2 {
         padding: 1rem !important; 
         box-shadow: none !important; 
         background: var(--bg-tool-card) !important; 
+        transform-style: flat !important;
+        filter: none !important;
     }
     .face .service-content {
         justify-content: center !important;
