@@ -352,8 +352,11 @@ html::before {
 }
 
 
-.cube-container { /* This element is now nested inside sticky-cube-wrapper */
-    aspect-ratio: 1 / 1; /* This will be overridden by JS for aspect ratio change */
+.cube-container { 
+    /* FIX: Add fallback dimensions for .cube-container in CSS */
+    width: 400px; /* Fallback for when JS hasn't set it */
+    height: 250px; /* Fallback for when JS hasn't set it */
+
     margin: 0 auto; 
     position: relative; 
     overflow: visible; 
@@ -363,6 +366,7 @@ html::before {
     align-items: center;
     z-index: 1; /* Cube is behind heading (z-index 2) */
     max-width: none; 
+    /* The below properties will be set by JS dynamically on desktop, but these are for mobile/fallback */
     width: auto;     
     height: auto;    
     opacity: 1; 
@@ -383,7 +387,7 @@ html::before {
     position: absolute;
     width: 100%;
     height: 250px !important; /* Enforce fixed height for faces */
-    backface-visibility: hidden;
+    backface-visibility: visible !important; /* FIX: Ensure backface is always visible to avoid hiding */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -700,6 +704,7 @@ footer h2 {
         margin-bottom: 0 !important; /* Managed by parent gap */
         transform-style: flat !important; /* Explicitly flat */
         filter: none !important; /* No brightness filter */
+        backface-visibility: visible !important; /* Ensure backface is visible */
     }
     .face .service-content { 
         align-items: flex-start;
@@ -888,6 +893,7 @@ footer h2 {
         background: var(--bg-tool-card) !important; 
         transform-style: flat !important;
         filter: none !important;
+        backface-visibility: visible !important;
     }
     .face .service-content {
         justify-content: center !important;
