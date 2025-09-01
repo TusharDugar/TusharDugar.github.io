@@ -80,7 +80,15 @@ function initIntersectionObserverAnimations() {
       if (el.matches('.services-heading')) { 
           gsap.set(el.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' });
       }
-    } else {
+    } 
+    // NEW: Also exclude gallery-heading as it's a reveal-item
+    else if (el.closest('.gallery-heading')) {
+        gsap.set(el, { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' });
+        if (el.matches('.gallery-heading')) { 
+            gsap.set(el.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' });
+        }
+    }
+    else {
       // For all other reveal elements:
       const rect = el.getBoundingClientRect();
       const isInitiallyVisible = (
@@ -128,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Services Section Premium Card Animations (No 3D cube) ---
     const servicesSection = document.getElementById('services');
-    // Targeting '.face' elements which now act as individual service cards
     const serviceCards = servicesSection ? servicesSection.querySelectorAll('.face') : [];
 
     if (servicesSection && serviceCards.length > 0) {
@@ -166,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener("mouseenter", () => {
           gsap.to(card, { 
             scale: 1.05, 
-            boxShadow: "0 15px 40px rgba(156, 255, 51, 0.3)", // Glow/shadow effect
+            boxShadow: "0 15px 40px var(--services-card-hover-glow)", // Use CSS variable for glow
             duration: 0.4, 
             ease: "power2.out" 
           });
@@ -187,7 +194,182 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(serviceCards, { opacity: 1, y: 0, scale: 1, clearProps: 'all' });
         }
     }
-    // End of Services Section Premium Card Animations (No 3D cube)
+    // End of Services Section Premium Card Animations
+
+    /* ===== NEW: 3D Image Ring Vanilla JS ===== */
+    const ring = document.querySelector(".image-ring");
+    const ringImages = document.querySelectorAll(".ring-image");
+
+    if (ring && ringImages.length > 0) {
+      console.log("✅ 3D Image Ring vanilla JS initializing...");
+      const total = ringImages.length;
+      const angleStep = 360 / total;
+      let currentRotation = 0;
+      let isDragging = false;
+      let startX = 0;
+      let velocity = 0;
+      let animationFrame;
+
+      // Get CSS variables for dynamic sizing
+      const style = getComputedStyle(document.documentElement);
+      const ringRadius = parseFloat(style.getPropertyValue('--gallery-ring-radius'));
+      const activeRange = 20; // Angle from front where image is fully visible (degrees)
+      const fadeRange = 90; // Angle from front where image starts to dim (degrees)
+      const minBrightness = 0.6; // For dimmed images
+      const maxBrightness = 1.1; // For active images
+
+      // Position each image in the 3D ring and apply initial dimming
+      ringImages.forEach((imgWrapper, i) => {
+        const img = imgWrapper.querySelector('img');
+        imgWrapper.style.transform = `rotateY(${i * angleStep}deg) translateZ(${ringRadius}px) translateX(-50%) translateY(-50%)`;
+        img.style.filter = `brightness(${minBrightness})`; // Start dimmed
+        img.style.opacity = '1'; // CSS handles initial opacity
+        imgWrapper.dataset.initialRotation = `${i * angleStep}`; // Store initial rotation for calculations
+      });
+
+      function calculateBrightness(imageInitialAngle, currentRingRotation) {
+        // Normalize ring rotation to 0-360 range
+        const normalizedRingRotation = (currentRingRotation % 360 + 360) % 360;
+        
+        // Calculate the effective angle of the image relative to the front (0 degrees)
+        const imageEffectiveAngle = (parseFloat(imageInitialAngle) + normalizedRingRotation) % 360;
+        
+        // Shortest angular distance to the "front" (0 or 360 degrees)
+        let angleDiff = Math.abs(imageEffectiveAngle);
+        if (angleDiff > 180) angleDiff = 360 - angleDiff;
+
+        if (angleDiff < activeRange) {
+          return maxBrightness;
+        } else if (angleDiff < fadeRange) {
+          const ratio = (fadeRange - angleDiff) / (fadeRange - activeRange);
+          return minBrightness + (maxBrightness - minBrightness) * ratio;
+        } else {
+          return minBrightness;
+        }
+      }
+
+      function updateRotation(rot) {
+        ring.style.transform = `translateZ(-${ringRadius}px) rotateY(${rot}deg)`;
+        
+        // Update brightness based on position
+        ringImages.forEach((imgWrapper) => {
+          const img = imgWrapper.querySelector('img');
+          const initialAngle = imgWrapper.dataset.initialRotation;
+          if (initialAngle !== undefined) {
+            const brightness = calculateBrightness(initialAngle, rot);
+            img.style.filter = `brightness(${brightness})`;
+          }
+        });
+      }
+
+      function animateInertia() {
+        if (!isDragging && Math.abs(velocity) > 0.1) {
+          currentRotation += velocity;
+          velocity *= 0.95; // friction
+          updateRotation(currentRotation);
+          animationFrame = requestAnimationFrame(animateInertia);
+        } else if (Math.abs(velocity) <= 0.1) {
+          // Snap to nearest angle when inertia almost stops
+          const nearestAngle = Math.round(currentRotation / angleStep) * angleStep;
+          gsap.to(ring, {
+            rotateY: nearestAngle,
+            duration: 0.5,
+            ease: "power2.out",
+            onUpdate: () => {
+                // Ensure brightness updates during snap animation
+                ringImages.forEach((imgWrapper) => {
+                    const img = imgWrapper.querySelector('img');
+                    const initialAngle = imgWrapper.dataset.initialRotation;
+                    if (initialAngle !== undefined) {
+                        const currentRotY = parseFloat(gsap.getProperty(ring, "rotateY"));
+                        const brightness = calculateBrightness(initialAngle, currentRotY);
+                        img.style.filter = `brightness(${brightness})`;
+                    }
+                });
+            },
+            onComplete: () => {
+                currentRotation = nearestAngle; // Update currentRotation to the snapped value
+                velocity = 0; // Stop inertia
+            }
+          });
+        }
+      }
+
+      ring.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        cancelAnimationFrame(animationFrame);
+        velocity = 0; // Reset velocity on new drag
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - startX;
+        startX = e.clientX;
+        currentRotation += deltaX * 0.5; // Sensitivity
+        velocity = deltaX * 0.5;
+        updateRotation(currentRotation);
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (isDragging) {
+          isDragging = false;
+          animateInertia();
+        }
+      });
+
+      // Touch support
+      ring.addEventListener("touchstart", (e) => {
+        isDragging = true;
+        startX = e.touches[0].clientX;
+        cancelAnimationFrame(animationFrame);
+        velocity = 0; // Reset velocity on new drag
+      });
+
+      window.addEventListener("touchmove", (e) => {
+        if (!isDragging) return;
+        const deltaX = e.touches[0].clientX - startX;
+        startX = e.touches[0].clientX;
+        currentRotation += deltaX * 0.5; // Sensitivity
+        velocity = deltaX * 0.5;
+        updateRotation(currentRotation);
+      });
+
+      window.addEventListener("touchend", () => {
+        if (isDragging) {
+          isDragging = false;
+          animateInertia();
+        }
+      });
+
+      // Initialize the position and brightness
+      updateRotation(currentRotation);
+
+      // Add a resize listener to re-calculate ringRadius if it changes via media queries
+      window.addEventListener('resize', () => {
+          const newRingRadius = parseFloat(style.getPropertyValue('--gallery-ring-radius'));
+          if (ringRadius !== newRingRadius) { // Only re-apply if it actually changed
+              ringImages.forEach((imgWrapper, i) => {
+                  imgWrapper.style.transform = `rotateY(${i * angleStep}deg) translateZ(${newRingRadius}px) translateX(-50%) translateY(-50%)`;
+                  // Update the transform-origin as well
+                  imgWrapper.style.transformOrigin = `50% 50% calc(${newRingRadius}px * -1)`;
+              });
+              // Also update ring's initial transform if needed
+              ring.style.transform = `translateZ(-${newRingRadius}px) rotateY(${currentRotation}deg)`;
+          }
+      });
+
+    } else {
+        console.warn("3D Image Ring elements not found. Skipping vanilla JS setup.");
+        // Ensure images are visible if JS is skipped or elements are missing
+        ringImages.forEach(imgWrapper => {
+            imgWrapper.style.transform = 'none'; // Clear any potential 3D transforms
+            imgWrapper.style.opacity = '1';
+            const img = imgWrapper.querySelector('img');
+            if (img) img.style.filter = 'brightness(1)';
+        });
+    }
+    // End NEW 3D Image Ring Vanilla JS
 
     window.addEventListener("resize", () => {
         ScrollTrigger.refresh(); 
