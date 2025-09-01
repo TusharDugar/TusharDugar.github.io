@@ -11,7 +11,7 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=57"> <!-- Incremented version to ensure fresh CSS -->
+    <link rel="stylesheet" href="style.css?v=58"> <!-- Incremented version to ensure fresh CSS -->
 
     <!-- GSAP & ScrollTrigger CDNs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -76,13 +76,11 @@
 
             <!-- Services Section -->
             <section id="services" class="services-section">
-                <h2 class="services-heading reveal-item"> <!-- The heading stays a reveal-item -->
+                <h2 class="services-heading reveal-item">
                     <span class="text-white">MY</span>
                     <span class="text-gray">SERVICES</span>
                 </h2>
-                <!-- This is the container for the service cards -->
                 <div class="services-card-grid"> 
-                   <!-- Removed 'reveal-item' from .face elements, GSAP handles their animation now -->
                    <div class="face" data-index="0"><div class="service-content"><h3 class="service-title">Web Design</h3><p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p></div><div class="face-number">01</div></div>
                    <div class="face" data-index="1"><div class="service-content"><h3 class="service-title">SEO Optimization</h3><p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p></div><div class="face-number">02</div></div>
                    <div class="face" data-index="2"><div class="service-content"><h3 class="service-title">UX/UI Design</h3><p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p></div><div class="face-number">03</div></div>
@@ -109,27 +107,49 @@
                     <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/semrush.svg" alt="SEMrush Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">SEMrush</h4><p class="tool-category">SEO & Content Marketing</p></div></div>
                 </div>
             </section>
+
+            <!-- NEW: 3D Image Slider Section -->
+            <section id="gallery" class="gallery-section">
+              <h2 class="gallery-heading reveal-item">
+                <span class="text-white">FEATURED</span>
+                <span class="text-gray">PROJECTS</span>
+              </h2>
+              <div class="image-ring-container">
+                <div class="image-ring">
+                  <!-- IMPORTANT: Replace with your actual image paths in the 'images/' folder -->
+                  <div class="ring-image" data-index="0"><img src="images/gallery1.jpg" alt="Project 1" /></div>
+                  <div class="ring-image" data-index="1"><img src="images/gallery2.jpg" alt="Project 2" /></div>
+                  <div class="ring-image" data-index="2"><img src="images/gallery3.jpg" alt="Project 3" /></div>
+                  <div class="ring-image" data-index="3"><img src="images/gallery4.jpg" alt="Project 4" /></div>
+                  <div class="ring-image" data-index="4"><img src="images/gallery5.jpg" alt="Project 5" /></div>
+                  <div class="ring-image" data-index="5"><img src="images/gallery6.jpg" alt="Project 6" /></div>
+                  <div class="ring-image" data-index="6"><img src="images/gallery7.jpg" alt="Project 7" /></div>
+                  <div class="ring-image" data-index="7"><img src="images/gallery8.jpg" alt="Project 8" /></div>
+                </div>
+              </div>
+            </section>
+            <!-- END NEW 3D Image Slider Section -->
+
+            <!-- Contact Section (Footer) -->
+            <footer id="contact" class="section reveal-item">
+                <h2>Let’s Connect!</h2>
+                <p class="contact-tagline">
+                    I am always open to discuss your project,<br>improve your online presence or help with your website.
+                </p>
+                <div class="contact-buttons reveal-stagger-container">
+                    <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
+                        <div class="button-content-main"><i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span></div>
+                        <span class="copied-text">Copied!</span>
+                    </button>
+                    <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
+                        <div class="button-content-main"><i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span></div>
+                        <span class="copied-text">Copied!</span>
+                    </button>
+                </div>
+                <div class="social-links"></div>
+            </footer>
         </div>
     </div>
-
-    <!-- Contact Section (Footer) -->
-    <footer id="contact" class="section reveal-item">
-        <h2>Let’s Connect!</h2>
-        <p class="contact-tagline">
-            I am always open to discuss your project,<br>improve your online presence or help with your website.
-        </p>
-        <div class="contact-buttons reveal-stagger-container">
-            <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
-                <div class="button-content-main"><i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span></div>
-                <span class="copied-text">Copied!</span>
-            </button>
-            <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
-                <div class="button-content-main"><i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span></div>
-                <span class="copied-text">Copied!</span>
-            </button>
-        </div>
-        <div class="social-links"></div>
-    </footer>
 
     <script src="script.js" defer></script>
 </body>
