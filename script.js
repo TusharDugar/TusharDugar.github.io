@@ -78,7 +78,6 @@ function initIntersectionObserverAnimations() {
           gsap.set(el.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' });
       }
     } 
-    // NEW: Also exclude gallery-heading as it's a reveal-item
     else if (el.closest('.gallery-heading')) {
         gsap.set(el, { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' });
         if (el.matches('.gallery-heading')) { 
@@ -185,7 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     } else {
         console.warn("Services section or service cards not found. Skipping services card animations.");
-        // Ensure service cards are visible if JS animations are skipped
         if (serviceCards.length > 0) {
             gsap.set(serviceCards, { opacity: 1, y: 0, scale: 1, clearProps: 'all' });
         }
@@ -216,12 +214,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Position each image in the 3D ring initially
       ringImages.forEach((imgWrapper, i) => {
-        const img = imgWrapper.querySelector('img');
         const angle = i * angleStep;
-        // FIX: Corrected transform to include translateZ for circular arrangement
-        imgWrapper.style.transform = `rotateY(${angle}deg) translateZ(${ringRadius}px) translateX(-50%) translateY(-50%)`;
+        // FIX: Corrected transform to include translateZ for circular arrangement,
+        //      removed centering from JS transform, which will be handled by CSS.
+        imgWrapper.style.transform = `rotateY(${angle}deg) translateZ(${ringRadius}px)`;
         imgWrapper.dataset.initialRotation = `${angle}`; // Store initial rotation for calculations
-        img.style.filter = `brightness(${dimmedBrightness})`; // Initial dimming
+        imgWrapper.querySelector('img').style.filter = `brightness(${dimmedBrightness})`; // Initial dimming
       });
 
       function calculateBrightness(imageInitialAngle, currentRingRotation) {
@@ -345,14 +343,23 @@ document.addEventListener('DOMContentLoaded', () => {
       // Add a resize listener to re-calculate ringRadius and positions if it changes via media queries
       window.addEventListener('resize', () => {
           const newRingRadius = parseFloat(style.getPropertyValue('--gallery-ring-radius'));
-          if (ringRadius !== newRingRadius) { // Only re-apply if it actually changed
+          // Get new width/height for recalculating container height if needed
+          const newImageHeight = parseFloat(style.getPropertyValue('--gallery-image-height'));
+
+          // Only re-apply if radius or image height actually changed (to avoid unnecessary DOM ops)
+          if (ringRadius !== newRingRadius || parseFloat(ring.parentElement.style.height) !== (newImageHeight * 1.5)) { 
               ringRadius = newRingRadius; // Update the JS variable
-              ringImages.forEach((imgWrapper, i) => {
+              
+              // Recalculate container height based on new image height
+              ring.parentElement.style.height = `calc(${newImageHeight}px * 1.5)`;
+
+              ringImages.forEach((imgWrapper) => {
                   const angle = parseFloat(imgWrapper.dataset.initialRotation || '0');
                   // Reapply transform with new radius
-                  imgWrapper.style.transform = `rotateY(${angle}deg) translateZ(${ringRadius}px) translateX(-50%) translateY(-50%)`;
+                  imgWrapper.style.transform = `rotateY(${angle}deg) translateZ(${ringRadius}px)`;
               });
-              // No need to update ring's initial transform here, updateRotation handles it
+              // Force update rotation and brightness in case values changed
+              updateRotation(currentRotation);
           }
       });
 
