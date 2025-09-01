@@ -164,9 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return; 
     }
 
-    // --- The HTML already has 'reveal-item' on faces, so no JS modification needed here. ---
-    // faces.forEach(face => face.classList.add('reveal-item')); // This line is now effectively redundant.
-
     const mm = gsap.matchMedia();
 
     mm.add({
@@ -218,19 +215,17 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("✅ Desktop cube animation initializing...");
         const cubeHeight = 250; // Fixed height for faces
         const cubeWidth = 400;  // Fixed width for faces
-        // FIX: Calculate the apothem based on face HEIGHT (for rotateX)
         const faceDepth = (cubeHeight / 2) / Math.tan(Math.PI / SERVICES_COUNT);
 
         gsap.set(cubeContainer, {
             width: cubeWidth,
             height: cubeHeight,
             perspective: 1600, // Apply perspective here for the container
-            // Ensure no lingering `position` or `transform` from mobile setup
             position: 'relative', 
             transform: 'none',
             opacity: 1,
             visibility: 'visible',
-            zIndex: 1 // Ensure cube is visible if something else resets z-index
+            zIndex: 1 
         });
 
         faces.forEach((face, i) => {
@@ -238,33 +233,32 @@ document.addEventListener('DOMContentLoaded', () => {
             gsap.set(face, {
                 width: cubeWidth,
                 height: cubeHeight,
-                // Faces rotate around their center, then translate out
                 transform: `rotateX(${rotation}deg) translateZ(${faceDepth}px)`,
-                position: 'absolute', // Absolute positioning for 3D stack
+                position: 'absolute', 
                 transformStyle: 'preserve-3d',
-                opacity: 1, // Ensure faces are initially visible for desktop setup
-                visibility: 'visible', // Ensure faces are initially visible for desktop setup
-                backfaceVisibility: 'visible' // FIX: Ensure backface is visible
+                opacity: 1, 
+                visibility: 'visible',
+                backfaceVisibility: 'visible' 
             });
         });
 
         gsap.set(cube, {
             transformStyle: 'preserve-3d',
             rotateX: 0,
-            rotateY: 0, // Ensure no unintended Y rotation
-            transformOrigin: 'center center' // Crucial for correct rotation
+            rotateY: 0, 
+            transformOrigin: 'center center' 
         });
 
         // Set scroll area height to allow for pinning and scrolling through faces
-        // FIX: Changed (SERVICES_COUNT - 1) to SERVICES_COUNT
+        // This ensures enough scroll space for a full 360-degree rotation (SERVICES_COUNT transitions)
         scrollArea.style.height = `${SERVICES_COUNT * cubeHeight}px`;
         
         // Initial reveal of the cube, similar to other reveal-items
-        gsap.fromTo(cubeContainer, // Animate the container for initial appearance
+        gsap.fromTo(cubeContainer, 
             { opacity: 0, y: 100, scale: 0.8 },
             { opacity: 1, y: 0, scale: 1, duration: 1, ease: "power2.out",
                 scrollTrigger: {
-                    trigger: servicesSection, // Trigger when services section starts
+                    trigger: servicesSection, 
                     start: "top 80%",
                     end: "top 40%",
                     scrub: false,
@@ -276,30 +270,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Main cube rotation animation
         gsap.to(cube, {
-            // FIX: Changed (SERVICES_COUNT - 1) to SERVICES_COUNT for full rotation
-            rotateX: SERVICES_COUNT * (360 / SERVICES_COUNT), // Rotate to show all faces
+            // Rotates the cube a full 360 degrees
+            rotateX: SERVICES_COUNT * (360 / SERVICES_COUNT), 
             ease: 'none',
             scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: scrollArea,
                 start: 'top top',
-                // FIX: Changed (SERVICES_COUNT - 1) to SERVICES_COUNT
+                // Ends the scroll trigger range after a full 360-degree rotation
                 end: `+=${SERVICES_COUNT * cubeHeight}`,
                 scrub: true,
                 pin: stickyCubeWrapper,
                 anticipatePin: 1,
                 snap: {
-                    snapTo: 1 / (SERVICES_COUNT - 1), // step through faces (this one remains -1 as it defines the intervals BETWEEN faces)
+                    // Snaps to each of the SERVICES_COUNT faces for the full 360 rotation
+                    snapTo: 1 / SERVICES_COUNT, 
                     duration: 0.8,
                     ease: "power2.inOut"
                 },
                 onUpdate: (self) => {
-                    const activeFace = Math.round(self.progress * (SERVICES_COUNT - 1));
+                    // Calculates the active face index (0 to SERVICES_COUNT-1)
+                    // Uses modulo to handle `self.progress * SERVICES_COUNT` potentially equalling SERVICES_COUNT
+                    const activeFace = Math.round(self.progress * SERVICES_COUNT) % SERVICES_COUNT;
                     faces.forEach((face, i) => {
                         gsap.to(face, {
                             filter: i === activeFace ? "brightness(1.1)" : "brightness(0.3)",
                             duration: 0.3,
-                            overwrite: true // Prevent conflicting animations on filter
+                            overwrite: true 
                         });
                     });
                 },
