@@ -18,7 +18,8 @@
     --accent-secondary-sawad: #00FFC2; 
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
-    --cube-service-title-color: #9CFF33; 
+    --cube-service-title-color: #9CFF33; /* This variable is no longer strictly needed but kept for context if you reuse it */
+    --services-card-hover-glow: rgba(156, 255, 51, 0.3); /* New variable for hover effect */
 }
 
 /* Universal Box-Sizing & Body */
@@ -117,6 +118,8 @@ html::before {
 
 /* Global Section & Reveal Animations */
 .section { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; padding: 80px 40px; }
+/* Changed to remove initial transform/opacity for elements handled by GSAP directly */
+/* Keeping it here for elements still using standard IO reveals */
 .reveal-item, .reveal-child, .reveal-stagger { 
     opacity: 0; 
     transform: translateY(40px); 
@@ -139,27 +142,24 @@ html::before {
     padding-top: 20px; 
 }
 
-/* --- Left Column Sticky & Animation (Now entirely CSS based on new structure) --- */
+/* --- Left Column Sticky & Animation --- */
 .left-column-sticky { 
     flex-shrink: 0; 
     flex-basis: 370px; 
-    display: flex; /* Ensure it's always flex for content alignment */
+    display: flex; 
     flex-direction: column; 
     align-items: center; 
     justify-content: center; 
-    z-index: 2; /* Ensures it's above other content on desktop */
-
-    position: relative; /* Base for all screen sizes (non-sticky initially) */
+    z-index: 2; 
+    position: relative; 
     top: auto;
     height: auto;
-    
     perspective: 1000px; 
     transform-style: preserve-3d; 
-    filter: none; /* Shadow removed */
-
-    opacity: 1; /* Default to visible */
-    transform: none; /* Default to no transform */
-    animation: none; /* No base animation property here */
+    filter: none; 
+    opacity: 1; 
+    transform: none; 
+    animation: none; 
     will-change: auto; 
 }
 
@@ -174,10 +174,10 @@ html::before {
 
 .striped-entry-list li {
   opacity: 0;
-  transform: translate3d(0, 0, 0); /* Base transform for animation */
+  transform: translate3d(0, 0, 0); 
   animation: entryAnim 0.6s ease forwards;
   background: transparent;
-  margin-bottom: 0.8rem; /* Spacing between list items */
+  margin-bottom: 0.8rem; 
 }
 
 @keyframes entryAnim {
@@ -202,12 +202,12 @@ html::before {
     box-shadow: 0 10px 30px var(--shadow-color-card-white); 
     width: 100%; 
     max-width: 370px; 
-    display: flex; /* IMPORTANT: Maintain flex for staggering children */
+    display: flex; 
     flex-direction: column; 
     align-items: center; 
     text-align: center; 
     position: relative; 
-    overflow: hidden; /* Keep content clipped within card */
+    overflow: hidden; 
     height: auto;
     box-sizing: border-box;
 }
@@ -292,17 +292,15 @@ html::before {
 .services-section { 
     position: relative; 
     width: 100%; 
-    min-height: 100vh; /* Set min-height to accommodate scroll-area */
     display: flex; 
     flex-direction: column;
     justify-content: flex-start; 
-    align-items: center; /* Centered by default for desktop */
+    align-items: center; 
     padding: 0 20px; 
     box-sizing: border-box; 
-    overflow: visible; /* Corrected to visible for pinning */
+    overflow: visible; 
     z-index: 2; 
-    padding-bottom: 0; /* Remove bottom padding */
-    margin-bottom: 0; /* Remove bottom margin */
+    padding-bottom: 80px; /* Added back some padding for spacing below cards */
 }
 .services-heading {
   font-size: clamp(2.5rem, 8vw, 8rem);
@@ -310,12 +308,12 @@ html::before {
   font-weight: 800;
   text-transform: uppercase;
   text-align: left; 
-  margin-bottom: 120px; /* Increased margin for spacing above cube */
+  margin-bottom: 60px; /* Adjusted margin for card layout */
   align-self: flex-start; 
   flex-shrink: 0; 
   width: 100%;
-  position: relative; /* Ensure z-index works */
-  z-index: 2; /* Ensure heading is above cube */
+  position: relative; 
+  z-index: 2; 
   opacity: 1; 
   transform: none; 
   visibility: visible; 
@@ -329,79 +327,36 @@ html::before {
 .services-heading .text-white { color: var(--text-light); }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); } 
 
-/* NEW: Styles for the scrollable area wrapper for the cube */
-.scroll-area {
-  height: auto; /* FIX: JS will set this dynamically */
-  position: relative;
-  width: 100%; /* Ensure it takes full width of services-section */
-  display: flex; /* Helps center its children */
-  justify-content: center;
-}
+/* --- NEW: Services Card Grid and Card Styling --- */
 
-/* NEW: Styles for the sticky wrapper that holds the cube */
-.sticky-cube-wrapper {
-  position: sticky;
-  top: 0; /* Pins to the top of the viewport */
-  height: 100vh; /* Takes up one full viewport height when pinned */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  perspective: 1600px; /* Perspective applied here for sticky cube */
-  width: 100%; /* Take full width of scroll-area */
-  overflow: visible; /* Allow cube's 3D transforms to extend */
-}
+/* Remove old cube-specific wrappers as they are no longer in HTML */
+/* .scroll-area, .sticky-cube-wrapper, .cube-container, #services-cube are removed */
 
-
-.cube-container { 
-    /* FIX: Add fallback dimensions for .cube-container in CSS */
-    width: 400px; /* Fallback for when JS hasn't set it */
-    height: 250px; /* Fallback for when JS hasn't set it */
-
-    margin: 0 auto; 
-    position: relative; 
-    overflow: visible; 
-    will-change: transform, opacity;
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    z-index: 1; /* Cube is behind heading (z-index 2) */
-    max-width: none; 
-    /* The below properties will be set by JS dynamically on desktop, but these are for mobile/fallback */
-    width: auto;     
-    height: auto;    
-    opacity: 1; 
-    transform: none; 
-    visibility: visible; 
-    margin-bottom: 0; /* Remove bottom margin */
-    padding-bottom: 0; /* Remove bottom padding */
-}
-#services-cube { /* Targeting by ID for higher specificity */
-    position: relative; 
-    width: 100%; 
-    height: 100%; 
-    transform-style: preserve-3d !important; /* ✅ Added: CRITICAL CSS BACKUP FIX with !important */
-    will-change: transform;
-    overflow: visible; 
-}
-.face {
-    position: absolute;
+.services-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 25px; /* Spacing between cards */
     width: 100%;
-    height: 250px !important; /* Enforce fixed height for faces */
-    backface-visibility: visible !important; /* FIX: Ensure backface is always visible to avoid hiding */
+    max-width: 1000px; /* Max width for the grid */
+    margin: 0 auto; /* Center the grid */
+}
+
+.face { /* This now represents a single service card */
+    position: relative; /* Essential for proper grid flow */
+    width: auto; /* Take grid cell width */
+    height: auto; /* Auto height based on content */
     display: flex;
     flex-direction: column;
     justify-content: center;
     border-radius: 20px;
-    background: var(--bg-gradient-2); 
-    padding: 0; /* Removed all internal padding for face itself */
-    margin: 0; /* Ensure no margin */
-    box-shadow: none; /* Remove box-shadow */
-    overflow: hidden; /* Keep internal text contained */
+    background: var(--bg-gradient-2); /* Use the nice gradient background */
+    padding: clamp(1.5rem, 4vw, 2.5rem); /* Generous padding */
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2); /* Default shadow */
+    overflow: hidden; 
     box-sizing: border-box;
     text-align: left;
-    opacity: 1; /* JS autoAlpha will control this for animation */
-    visibility: visible; /* JS autoAlpha will control this for animation */
-    transition: opacity 0.4s ease-in-out; /* Gentle fade transition for opacity changes */
+    transition: none !important; /* Important: Disable CSS transitions for GSAP to control */
+    will-change: transform, box-shadow; /* Optimize for GSAP's hover effects */
 }
 .face .service-content { 
     width: 100%; 
@@ -411,14 +366,14 @@ html::before {
     justify-content: center; 
     align-items: flex-start; 
     text-align: left;
-    padding: clamp(1rem, 3vw, 2rem); /* Adjusted padding for better fit with fixed height */
+    padding: 0; /* Content padding is handled by .face itself now */
     margin: 0; 
 }
 .service-title { 
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: #fff7ed; /* Updated to #fff7ed */
+    color: var(--cube-service-title-color); /* Kept this green for a fresh look, adjust if preferred */
     margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
@@ -430,11 +385,11 @@ html::before {
 }
 .face-number { 
     position: absolute; 
-    bottom: clamp(1rem, 2vw, 1.5rem); 
+    top: clamp(1rem, 2vw, 1.5rem); /* Changed from bottom to top for card layout */
     right: clamp(1rem, 2vw, 1.5rem); 
-    font-size: clamp(3rem, 10vw, 6rem); 
+    font-size: clamp(1.5rem, 4vw, 2.5rem); /* Smaller size for card context */
     font-weight: 500; 
-    color: rgba(255, 255, 255, 0.08); /* Confirmed: stays gray */
+    color: rgba(255, 255, 255, 0.08); 
     z-index: 0; 
     line-height: 1; 
     pointer-events: none;
@@ -442,13 +397,13 @@ html::before {
 
 /* Premium Tools Section (general styling for tools-heading and grid) */
 .tools-heading {
-  font-size: clamp(2.5rem, 8vw, 8rem); /* Matches services-heading base font-size */
+  font-size: clamp(2.5rem, 8vw, 8rem); 
   line-height: 0.75em;
   font-weight: 800;
   text-transform: uppercase;
   margin-bottom: 40px;
   width: 100%;
-  text-align: left; /* Default text alignment */
+  text-align: left; 
 }
 .tools-heading .text-white { color: var(--text-light); display: block; }
 .tools-heading .text-gray { color: var(--text-sub-heading-grey); display: block; }
@@ -610,14 +565,14 @@ footer h2 {
     .left-column-sticky { 
         position: sticky; 
         top: 50%; 
-        transform: translateY(-50%); /* This IS the desired sticky transform */
-        animation: none !important; /* Crucially, disable the animation property to prevent conflicts */
+        transform: translateY(-50%); 
+        animation: none !important; 
         height: calc(100vh - 100px); 
         margin: 0; 
         align-self: flex-start; 
     } 
     .face {
-        transition: opacity 0.4s ease-in-out !important; /* Ensure transition is present for smooth dimming */
+        /* No specific desktop-only transition needed here, GSAP handles it */
     }
 }
 
@@ -643,90 +598,19 @@ footer h2 {
         margin: 0 auto 40px auto; 
         align-self: center; 
     }
-    /* Mobile-specific styles for cube-related elements to revert to stacked cards */
-    .scroll-area {
-        height: auto !important; /* Remove fixed height on mobile */
-        position: relative;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        flex-direction: column; /* Stack elements vertically */
-        gap: 20px;
+    /* Mobile-specific adjustments for services cards */
+    .services-card-grid {
+        grid-template-columns: 1fr; /* Single column layout on mobile */
+        max-width: 400px; /* Constrain max width for single column */
     }
-    .sticky-cube-wrapper {
-        position: relative !important; /* No sticky on mobile */
-        top: auto !important;
-        height: auto !important; /* Auto height for content */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        perspective: none !important; /* No 3D perspective on mobile */
-        width: 100%;
-        flex-direction: column; /* Stack cube faces */
-        gap: 20px;
+    .services-section { 
+        min-height: auto; /* No min-height required for pinning */
     }
-    .cube-container { 
-        /* Reset any desktop-specific absolute positioning/transforms */
-        position: relative !important;
-        transform: none !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        width: 100% !important; /* Take full available width */
-        height: auto !important; /* Auto height */
-        margin: 0 auto !important; /* Center horizontally */
-        perspective: none !important; /* No 3D perspective */
-        z-index: auto !important;
-        aspect-ratio: auto !important;
-    }
-    #services-cube { /* Using ID for specificity, matches JS */
-        transform-style: flat !important; /* Enforce flat on mobile */
-        transform: none !important; 
-        display: flex !important; 
-        flex-direction: column !important; 
-        gap: 20px !important; 
-        height: auto !important; 
-        width: 100% !important;
-        align-items: flex-start !important; 
-        overflow: visible !important;
-    }
-    .face { 
-        position: relative !important; /* Stack faces, not absolute */
-        transform: none !important; /* No 3D transform */
-        opacity: 0; /* Let IO handle fade-in via 'reveal-item' */
-        visibility: hidden; /* Let IO handle visibility via 'reveal-item' */
-        height: auto !important; /* Auto height on mobile, overrides fixed desktop height */
-        padding: 1rem !important; 
-        justify-content: center;
-        align-items: flex-start; 
-        text-align: left;
-        box-shadow: none !important; 
-        background: var(--bg-tool-card) !important; 
-        margin-bottom: 0 !important; /* Managed by parent gap */
-        transform-style: flat !important; /* Explicitly flat */
-        filter: none !important; /* No brightness filter */
-        backface-visibility: visible !important; /* Ensure backface is visible */
-    }
-    .face .service-content { 
-        align-items: flex-start;
-        text-align: left;
-        padding: 0 !important; 
-    }
-    .service-title { 
-        color: var(--text-light); 
-        text-align: left;
-    }
-    .service-description { 
-        text-align: left;
-    }
-    .face-number { 
-        position: relative; 
-        bottom: auto;
-        right: auto;
-        font-size: 0.8em;
-        color: var(--text-medium);
-        margin-top: 10px;
-        align-self: flex-end; 
-    }
+
+    /* All cube-specific overrides below are now irrelevant as the cube HTML is gone */
+    /* .scroll-area, .sticky-cube-wrapper, .cube-container, #services-cube, and all .face overrides below this are removed */
+    /* The .face element is now a standard card, styled above */
+
 
     .tools-grid { 
         grid-template-columns: 1fr; 
@@ -782,18 +666,22 @@ footer h2 {
 }
 
 
-/* Accessibility: Reduced Motion Override (should always disable animations) */
+/* Accessibility: Reduced Motion Override */
 @media (prefers-reduced-motion: reduce) {
     /* Global reveals */
     .reveal-item,
     .reveal-parent .reveal-child,
     .reveal-stagger-container .reveal-stagger,
-    .tool-card {
+    .tool-card,
+    /* Also include .face here to ensure no animations for service cards */
+    .face { 
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
         animation: none !important;
         visibility: visible !important;
+        /* Ensure hover effects are also disabled */
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2) !important; 
     }
     
     /* Left column - ensure static and visible */
@@ -808,14 +696,14 @@ footer h2 {
     .left-column-sticky[style*="transform"] { 
         transform: none !important;
     }
-    .striped-reveal-mask .striped-overlay { /* Ensure overlay is off for reduced motion */
+    .striped-reveal-mask .striped-overlay { 
         animation: none !important;
         display: none !important;
     }
     .striped-reveal-mask.revealed .striped-overlay {
         display: none !important;
     }
-    .about-left-content .reveal-stagger-child { /* Ensure children are visible for reduced motion */
+    .about-left-content .reveal-stagger-child { 
         animation: none !important;
         opacity: 1 !important;
         transform: none !important;
@@ -850,73 +738,8 @@ footer h2 {
         transform: none !important;
         display: block !important;
     }
-    .services-heading, .cube-container { 
-        flex-basis: auto !important; 
-        max-width: 100% !important;
-        height: auto !important;
-        padding-right: 0 !important;
-        margin-bottom: 20px !important; 
-        justify-content: center !important; 
-        align-items: flex-start !important; 
-        text-align: left !important; 
-        z-index: auto !important;
-        align-self: flex-start !important; 
-    }
-    .scroll-area, .sticky-cube-wrapper { /* Ensure these are static for reduced motion */
-        height: auto !important;
-        position: relative !important;
-        top: auto !important;
-        transform: none !important;
-    }
-    #services-cube { /* Using ID for specificity, matches JS */
-        transform-style: flat !important; 
-        transform: none !important;
-        transition: none !important;
-        display: flex; 
-        flex-direction: column;
-        gap: 20px; 
-        height: auto;
-        align-items: flex-start !important; 
-    }
-    .face {
-        transition: none !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        position: relative !important;
-        transform: none !important;
-        height: auto !important;
-        justify-content: center !important; 
-        align-items: flex-start !important; 
-        text-align: left !important; 
-        padding: 1rem !important; 
-        box-shadow: none !important; 
-        background: var(--bg-tool-card) !important; 
-        transform-style: flat !important;
-        filter: none !important;
-        backface-visibility: visible !important;
-    }
-    .face .service-content {
-        justify-content: center !important;
-        align-items: flex-start !important; 
-        text-align: left !important;
-        padding: 0 !important; 
-    }
-    .face .service-title {
-        color: var(--text-light) !important; 
-        text-align: left !important;
-    }
-    .face .service-description {
-        text-align: left !important;
-    }
-    .face .face-number {
-        position: relative !important;
-        bottom: auto;
-        right: auto;
-        font-size: 0.8em !important;
-        color: var(--text-medium) !important;
-        margin-top: 10px;
-        align-self: flex-end !important;
-    }
+    /* Removed all cube-specific overrides */
+
     /* Tools heading for reduced motion */
     .tools-heading {
         text-align: left !important;
