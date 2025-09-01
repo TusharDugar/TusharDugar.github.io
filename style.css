@@ -8,7 +8,7 @@
     --text-medium-card: #4B4B4B;
     --accent-primary-sawad: #FF6B00;
     --text-sub-heading-grey: #666666;
-    --service-title-color: #FF6B00; 
+    /* --service-title-color: #FF6B00; - This variable is replaced by direct usage below */
     --bg-tool-card: #1A1A1A;
     --tool-icon-bg: #F8F8F8;
     --tool-name-color: var(--text-light);
@@ -18,7 +18,7 @@
     --accent-secondary-sawad: #00FFC2; 
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
-    --cube-service-title-color: #9CFF33; /* This variable is no longer strictly needed but kept for context if you reuse it */
+    /* --cube-service-title-color: #9CFF33; -- REMOVED: This was the green color, no longer used */
     --services-card-hover-glow: rgba(156, 255, 51, 0.3); /* New variable for hover effect */
 }
 
@@ -118,8 +118,6 @@ html::before {
 
 /* Global Section & Reveal Animations */
 .section { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; padding: 80px 40px; }
-/* Changed to remove initial transform/opacity for elements handled by GSAP directly */
-/* Keeping it here for elements still using standard IO reveals */
 .reveal-item, .reveal-child, .reveal-stagger { 
     opacity: 0; 
     transform: translateY(40px); 
@@ -301,6 +299,7 @@ html::before {
     overflow: visible; 
     z-index: 2; 
     padding-bottom: 80px; /* Added back some padding for spacing below cards */
+    min-height: auto; /* Ensure no fixed min-height remains for pinning */
 }
 .services-heading {
   font-size: clamp(2.5rem, 8vw, 8rem);
@@ -329,12 +328,12 @@ html::before {
 
 /* --- NEW: Services Card Grid and Card Styling --- */
 
-/* Remove old cube-specific wrappers as they are no longer in HTML */
-/* .scroll-area, .sticky-cube-wrapper, .cube-container, #services-cube are removed */
+/* Removed old cube-specific wrappers as they are no longer in HTML */
+/* .scroll-area, .sticky-cube-wrapper, .cube-container, #services-cube are removed from HTML/CSS */
 
 .services-card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    grid-template-columns: repeat(2, 1fr); /* FIX: Changed to 2 columns for desktop */
     gap: 25px; /* Spacing between cards */
     width: 100%;
     max-width: 1000px; /* Max width for the grid */
@@ -347,7 +346,7 @@ html::before {
     height: auto; /* Auto height based on content */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Align content to start for cards */
     border-radius: 20px;
     background: var(--bg-gradient-2); /* Use the nice gradient background */
     padding: clamp(1.5rem, 4vw, 2.5rem); /* Generous padding */
@@ -363,7 +362,7 @@ html::before {
     flex-grow: 1; 
     display: flex; 
     flex-direction: column; 
-    justify-content: center; 
+    justify-content: flex-start; /* Align content to start */
     align-items: flex-start; 
     text-align: left;
     padding: 0; /* Content padding is handled by .face itself now */
@@ -373,7 +372,7 @@ html::before {
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: var(--cube-service-title-color); /* Kept this green for a fresh look, adjust if preferred */
+    color: var(--accent-primary-sawad); /* FIX: Changed color to primary accent */
     margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
@@ -571,9 +570,7 @@ footer h2 {
         margin: 0; 
         align-self: flex-start; 
     } 
-    .face {
-        /* No specific desktop-only transition needed here, GSAP handles it */
-    }
+    /* No specific desktop-only transition needed here, GSAP handles it */
 }
 
 /* Tablet & Mobile Layout (max-width: 1023px) */
@@ -600,17 +597,14 @@ footer h2 {
     }
     /* Mobile-specific adjustments for services cards */
     .services-card-grid {
-        grid-template-columns: 1fr; /* Single column layout on mobile */
+        grid-template-columns: 1fr; /* FIX: Single column layout on mobile */
         max-width: 400px; /* Constrain max width for single column */
     }
     .services-section { 
         min-height: auto; /* No min-height required for pinning */
     }
 
-    /* All cube-specific overrides below are now irrelevant as the cube HTML is gone */
-    /* .scroll-area, .sticky-cube-wrapper, .cube-container, #services-cube, and all .face overrides below this are removed */
-    /* The .face element is now a standard card, styled above */
-
+    /* All old cube-specific overrides below are REMOVED entirely as they are no longer in the HTML/relevant */
 
     .tools-grid { 
         grid-template-columns: 1fr; 
@@ -738,8 +732,6 @@ footer h2 {
         transform: none !important;
         display: block !important;
     }
-    /* Removed all cube-specific overrides */
-
     /* Tools heading for reduced motion */
     .tools-heading {
         text-align: left !important;
