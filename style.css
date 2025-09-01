@@ -20,11 +20,12 @@
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3); /* New variable for hover effect */
     /* NEW: Variables for gallery slider */
-    --gallery-ring-radius: 500px;
+    --gallery-ring-radius: 500px; /* Increased radius for better 3D separation */
     --gallery-image-width: 280px;
     --gallery-image-height: 200px;
-    --gallery-dimmed-opacity: 0.3;
-    --gallery-active-brightness: 1.2;
+    --gallery-dimmed-brightness: 0.6; /* Dimming for non-active images */
+    --gallery-active-brightness: 1.1; /* Full brightness for active image */
+    --gallery-hover-brightness: 1.3; /* Even brighter on hover */
 }
 
 /* Universal Box-Sizing & Body */
@@ -335,7 +336,7 @@ html::before {
 
 .services-card-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for desktop */
+    grid-template-columns: repeat(2, 1fr); 
     gap: 25px; 
     width: 100%;
     max-width: 1000px; 
@@ -374,7 +375,7 @@ html::before {
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: #fff7ed; /* FIX: Changed color to #fff7ed */
+    color: #fff7ed; /* Corrected: #fff7ed for service titles */
     margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
@@ -566,7 +567,7 @@ footer h2 {
   text-align: center;
   background: var(--bg-main); /* Ensure it uses the main background */
   color: var(--text-light);
-  overflow: hidden;
+  overflow: hidden; /* Crucial to clip images that are off-screen */
   z-index: 1; /* Ensure it respects z-index of other sections */
 }
 
@@ -583,28 +584,32 @@ footer h2 {
 
 
 .image-ring-container {
-  perspective: 1500px; /* Slightly adjusted perspective */
+  perspective: 1500px; /* IMPORTANT: Perspective goes on the parent of the 3D-transformed element */
   width: 100%;
-  height: var(--gallery-image-height); /* Set height to image height */
+  height: calc(var(--gallery-image-height) + 100px); /* Give some extra height for perspective */
   position: relative;
-  display: flex; /* Center items visually */
+  display: flex; 
   justify-content: center;
   align-items: center;
-  min-height: 400px; /* Minimum height for the container, could be dynamic based on ringRadius + imageHeight */
 }
 
 .image-ring {
-  width: 100%; /* Keep width for positioning child elements */
-  height: 100%; /* Keep height for positioning child elements */
-  position: absolute;
+  width: var(--gallery-image-width); /* Base width for the ring's center point */
+  height: var(--gallery-image-height); /* Base height for the ring's center point */
+  position: relative; /* Changed from absolute to relative to be flowed within container, then positioned centrally by transform */
   transform-style: preserve-3d;
-  /* Initial transform, adjust translateZ based on ringRadius variable */
-  transform: translateZ(calc(var(--gallery-ring-radius) * -1)) rotateY(0deg); 
-  transition: transform 0.1s ease-out; /* Smoother dragging */
+  /* This transform will be controlled by JS for rotation */
+  /* NO initial translateZ here. It's applied to individual images */
+  /* It needs to be flex to center its child when not absolutely positioned */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  will-change: transform;
   cursor: grab;
-  /* NEW: Dimming all images by default, JS will brighten active one */
-  filter: brightness(0.8); 
-  opacity: var(--gallery-dimmed-opacity);
+  
+  /* Initial dimming handled by JS, but if JS fails, this provides a fallback */
+  /* filter: brightness(var(--gallery-dimmed-brightness)); */
+  /* opacity: 1; */ /* Opacity will be managed by JS for the effect */
 }
 
 .image-ring:active {
@@ -612,16 +617,20 @@ footer h2 {
 }
 
 .ring-image {
-  position: absolute;
+  position: absolute; /* Each image needs to be absolutely positioned within the ring */
   width: var(--gallery-image-width);
   height: var(--gallery-image-height);
-  left: 50%; /* Center horizontally */
-  top: 50%; /* Center vertically */
+  left: 0; /* Position relative to the .image-ring element */
+  top: 0;  /* Position relative to the .image-ring element */
   transform-style: preserve-3d;
-  /* This transformOrigin needs to be exactly at the center of the ring's Z-depth to rotate correctly */
+  /* transform-origin is critical for proper 3D positioning */
+  /* Images rotate around the center of the ring's radius */
   transform-origin: 50% 50% calc(var(--gallery-ring-radius) * -1); 
-  transform: translate(-50%, -50%); /* Adjust to center the image itself */
-  will-change: transform, opacity, filter; /* Optimisation */
+  
+  /* Initial transform will be set by JS: rotateY(angle) translateZ(radius) translate(-50%, -50%) */
+  /* Disable CSS transitions here, JS will animate */
+  transition: none !important;
+  will-change: transform, filter; /* Optimisation */
 }
 
 .ring-image img {
@@ -630,18 +639,15 @@ footer h2 {
   object-fit: cover;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  /* transition handled by JS/hover, so no base transition here */
-}
-
-/* Specific class for the active image */
-.ring-image.active img {
-  filter: brightness(1); /* Full brightness for active image */
-  opacity: 1; /* Full opacity for active image */
+  transition: transform 0.3s ease, filter 0.3s ease; /* Transitions for hover effect */
+  cursor: pointer;
+  /* Initial brightness will be set by JS */
+  filter: brightness(var(--gallery-dimmed-brightness)); 
 }
 
 .ring-image img:hover {
   transform: scale(1.05);
-  filter: brightness(var(--gallery-active-brightness)); /* Brighter on hover */
+  filter: brightness(var(--gallery-hover-brightness)); /* Even brighter on hover */
 }
 
 
@@ -691,7 +697,7 @@ footer h2 {
         max-width: 400px; /* Constrain max width for single column */
     }
     .services-section { 
-        min-height: auto; /* No min-height required for pinning */
+        min-height: auto; 
     }
 
     .tools-grid { 
@@ -703,12 +709,13 @@ footer h2 {
 
     /* NEW: Mobile adjustments for gallery slider */
     :root {
-        --gallery-ring-radius: 200px; /* Smaller radius on mobile */
-        --gallery-image-width: 200px; /* Smaller images on mobile */
-        --gallery-image-height: 150px; /* Smaller images on mobile */
+        --gallery-ring-radius: 250px; /* Smaller radius on mobile */
+        --gallery-image-width: 220px; /* Smaller images on mobile */
+        --gallery-image-height: 160px; /* Smaller images on mobile */
     }
     .image-ring-container {
-        min-height: 300px; /* Adjust min height for mobile */
+        min-height: 350px; /* Adjust min height for mobile */
+        perspective: 1000px; /* Reduce perspective on mobile */
     }
     .gallery-heading {
       text-align: center; /* Center heading on mobile */
@@ -737,7 +744,7 @@ footer h2 {
     .hero-heading,
     .services-heading,
     .tools-heading,
-    .gallery-heading { /* Include gallery heading here */
+    .gallery-heading { 
         font-size: clamp(2rem, 7vw, 6rem); 
     }
     .tools-grid {
@@ -765,6 +772,16 @@ footer h2 {
         width: 100%; 
         justify-content: center;
     }
+
+    /* Further mobile adjustments for gallery */
+    :root {
+        --gallery-ring-radius: 200px; 
+        --gallery-image-width: 180px; 
+        --gallery-image-height: 130px; 
+    }
+    .image-ring-container {
+        min-height: 280px; 
+    }
 }
 
 
@@ -778,6 +795,7 @@ footer h2 {
     .face,
     /* Include gallery elements to disable transitions/animations */
     .image-ring,
+    .ring-image, /* Target ring-image wrapper for transform reset */
     .ring-image img { 
         transition: none !important;
         transform: none !important;
@@ -812,7 +830,7 @@ footer h2 {
         transform: none !important;
     }
 
-    .services-section, .gallery-section { /* Include gallery section for reduced motion */
+    .services-section, .gallery-section { 
         position: relative !important;
         top: auto !important;
         left: auto !important;
@@ -828,7 +846,7 @@ footer h2 {
         opacity: 1 !important; 
         visibility: visible !important;
     }
-    .services-heading, .gallery-heading { /* Include gallery heading */
+    .services-heading, .gallery-heading { 
         opacity: 1 !important; 
         transform: none !important; 
         text-align: left !important; 
@@ -837,7 +855,7 @@ footer h2 {
     .services-heading .text-white,
     .services-heading .text-gray,
     .gallery-heading .text-white,
-    .gallery-heading .text-gray { /* Include gallery heading spans */
+    .gallery-heading .text-gray { 
         opacity: 1 !important; 
         transform: none !important;
         display: block !important;
