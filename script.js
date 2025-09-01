@@ -72,10 +72,7 @@ function initIntersectionObserverAnimations() {
   }, observerOptions);
 
   document.querySelectorAll(".reveal-item, .reveal-parent, .reveal-stagger-container").forEach(el => {
-    // Exclude services-heading from standard reveal-item check if it's already handled
-    // The services-heading is made visible via gsap.set inside the matchMedia block
     if (el.closest('.services-heading')) {
-      // For the services-heading, ensure it's immediately visible and static
       gsap.set(el, { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' });
       if (el.matches('.services-heading')) { 
           gsap.set(el.querySelectorAll('span'), { opacity: 1, y: 0, x: 0, visibility: 'visible', clearProps: 'all' });
@@ -89,7 +86,6 @@ function initIntersectionObserverAnimations() {
         }
     }
     else {
-      // For all other reveal elements:
       const rect = el.getBoundingClientRect();
       const isInitiallyVisible = (
           rect.top < window.innerHeight &&
@@ -210,21 +206,22 @@ document.addEventListener('DOMContentLoaded', () => {
       let velocity = 0;
       let animationFrame;
 
-      // Get CSS variables for dynamic sizing
+      // Get CSS variables for dynamic sizing and effects
       const style = getComputedStyle(document.documentElement);
-      const ringRadius = parseFloat(style.getPropertyValue('--gallery-ring-radius'));
+      let ringRadius = parseFloat(style.getPropertyValue('--gallery-ring-radius'));
       const activeRange = 20; // Angle from front where image is fully visible (degrees)
       const fadeRange = 90; // Angle from front where image starts to dim (degrees)
-      const minBrightness = 0.6; // For dimmed images
-      const maxBrightness = 1.1; // For active images
+      const dimmedBrightness = parseFloat(style.getPropertyValue('--gallery-dimmed-brightness'));
+      const activeBrightness = parseFloat(style.getPropertyValue('--gallery-active-brightness'));
 
-      // Position each image in the 3D ring and apply initial dimming
+      // Position each image in the 3D ring initially
       ringImages.forEach((imgWrapper, i) => {
         const img = imgWrapper.querySelector('img');
-        imgWrapper.style.transform = `rotateY(${i * angleStep}deg) translateZ(${ringRadius}px) translateX(-50%) translateY(-50%)`;
-        img.style.filter = `brightness(${minBrightness})`; // Start dimmed
-        img.style.opacity = '1'; // CSS handles initial opacity
-        imgWrapper.dataset.initialRotation = `${i * angleStep}`; // Store initial rotation for calculations
+        const angle = i * angleStep;
+        // FIX: Corrected transform to include translateZ for circular arrangement
+        imgWrapper.style.transform = `rotateY(${angle}deg) translateZ(${ringRadius}px) translateX(-50%) translateY(-50%)`;
+        imgWrapper.dataset.initialRotation = `${angle}`; // Store initial rotation for calculations
+        img.style.filter = `brightness(${dimmedBrightness})`; // Initial dimming
       });
 
       function calculateBrightness(imageInitialAngle, currentRingRotation) {
@@ -239,17 +236,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (angleDiff > 180) angleDiff = 360 - angleDiff;
 
         if (angleDiff < activeRange) {
-          return maxBrightness;
+          return activeBrightness;
         } else if (angleDiff < fadeRange) {
           const ratio = (fadeRange - angleDiff) / (fadeRange - activeRange);
-          return minBrightness + (maxBrightness - minBrightness) * ratio;
+          return dimmedBrightness + (activeBrightness - dimmedBrightness) * ratio;
         } else {
-          return minBrightness;
+          return dimmedBrightness;
         }
       }
 
       function updateRotation(rot) {
-        ring.style.transform = `translateZ(-${ringRadius}px) rotateY(${rot}deg)`;
+        // FIX: Apply rotation to the main ring element
+        ring.style.transform = `rotateY(${rot}deg)`; 
         
         // Update brightness based on position
         ringImages.forEach((imgWrapper) => {
@@ -276,12 +274,11 @@ document.addEventListener('DOMContentLoaded', () => {
             duration: 0.5,
             ease: "power2.out",
             onUpdate: () => {
-                // Ensure brightness updates during snap animation
+                const currentRotY = parseFloat(gsap.getProperty(ring, "rotateY"));
                 ringImages.forEach((imgWrapper) => {
                     const img = imgWrapper.querySelector('img');
                     const initialAngle = imgWrapper.dataset.initialRotation;
                     if (initialAngle !== undefined) {
-                        const currentRotY = parseFloat(gsap.getProperty(ring, "rotateY"));
                         const brightness = calculateBrightness(initialAngle, currentRotY);
                         img.style.filter = `brightness(${brightness})`;
                     }
@@ -345,17 +342,17 @@ document.addEventListener('DOMContentLoaded', () => {
       // Initialize the position and brightness
       updateRotation(currentRotation);
 
-      // Add a resize listener to re-calculate ringRadius if it changes via media queries
+      // Add a resize listener to re-calculate ringRadius and positions if it changes via media queries
       window.addEventListener('resize', () => {
           const newRingRadius = parseFloat(style.getPropertyValue('--gallery-ring-radius'));
           if (ringRadius !== newRingRadius) { // Only re-apply if it actually changed
+              ringRadius = newRingRadius; // Update the JS variable
               ringImages.forEach((imgWrapper, i) => {
-                  imgWrapper.style.transform = `rotateY(${i * angleStep}deg) translateZ(${newRingRadius}px) translateX(-50%) translateY(-50%)`;
-                  // Update the transform-origin as well
-                  imgWrapper.style.transformOrigin = `50% 50% calc(${newRingRadius}px * -1)`;
+                  const angle = parseFloat(imgWrapper.dataset.initialRotation || '0');
+                  // Reapply transform with new radius
+                  imgWrapper.style.transform = `rotateY(${angle}deg) translateZ(${ringRadius}px) translateX(-50%) translateY(-50%)`;
               });
-              // Also update ring's initial transform if needed
-              ring.style.transform = `translateZ(-${newRingRadius}px) rotateY(${currentRotation}deg)`;
+              // No need to update ring's initial transform here, updateRotation handles it
           }
       });
 
