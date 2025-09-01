@@ -19,6 +19,12 @@
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3); /* New variable for hover effect */
+    /* NEW: Variables for gallery slider */
+    --gallery-ring-radius: 500px;
+    --gallery-image-width: 280px;
+    --gallery-image-height: 200px;
+    --gallery-dimmed-opacity: 0.3;
+    --gallery-active-brightness: 1.2;
 }
 
 /* Universal Box-Sizing & Body */
@@ -297,8 +303,8 @@ html::before {
     box-sizing: border-box; 
     overflow: visible; 
     z-index: 2; 
-    padding-bottom: 80px; /* Added back some padding for spacing below cards */
-    min-height: auto; /* Ensure no fixed min-height remains for pinning */
+    padding-bottom: 80px; 
+    min-height: auto; 
 }
 .services-heading {
   font-size: clamp(2.5rem, 8vw, 8rem);
@@ -306,7 +312,7 @@ html::before {
   font-weight: 800;
   text-transform: uppercase;
   text-align: left; 
-  margin-bottom: 60px; /* Adjusted margin for card layout */
+  margin-bottom: 60px; 
   align-self: flex-start; 
   flex-shrink: 0; 
   width: 100%;
@@ -325,51 +331,50 @@ html::before {
 .services-heading .text-white { color: var(--text-light); }
 .services-heading .text-gray { color: var(--text-sub-heading-grey); } 
 
-/* --- NEW: Services Card Grid and Card Styling --- */
+/* --- Services Card Grid and Card Styling --- */
 
 .services-card-grid {
     display: grid;
-    /* FIX: Changed to 2 columns for desktop */
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 25px; /* Spacing between cards */
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for desktop */
+    gap: 25px; 
     width: 100%;
-    max-width: 1000px; /* Max width for the grid */
-    margin: 0 auto; /* Center the grid */
+    max-width: 1000px; 
+    margin: 0 auto; 
 }
 
-.face { /* This now represents a single service card */
-    position: relative; /* Essential for proper grid flow */
-    width: auto; /* Take grid cell width */
-    height: auto; /* Auto height based on content */
+.face { 
+    position: relative; 
+    width: auto; 
+    height: auto; 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Align content to start for cards */
+    justify-content: flex-start; 
     border-radius: 20px;
-    background: var(--bg-gradient-2); /* Use the nice gradient background */
-    padding: clamp(1.5rem, 4vw, 2.5rem); /* Generous padding */
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2); /* Default shadow */
+    background: var(--bg-gradient-2); 
+    padding: clamp(1.5rem, 4vw, 2.5rem); 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2); 
     overflow: hidden; 
     box-sizing: border-box;
     text-align: left;
-    transition: none !important; /* Important: Disable CSS transitions for GSAP to control */
-    will-change: transform, box-shadow; /* Optimize for GSAP's hover effects */
+    transition: none !important; 
+    will-change: transform, box-shadow; 
 }
 .face .service-content { 
     width: 100%; 
     flex-grow: 1; 
     display: flex; 
     flex-direction: column; 
-    justify-content: flex-start; /* Align content to start */
+    justify-content: flex-start; 
     align-items: flex-start; 
     text-align: left;
-    padding: 0; /* Content padding is handled by .face itself now */
+    padding: 0; 
     margin: 0; 
 }
 .service-title { 
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: #fff7ed; /* FIX: Changed color to #fff7ed as requested */
+    color: #fff7ed; /* FIX: Changed color to #fff7ed */
     margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
@@ -381,9 +386,9 @@ html::before {
 }
 .face-number { 
     position: absolute; 
-    top: clamp(1rem, 2vw, 1.5rem); /* Changed from bottom to top for card layout */
+    top: clamp(1rem, 2vw, 1.5rem); 
     right: clamp(1rem, 2vw, 1.5rem); 
-    font-size: clamp(1.5rem, 4vw, 2.5rem); /* Smaller size for card context */
+    font-size: clamp(1.5rem, 4vw, 2.5rem); 
     font-weight: 500; 
     color: rgba(255, 255, 255, 0.08); 
     z-index: 0; 
@@ -551,6 +556,95 @@ footer h2 {
 .social-links { margin-top: 30px; }
 
 
+/* ===== NEW: Gallery Section CSS ===== */
+.gallery-section {
+  position: relative;
+  width: 100%;
+  max-width: 1200px; /* Constrain width to match other sections */
+  margin: 0 auto; /* Center the section */
+  padding: 100px 40px; /* Add horizontal padding for consistency */
+  text-align: center;
+  background: var(--bg-main); /* Ensure it uses the main background */
+  color: var(--text-light);
+  overflow: hidden;
+  z-index: 1; /* Ensure it respects z-index of other sections */
+}
+
+.gallery-heading {
+  font-size: clamp(2.5rem, 8vw, 8rem); /* Match other main headings */
+  line-height: 0.75em;
+  font-weight: 800; /* Match other main headings */
+  text-transform: uppercase;
+  margin-bottom: 60px; /* Consistent spacing */
+  text-align: left; /* Consistent alignment */
+}
+.gallery-heading .text-white { color: var(--text-light); display: block; }
+.gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } /* Using existing text-gray class */
+
+
+.image-ring-container {
+  perspective: 1500px; /* Slightly adjusted perspective */
+  width: 100%;
+  height: var(--gallery-image-height); /* Set height to image height */
+  position: relative;
+  display: flex; /* Center items visually */
+  justify-content: center;
+  align-items: center;
+  min-height: 400px; /* Minimum height for the container, could be dynamic based on ringRadius + imageHeight */
+}
+
+.image-ring {
+  width: 100%; /* Keep width for positioning child elements */
+  height: 100%; /* Keep height for positioning child elements */
+  position: absolute;
+  transform-style: preserve-3d;
+  /* Initial transform, adjust translateZ based on ringRadius variable */
+  transform: translateZ(calc(var(--gallery-ring-radius) * -1)) rotateY(0deg); 
+  transition: transform 0.1s ease-out; /* Smoother dragging */
+  cursor: grab;
+  /* NEW: Dimming all images by default, JS will brighten active one */
+  filter: brightness(0.8); 
+  opacity: var(--gallery-dimmed-opacity);
+}
+
+.image-ring:active {
+  cursor: grabbing;
+}
+
+.ring-image {
+  position: absolute;
+  width: var(--gallery-image-width);
+  height: var(--gallery-image-height);
+  left: 50%; /* Center horizontally */
+  top: 50%; /* Center vertically */
+  transform-style: preserve-3d;
+  /* This transformOrigin needs to be exactly at the center of the ring's Z-depth to rotate correctly */
+  transform-origin: 50% 50% calc(var(--gallery-ring-radius) * -1); 
+  transform: translate(-50%, -50%); /* Adjust to center the image itself */
+  will-change: transform, opacity, filter; /* Optimisation */
+}
+
+.ring-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  /* transition handled by JS/hover, so no base transition here */
+}
+
+/* Specific class for the active image */
+.ring-image.active img {
+  filter: brightness(1); /* Full brightness for active image */
+  opacity: 1; /* Full opacity for active image */
+}
+
+.ring-image img:hover {
+  transform: scale(1.05);
+  filter: brightness(var(--gallery-active-brightness)); /* Brighter on hover */
+}
+
+
 /* --- Media Queries --- */
 
 /* Desktop Specific Styles (min-width: 1024px) */
@@ -593,7 +687,7 @@ footer h2 {
     }
     /* Mobile-specific adjustments for services cards */
     .services-card-grid {
-        grid-template-columns: 1fr; /* FIX: Single column layout on mobile */
+        grid-template-columns: 1fr; /* Single column layout on mobile */
         max-width: 400px; /* Constrain max width for single column */
     }
     .services-section { 
@@ -606,6 +700,25 @@ footer h2 {
         gap: 15px;
         margin-top: 40px;
     }
+
+    /* NEW: Mobile adjustments for gallery slider */
+    :root {
+        --gallery-ring-radius: 200px; /* Smaller radius on mobile */
+        --gallery-image-width: 200px; /* Smaller images on mobile */
+        --gallery-image-height: 150px; /* Smaller images on mobile */
+    }
+    .image-ring-container {
+        min-height: 300px; /* Adjust min height for mobile */
+    }
+    .gallery-heading {
+      text-align: center; /* Center heading on mobile */
+      margin-bottom: 40px;
+    }
+    .gallery-heading .text-white,
+    .gallery-heading .text-gray {
+      display: inline-block; /* Allow them to sit next to each other if desired or flow better */
+    }
+
 }
 
 /* Smaller Mobile Screens (max-width: 767px - often considered phones) */
@@ -623,7 +736,8 @@ footer h2 {
     }
     .hero-heading,
     .services-heading,
-    .tools-heading {
+    .tools-heading,
+    .gallery-heading { /* Include gallery heading here */
         font-size: clamp(2rem, 7vw, 6rem); 
     }
     .tools-grid {
@@ -661,18 +775,19 @@ footer h2 {
     .reveal-parent .reveal-child,
     .reveal-stagger-container .reveal-stagger,
     .tool-card,
-    /* Also include .face here to ensure no animations for service cards */
-    .face { 
+    .face,
+    /* Include gallery elements to disable transitions/animations */
+    .image-ring,
+    .ring-image img { 
         transition: none !important;
         transform: none !important;
         opacity: 1 !important;
         animation: none !important;
         visibility: visible !important;
-        /* Ensure hover effects are also disabled */
         box-shadow: 0 5px 20px rgba(0,0,0,0.2) !important; 
+        filter: none !important; /* No dimming or brightness changes */
     }
     
-    /* Left column - ensure static and visible */
     .left-column-sticky {
         animation: none !important;
         transition-duration: 0s !important;
@@ -697,8 +812,7 @@ footer h2 {
         transform: none !important;
     }
 
-    /* Services section specific overrides for reduced motion (CSS fallback) */
-    .services-section { 
+    .services-section, .gallery-section { /* Include gallery section for reduced motion */
         position: relative !important;
         top: auto !important;
         left: auto !important;
@@ -714,19 +828,47 @@ footer h2 {
         opacity: 1 !important; 
         visibility: visible !important;
     }
-    .services-heading {
+    .services-heading, .gallery-heading { /* Include gallery heading */
         opacity: 1 !important; 
         transform: none !important; 
         text-align: left !important; 
         align-self: flex-start !important; 
     }
     .services-heading .text-white,
-    .services-heading .text-gray {
+    .services-heading .text-gray,
+    .gallery-heading .text-white,
+    .gallery-heading .text-gray { /* Include gallery heading spans */
         opacity: 1 !important; 
         transform: none !important;
         display: block !important;
     }
-    /* Tools heading for reduced motion */
+    .image-ring-container {
+        perspective: none !important; /* Disable 3D perspective */
+    }
+    .image-ring {
+        transform: none !important; /* Flatten ring */
+        position: relative !important;
+        height: auto !important;
+        display: flex !important; /* Stack images normally */
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    .ring-image {
+        position: relative !important;
+        transform: none !important; /* Flatten image positioning */
+        top: auto !important;
+        left: auto !important;
+        margin: 0 auto !important; /* Center stacked images */
+        width: 100% !important; /* Allow full width */
+        max-width: var(--gallery-image-width) !important; /* Constrain max width for images */
+        height: auto !important; /* Auto height */
+        aspect-ratio: calc(var(--gallery-image-width) / var(--gallery-image-height)) !important; /* Maintain aspect ratio */
+    }
+    .ring-image img {
+        filter: none !important; /* No dimming */
+        opacity: 1 !important;
+    }
+
     .tools-heading {
         text-align: left !important;
         align-self: flex-start !important;
