@@ -586,7 +586,7 @@ footer h2 {
 .image-ring-container {
   perspective: 1500px; /* IMPORTANT: Perspective goes on the parent of the 3D-transformed element */
   width: 100%;
-  height: calc(var(--gallery-image-height) + 100px); /* Give some extra height for perspective */
+  height: calc(var(--gallery-image-height) * 1.5); /* Give some extra height for perspective */
   position: relative;
   display: flex; 
   justify-content: center;
@@ -594,22 +594,16 @@ footer h2 {
 }
 
 .image-ring {
-  width: var(--gallery-image-width); /* Base width for the ring's center point */
-  height: var(--gallery-image-height); /* Base height for the ring's center point */
-  position: relative; /* Changed from absolute to relative to be flowed within container, then positioned centrally by transform */
+  position: absolute; /* The ring itself should be absolutely positioned and centered */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* Center the ring */
   transform-style: preserve-3d;
-  /* This transform will be controlled by JS for rotation */
-  /* NO initial translateZ here. It's applied to individual images */
-  /* It needs to be flex to center its child when not absolutely positioned */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: var(--gallery-image-width); /* Base width of the ring's central axis */
+  height: var(--gallery-image-height); /* Base height of the ring's central axis */
+  
   will-change: transform;
   cursor: grab;
-  
-  /* Initial dimming handled by JS, but if JS fails, this provides a fallback */
-  /* filter: brightness(var(--gallery-dimmed-brightness)); */
-  /* opacity: 1; */ /* Opacity will be managed by JS for the effect */
 }
 
 .image-ring:active {
@@ -617,18 +611,21 @@ footer h2 {
 }
 
 .ring-image {
-  position: absolute; /* Each image needs to be absolutely positioned within the ring */
+  position: absolute; /* Each image needs to be absolutely positioned within the .image-ring */
   width: var(--gallery-image-width);
   height: var(--gallery-image-height);
+  /* CRITICAL FIX: Base positioning and centering the image within its rotated slot */
   left: 0; /* Position relative to the .image-ring element */
   top: 0;  /* Position relative to the .image-ring element */
+  transform: translate(-50%, -50%); /* Center the image within its rotated slot */
   transform-style: preserve-3d;
-  /* transform-origin is critical for proper 3D positioning */
-  /* Images rotate around the center of the ring's radius */
+  
+  /* transform-origin is crucial for proper 3D positioning of individual images.
+     It should rotate around the center of the ring, which is effectively its own (0,0) point in this setup */
   transform-origin: 50% 50% calc(var(--gallery-ring-radius) * -1); 
   
-  /* Initial transform will be set by JS: rotateY(angle) translateZ(radius) translate(-50%, -50%) */
-  /* Disable CSS transitions here, JS will animate */
+  /* Initial transform will be set by JS: rotateY(angle) translateZ(radius) */
+  /* Disable CSS transitions here, JS will animate filter/transform changes */
   transition: none !important;
   will-change: transform, filter; /* Optimisation */
 }
@@ -641,7 +638,7 @@ footer h2 {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s ease, filter 0.3s ease; /* Transitions for hover effect */
   cursor: pointer;
-  /* Initial brightness will be set by JS */
+  /* Initial brightness will be set by JS, but this is a fallback for CSS-only display */
   filter: brightness(var(--gallery-dimmed-brightness)); 
 }
 
@@ -714,7 +711,7 @@ footer h2 {
         --gallery-image-height: 160px; /* Smaller images on mobile */
     }
     .image-ring-container {
-        min-height: 350px; /* Adjust min height for mobile */
+        height: calc(var(--gallery-image-height) * 1.5); /* Adjust min height for mobile */
         perspective: 1000px; /* Reduce perspective on mobile */
     }
     .gallery-heading {
@@ -780,7 +777,7 @@ footer h2 {
         --gallery-image-height: 130px; 
     }
     .image-ring-container {
-        min-height: 280px; 
+        height: calc(var(--gallery-image-height) * 1.5); 
     }
 }
 
@@ -793,9 +790,8 @@ footer h2 {
     .reveal-stagger-container .reveal-stagger,
     .tool-card,
     .face,
-    /* Include gallery elements to disable transitions/animations */
     .image-ring,
-    .ring-image, /* Target ring-image wrapper for transform reset */
+    .ring-image, 
     .ring-image img { 
         transition: none !important;
         transform: none !important;
@@ -803,7 +799,7 @@ footer h2 {
         animation: none !important;
         visibility: visible !important;
         box-shadow: 0 5px 20px rgba(0,0,0,0.2) !important; 
-        filter: none !important; /* No dimming or brightness changes */
+        filter: none !important; 
     }
     
     .left-column-sticky {
@@ -861,29 +857,29 @@ footer h2 {
         display: block !important;
     }
     .image-ring-container {
-        perspective: none !important; /* Disable 3D perspective */
+        perspective: none !important; 
     }
     .image-ring {
-        transform: none !important; /* Flatten ring */
+        transform: none !important; 
         position: relative !important;
         height: auto !important;
-        display: flex !important; /* Stack images normally */
+        display: flex !important; 
         flex-direction: column !important;
         gap: 20px !important;
     }
     .ring-image {
         position: relative !important;
-        transform: none !important; /* Flatten image positioning */
+        transform: none !important; 
         top: auto !important;
         left: auto !important;
-        margin: 0 auto !important; /* Center stacked images */
-        width: 100% !important; /* Allow full width */
-        max-width: var(--gallery-image-width) !important; /* Constrain max width for images */
-        height: auto !important; /* Auto height */
-        aspect-ratio: calc(var(--gallery-image-width) / var(--gallery-image-height)) !important; /* Maintain aspect ratio */
+        margin: 0 auto !important; 
+        width: 100% !important; 
+        max-width: var(--gallery-image-width) !important; 
+        height: auto !important; 
+        aspect-ratio: calc(var(--gallery-image-width) / var(--gallery-image-height)) !important; 
     }
     .ring-image img {
-        filter: none !important; /* No dimming */
+        filter: none !important; 
         opacity: 1 !important;
     }
 
