@@ -250,7 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Set scroll area height to allow for pinning and scrolling through faces
-        // This ensures enough scroll space for a full 360-degree rotation (SERVICES_COUNT transitions)
         scrollArea.style.height = `${SERVICES_COUNT * cubeHeight}px`;
         
         // Initial reveal of the cube, similar to other reveal-items
@@ -270,34 +269,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Main cube rotation animation
         gsap.to(cube, {
-            // Rotates the cube a full 360 degrees
             rotateX: SERVICES_COUNT * (360 / SERVICES_COUNT), 
             ease: 'none',
             scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: scrollArea,
                 start: 'top top',
-                // Ends the scroll trigger range after a full 360-degree rotation
                 end: `+=${SERVICES_COUNT * cubeHeight}`,
                 scrub: true,
                 pin: stickyCubeWrapper,
                 anticipatePin: 1,
                 snap: {
-                    // Snaps to each of the SERVICES_COUNT faces for the full 360 rotation
                     snapTo: 1 / SERVICES_COUNT, 
                     duration: 0.8,
                     ease: "power2.inOut"
                 },
                 onUpdate: (self) => {
-                    // Calculates the active face index (0 to SERVICES_COUNT-1)
-                    // Uses modulo to handle `self.progress * SERVICES_COUNT` potentially equalling SERVICES_COUNT
                     const activeFace = Math.round(self.progress * SERVICES_COUNT) % SERVICES_COUNT;
                     faces.forEach((face, i) => {
-                        gsap.to(face, {
-                            filter: i === activeFace ? "brightness(1.1)" : "brightness(0.3)",
-                            duration: 0.3,
-                            overwrite: true 
-                        });
+                        // Optimized: Directly set filter style instead of using gsap.to
+                        face.style.filter = i === activeFace ? "brightness(1.1)" : "brightness(0.3)";
                     });
                 },
                 onLeave: () => {
