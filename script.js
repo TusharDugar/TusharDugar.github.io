@@ -256,7 +256,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Set scroll area height to allow for pinning and scrolling through faces
-        scrollArea.style.height = `${(SERVICES_COUNT - 1) * cubeHeight}px`;
+        // FIX: Changed (SERVICES_COUNT - 1) to SERVICES_COUNT
+        scrollArea.style.height = `${SERVICES_COUNT * cubeHeight}px`;
         
         // Initial reveal of the cube, similar to other reveal-items
         gsap.fromTo(cubeContainer, // Animate the container for initial appearance
@@ -275,18 +276,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Main cube rotation animation
         gsap.to(cube, {
-            rotateX: (SERVICES_COUNT - 1) * (360 / SERVICES_COUNT), // Rotate to show all faces
+            // FIX: Changed (SERVICES_COUNT - 1) to SERVICES_COUNT for full rotation
+            rotateX: SERVICES_COUNT * (360 / SERVICES_COUNT), // Rotate to show all faces
             ease: 'none',
             scrollTrigger: {
                 id: 'servicesCubePin',
                 trigger: scrollArea,
                 start: 'top top',
-                end: `+=${(SERVICES_COUNT - 1) * cubeHeight}`,
+                // FIX: Changed (SERVICES_COUNT - 1) to SERVICES_COUNT
+                end: `+=${SERVICES_COUNT * cubeHeight}`,
                 scrub: true,
                 pin: stickyCubeWrapper,
                 anticipatePin: 1,
                 snap: {
-                    snapTo: 1 / (SERVICES_COUNT - 1),
+                    snapTo: 1 / (SERVICES_COUNT - 1), // step through faces (this one remains -1 as it defines the intervals BETWEEN faces)
                     duration: 0.8,
                     ease: "power2.inOut"
                 },
