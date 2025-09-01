@@ -215,8 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Position each image in the 3D ring initially
       ringImages.forEach((imgWrapper, i) => {
         const angle = i * angleStep;
-        // FIX: Corrected transform to include translateZ for circular arrangement,
-        //      removed centering from JS transform, which will be handled by CSS.
+        // FIX: Corrected transform to include translateZ for circular arrangement
+        //      CSS handles the translate(-50%, -50%) centering now.
         imgWrapper.style.transform = `rotateY(${angle}deg) translateZ(${ringRadius}px)`;
         imgWrapper.dataset.initialRotation = `${angle}`; // Store initial rotation for calculations
         imgWrapper.querySelector('img').style.filter = `brightness(${dimmedBrightness})`; // Initial dimming
@@ -244,8 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       function updateRotation(rot) {
-        // FIX: Apply rotation to the main ring element
-        ring.style.transform = `rotateY(${rot}deg)`; 
+        // Apply rotation to the main ring element
+        ring.style.transform = `translate(-50%, -50%) rotateY(${rot}deg)`; // Combined with CSS centering
         
         // Update brightness based on position
         ringImages.forEach((imgWrapper) => {
@@ -346,8 +346,8 @@ document.addEventListener('DOMContentLoaded', () => {
           // Get new width/height for recalculating container height if needed
           const newImageHeight = parseFloat(style.getPropertyValue('--gallery-image-height'));
 
-          // Only re-apply if radius or image height actually changed (to avoid unnecessary DOM ops)
-          if (ringRadius !== newRingRadius || parseFloat(ring.parentElement.style.height) !== (newImageHeight * 1.5)) { 
+          // Only re-apply if radius or container height needs adjustment
+          if (ringRadius !== newRingRadius || parseFloat(getComputedStyle(ring.parentElement).height) !== (newImageHeight * 1.5)) { 
               ringRadius = newRingRadius; // Update the JS variable
               
               // Recalculate container height based on new image height
@@ -365,7 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else {
         console.warn("3D Image Ring elements not found. Skipping vanilla JS setup.");
-        // Ensure images are visible if JS is skipped or elements are missing
         ringImages.forEach(imgWrapper => {
             imgWrapper.style.transform = 'none'; // Clear any potential 3D transforms
             imgWrapper.style.opacity = '1';
