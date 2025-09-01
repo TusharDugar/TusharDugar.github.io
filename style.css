@@ -18,7 +18,6 @@
     --accent-secondary-sawad: #00FFC2; 
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
-    /* --cube-service-title-color: #9CFF33; -- REMOVED: This was the green color, no longer used */
     --services-card-hover-glow: rgba(156, 255, 51, 0.3); /* New variable for hover effect */
 }
 
@@ -328,12 +327,10 @@ html::before {
 
 /* --- NEW: Services Card Grid and Card Styling --- */
 
-/* Removed old cube-specific wrappers as they are no longer in HTML */
-/* .scroll-area, .sticky-cube-wrapper, .cube-container, #services-cube are removed from HTML/CSS */
-
 .services-card-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* FIX: Changed to 2 columns for desktop */
+    /* FIX: Changed to 2 columns for desktop */
+    grid-template-columns: repeat(2, 1fr); 
     gap: 25px; /* Spacing between cards */
     width: 100%;
     max-width: 1000px; /* Max width for the grid */
@@ -372,7 +369,7 @@ html::before {
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: var(--accent-primary-sawad); /* FIX: Changed color to primary accent */
+    color: #fff7ed; /* FIX: Changed color to #fff7ed as requested */
     margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
@@ -570,7 +567,6 @@ footer h2 {
         margin: 0; 
         align-self: flex-start; 
     } 
-    /* No specific desktop-only transition needed here, GSAP handles it */
 }
 
 /* Tablet & Mobile Layout (max-width: 1023px) */
@@ -603,8 +599,6 @@ footer h2 {
     .services-section { 
         min-height: auto; /* No min-height required for pinning */
     }
-
-    /* All old cube-specific overrides below are REMOVED entirely as they are no longer in the HTML/relevant */
 
     .tools-grid { 
         grid-template-columns: 1fr; 
