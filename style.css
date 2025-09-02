@@ -18,7 +18,7 @@
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
-    /* [UPDATED] Variables for gallery slider */
+    /* Variables for gallery slider */
     --gallery-ring-radius: 450px;
     --gallery-item-width: 220px;
     --gallery-item-height: 140px;
@@ -110,7 +110,8 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 .image-ring-container {
     perspective: 1200px;
     width: 100%;
-    height: 300px;
+    /* [IMPROVEMENT] Responsive container height */
+    height: clamp(220px, 40vh, 320px);
     position: relative;
     display: flex; 
     justify-content: center;
@@ -125,6 +126,11 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
   cursor: grab;
 }
 .image-ring:active { cursor: grabbing; }
+
+/* [IMPROVEMENT] Disable clicks while dragging */
+.image-ring.dragging .gallery-item-link {
+    pointer-events: none;
+}
 
 .gallery-item {
   position: absolute;
@@ -181,7 +187,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 }
 
 @media (max-width: 767px) {
-  /* [UPDATED] Smaller variables for mobile to prevent overlap */
+  /* [IMPROVEMENT] Smaller variables for mobile to prevent overlap */
   :root {
     --gallery-ring-radius: 180px;
     --gallery-item-width: 140px;
