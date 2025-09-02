@@ -107,11 +107,11 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 .gallery-heading { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; margin-bottom: 60px; text-align: left; }
 .gallery-heading .text-white { color: var(--text-light); display: block; }
 .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; }
+
 .image-ring-container {
     perspective: 1200px;
     width: 100%;
-    /* [IMPROVEMENT] Responsive container height */
-    height: clamp(220px, 40vh, 320px);
+    height: clamp(220px, 40vh, 320px); /* Responsive height */
     position: relative;
     display: flex; 
     justify-content: center;
@@ -127,7 +127,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 }
 .image-ring:active { cursor: grabbing; }
 
-/* [IMPROVEMENT] Disable clicks while dragging */
+/* Disable clicks during drag */
 .image-ring.dragging .gallery-item-link {
     pointer-events: none;
 }
@@ -187,7 +187,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 }
 
 @media (max-width: 767px) {
-  /* [IMPROVEMENT] Smaller variables for mobile to prevent overlap */
+  /* Smaller variables for mobile to prevent overlap */
   :root {
     --gallery-ring-radius: 180px;
     --gallery-item-width: 140px;
