@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const galleryItems = document.querySelectorAll(".gallery-item");
 
     if (ring && galleryItems.length > 0) {
-        let isDragging = false, startX = 0, currentRotation = 0, velocity = 0, animationFrame, dragDistance = 0;
+        let isDragging = false, startX = 0, currentRotation = 0, dragDistance = 0;
         const total = galleryItems.length;
         const angleStep = 360 / total;
         
@@ -144,16 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function animateInertia() {
-            if (!isDragging && Math.abs(velocity) > 0.1) {
-                currentRotation += velocity;
-                velocity *= 0.95; // friction
-                updateRotation(currentRotation);
-                animationFrame = requestAnimationFrame(animateInertia);
-            } else if (!isDragging) {
-                const nearestAngle = Math.round(currentRotation / angleStep) * angleStep;
+            if (!isDragging) {
+                const nearestIndex = Math.round(currentRotation / angleStep);
+                const targetRotation = nearestIndex * angleStep;
+
                 gsap.to(ring, {
-                    rotationY: nearestAngle,
-                    duration: 0.5,
+                    rotationY: targetRotation,
+                    duration: 0.6,
                     ease: "power2.out",
                     onUpdate: () => {
                         const currentRotY = gsap.getProperty(ring, "rotationY");
@@ -162,7 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             item.style.filter = `brightness(${calculateBrightness(initialAngle, currentRotY)})`;
                         });
                     },
-                    onComplete: () => { currentRotation = nearestAngle; }
+                    onComplete: () => {
+                        currentRotation = targetRotation;
+                    }
                 });
             }
         }
@@ -171,8 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isDragging = true; 
             startX = e.pageX || e.touches[0].pageX; 
             dragDistance = 0;
-            cancelAnimationFrame(animationFrame); 
-            velocity = 0; 
+            gsap.killTweensOf(ring);
         }
         
         function onDragMove(e) { 
@@ -181,8 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentX = e.pageX || e.touches[0].pageX; 
             const deltaX = currentX - startX; 
             dragDistance += Math.abs(deltaX);
-            velocity = deltaX * 0.8; 
-            currentRotation += velocity; 
+            currentRotation -= deltaX * 0.5;
             updateRotation(currentRotation); 
             startX = currentX; 
         }
@@ -204,6 +201,52 @@ document.addEventListener('DOMContentLoaded', () => {
         ring.addEventListener("touchstart", onDragStart, { passive: true });
         window.addEventListener("touchmove", onDragMove, { passive: false });
         window.addEventListener("touchend", onDragEnd);
+
+        // --- [NEW] Wheel / Trackpad Navigation ---
+        let isScrolling = false;
+        
+        function scrollToNextItem(direction) {
+            if (isScrolling) return; // prevent spam scroll
+            isScrolling = true;
+
+            // Calculate the next index based on scroll direction
+            const nearestIndex = Math.round(currentRotation / angleStep);
+            // Invert direction for natural scrolling (wheel down/swipe right moves to the "next" item)
+            const nextIndex = direction > 0 ? nearestIndex + 1 : nearestIndex - 1;
+            const targetRotation = nextIndex * angleStep;
+
+            gsap.to(ring, {
+                rotationY: targetRotation,
+                duration: 0.6,
+                ease: "power2.out",
+                onUpdate: () => {
+                    const currentRotY = gsap.getProperty(ring, "rotationY");
+                    galleryItems.forEach((item) => {
+                        const initialAngle = item.dataset.initialRotation;
+                        item.style.filter = `brightness(${calculateBrightness(initialAngle, currentRotY)})`;
+                    });
+                },
+                onComplete: () => {
+                    currentRotation = targetRotation;
+                    isScrolling = false;
+                }
+            });
+        }
+
+        const galleryContainer = document.querySelector(".image-ring-container");
+        if (galleryContainer) {
+            galleryContainer.addEventListener("wheel", (e) => {
+                e.preventDefault();
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                    // Vertical scroll
+                    scrollToNextItem(e.deltaY);
+                } else {
+                    // Horizontal swipe (trackpad)
+                    scrollToNextItem(e.deltaX);
+                }
+            }, { passive: false });
+        }
+        // --- End Wheel / Trackpad Navigation ---
 
         let resizeTimeout;
         window.addEventListener('resize', () => {
