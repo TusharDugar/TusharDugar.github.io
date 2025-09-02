@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const galleryItems = document.querySelectorAll(".gallery-item");
 
     if (ring && galleryItems.length > 0) {
-        let isDragging = false, startX = 0, currentRotation = 0, velocity = 0, animationFrame;
+        let isDragging = false, startX = 0, currentRotation = 0, velocity = 0, animationFrame, dragDistance = 0;
         const total = galleryItems.length;
         const angleStep = 360 / total;
         
@@ -167,29 +167,53 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        function onDragStart(e) { isDragging = true; startX = e.pageX || e.touches[0].pageX; cancelAnimationFrame(animationFrame); velocity = 0; }
+        // [IMPROVEMENT] Added dragDistance reset
+        function onDragStart(e) { 
+            isDragging = true; 
+            startX = e.pageX || e.touches[0].pageX; 
+            dragDistance = 0;
+            cancelAnimationFrame(animationFrame); 
+            velocity = 0; 
+        }
         
+        // [IMPROVEMENT] Added dragDistance calculation and preventDefault
         function onDragMove(e) { 
             if (!isDragging) return;
-            e.preventDefault(); // Prevent page scroll while dragging
+            e.preventDefault(); 
             const currentX = e.pageX || e.touches[0].pageX; 
             const deltaX = currentX - startX; 
+            dragDistance += Math.abs(deltaX);
             velocity = deltaX * 0.8; 
             currentRotation += velocity; 
             updateRotation(currentRotation); 
             startX = currentX; 
         }
 
-        function onDragEnd() { if (isDragging) { isDragging = false; animateInertia(); } }
+        // [IMPROVEMENT] Added click prevention logic
+        function onDragEnd() { 
+            if (isDragging) { 
+                isDragging = false; 
+                if (dragDistance > 10) { // Threshold to differentiate a drag from a click
+                    ring.classList.add("dragging");
+                    setTimeout(() => ring.classList.remove("dragging"), 100);
+                }
+                animateInertia(); 
+            } 
+        }
 
         ring.addEventListener("mousedown", onDragStart);
         window.addEventListener("mousemove", onDragMove);
         window.addEventListener("mouseup", onDragEnd);
         ring.addEventListener("touchstart", onDragStart, { passive: true });
-        window.addEventListener("touchmove", onDragMove, { passive: false }); // Corrected for smooth touch drag
+        window.addEventListener("touchmove", onDragMove, { passive: false });
         window.addEventListener("touchend", onDragEnd);
 
-        window.addEventListener('resize', positionItems);
+        // [IMPROVEMENT] Debounced resize handler
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(positionItems, 150);
+        });
 
         // Initial setup
         positionItems();
