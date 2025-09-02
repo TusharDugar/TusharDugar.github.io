@@ -18,7 +18,7 @@
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
-    /* [UPDATED] Variables for gallery slider */
+    /* Variables for gallery slider */
     --gallery-ring-radius: 450px;
     --gallery-item-width: 220px;
     --gallery-item-height: 140px;
@@ -30,7 +30,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; font-family: 'Poppins', sans-serif; line-height: 1.6; color: var(--text-light); background-color: var(--bg-main); overflow-x: hidden; position: relative; scroll-behavior: smooth; min-height: 100vh; }
 
-/* Backgrounds, Glows, Grid Pattern... (No changes) */
+/* Backgrounds, Glows, Grid Pattern */
 .site-background-image { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.079; background-image: url('./71976 (1).jpg'); background-repeat: repeat; background-size: 400px auto; }
 .background-color-gradient { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.05; background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); background-size: 400% 400%; animation: gradient 15s ease infinite; }
 @keyframes gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
@@ -42,12 +42,12 @@ body::after { width: 1200px; height: 1200px; background: radial-gradient(circle 
 html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.02; mask-image: linear-gradient(to right, transparent 99.85%, white 0.15%), linear-gradient(to bottom, transparent 99.85%, white 0.15%), linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%), linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%); mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px; -webkit-mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px; mask-repeat: repeat; -webkit-mask-repeat: repeat; }
 .mouse-follower-glow { position: fixed; top: 0; left: 0; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, transparent 60%); filter: blur(50px); z-index: 100; pointer-events: none; transition: transform 0.1s ease-out; will-change: transform; }
 
-/* Global Section & Animations (No changes) */
+/* Global Section & Animations */
 .section { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; padding: 80px 40px; }
 .reveal-item, .reveal-child, .reveal-stagger { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, opacity; }
 .reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
 
-/* Layout, About, Hero, Services, Tools, Contact Sections (No changes) */
+/* Layout, About, Hero, Services, Tools, Contact Sections */
 .main-layout-container { display: flex; justify-content: center; max-width: 1920px; margin: 0 auto; padding: 0 60px; gap: 60px; min-height: 100vh; padding-top: 20px; }
 .left-column-sticky { flex-shrink: 0; flex-basis: 370px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; position: relative; top: auto; height: auto; perspective: 1000px; transform-style: preserve-3d; }
 .striped-entry-list { list-style: none; margin: 0; padding: 0; perspective: 1000px; transform-style: preserve-3d; }
@@ -100,9 +100,9 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 
 /* ===== [UPDATED] Gallery Section CSS ===== */
 .gallery-section {
-  padding: 100px 20px; /* Adjusted padding */
-  margin-bottom: 5rem;  /* Added margin to prevent overlap */
-  overflow: hidden; /* Important for 3D effect */
+  padding: 100px 20px;
+  margin-bottom: 5rem;
+  overflow: hidden;
 }
 .gallery-heading { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; margin-bottom: 60px; text-align: left; }
 .gallery-heading .text-white { color: var(--text-light); display: block; }
@@ -110,7 +110,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 .image-ring-container {
     perspective: 1200px;
     width: 100%;
-    height: 300px; /* Adjusted for smaller items */
+    height: 300px;
     position: relative;
     display: flex; 
     justify-content: center;
@@ -131,7 +131,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
   top: 50%;
   left: 50%;
   width: var(--gallery-item-width);
-  height: auto; /* Auto height based on content */
+  height: auto;
   transform: translate(-50%, -50%);
   transform-style: preserve-3d;
   transition: filter 0.5s ease;
@@ -150,14 +150,12 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 .gallery-item-link:hover {
   transform: scale(1.05);
 }
-
 .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: top;
 }
-
 .gallery-caption {
   font-size: 0.85rem;
   color: var(--text-medium);
@@ -183,12 +181,12 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 }
 
 @media (max-width: 767px) {
-    :root {
-      /* [UPDATED] Smaller variables for mobile */
-      --gallery-ring-radius: 220px;
-      --gallery-item-width: 160px;
-      --gallery-item-height: 100px;
-    }
+  /* [UPDATED] Smaller variables for mobile to prevent overlap */
+  :root {
+    --gallery-ring-radius: 180px;
+    --gallery-item-width: 140px;
+    --gallery-item-height: 90px;
+  }
     .main-layout-container { padding: 15px; gap: 30px; }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 10vw, 3rem); }
     .contact-buttons { flex-direction: column; }
