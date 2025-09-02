@@ -60,75 +60,23 @@ body::before, body::after {
     pointer-events: none;
     will-change: transform, opacity;
 }
-
-body::before {
-    width: 1300px;
-    height: 1300px;
-    background: radial-gradient(circle at center, var(--accent-primary-sawad) 0%, transparent 60%);
-    animation: glow1 25s infinite alternate ease-in-out;
-}
-
-body::after {
-    width: 1200px;
-    height: 1200px;
-    background: radial-gradient(circle at center, var(--accent-secondary-sawad) 0%, transparent 60%);
-    animation: glow2 28s infinite alternate-reverse ease-in-out;
-}
-
-@keyframes glow1 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
-    50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.05; }
-    100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; }
-}
-
-@keyframes glow2 {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
-    50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; }
-    100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; }
-}
+body::before { width: 1300px; height: 1300px; background: radial-gradient(circle at center, var(--accent-primary-sawad) 0%, transparent 60%); animation: glow1 25s infinite alternate ease-in-out; }
+body::after { width: 1200px; height: 1200px; background: radial-gradient(circle at center, var(--accent-secondary-sawad) 0%, transparent 60%); animation: glow2 28s infinite alternate-reverse ease-in-out; }
+@keyframes glow1 { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; } 50% { transform: translate(-55%, -45%) scale(1.05); opacity: 0.05; } 100% { transform: translate(-45%, -55%) scale(1); opacity: 0.03; } }
+@keyframes glow2 { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; } 50% { transform: translate(-45%, -55%) scale(1.03); opacity: 0.05; } 100% { transform: translate(-55%, -45%) scale(1); opacity: 0.03; } }
 
 /* Animated Background Grid Pattern */
 html::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0.02;
-    mask-image:
-        linear-gradient(to right, transparent 99.85%, white 0.15%),
-        linear-gradient(to bottom, transparent 99.85%, white 0.15%),
-        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%),
-        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
-    mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
-    -webkit-mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px;
-    mask-repeat: repeat;
-    -webkit-mask-repeat: repeat;
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.02;
+    mask-image: linear-gradient(to right, transparent 99.85%, white 0.15%), linear-gradient(to bottom, transparent 99.85%, white 0.15%), linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%), linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%);
+    mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px; -webkit-mask-size: 40px 40px, 40px 40px, 40px 40px, 40px 40px; mask-repeat: repeat; -webkit-mask-repeat: repeat;
 }
 
-.mouse-follower-glow { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 80px; 
-    height: 80px; 
-    border-radius: 50%; 
-    background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, transparent 60%); 
-    filter: blur(50px); 
-    z-index: 100; 
-    pointer-events: none; 
-    transition: transform 0.1s ease-out; 
-    will-change: transform;
-}
+.mouse-follower-glow { position: fixed; top: 0; left: 0; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, transparent 60%); filter: blur(50px); z-index: 100; pointer-events: none; transition: transform 0.1s ease-out; will-change: transform; }
 
 /* Global Section & Reveal Animations */
 .section { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; padding: 80px 40px; }
-.reveal-item, .reveal-child, .reveal-stagger { 
-    opacity: 0; 
-    transform: translateY(40px); 
-    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); 
-    will-change: transform, opacity; 
-}
+.reveal-item, .reveal-child, .reveal-stagger { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, opacity; }
 .reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
 .reveal-parent { position: relative; } 
 .reveal-stagger-container { position: relative; } 
@@ -196,13 +144,34 @@ html::before {
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; line-height: 1.2; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; line-height: 1.2; }
 
-/* ===== NEW: Featured Websites Carousel Section CSS ===== */
+/* ===== FEATURED WEBSITES CAROUSEL CSS (CORRECTED) ===== */
 .websites-heading { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; margin-bottom: 80px; width: 100%; text-align: left; }
 .websites-heading .text-white { color: var(--text-light); display: block; }
 .websites-heading .text-gray { color: var(--text-sub-heading-grey); display: block; }
+
 .website-carousel-container { position: relative; width: 100%; height: 450px; perspective: 1200px; transform-style: preserve-3d; display: flex; justify-content: center; align-items: center; touch-action: pan-y; }
-.website-carousel { position: relative; width: 1px; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
-.website-card { position: absolute; width: 300px; height: 420px; left: 50%; top: 50%; margin-left: -150px; margin-top: -210px; transform-style: preserve-3d; cursor: pointer; user-select: none; }
+
+/* FIX: Give the carousel element the dimensions of a card to act as a proper 3D container */
+.website-carousel {
+    position: relative;
+    width: 300px;
+    height: 420px;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* FIX: Cards are positioned absolutely within the new container dimensions */
+.website-card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    user-select: none;
+}
+
 .website-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .website-card:hover .website-card-inner { transform: translateZ(20px) scale(1.02); }
 .website-card.flipped .website-card-inner { transform: rotateY(180deg); }
@@ -214,14 +183,26 @@ html::before {
 .website-preview, .website-card-back p { font-size: 0.95rem; color: var(--text-medium); flex-grow: 1; line-height: 1.6; }
 .website-card-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200%; height: 200%; border-radius: 20px; pointer-events: none; background: radial-gradient(circle, rgba(255, 107, 0, 0.15), transparent 60%); opacity: 0; transition: opacity 0.4s ease; }
 .website-card:hover .website-card-glow { opacity: 1; }
+
+/* FIX: Use aspect-ratio to properly display website screenshots */
+.website-image-link {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3; /* This creates a better shape for previews */
+    height: auto; /* Allow height to be determined by aspect ratio */
+    margin-bottom: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.website-image-link:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); }
+.website-image-link img { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: opacity 0.3s ease; }
+
+.website-card-back h3 { margin-bottom: 20px; font-size: 1.5rem; color: var(--accent-primary-sawad); }
 .website-carousel-controls { position: absolute; bottom: -60px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; z-index: 10; }
 .website-control-btn { background: var(--bg-section-card); border: 1px solid var(--accent-primary-sawad); color: var(--text-light); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 15px rgba(255, 107, 0, 0.4); }
 .website-control-btn:hover { background: var(--accent-primary-sawad); transform: scale(1.1); }
-/* STYLES for Featured Websites Carousel Images */
-.website-image-link { display: block; width: 100%; height: 150px; margin-bottom: 15px; border-radius: 10px; overflow: hidden; background-color: rgba(0, 0, 0, 0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-.website-image-link:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); }
-.website-image-link img { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: opacity 0.3s ease; }
-.website-card-back h3 { margin-bottom: 20px; font-size: 1.5rem; color: var(--accent-primary-sawad); }
 
 /* Project Gallery Section */
 .gallery-section { position: relative; width: 100%; max-width: 1200px; margin: 0 auto; padding: 100px 40px; text-align: center; background: var(--bg-main); color: var(--text-light); overflow: hidden; z-index: 1; }
@@ -272,7 +253,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .section { padding: 40px 15px; }
     .main-layout-container { padding: 15px; gap: 30px; padding-top: 30px; }
     .left-column-sticky { margin-bottom: 30px; }
-    .hero-heading, .services-heading, .tools-heading, .gallery-heading, .websites-heading { font-size: clamp(2rem, 7vw, 6rem); }
+    .hero-heading, .services-heading, .tools-heading, .gallery-heading, .websites-heading { font-size: clamp(2rem, 10vw, 3rem); }
     .tools-grid { gap: 10px; margin-top: 30px; }
     .tool-card { padding: 15px; gap: 10px; }
     footer#contact { padding: 60px 20px; }
@@ -284,7 +265,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .image-ring-container { height: calc(var(--gallery-image-height) * 1.5); }
     /* Mobile adjustments for websites carousel */
     .website-carousel-container { height: 400px; }
-    .website-card { width: 250px; height: 380px; margin-left: -125px; margin-top: -190px; }
+    .website-carousel { width: 250px; height: 380px; }
     .websites-heading { text-align: center; }
 }
 
