@@ -11,7 +11,7 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=59"> <!-- Incremented version to ensure fresh CSS -->
+    <link rel="stylesheet" href="style.css?v=61"> <!-- Incremented version -->
 
     <!-- GSAP & ScrollTrigger CDNs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -19,7 +19,6 @@
     <!-- Register ScrollTrigger Plugin -->
     <script>
         gsap.registerPlugin(ScrollTrigger);
-        console.log("GSAP and ScrollTrigger registered."); // Debugging: Confirm GSAP is loaded
     </script>
 </head>
 <body>
@@ -85,7 +84,7 @@
                    <div class="face" data-index="1"><div class="service-content"><h3 class="service-title">SEO Optimization</h3><p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p></div><div class="face-number">02</div></div>
                    <div class="face" data-index="2"><div class="service-content"><h3 class="service-title">UX/UI Design</h3><p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p></div><div class="face-number">03</div></div>
                    <div class="face" data-index="3"><div class="service-content"><h3 class="service-title">Graphic Design</h3><p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p></div><div class="face-number">04</div></div>
-                   <div class="face" data-index="4"><div class="service-content"><h3 class="service-title">E-commerce Solutions</h3><p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p></div><div class="face-number">05</p></div></div>
+                   <div class="face" data-index="4"><div class="service-content"><h3 class="service-title">E-commerce Solutions</h3><p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p></div><div class="face-number">05</div></div>
                    <div class="face" data-index="5"><div class="service-content"><h3 class="service-title">Digital Marketing</h3><p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p></div><div class="face-number">06</div></div>
                    <div class="face" data-index="6"><div class="service-content"><h3 class="service-title">Content Creation</h3><p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p></div><div class="face-number">07</div></div>
                    <div class="face" data-index="7"><div class="service-content"><h3 class="service-title">Social Media Management</h3><p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p></div><div class="face-number">08</div></div>
@@ -108,11 +107,94 @@
                 </div>
             </section>
 
-            <!-- NEW: 3D Image Slider Section -->
+            <!-- NEW: Featured Websites Carousel Section -->
+            <section id="featured-websites" class="section">
+                <h2 class="websites-heading">
+                    <span class="text-white">FEATURED</span>
+                    <span class="text-gray">WEBSITES</span>
+                </h2>
+                <div class="website-carousel-container">
+                    <div class="website-carousel" id="website-carousel">
+                        <!-- Website 1: TechMars -->
+                        <div class="website-card" data-website-id="1">
+                            <div class="website-card-inner">
+                                <div class="website-card-front">
+                                    <div class="website-card-content">
+                                        <div class="website-category">Ed-Tech Platform</div>
+                                        <h3>TechMars</h3>
+                                        <a href="https://techmars.in/" target="_blank" class="website-image-link">
+                                            <img src="https://i.imgur.com/kY1iJ5C.png" alt="TechMars Website Preview">
+                                        </a>
+                                        <p class="website-preview">An innovative platform providing cutting-edge educational resources in technology.</p>
+                                        <div class="website-card-glow"></div>
+                                    </div>
+                                </div>
+                                <div class="website-card-back">
+                                    <div class="website-card-content">
+                                        <h3>Project Overview</h3>
+                                        <p>Developed a responsive and feature-rich educational website focused on practical skills. The platform offers career-oriented courses in coding and AI, designed with a clean UI for an optimal learning experience.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Website 2: Sipologie -->
+                        <div class="website-card" data-website-id="2">
+                            <div class="website-card-inner">
+                                <div class="website-card-front">
+                                    <div class="website-card-content">
+                                        <div class="website-category">Luxury E-commerce</div>
+                                        <h3>Sipologie</h3>
+                                        <a href="https://sipologie.in/" target="_blank" class="website-image-link">
+                                            <img src="https://i.imgur.com/mYtVfG7.png" alt="Sipologie Website Preview">
+                                        </a>
+                                        <p class="website-preview">A premium e-commerce experience for connoisseurs of fine teas and infusions.</p>
+                                        <div class="website-card-glow"></div>
+                                    </div>
+                                </div>
+                                <div class="website-card-back">
+                                    <div class="website-card-content">
+                                        <h3>Project Overview</h3>
+                                        <p>Crafted an elegant and intuitive online store for a luxury tea brand. The site enhances the brand's premium appeal through a sophisticated design and drives sales with a streamlined, user-friendly checkout process.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Website 3: Hotel Airdrop -->
+                        <div class="website-card" data-website-id="3">
+                            <div class="website-card-inner">
+                                <div class="website-card-front">
+                                    <div class="website-card-content">
+                                        <div class="website-category">Hospitality SaaS</div>
+                                        <h3>Hotel Airdrop</h3>
+                                        <a href="https://hotelairdrop.com/" target="_blank" class="website-image-link">
+                                            <img src="https://i.imgur.com/pT5u4sB.png" alt="Hotel Airdrop Website Preview">
+                                        </a>
+                                        <p class="website-preview">A modern solution for hotel services, connecting guests with amenities seamlessly.</p>
+                                        <div class="website-card-glow"></div>
+                                    </div>
+                                </div>
+                                <div class="website-card-back">
+                                    <div class="website-card-content">
+                                        <h3>Project Overview</h3>
+                                        <p>Designed and built a dynamic service platform that simplifies hotel operations via QR codes. This modern solution digitizes amenities and improves the guest experience through fast, intuitive digital interactions.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="website-carousel-controls">
+                        <button id="website-prev-btn" class="website-control-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button id="website-next-btn" class="website-control-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </section>
+            <!-- END NEW Featured Websites Carousel Section -->
+            
+            <!-- RENAMED: Project Gallery Section (3D Image Slider) -->
             <section id="gallery" class="gallery-section">
               <h2 class="gallery-heading reveal-item">
-                <span class="text-white">FEATURED</span>
-                <span class="text-gray">PROJECTS</span>
+                <span class="text-white">PROJECT</span>
+                <span class="text-gray">GALLERY</span>
               </h2>
               <div class="image-ring-container">
                 <div class="image-ring">
@@ -128,7 +210,7 @@
                 </div>
               </div>
             </section>
-            <!-- END NEW 3D Image Slider Section -->
+            <!-- END Project Gallery Section -->
 
             <!-- Contact Section (Footer) -->
             <footer id="contact" class="section reveal-item">
