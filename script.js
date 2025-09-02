@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // --- [UPDATED] 3D Image Ring (Featured Websites) JS ---
+    // --- 3D Image Ring (Featured Websites) JS ---
     const ring = document.querySelector(".image-ring");
     const galleryItems = document.querySelectorAll(".gallery-item");
 
@@ -167,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // [IMPROVEMENT] Added dragDistance reset
         function onDragStart(e) { 
             isDragging = true; 
             startX = e.pageX || e.touches[0].pageX; 
@@ -176,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
             velocity = 0; 
         }
         
-        // [IMPROVEMENT] Added dragDistance calculation and preventDefault
         function onDragMove(e) { 
             if (!isDragging) return;
             e.preventDefault(); 
@@ -189,11 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
             startX = currentX; 
         }
 
-        // [IMPROVEMENT] Added click prevention logic
         function onDragEnd() { 
             if (isDragging) { 
                 isDragging = false; 
-                if (dragDistance > 10) { // Threshold to differentiate a drag from a click
+                if (dragDistance > 10) {
                     ring.classList.add("dragging");
                     setTimeout(() => ring.classList.remove("dragging"), 100);
                 }
@@ -208,7 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener("touchmove", onDragMove, { passive: false });
         window.addEventListener("touchend", onDragEnd);
 
-        // [IMPROVEMENT] Debounced resize handler
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
