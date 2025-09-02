@@ -33,7 +33,6 @@ function initIntersectionObserverAnimations() {
     rootMargin: "0px", 
     threshold: window.innerWidth < 1024 ? 0.05 : 0.1
   };
-
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -61,7 +60,6 @@ function initIntersectionObserverAnimations() {
       }
     });
   }, observerOptions);
-
   document.querySelectorAll(".reveal-item, .reveal-parent, .reveal-stagger-container").forEach(el => observer.observe(el));
 }
 
@@ -102,84 +100,89 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- [UPDATED] 3D Image Ring (Featured Websites) JS ---
-    // This script will only run on screens wider than 1023px
-    if (window.matchMedia("(min-width: 1024px)").matches) {
-        const ring = document.querySelector(".image-ring");
-        const ringImages = document.querySelectorAll(".ring-image");
+    const ring = document.querySelector(".image-ring");
+    const galleryItems = document.querySelectorAll(".gallery-item");
 
-        if (ring && ringImages.length > 0) {
-            const total = ringImages.length;
-            const angleStep = 360 / total;
-            let currentRotation = 0, isDragging = false, startX = 0, velocity = 0, animationFrame;
-            const style = getComputedStyle(document.documentElement);
-            let ringRadius = parseFloat(style.getPropertyValue('--gallery-ring-radius'));
-            const activeRange = 25, fadeRange = 90; // Increased active range for fewer items
-            const dimmedBrightness = parseFloat(style.getPropertyValue('--gallery-dimmed-brightness'));
-            const activeBrightness = parseFloat(style.getPropertyValue('--gallery-active-brightness'));
+    if (ring && galleryItems.length > 0) {
+        let isDragging = false, startX = 0, currentRotation = 0, velocity = 0, animationFrame;
+        const total = galleryItems.length;
+        const angleStep = 360 / total;
+        const style = getComputedStyle(document.documentElement);
+        
+        const dimmedBrightness = parseFloat(style.getPropertyValue('--gallery-dimmed-brightness'));
+        const activeBrightness = parseFloat(style.getPropertyValue('--gallery-active-brightness'));
 
-            ringImages.forEach((imgWrapper, i) => {
+        function getRadius() {
+            return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gallery-ring-radius'));
+        }
+
+        function positionItems() {
+            const radius = getRadius();
+            galleryItems.forEach((item, i) => {
                 const angle = i * angleStep;
-                imgWrapper.style.transform = `rotateY(${angle}deg) translateZ(${ringRadius}px)`;
-                imgWrapper.dataset.initialRotation = `${angle}`;
-                imgWrapper.style.filter = `brightness(${dimmedBrightness})`; // Dim the whole card
+                item.style.transform = `translate(-50%, -50%) rotateY(${angle}deg) translateZ(${radius}px)`;
+                item.dataset.initialRotation = angle;
             });
+        }
+        
+        function calculateBrightness(itemAngle, ringRotation) {
+            const normalizedRingRotation = (ringRotation % 360 + 360) % 360;
+            const effectiveAngle = (parseFloat(itemAngle) + normalizedRingRotation) % 360;
+            let angleDiff = Math.abs(effectiveAngle);
+            if (angleDiff > 180) angleDiff = 360 - angleDiff;
+            
+            const activeRange = 30; // degrees
+            if (angleDiff < activeRange) return activeBrightness;
+            return dimmedBrightness;
+        }
 
-            function calculateBrightness(imageInitialAngle, currentRingRotation) {
-                const normalizedRingRotation = (currentRingRotation % 360 + 360) % 360;
-                const imageEffectiveAngle = (parseFloat(imageInitialAngle) + normalizedRingRotation) % 360;
-                let angleDiff = Math.abs(imageEffectiveAngle);
-                if (angleDiff > 180) angleDiff = 360 - angleDiff;
-                if (angleDiff < activeRange) return activeBrightness;
-                if (angleDiff < fadeRange) return dimmedBrightness + (activeBrightness - dimmedBrightness) * ((fadeRange - angleDiff) / (fadeRange - activeRange));
-                return dimmedBrightness;
-            }
+        function updateRotation(rot) {
+            ring.style.transform = `rotateY(${rot}deg)`;
+            galleryItems.forEach((item) => {
+                const initialAngle = item.dataset.initialRotation;
+                item.style.filter = `brightness(${calculateBrightness(initialAngle, rot)})`;
+            });
+        }
 
-            function updateRotation(rot) {
-                ring.style.transform = `translate(-50%, -50%) rotateY(${rot}deg)`;
-                ringImages.forEach((imgWrapper) => {
-                    const initialAngle = imgWrapper.dataset.initialRotation;
-                    if (initialAngle !== undefined) {
-                        const brightness = calculateBrightness(initialAngle, rot);
-                        imgWrapper.style.filter = `brightness(${brightness})`;
-                    }
+        function animateInertia() {
+            if (!isDragging && Math.abs(velocity) > 0.1) {
+                currentRotation += velocity;
+                velocity *= 0.95; // friction
+                updateRotation(currentRotation);
+                animationFrame = requestAnimationFrame(animateInertia);
+            } else if (!isDragging) {
+                const nearestAngle = Math.round(currentRotation / angleStep) * angleStep;
+                gsap.to(ring, {
+                    rotationY: nearestAngle,
+                    duration: 0.5,
+                    ease: "power2.out",
+                    onUpdate: () => {
+                        const currentRotY = gsap.getProperty(ring, "rotationY");
+                        galleryItems.forEach((item) => {
+                            const initialAngle = item.dataset.initialRotation;
+                            item.style.filter = `brightness(${calculateBrightness(initialAngle, currentRotY)})`;
+                        });
+                    },
+                    onComplete: () => { currentRotation = nearestAngle; }
                 });
             }
-
-            function animateInertia() {
-                if (!isDragging && Math.abs(velocity) > 0.1) {
-                    currentRotation += velocity;
-                    velocity *= 0.95; // friction
-                    updateRotation(currentRotation);
-                    animationFrame = requestAnimationFrame(animateInertia);
-                } else if (Math.abs(velocity) <= 0.1) {
-                    const nearestAngle = Math.round(currentRotation / angleStep) * angleStep;
-                    gsap.to(ring, {
-                        rotateY: nearestAngle,
-                        duration: 0.5,
-                        ease: "power2.out",
-                        onUpdate: () => {
-                            const currentRotY = gsap.getProperty(ring, "rotateY");
-                            ringImages.forEach((imgWrapper) => {
-                                const initialAngle = imgWrapper.dataset.initialRotation;
-                                if (initialAngle !== undefined) {
-                                    const brightness = calculateBrightness(initialAngle, currentRotY);
-                                    imgWrapper.style.filter = `brightness(${brightness})`;
-                                }
-                            });
-                        },
-                        onComplete: () => { currentRotation = nearestAngle; velocity = 0; }
-                    });
-                }
-            }
-
-            ring.addEventListener("mousedown", (e) => { isDragging = true; startX = e.clientX; cancelAnimationFrame(animationFrame); velocity = 0; });
-            window.addEventListener("mousemove", (e) => { if (!isDragging) return; const deltaX = e.clientX - startX; startX = e.clientX; currentRotation += deltaX * 0.5; velocity = deltaX * 0.5; updateRotation(currentRotation); });
-            window.addEventListener("mouseup", () => { if (isDragging) { isDragging = false; animateInertia(); } });
-            ring.addEventListener("touchstart", (e) => { isDragging = true; startX = e.touches[0].clientX; cancelAnimationFrame(animationFrame); velocity = 0; });
-            window.addEventListener("touchmove", (e) => { if (!isDragging) return; const deltaX = e.touches[0].clientX - startX; startX = e.touches[0].clientX; currentRotation += deltaX * 0.5; velocity = deltaX * 0.5; updateRotation(currentRotation); });
-            window.addEventListener("touchend", () => { if (isDragging) { isDragging = false; animateInertia(); } });
-            
-            updateRotation(currentRotation);
         }
+
+        function onDragStart(e) { isDragging = true; startX = e.pageX || e.touches[0].pageX; cancelAnimationFrame(animationFrame); velocity = 0; }
+        function onDragMove(e) { if (!isDragging) return; const currentX = e.pageX || e.touches[0].pageX; const deltaX = currentX - startX; velocity = deltaX * 0.8; currentRotation += velocity; updateRotation(currentRotation); startX = currentX; }
+        function onDragEnd() { if (isDragging) { isDragging = false; animateInertia(); } }
+
+        ring.addEventListener("mousedown", onDragStart);
+        window.addEventListener("mousemove", onDragMove);
+        window.addEventListener("mouseup", onDragEnd);
+        ring.addEventListener("touchstart", onDragStart, { passive: true });
+        window.addEventListener("touchmove", onDragMove);
+        window.addEventListener("touchend", onDragEnd);
+
+        window.addEventListener('resize', positionItems);
+
+        // Initial setup
+        positionItems();
+        updateRotation(0);
     }
 });
