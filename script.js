@@ -107,10 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let isDragging = false, startX = 0, currentRotation = 0, velocity = 0, animationFrame;
         const total = galleryItems.length;
         const angleStep = 360 / total;
-        const style = getComputedStyle(document.documentElement);
         
-        const dimmedBrightness = parseFloat(style.getPropertyValue('--gallery-dimmed-brightness'));
-        const activeBrightness = parseFloat(style.getPropertyValue('--gallery-active-brightness'));
+        const dimmedBrightness = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gallery-dimmed-brightness'));
+        const activeBrightness = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gallery-active-brightness'));
 
         function getRadius() {
             return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gallery-ring-radius'));
@@ -170,10 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function onDragStart(e) { isDragging = true; startX = e.pageX || e.touches[0].pageX; cancelAnimationFrame(animationFrame); velocity = 0; }
         
-        // [FIX] Added e.preventDefault() to stop page scroll
         function onDragMove(e) { 
             if (!isDragging) return;
-            e.preventDefault(); 
+            e.preventDefault(); // Prevent page scroll while dragging
             const currentX = e.pageX || e.touches[0].pageX; 
             const deltaX = currentX - startX; 
             velocity = deltaX * 0.8; 
@@ -188,8 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener("mousemove", onDragMove);
         window.addEventListener("mouseup", onDragEnd);
         ring.addEventListener("touchstart", onDragStart, { passive: true });
-        // [FIX] Added { passive: false } to allow preventDefault
-        window.addEventListener("touchmove", onDragMove, { passive: false });
+        window.addEventListener("touchmove", onDragMove, { passive: false }); // Corrected for smooth touch drag
         window.addEventListener("touchend", onDragEnd);
 
         window.addEventListener('resize', positionItems);
