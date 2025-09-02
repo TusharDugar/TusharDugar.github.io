@@ -47,7 +47,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .reveal-item, .reveal-child, .reveal-stagger { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, opacity; }
 .reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
 
-/* Layout, About, Hero, Services, Tools, Contact Sections */
+/* Layout, About, Hero, Services, Tools */
 .main-layout-container { display: flex; justify-content: center; max-width: 1920px; margin: 0 auto; padding: 0 60px; gap: 60px; min-height: 100vh; padding-top: 20px; }
 .left-column-sticky { flex-shrink: 0; flex-basis: 370px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; position: relative; top: auto; height: auto; perspective: 1000px; transform-style: preserve-3d; }
 .striped-entry-list { list-style: none; margin: 0; padding: 0; perspective: 1000px; transform-style: preserve-3d; }
@@ -95,24 +95,30 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .image-ring.dragging .gallery-item-link { pointer-events: none; }
 .gallery-item { position: absolute; top: 50%; left: 50%; width: var(--gallery-item-width); height: auto; transform: translate(-50%, -50%); transform-style: preserve-3d; transition: filter 0.5s ease; will-change: transform, filter; }
 
-/* [FIX] Updated .gallery-item-link and children for correct layering */
+/* [FIX] Updated .gallery-item-link to correctly layer gradient, image, and overlay */
 .gallery-item-link {
-  position: relative; /* Establish positioning context */
+  position: relative;
   display: block;
   width: 100%;
   height: var(--gallery-item-height);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(to bottom, #6e6e6e, #000000);
   transition: transform 0.2s ease;
+}
+.gallery-item-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, #6e6e6e, #000000);
+  z-index: 0;
 }
 .gallery-item-link img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: top;
-  position: relative; /* Allow z-index to work */
+  position: relative;
   z-index: 1;
 }
 .gallery-item-link::after {
@@ -120,7 +126,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7));
-  z-index: 2; /* Sit on top of the image */
+  z-index: 2;
   pointer-events: none;
 }
 .gallery-item-link:hover { transform: scale(1.05); }
@@ -135,17 +141,19 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   text-shadow: 0 2px 5px rgba(0,0,0,0.8);
 }
 
-/* [FIX] Updated footer styles for full-width */
+/* [FIX] Full-width footer styles */
 footer#contact {
   background-color: var(--bg-section-card);
   padding: 100px 40px;
   text-align: center;
   color: var(--text-light);
-  width: 100vw;
-  max-width: 100%; /* Override .section max-width */
-  margin-left: 50%;
-  transform: translateX(-50%);
-  box-sizing: border-box; /* Ensure padding is included in width */
+  width: 100%;
+  box-sizing: border-box;
+}
+footer#contact.section {
+    max-width: 100% !important;
+    padding-left: 40px; /* Or your preferred padding */
+    padding-right: 40px;
 }
 footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spacing: 1.5px; }
 .contact-tagline { font-size: 1.1rem; margin-bottom: 40px; color: var(--text-medium); max-width: 700px; margin: 0 auto 40px; line-height: 1.8; }
