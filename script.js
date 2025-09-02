@@ -169,14 +169,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function onDragStart(e) { isDragging = true; startX = e.pageX || e.touches[0].pageX; cancelAnimationFrame(animationFrame); velocity = 0; }
-        function onDragMove(e) { if (!isDragging) return; const currentX = e.pageX || e.touches[0].pageX; const deltaX = currentX - startX; velocity = deltaX * 0.8; currentRotation += velocity; updateRotation(currentRotation); startX = currentX; }
+        
+        // [FIX] Added e.preventDefault() to stop page scroll
+        function onDragMove(e) { 
+            if (!isDragging) return;
+            e.preventDefault(); 
+            const currentX = e.pageX || e.touches[0].pageX; 
+            const deltaX = currentX - startX; 
+            velocity = deltaX * 0.8; 
+            currentRotation += velocity; 
+            updateRotation(currentRotation); 
+            startX = currentX; 
+        }
+
         function onDragEnd() { if (isDragging) { isDragging = false; animateInertia(); } }
 
         ring.addEventListener("mousedown", onDragStart);
         window.addEventListener("mousemove", onDragMove);
         window.addEventListener("mouseup", onDragEnd);
         ring.addEventListener("touchstart", onDragStart, { passive: true });
-        window.addEventListener("touchmove", onDragMove);
+        // [FIX] Added { passive: false } to allow preventDefault
+        window.addEventListener("touchmove", onDragMove, { passive: false });
         window.addEventListener("touchend", onDragEnd);
 
         window.addEventListener('resize', positionItems);
