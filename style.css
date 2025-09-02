@@ -18,7 +18,7 @@
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
-    /* [UPDATED] Variables for gallery slider for tighter spacing */
+    /* Variables for gallery slider */
     --gallery-ring-radius: 320px;
     --gallery-item-width: 220px;
     --gallery-item-height: 140px;
@@ -86,16 +86,6 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-logo { max-width: 70%; max-height: 70%; object-fit: contain; }
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
-footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; text-align: center; color: var(--text-light); }
-footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spacing: 1.5px; }
-.contact-tagline { font-size: 1.1rem; margin-bottom: 40px; color: var(--text-medium); max-width: 700px; margin: 0 auto 40px; line-height: 1.8; }
-.contact-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 40px; }
-.contact-button { background-color: var(--bg-profile-card); color: var(--text-dark-card); padding: 15px 25px; border: none; border-radius: 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
-.contact-button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-.contact-button i { font-size: 1.5em; color: var(--accent-primary-sawad); }
-.copied-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: var(--accent-primary-sawad); color: var(--text-light); font-weight: bold; border-radius: 10px; opacity: 0; transform: translateY(100%); transition: transform 0.3s, opacity 0.3s; z-index: 3; }
-.contact-button.copied .button-content-main { transform: translateY(-100%); opacity: 0; }
-.contact-button.copied .copied-text { transform: translateY(0); opacity: 1; }
 
 /* ===== Gallery Section CSS ===== */
 .gallery-section { padding: 100px 20px; margin-bottom: 5rem; overflow: hidden; }
@@ -105,35 +95,67 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 .image-ring.dragging .gallery-item-link { pointer-events: none; }
 .gallery-item { position: absolute; top: 50%; left: 50%; width: var(--gallery-item-width); height: auto; transform: translate(-50%, -50%); transform-style: preserve-3d; transition: filter 0.5s ease; will-change: transform, filter; }
 
+/* [FIX] Updated .gallery-item-link and children for correct layering */
 .gallery-item-link {
+  position: relative; /* Establish positioning context */
   display: block;
   width: 100%;
   height: var(--gallery-item-height);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  background: linear-gradient(to bottom, #6e6e6e, #000000); /* Softer gray to black */
+  background: linear-gradient(to bottom, #6e6e6e, #000000);
   transition: transform 0.2s ease;
-  position: relative; /* For the ::after pseudo-element */
+}
+.gallery-item-link img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  position: relative; /* Allow z-index to work */
+  z-index: 1;
 }
 .gallery-item-link::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.7));
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7));
+  z-index: 2; /* Sit on top of the image */
   pointer-events: none;
 }
 .gallery-item-link:hover { transform: scale(1.05); }
 .gallery-item-link:active { transform: scale(0.97); }
-.gallery-item img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
 .gallery-caption {
   font-size: 0.85rem;
   color: var(--text-medium);
-  text-align: left; /* Left-aligned caption */
+  text-align: left;
   margin-top: 3px;
   line-height: 1.3;
   text-shadow: 0 2px 5px rgba(0,0,0,0.8);
 }
+
+/* [FIX] Updated footer styles for full-width */
+footer#contact {
+  background-color: var(--bg-section-card);
+  padding: 100px 40px;
+  text-align: center;
+  color: var(--text-light);
+  width: 100vw;
+  max-width: 100%; /* Override .section max-width */
+  margin-left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box; /* Ensure padding is included in width */
+}
+footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spacing: 1.5px; }
+.contact-tagline { font-size: 1.1rem; margin-bottom: 40px; color: var(--text-medium); max-width: 700px; margin: 0 auto 40px; line-height: 1.8; }
+.contact-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 40px; }
+.contact-button { background-color: var(--bg-profile-card); color: var(--text-dark-card); padding: 15px 25px; border: none; border-radius: 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.contact-button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+.contact-button i { font-size: 1.5em; color: var(--accent-primary-sawad); }
+.copied-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: var(--accent-primary-sawad); color: var(--text-light); font-weight: bold; border-radius: 10px; opacity: 0; transform: translateY(100%); transition: transform 0.3s, opacity 0.3s; z-index: 3; }
+.contact-button.copied .button-content-main { transform: translateY(-100%); opacity: 0; }
+.contact-button.copied .copied-text { transform: translateY(0); opacity: 1; }
 
 /* Media Queries */
 @media (min-width: 1024px) { 
@@ -151,7 +173,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 
 @media (max-width: 767px) {
   :root {
-    --gallery-ring-radius: 130px; /* Tighter spacing on mobile */
+    --gallery-ring-radius: 130px;
     --gallery-item-width: 130px;
     --gallery-item-height: 80px;
   }
