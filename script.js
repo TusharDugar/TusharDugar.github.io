@@ -202,17 +202,17 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener("touchmove", onDragMove, { passive: false });
         window.addEventListener("touchend", onDragEnd);
 
-        // --- [NEW] Wheel / Trackpad Navigation ---
+        // --- Wheel / Trackpad Navigation ---
         let isScrolling = false;
         
+        // [FIX] Updated logic to prevent "double scroll"
         function scrollToNextItem(direction) {
-            if (isScrolling) return; // prevent spam scroll
+            if (isScrolling) return;
             isScrolling = true;
 
-            // Calculate the next index based on scroll direction
             const nearestIndex = Math.round(currentRotation / angleStep);
-            // Invert direction for natural scrolling (wheel down/swipe right moves to the "next" item)
-            const nextIndex = direction > 0 ? nearestIndex + 1 : nearestIndex - 1;
+            const step = direction > 0 ? 1 : -1; // Normalize to only move 1 step
+            const nextIndex = nearestIndex + step;
             const targetRotation = nextIndex * angleStep;
 
             gsap.to(ring, {
@@ -237,17 +237,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (galleryContainer) {
             galleryContainer.addEventListener("wheel", (e) => {
                 e.preventDefault();
-                if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-                    // Vertical scroll
-                    scrollToNextItem(e.deltaY);
-                } else {
-                    // Horizontal swipe (trackpad)
-                    scrollToNextItem(e.deltaX);
-                }
+                // Use the dominant scroll axis
+                const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+                scrollToNextItem(delta);
             }, { passive: false });
         }
-        // --- End Wheel / Trackpad Navigation ---
-
+        
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
