@@ -90,7 +90,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .right-column-scroll {
     flex-grow: 1;
     padding-top: 50px;
-    padding-bottom: 0; /* REMOVED extra space */
+    padding-bottom: 0;
     box-sizing: border-box;
     min-height: 150vh;
     position: relative;
@@ -107,9 +107,12 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     font-weight: 800;
     text-transform: uppercase;
     text-align: left !important;
-    margin-bottom: 80px;
     width: 100%;
 }
+/* Spacing adjustments for individual headings */
+.services-heading, .tools-heading { margin-bottom: 80px; }
+.gallery-heading { margin-bottom: 100px; } /* Increased space for gallery */
+
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; } 
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 .services-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; width: 100%; max-width: 1000px; margin: 0 auto; }
@@ -139,7 +142,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .gallery-caption { font-size: 0.85rem; color: var(--text-medium); text-align: left; margin-top: 3px; line-height: 1.3; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
 footer#contact {
     background-color: var(--bg-section-card);
-    padding: 100px 40px 40px; /* REDUCED bottom padding */
+    padding: 100px 40px 40px;
     text-align: center;
     color: var(--text-light);
     width: 100%;
