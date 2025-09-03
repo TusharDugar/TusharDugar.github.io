@@ -230,16 +230,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const galleryContainer = document.querySelector(".image-ring-container");
         if (galleryContainer) {
+            let scrollTimeout;
             galleryContainer.addEventListener("wheel", (e) => {
                 e.preventDefault();
-                if (isScrolling) return; // Throttle wheel events
-
+                if (isScrolling) return; // Prevent overlapping animations
                 isScrolling = true;
+
                 const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
                 scrollToNextItem(delta);
+                
+                // Use a cleared timeout to throttle events from a single gesture
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => { isScrolling = false; }, 400);
 
-                // Cooldown to ignore extra events from the same gesture
-                setTimeout(() => { isScrolling = false; }, 800); 
             }, { passive: false });
         }
         
