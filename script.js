@@ -205,13 +205,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- Wheel / Trackpad Navigation ---
         let isScrolling = false;
         
-        // [FIX] Updated logic to prevent "double scroll"
         function scrollToNextItem(direction) {
-            if (isScrolling) return;
-            isScrolling = true;
-
             const nearestIndex = Math.round(currentRotation / angleStep);
-            const step = direction > 0 ? 1 : -1; // Normalize to only move 1 step
+            const step = direction > 0 ? 1 : -1;
             const nextIndex = nearestIndex + step;
             const targetRotation = nextIndex * angleStep;
 
@@ -228,7 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 onComplete: () => {
                     currentRotation = targetRotation;
-                    isScrolling = false;
                 }
             });
         }
@@ -237,9 +232,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (galleryContainer) {
             galleryContainer.addEventListener("wheel", (e) => {
                 e.preventDefault();
-                // Use the dominant scroll axis
+                if (isScrolling) return; // Throttle wheel events
+
+                isScrolling = true;
                 const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
                 scrollToNextItem(delta);
+
+                // Cooldown to ignore extra events from the same gesture
+                setTimeout(() => { isScrolling = false; }, 800); 
             }, { passive: false });
         }
         
