@@ -180,7 +180,7 @@ footer .contact-buttons {
     max-width: 1200px; /* Constrains inner content to the grid */
     margin-left: auto;
     margin-right: auto;
-    padding-left: 40px;  /* Maintains content padding */
+    padding-left: 40px;
     padding-right: 40px;
 }
 footer h2 { 
