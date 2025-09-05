@@ -115,11 +115,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gallery-ring-radius'));
         }
 
+        // ✅ REFACTORED: Use GSAP for initial positioning
         function positionItems() {
             const radius = getRadius();
             galleryItems.forEach((item, i) => {
                 const angle = i * angleStep;
-                item.style.transform = `translate(-50%, -50%) rotateY(${angle}deg) translateZ(${radius}px)`;
+                // Use GSAP set for consistency
+                gsap.set(item, {
+                    xPercent: -50,
+                    yPercent: -50,
+                    rotationY: angle,
+                    transformOrigin: "50% 50%",
+                    z: radius
+                });
                 item.dataset.initialRotation = angle;
             });
         }
@@ -135,8 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return dimmedBrightness;
         }
 
+        // ✅ REFACTORED: Use GSAP.set for all manual updates
         function updateRotation(rot) {
-            ring.style.transform = `rotateY(${rot}deg)`;
+            gsap.set(ring, { rotationY: rot }); // Use GSAP to update its internal state
             galleryItems.forEach((item) => {
                 const initialAngle = item.dataset.initialRotation;
                 item.style.filter = `brightness(${calculateBrightness(initialAngle, rot)})`;
