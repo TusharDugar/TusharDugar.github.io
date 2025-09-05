@@ -115,17 +115,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gallery-ring-radius'));
       }
 
-      // Position items once
+      // Position items once - JS now handles all centering and 3D distribution
       function positionItems() {
         const radius = getRadius();
         galleryItems.forEach((item, i) => {
           const angle = i * angleStep;
           gsap.set(item, {
-            xPercent: -50,
-            yPercent: -50,
+            xPercent: -50, // This centers the item relative to its own size
+            yPercent: -50, // This centers the item relative to its own size
             rotationY: angle,
-            transformOrigin: "50% 50%",
-            z: radius
+            transformOrigin: "50% 50%", // Item rotates around its own center
+            z: radius // Item is pushed out along its own Z-axis
           });
           item.dataset.initialRotation = angle;
         });
@@ -152,111 +152,4 @@ document.addEventListener('DOMContentLoaded', () => {
       function animateInertia() {
         const nearestIndex = Math.round(currentRotation / angleStep);
         const targetRotation = nearestIndex * angleStep;
-        gsap.to(ring, {
-          rotationY: targetRotation,
-          duration: 0.6,
-          ease: "power2.out",
-          onUpdate: () => {
-            const currentRotY = gsap.getProperty(ring, "rotationY");
-            galleryItems.forEach((item) => {
-              const initialAngle = item.dataset.initialRotation;
-              item.style.filter = `brightness(${calculateBrightness(initialAngle, currentRotY)})`;
-            });
-          },
-          onComplete: () => {
-            currentRotation = targetRotation;
-          }
-        });
-      }
-
-      // Drag logic
-      let isDragging = false, startX = 0, dragDistance = 0;
-
-      function onDragStart(e) {
-        isDragging = true;
-        startX = e.pageX || e.touches[0].pageX;
-        dragDistance = 0;
-        gsap.killTweensOf(ring);
-      }
-
-      function onDragMove(e) {
-        if (!isDragging) return;
-        e.preventDefault();
-        const currentX = e.pageX || e.touches[0].pageX;
-        const deltaX = currentX - startX;
-        dragDistance += Math.abs(deltaX);
-        currentRotation -= deltaX * 0.5;
-        updateRotation(currentRotation);
-        startX = currentX;
-      }
-
-      function onDragEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        if (dragDistance > 10) {
-          ring.classList.add("dragging");
-          setTimeout(() => ring.classList.remove("dragging"), 100);
-        }
-        animateInertia();
-      }
-
-      // Events
-      ring.addEventListener("mousedown", onDragStart);
-      window.addEventListener("mousemove", onDragMove);
-      window.addEventListener("mouseup", onDragEnd);
-      ring.addEventListener("touchstart", onDragStart, { passive: true });
-      window.addEventListener("touchmove", onDragMove, { passive: false });
-      window.addEventListener("touchend", onDragEnd);
-
-      // Scroll / Trackpad
-      const galleryContainer = document.querySelector(".image-ring-container");
-      if (galleryContainer) {
-        let isScrolling = false, scrollTimeout;
-        galleryContainer.addEventListener("wheel", (e) => {
-          e.preventDefault();
-          if (isScrolling) return;
-          isScrolling = true;
-
-          const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-          const nearestIndex = Math.round(currentRotation / angleStep);
-          const step = delta > 0 ? 1 : -1;
-          const nextIndex = nearestIndex + step;
-          const targetRotation = nextIndex * angleStep;
-
-          gsap.to(ring, {
-            rotationY: targetRotation,
-            duration: 0.6,
-            ease: "power2.out",
-            onUpdate: () => {
-              const currentRotY = gsap.getProperty(ring, "rotationY");
-              galleryItems.forEach((item) => {
-                const initialAngle = item.dataset.initialRotation;
-                item.style.filter = `brightness(${calculateBrightness(initialAngle, currentRotY)})`;
-              });
-            },
-            onComplete: () => {
-              currentRotation = targetRotation;
-              isScrolling = false;
-            }
-          });
-
-          clearTimeout(scrollTimeout);
-          scrollTimeout = setTimeout(() => { isScrolling = false; }, 400);
-        }, { passive: false });
-      }
-
-        // Handle resize
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                positionItems();
-                updateRotation(currentRotation); // Re-apply current rotation after repositioning
-            }, 150);
-        });
-
-      // Init
-      positionItems();
-      updateRotation(0);
-    }
-});
+        gsap.to(ring
