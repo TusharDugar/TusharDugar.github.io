@@ -50,33 +50,28 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 /* Layout, About, Hero, Services, Tools */
 .main-layout-container { display: flex; justify-content: center; max-width: 1920px; margin: 0 auto; padding: 0 60px; gap: 60px; min-height: 100vh; padding-top: 20px; }
 .left-column-sticky { flex-shrink: 0; flex-basis: 370px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; position: relative; top: auto; height: auto; perspective: 1000px; transform-style: preserve-3d; }
-.striped-entry-list { list-style: none; margin: 0; padding: 0; perspective: 1000px; transform-style: preserve-3d; }
-.striped-entry-list li { opacity: 0; transform: translate3d(0, 0, 0); animation: entryAnim 0.6s ease forwards; background: transparent; margin-bottom: 0.8rem; }
-@keyframes entryAnim { 0% { transform: translate3d(0, 0, -80px); opacity: 0; } 60% { transform: translate3d(0, 0, 20px); opacity: 0.5; } 100% { transform: translate3d(0, 0, 0); opacity: 1; } }
-.striped-entry-list li:nth-child(1) { animation-delay: 0.2s; } .striped-entry-list li:nth-child(2) { animation-delay: 0.35s; } .striped-entry-list li:nth-child(3) { animation-delay: 0.5s; } .striped-entry-list li:nth-child(4) { animation-delay: 0.65s; } .striped-entry-list li:nth-child(5) { animation-delay: 0.8s; }
 .about-left-content { background-color: var(--bg-profile-card); color: var(--text-dark-card); border-radius: 20px; padding: 30px 25px; box-shadow: 0 10px 30px var(--shadow-color-card-white); width: 100%; max-width: 370px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; height: auto; box-sizing: border-box; transition: transform 0.3s ease, box-shadow 0.3s ease; }
 .about-left-content:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
 
-/* === Final Corrected Profile Image Alignment (Square, Sharp Edges) === */
-.about-left-content .profile-image-container {
+/* === Final Profile Image Styling === */
+.profile-image-container {
     width: 180px;
     height: 180px;
-    border-radius: 0 !important;  /* Force square */
-    overflow: hidden !important;
-    margin-bottom: 25px;
+    border-radius: 0; /* sharp square */
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #FFFFFF;
-    position: relative;
+    background-color: #fff;
+    margin-bottom: 25px;
 }
-.about-left-content .profile-image-container img.profile-photo {
+.profile-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
-    border-radius: 0 !important;  /* Ensure no rounding */
     display: block;
+    border-radius: 0; /* make sure no rounding applies */
 }
 
 .about-left-content h3 {
@@ -163,20 +158,19 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .gallery-item-link:active { transform: scale(0.97); }
 .gallery-caption { font-size: 0.85rem; color: var(--text-medium); text-align: left; margin-top: 3px; line-height: 1.3; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
 
-/* === Final Corrected Contact Section (Full Width Footer) === */
+/* === Final Contact Section (Footer) Styling === */
 footer#contact {
     background-color: var(--bg-section-card);
     padding: 100px 0 60px;
     color: var(--text-light);
-    width: 100% !important;   /* Ensure it spans entire viewport */
+    width: 100%;
     margin: 0;
-    max-width: 100% !important;
 }
 footer#contact .inner {
-    max-width: 1200px;       /* Keep content aligned to main grid */
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 40px;
-    text-align: left;        /* Align heading & tagline left */
+    text-align: left;
 }
 footer h2 { 
     font-size: 3.2em; 
@@ -195,7 +189,7 @@ footer h2 {
 .contact-buttons { 
     display: flex; 
     flex-wrap: wrap; 
-    justify-content: flex-start;  /* align buttons left, not centered */
+    justify-content: flex-start;
     gap: 20px; 
     margin-bottom: 0;
 }
