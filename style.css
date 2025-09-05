@@ -154,7 +154,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     height: auto;
     transform-style: preserve-3d;
     will-change: transform;
-    animation: none !important; /* stop any auto-spin */
+    animation: none !important;
     cursor: grab;
 }
 .image-ring:active {
@@ -168,7 +168,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 
 .image-ring.dragging .gallery-item-link { pointer-events: none; }
 
-/* ✅ CORRECTED: Let GSAP handle all transforms */
+/* Let GSAP handle all transforms */
 .gallery-item {
     position: absolute;
     top: 0;
@@ -180,8 +180,17 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     will-change: transform, filter;
 }
 
-.gallery-item-link { position: relative; display: block; width: 100%; height: var(--gallery-item-height); border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); background: linear-gradient(to bottom, #6e6e6e, #000000); transition: transform 0.2s ease; }
-.gallery-item-link::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, #6e6e6e, #000000); z-index: 0; }
+.gallery-item-link { position: relative; display: block; width: 100%; height: var(--gallery-item-height); border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); transition: transform 0.2s ease; }
+
+/* ✅ CORRECTED: Lighter overlay for better image clarity */
+.gallery-item-link::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(110,110,110,0.3), rgba(0,0,0,0.6));
+    z-index: 0;
+}
+
 .gallery-item-link img { position: relative; width: 100%; height: 100%; object-fit: cover; object-position: top; z-index: 1; }
 .gallery-item-link::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7)); z-index: 2; pointer-events: none; }
 .gallery-item-link:hover { transform: scale(1.05); }
@@ -299,7 +308,7 @@ footer h2 {
     .contact-buttons { flex-direction: column; }
     .contact-button { width: 100%; justify-content: center; }
     
-    /* ✅ CORRECTED: Extra breathing space for left column */
+    /* Extra breathing space for left column */
     .left-column-sticky {
         margin-top: 90px;
     }
