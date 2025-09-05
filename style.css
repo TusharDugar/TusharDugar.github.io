@@ -164,7 +164,6 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .gallery-item-link:hover { transform: scale(1.05); }
 .gallery-item-link:active { transform: scale(0.97); }
 
-/* === UPDATED: Gallery Caption Styling === */
 .gallery-caption {
   font-size: 0.85rem;
   color: var(--text-medium);
@@ -175,14 +174,15 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   white-space: normal;
 }
 
-/* === NEW: Featured Websites: 3 Item Layout Fix === */
+/* === UPDATED: Featured Websites: 4 Item Layout Fix === */
 .image-ring .gallery-item {
-  --item-count: 3; /* number of items in the ring */
+  --item-count: 4; /* number of items in the ring */
   --angle: calc(360deg / var(--item-count));
 }
 .image-ring .gallery-item:nth-child(1) { transform: rotateY(calc(var(--angle) * 0)) translateZ(var(--gallery-ring-radius)); }
 .image-ring .gallery-item:nth-child(2) { transform: rotateY(calc(var(--angle) * 1)) translateZ(var(--gallery-ring-radius)); }
 .image-ring .gallery-item:nth-child(3) { transform: rotateY(calc(var(--angle) * 2)) translateZ(var(--gallery-ring-radius)); }
+.image-ring .gallery-item:nth-child(4) { transform: rotateY(calc(var(--angle) * 3)) translateZ(var(--gallery-ring-radius)); }
 
 
 /* === Final Contact Section (Footer) Styling === */
