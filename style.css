@@ -168,13 +168,14 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 
 .image-ring.dragging .gallery-item-link { pointer-events: none; }
 
-/* Let GSAP handle all transforms */
+/* ✅ CORRECTED CSS: Let JS handle all positioning for gallery-item */
 .gallery-item {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; /* Changed from 50% */
+    left: 0; /* Changed from 50% */
+    width: var(--gallery-item-width);
+    height: var(--gallery-item-height);
+    /* Removed transform: translate(-50%, -50%); */
     transform-style: preserve-3d;
     transition: filter 0.5s ease;
     will-change: transform, filter;
