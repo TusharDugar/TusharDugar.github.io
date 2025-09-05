@@ -146,12 +146,21 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 .gallery-section { padding: 100px 20px; margin-bottom: 5rem; overflow: hidden; }
 .image-ring-container { perspective: 1200px; width: 100%; height: clamp(220px, 40vh, 320px); position: relative; display: flex; justify-content: center; align-items: center; }
-.image-ring { position: relative; width: var(--gallery-item-width); height: auto; transform-style: preserve-3d; will-change: transform; cursor: grab; }
+.image-ring { position: relative; width: var(--gallery-item-width); height: auto; transform-style: preserve-3d; will-change: transform; }
 .image-ring:active { cursor: grabbing; }
 
-/* Featured Websites touch support */
-.image-ring-container,
+/* === Featured Websites: Manual Control for All Devices === */
 .image-ring {
+    animation: none !important; /* stop auto-spin everywhere */
+    cursor: grab;              /* show grab hand */
+    transform: translateZ(0);  /* keep GPU acceleration */
+}
+.image-ring:active {
+    cursor: grabbing;
+}
+
+/* Featured Websites touch support */
+.image-ring-container {
     touch-action: pan-y pinch-zoom;
 }
 
@@ -244,12 +253,6 @@ footer h2 {
 .contact-button.copied .button-content-main { transform: translateY(-100%); opacity: 0; }
 .contact-button.copied .copied-text { transform: translateY(0); opacity: 1; }
 
-/* Animation for Mobile Gallery */
-@keyframes autoSpin {
-  from { transform: rotateY(0deg); }
-  to { transform: rotateY(-360deg); }
-}
-
 /* Media Queries */
 @media (min-width: 1024px) { 
     .main-layout-container { align-items: stretch; } 
@@ -279,12 +282,6 @@ footer h2 {
     footer#contact {
         padding-top: 80px;
         padding-bottom: 40px;
-    }
-
-    /* Mobile fallback: auto-spin Featured Websites */
-    .image-ring {
-        animation: autoSpin 25s linear infinite;
-        cursor: default; /* disable grab cursor */
     }
 }
 
