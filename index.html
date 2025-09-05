@@ -11,7 +11,7 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=67"> <!-- Incremented version -->
+    <link rel="stylesheet" href="style.css?v=68"> <!-- Incremented version -->
 
     <!-- GSAP & ScrollTrigger CDNs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -32,33 +32,24 @@
     <div class="main-layout-container">
         <!-- Left Column (Sticky) -->
         <div class="left-column-sticky">
-            <section id="about" class="section about-left-content striped-entry">
-              <ul class="striped-entry-list">
-                <li>
-                  <div class="profile-image-container">
-                    <img src="New Project (1).png" alt="Tushar Dugar Profile" class="profile-photo">
-                  </div>
-                </li>
-                <li><h3>Tushar Dugar</h3></li>
-                <li>
-                  <div class="fire-icon-with-line">
-                    <span class="fire-icon"><i class="fas fa-fire"></i></span>
-                  </div>
-                </li>
-                <li>
-                  <p class="about-short-desc">
-                    A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.
-                  </p>
-                </li>
-                <li>
-                  <div class="about-social-icons">
-                    <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
-                    <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="mailto:imtushar4621@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-                  </div>
-                </li>
-              </ul>
+            <!-- ✅ CORRECTED: Simplified profile card structure -->
+            <section id="about" class="about-left-content">
+              <div class="profile-image-container">
+                <img src="New Project (1).png" alt="Tushar Dugar Profile" class="profile-photo">
+              </div>
+              <h3>Tushar Dugar</h3>
+              <div class="fire-icon-with-line">
+                <span class="fire-icon"><i class="fas fa-fire"></i></span>
+              </div>
+              <p class="about-short-desc">
+                A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.
+              </p>
+              <div class="about-social-icons">
+                <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
+                <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="mailto:imtushar4621@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+              </div>
             </section>
         </div>
 
@@ -115,66 +106,38 @@
               </h2>
               <div class="image-ring-container">
                 <div class="image-ring" role="list">
-
-                  <!-- Project 1: Sipologie -->
-                  <div class="gallery-item" role="listitem" data-index="0">
-                    <a href="https://sipologie.in/" target="_blank" rel="noopener noreferrer" class="gallery-item-link">
-                      <img src="sipologie.png" alt="Sipologie Website Preview" />
-                    </a>
-                    <p class="gallery-caption">Sipologie curates premium drinkware and tea essentials—everything from elegant teapots and infuser mugs to high-quality loose-leaf teas. It’s perfect for people who want to upgrade their daily tea or coffee ritual with beautiful, functional products.</p>
-                  </div>
-
-                  <!-- Project 2: Hotel Airdrop -->
-                  <div class="gallery-item" role="listitem" data-index="1">
-                    <a href="https://hotelairdrop.com/" target="_blank" rel="noopener noreferrer" class="gallery-item-link">
-                      <img src="hotel_airdrop.png" alt="Hotel Airdrop Website Preview" />
-                    </a>
-                    <p class="gallery-caption">Hotel Airdrop is a modern boutique hotel and café-bar offering stylish rooms, smart amenities, and cozy event spaces. It’s designed for travelers, professionals, and locals looking for comfort, convenience, and a great place to unwind.</p>
-                  </div>
-
-                  <!-- Project 3: TechMars -->
-                  <div class="gallery-item" role="listitem" data-index="2">
-                    <a href="https://techmars.in/" target="_blank" rel="noopener noreferrer" class="gallery-item-link">
-                      <img src="techmars.png" alt="TechMars Website Preview" />
-                    </a>
-                    <p class="gallery-caption">Techmars is a digital solutions agency that helps brands grow online. They offer services like digital marketing, web development, UI/UX design, and IT support—including cloud and cybersecurity—for startups and established businesses alike.</p>
-                  </div>
-
-                  <!-- Project 4: Portfolio -->
-                  <div class="gallery-item" role="listitem" data-index="3">
-                    <a href="https://tushardugar.github.io/" target="_blank" rel="noopener noreferrer" class="gallery-item-link">
-                      <img src="https://i.imgur.com/sC5G6Bf.png" alt="Tushar Dugar Portfolio Preview" />
-                    </a>
-                    <p class="gallery-caption">Digital creator who brings brands to life online—through eye-catching web design, smart SEO strategy, intuitive UI/UX, compelling graphics, e‑commerce platforms, digital marketing, content creation, and social media management.</p>
-                  </div>
-
+                  <!-- Gallery items go here -->
                 </div>
               </div>
             </section>
             <!-- END Featured Websites Section -->
-
         </div> <!-- END .right-column-scroll -->
     </div> <!-- END .main-layout-container -->
 
-    <!-- ✅ CORRECTED: Contact Section (Footer) moved OUTSIDE of the main layout container -->
-    <footer id="contact" class="reveal-item">
-        <div class="inner">
-            <h2>Let’s Connect!</h2>
-            <p class="contact-tagline">
-                I am always open to discuss your project,<br>improve your online presence or help with your website.
-            </p>
-            <div class="contact-buttons reveal-stagger-container">
-                <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
-                    <div class="button-content-main"><i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span></div>
-                    <span class="copied-text">Copied!</span>
-                </button>
-                <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
-                    <div class="button-content-main"><i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span></div>
-                    <span class="copied-text">Copied!</span>
-                </button>
+    <!-- ✅ CORRECTED: Footer is outside the main layout container -->
+    <footer id="contact">
+      <div class="inner">
+        <h2>Let’s Connect!</h2>
+        <p class="contact-tagline">
+          I am always open to discuss your project,<br>
+          improve your online presence or help with your website.
+        </p>
+        <div class="contact-buttons reveal-stagger-container">
+          <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
+            <div class="button-content-main">
+              <i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span>
             </div>
-            <div class="social-links"></div>
+            <span class="copied-text">Copied!</span>
+          </button>
+          <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
+            <div class="button-content-main">
+              <i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span>
+            </div>
+            <span class="copied-text">Copied!</span>
+          </button>
         </div>
+        <div class="social-links"></div>
+      </div>
     </footer>
 
     <script src="script.js" defer></script>
