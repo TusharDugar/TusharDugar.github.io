@@ -224,6 +224,13 @@ footer h2 {
 .contact-button.copied .button-content-main { transform: translateY(-100%); opacity: 0; }
 .contact-button.copied .copied-text { transform: translateY(0); opacity: 1; }
 
+
+/* Animation for Mobile Gallery */
+@keyframes autoSpin {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(-360deg); }
+}
+
 /* Media Queries */
 @media (min-width: 1024px) { 
     .main-layout-container { align-items: stretch; } 
@@ -241,7 +248,7 @@ footer h2 {
         width: 100%; 
         max-width: 370px; 
         margin: 0 auto 40px; 
-        margin-top: 30px; /* push it down a little */
+        margin-top: 30px;
     }
     .services-card-grid { grid-template-columns: 1fr; max-width: 400px; }
     .tools-grid { grid-template-columns: 1fr; max-width: 400px; }
@@ -253,6 +260,12 @@ footer h2 {
     footer#contact {
         padding-top: 80px;
         padding-bottom: 40px;
+    }
+
+    /* Mobile fallback: auto-spin Featured Websites */
+    .image-ring {
+        animation: autoSpin 25s linear infinite;
+        cursor: default; /* disable grab cursor */
     }
 }
 
@@ -266,4 +279,9 @@ footer h2 {
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 10vw, 3rem); }
     .contact-buttons { flex-direction: column; }
     .contact-button { width: 100%; justify-content: center; }
+    
+    /* Extra breathing space for left column on small screens */
+    .left-column-sticky {
+        margin-top: 60px;
+    }
 }
