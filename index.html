@@ -36,7 +36,6 @@
               <ul class="striped-entry-list">
                 <li>
                   <div class="profile-image-container">
-                    <!-- [UPDATED] Image path changed to the new, centered version -->
                     <img src="New Project (1).png" alt="Tushar Dugar Profile" class="profile-photo">
                   </div>
                 </li>
@@ -154,26 +153,29 @@
             </section>
             <!-- END Featured Websites Section -->
 
-            <!-- Contact Section (Footer) -->
-            <footer id="contact" class="section reveal-item">
-                <h2>Let’s Connect!</h2>
-                <p class="contact-tagline">
-                    I am always open to discuss your project,<br>improve your online presence or help with your website.
-                </p>
-                <div class="contact-buttons reveal-stagger-container">
-                    <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
-                        <div class="button-content-main"><i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span></div>
-                        <span class="copied-text">Copied!</span>
-                    </button>
-                    <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
-                        <div class="button-content-main"><i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span></div>
-                        <span class="copied-text">Copied!</span>
-                    </button>
-                </div>
-                <div class="social-links"></div>
-            </footer>
+        </div> <!-- END .right-column-scroll -->
+    </div> <!-- END .main-layout-container -->
+
+    <!-- ✅ CORRECTED: Contact Section (Footer) moved OUTSIDE of the main layout container -->
+    <footer id="contact" class="reveal-item">
+        <div class="inner">
+            <h2>Let’s Connect!</h2>
+            <p class="contact-tagline">
+                I am always open to discuss your project,<br>improve your online presence or help with your website.
+            </p>
+            <div class="contact-buttons reveal-stagger-container">
+                <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
+                    <div class="button-content-main"><i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span></div>
+                    <span class="copied-text">Copied!</span>
+                </button>
+                <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
+                    <div class="button-content-main"><i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span></div>
+                    <span class="copied-text">Copied!</span>
+                </button>
+            </div>
+            <div class="social-links"></div>
         </div>
-    </div>
+    </footer>
 
     <script src="script.js" defer></script>
 </body>
