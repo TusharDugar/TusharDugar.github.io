@@ -104,30 +104,15 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
-/* ✅ REFACTORED: Featured Websites Section Styles */
-#gallery .face {
-    background: rgba(255, 255, 255, 0.05); /* translucent */
-    backdrop-filter: blur(12px);           /* frosted glass effect */
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 1.5rem;
-    text-align: left;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-#gallery .face:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-}
-#gallery .gallery-image {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    display: block;
-}
-#gallery .gallery-heading {
-    margin-bottom: 20px;
-}
+/* ✅ REFACTORED: Featured Websites Ring Section */
+.gallery-section { padding: 100px 40px; text-align: center; }
+.image-ring-container { perspective: 1200px; width: 100%; max-width: 900px; margin: 0 auto; height: 420px; position: relative; }
+.image-ring { width: 100%; height: 100%; transform-style: preserve-3d; position: absolute; top: 0; left: 0; }
+.gallery-item { position: absolute; top: 50%; left: 50%; transform-style: preserve-3d; width: 260px; height: auto; margin: -160px -130px; }
+#gallery .face { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); padding: 1.5rem; }
+.gallery-image { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; display: block; }
+#gallery .face-number { display: none; }
+.gallery-item-link { display: block; margin-bottom: 15px; }
 
 /* Contact Section */
 footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; text-align: center; color: var(--text-light); }
