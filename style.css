@@ -90,9 +90,8 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
-/* ✅ CORRECTED: Gallery Section Styles */
 .gallery-section { padding: 100px 20px; margin-bottom: 5rem; overflow: visible; }
-.image-ring-container { perspective: 1200px; width: 100%; height: 400px; position: relative; display: flex; justify-content: center; align-items: center; touch-action: none; }
+.image-ring-container { perspective: 1200px; width: 100%; height: 500px; position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; touch-action: none; }
 .image-ring { position: relative; width: var(--gallery-item-width); height: var(--gallery-item-height); transform-style: preserve-3d; will-change: transform; cursor: grab; }
 .image-ring:active { cursor: grabbing; }
 .gallery-item { position: absolute; top: 50%; left: 50%; width: var(--gallery-item-width); height: var(--gallery-item-height); transform: translate(-50%, -50%); transform-style: preserve-3d; will-change: transform, filter; }
@@ -120,7 +119,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
 @media (max-width: 1023px) {
     .section { padding: 60px 20px; }
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; align-items: center; }
-    .left-column-sticky { position: relative; top: auto; transform: none; height: auto; width: 100%; max-width: 370px; margin: 30px auto 40px; }
+    .left-column-sticky { position: relative; top: auto; transform: none; height: auto; width: 100%; max-width: 370px; margin: 80px auto 60px; }
     .services-card-grid { grid-template-columns: 1fr; max-width: 400px; }
     .tools-grid { grid-template-columns: 1fr; max-width: 400px; }
     footer#contact { padding-top: 80px; padding-bottom: 40px; }
@@ -136,6 +135,6 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; letter-spac
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 10vw, 3rem); }
     .contact-buttons { flex-direction: column; }
     .contact-button { width: 100%; justify-content: center; }
-    .left-column-sticky { margin-top: 60px; } 
+    .left-column-sticky { margin-top: 60px; margin-bottom: 60px; } 
     footer#contact { padding-top: 60px; }
 }
