@@ -59,11 +59,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .striped-entry-list { list-style: none; margin: 0; padding: 0; perspective: 1000px; transform-style: preserve-3d; }
 .striped-entry-list li { opacity: 0; transform: translate3d(0, 0, 0); animation: entryAnim 0.6s ease forwards; background: transparent; margin-bottom: 0.8rem; }
 @keyframes entryAnim { 0% { transform: translate3d(0, 0, -80px); opacity: 0; } 60% { transform: translate3d(0, 0, 20px); opacity: 0.5; } 100% { transform: translate3d(0, 0, 0); opacity: 1; } }
-.striped-entry-list li:nth-child(1) { animation-delay: 0.2s; }
-.striped-entry-list li:nth-child(2) { animation-delay: 0.35s; }
-.striped-entry-list li:nth-child(3) { animation-delay: 0.5s; }
-.striped-entry-list li:nth-child(4) { animation-delay: 0.65s; }
-.striped-entry-list li:nth-child(5) { animation-delay: 0.8s; }
+.striped-entry-list li:nth-child(1) { animation-delay: 0.2s; } .striped-entry-list li:nth-child(2) { animation-delay: 0.35s; } .striped-entry-list li:nth-child(3) { animation-delay: 0.5s; } .striped-entry-list li:nth-child(4) { animation-delay: 0.65s; } .striped-entry-list li:nth-child(5) { animation-delay: 0.8s; }
 
 /* "About" Card Styles */
 .about-left-content { background-color: var(--bg-profile-card); color: var(--text-dark-card); border-radius: 20px; padding: 30px 25px; box-shadow: 0 10px 30px var(--shadow-color-card-white); width: 100%; max-width: 370px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; height: auto; box-sizing: border-box; }
@@ -73,8 +69,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .fire-icon-with-line { position: relative; width: 100%; height: 40px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
 .fire-icon { background-color: var(--accent-primary-sawad); border-radius: 50%; padding: 8px; font-size: 1.1em; color: var(--text-light); box-shadow: 0 2px 8px rgba(0,0,0,0.5); z-index: 2; position: relative; }
 .fire-icon-with-line::before, .fire-icon-with-line::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); height: 2px; border-top: 2px dashed var(--accent-primary-sawad); z-index: 1; }
-.fire-icon-with-line::before { left: 0; width: calc(50% - 25px); }
-.fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
+.fire-icon-with-line::before { left: 0; width: calc(50% - 25px); } .fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
 .about-short-desc { line-height: 1.8; font-size: 0.9em; color: var(--text-medium-card); margin-bottom: 20px; max-width: 90%; word-spacing: 1px; }
 .about-social-icons { display: flex; justify-content: center; gap: 15px; margin-top: auto; padding-top: 10px; }
 .about-social-icons a { color: var(--accent-primary-sawad); font-size: 1.5em; transition: color 0.3s, transform 0.3s; }
@@ -85,8 +80,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 
 /* Hero Section */
 .hero-heading { font-size: clamp(4rem, 10vw, 7.75em); line-height: 0.8em; font-weight: 900; margin-bottom: 20px; text-transform: uppercase; text-align: left; }
-.hero-heading .crafting { color: #ffffff; }
-.hero-heading .digital { color: var(--text-sub-heading-grey); }
+.hero-heading .crafting { color: #ffffff; } .hero-heading .digital { color: var(--text-sub-heading-grey); }
 .hero-description { text-align: justify; line-height: 1.8; font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); word-spacing: 1px; }
 
 /* Services, Tools, Gallery Headings */
@@ -110,9 +104,30 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
-/* REFACTORED: Featured Websites Section */
-.gallery-section { padding: 100px 40px; text-align: center; }
-.gallery-heading { margin-bottom: 25px; /* Reduced spacing */ }
+/* ✅ REFACTORED: Featured Websites Section Styles */
+#gallery .face {
+    background: rgba(255, 255, 255, 0.05); /* translucent */
+    backdrop-filter: blur(12px);           /* frosted glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.5rem;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#gallery .face:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+}
+#gallery .gallery-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    display: block;
+}
+#gallery .gallery-heading {
+    margin-bottom: 20px;
+}
 
 /* Contact Section */
 footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; text-align: center; color: var(--text-light); }
