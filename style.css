@@ -18,6 +18,12 @@
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
+    /* Variables for gallery slider */
+    --gallery-ring-radius: 320px;
+    --gallery-item-width: 220px;
+    --gallery-item-height: 140px;
+    --gallery-dimmed-brightness: 0.5;
+    --gallery-active-brightness: 1.1;
 }
 
 /* Universal Box-Sizing & Body */
@@ -74,7 +80,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
-/* Services & Gallery Grid */
+/* Services Grid */
 .services-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; max-width: 1000px; margin: 0 auto; }
 .face { position: relative; display: flex; flex-direction: column; border-radius: 20px; background: var(--bg-gradient-2); padding: clamp(1.5rem, 4vw, 2.5rem); box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
 .service-title { font-size: clamp(1rem, 1.8vw, 1.8rem); font-weight: 700; color: #fff7ed; margin-bottom: 1rem; }
@@ -89,16 +95,14 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
-/* Featured Websites Section */
-.gallery-section { padding: 100px 40px 160px; /* Extra bottom space */ }
-.image-ring-container { perspective: 1200px; width: 100%; max-width: 900px; margin: 0 auto; height: 420px; position: relative; }
-.image-ring { width: 100%; height: 100%; transform-style: preserve-3d; position: absolute; }
-.gallery-item { position: absolute; top: 50%; left: 50%; transform-style: preserve-3d; width: 260px; height: auto; margin: -160px -130px; }
-#gallery .face { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); }
-.gallery-image { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; }
-/* ✅ CORRECTED: Text size for gallery cards */
-#gallery .service-title { font-size: 1rem; line-height: 1.3; }
-#gallery .service-description { font-size: 0.85rem; line-height: 1.4; }
+/* ✅ CORRECTED: Featured Websites Section Styles */
+.gallery-section { padding: 100px 40px; text-align: center; }
+.image-ring-container { perspective: 2000px; height: 400px; display: flex; justify-content: center; align-items: center; margin-top: -20px; }
+.image-ring { position: relative; width: 300px; height: 300px; transform-style: preserve-3d; }
+.gallery-item { position: absolute; width: 180px; height: 240px; top: 50%; left: 50%; margin-top: -120px; margin-left: -90px; padding: 10px; background: rgba(255, 255, 255, 0.08); border-radius: 12px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; backdrop-filter: blur(10px); text-align: center; }
+.gallery-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+.gallery-item a { display: block; width: 100%; }
+.gallery-caption { font-size: 0.8rem; line-height: 1.3; color: #ddd; padding: 0 5px; }
 
 /* Contact Section */
 footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; text-align: center; color: var(--text-light); }
@@ -119,7 +123,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; }
 @media (max-width: 1023px) {
     .section { padding: 60px 20px; }
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; }
-    .left-column-sticky { margin: 80px auto 60px; /* ✅ CORRECTED: Increased top margin */ }
+    .left-column-sticky { margin: 80px auto 60px; }
     .services-card-grid { grid-template-columns: 1fr; max-width: 400px; }
     .tools-grid { grid-template-columns: 1fr; max-width: 400px; }
 }
@@ -129,7 +133,4 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
-    /* ✅ ADDED: Further text scaling on small screens */
-    #gallery .service-title { font-size: 0.9rem; }
-    #gallery .service-description { font-size: 0.75rem; }
 }
