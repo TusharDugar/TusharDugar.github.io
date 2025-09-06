@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Function to copy text to clipboard
     function copyToClipboard(button) {
         const value = button.dataset.contact || '';
         if (value) {
@@ -12,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Function to reveal elements on scroll
     function initIntersectionObserverAnimations() {
         const observerOptions = { root: null, rootMargin: "0px", threshold: 0.1 };
         const observer = new IntersectionObserver((entries, observer) => {
@@ -32,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(".reveal-item, .reveal-stagger-container").forEach(el => observer.observe(el));
     }
 
-    // Main execution
     const mouseFollowerGlow = document.querySelector('.mouse-follower-glow');
     if (mouseFollowerGlow) {
         document.addEventListener('mousemove', (e) => {
@@ -63,7 +60,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     animateGridCards('services');
 
-    // === Featured Websites Ring Animation ===
     const ring = document.querySelector(".image-ring");
     const galleryItems = document.querySelectorAll(".gallery-item");
 
@@ -97,19 +93,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // ✅ CORRECTED: Rotation snapping logic
         function animateToRotation(targetRotation) {
+            // Normalize the target to prevent over-rotation
+            const normalizedTarget = ((targetRotation % 360) + 360) % 360;
+            
             gsap.to(ring, {
-                rotationY: targetRotation,
+                rotationY: targetRotation, // GSAP handles shortest path automatically
                 duration: 0.8,
                 ease: "power2.out",
                 onUpdate: () => updateBrightness(gsap.getProperty(ring, "rotationY")),
-                onComplete: () => { currentRotation = targetRotation % 360; } // Normalize rotation
+                onComplete: () => { currentRotation = normalizedTarget; } // Set normalized value on complete
             });
         }
 
         let isDragging = false, startX = 0;
         const container = document.querySelector('.image-ring-container');
 
-        function onDragStart(e) { isDragging = true; startX = e.pageX || e.touches[0].pageX; gsap.killTweensOf(ring); }
+        const autoRotate = gsap.to(ring, {
+            rotationY: "-=360",
+            duration: 40,
+            ease: "none",
+            repeat: -1,
+            onUpdate: () => updateBrightness(gsap.getProperty(ring, "rotationY"))
+        });
+
+        function onDragStart(e) { 
+            isDragging = true; 
+            startX = e.pageX || e.touches[0].pageX; 
+            gsap.killTweensOf(ring);
+            autoRotate.pause(); // Pause auto-rotation on drag
+        }
         function onDragMove(e) {
             if (!isDragging) return;
             const currentX = e.pageX || e.touches[0].pageX;
@@ -124,6 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
             isDragging = false;
             const nearest = Math.round(currentRotation / angleStep);
             animateToRotation(nearest * angleStep);
+            autoRotate.play(); // Resume auto-rotation
         }
         
         container.addEventListener("mousedown", onDragStart);
@@ -140,20 +153,12 @@ document.addEventListener("DOMContentLoaded", function () {
             animateToRotation((nearest + delta) * angleStep);
         }, { passive: false });
 
+        container.addEventListener("mouseenter", () => autoRotate.timeScale(0.1));
+        container.addEventListener("mouseleave", () => autoRotate.timeScale(1));
+
         window.addEventListener("resize", () => { positionItems(); updateBrightness(currentRotation); });
 
         positionItems();
         updateBrightness(0);
-
-        const autoRotate = gsap.to(ring, {
-            rotationY: "-=360",
-            duration: 40,
-            ease: "none",
-            repeat: -1,
-            onUpdate: () => updateBrightness(gsap.getProperty(ring, "rotationY"))
-        });
-
-        container.addEventListener("mouseenter", () => autoRotate.timeScale(0.1));
-        container.addEventListener("mouseleave", () => autoRotate.timeScale(1));
     }
 });
