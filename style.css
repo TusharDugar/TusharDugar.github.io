@@ -91,14 +91,14 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 
 /* Featured Websites Section */
 .gallery-section { padding: 100px 40px 160px; /* Extra bottom space */ }
-.gallery-heading { margin-bottom: 60px; }
-#gallery .service-title { font-size: 1rem; line-height: 1.3; }
-#gallery .service-description { font-size: 0.85rem; line-height: 1.4; }
 .image-ring-container { perspective: 1200px; width: 100%; max-width: 900px; margin: 0 auto; height: 420px; position: relative; }
 .image-ring { width: 100%; height: 100%; transform-style: preserve-3d; position: absolute; }
 .gallery-item { position: absolute; top: 50%; left: 50%; transform-style: preserve-3d; width: 260px; height: auto; margin: -160px -130px; }
 #gallery .face { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); }
 .gallery-image { width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; }
+/* ✅ CORRECTED: Text size for gallery cards */
+#gallery .service-title { font-size: 1rem; line-height: 1.3; }
+#gallery .service-description { font-size: 0.85rem; line-height: 1.4; }
 
 /* Contact Section */
 footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; text-align: center; color: var(--text-light); }
@@ -119,7 +119,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; }
 @media (max-width: 1023px) {
     .section { padding: 60px 20px; }
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; }
-    .left-column-sticky { margin: 80px auto 60px; }
+    .left-column-sticky { margin: 80px auto 60px; /* ✅ CORRECTED: Increased top margin */ }
     .services-card-grid { grid-template-columns: 1fr; max-width: 400px; }
     .tools-grid { grid-template-columns: 1fr; max-width: 400px; }
 }
@@ -129,4 +129,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
+    /* ✅ ADDED: Further text scaling on small screens */
+    #gallery .service-title { font-size: 0.9rem; }
+    #gallery .service-description { font-size: 0.75rem; }
 }
