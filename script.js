@@ -26,7 +26,7 @@ function copyToClipboard(button) {
     }
 }
 
-// ✅ CORRECTED: Simplified and reliable reveal animations
+// Simplified and reliable reveal animations
 function initIntersectionObserverAnimations() {
   const observerOptions = { 
     root: null, 
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // --- ✅ REFACTORED: 3D Image Ring (Featured Websites) JS ---
+    // --- 3D Image Ring (Featured Websites) JS ---
     const ring = document.querySelector(".image-ring");
     const ringImages = document.querySelectorAll(".ring-image");
 
@@ -110,10 +110,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const radius = getRadius();
             ringImages.forEach((item, i) => {
                 const angle = i * angleStep;
+                // ✅ CONFIRMED: Correct transformOrigin for depth
                 gsap.set(item, {
                     rotationY: angle,
                     z: radius,
-                    transformOrigin: "50% 50% " + (-radius) + "px" // Set origin to the center of the ring
+                    transformOrigin: "50% 50% " + (-radius) + "px"
                 });
                 item.dataset.initialRotation = angle;
             });
@@ -135,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        gsap.set(ring, { rotationY: 0 }); // Initialize ring rotation with GSAP
+        gsap.set(ring, { rotationY: 0 });
 
         function animateToRotation(targetRotation) {
             gsap.to(ring, {
@@ -151,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         
-        // --- Drag Logic ---
         let isDragging = false, startX = 0;
         
         function onDragStart(e) {
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const currentX = e.pageX || e.touches[0].pageX;
             const deltaX = currentX - startX;
-            currentRotation += deltaX * 0.5; // Sensitivity
+            currentRotation += deltaX * 0.5;
             gsap.set(ring, { rotationY: currentRotation });
             updateBrightness(currentRotation);
             startX = currentX;
@@ -186,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener("touchmove", onDragMove, { passive: false });
         window.addEventListener("touchend", onDragEnd);
 
-        // --- Wheel / Trackpad Logic ---
         let isScrolling = false;
         const galleryContainer = document.querySelector(".image-ring-container");
         if(galleryContainer) {
@@ -202,11 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const targetRotation = nextIndex * angleStep;
                 animateToRotation(targetRotation);
 
-                setTimeout(() => { isScrolling = false; }, 500); // Throttle scroll events
+                setTimeout(() => { isScrolling = false; }, 500);
             }, { passive: false });
         }
         
-        // --- Resize and Initial Setup ---
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
