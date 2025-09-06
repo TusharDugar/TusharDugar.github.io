@@ -11,15 +11,11 @@
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=70"> <!-- Incremented version -->
+    <link rel="stylesheet" href="style.css?v=60">
 
     <!-- GSAP & ScrollTrigger CDNs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <!-- Register ScrollTrigger Plugin -->
-    <script>
-        gsap.registerPlugin(ScrollTrigger);
-    </script>
 </head>
 <body>
     <!-- Background Layers -->
@@ -32,23 +28,33 @@
     <div class="main-layout-container">
         <!-- Left Column (Sticky) -->
         <div class="left-column-sticky">
-            <section id="about" class="about-left-content">
-              <div class="profile-image-container">
-                <img src="New Project (1).png" alt="Tushar Dugar Profile" class="profile-photo">
-              </div>
-              <h3>Tushar Dugar</h3>
-              <div class="fire-icon-with-line">
-                <span class="fire-icon"><i class="fas fa-fire"></i></span>
-              </div>
-              <p class="about-short-desc">
-                A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.
-              </p>
-              <div class="about-social-icons">
-                <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
-                <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="mailto:imtushar4621@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-              </div>
+            <section id="about" class="section about-left-content striped-entry">
+              <ul class="striped-entry-list">
+                <li>
+                  <div class="profile-image-container">
+                    <img src="images/profile.jpg" alt="Tushar Dugar Profile" class="profile-photo">
+                  </div>
+                </li>
+                <li><h3>Tushar Dugar</h3></li>
+                <li>
+                  <div class="fire-icon-with-line">
+                    <span class="fire-icon"><i class="fas fa-fire"></i></span>
+                  </div>
+                </li>
+                <li>
+                  <p class="about-short-desc">
+                    A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.
+                  </p>
+                </li>
+                <li>
+                  <div class="about-social-icons">
+                    <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
+                    <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="mailto:imtushar4621@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+                  </div>
+                </li>
+              </ul>
             </section>
         </div>
 
@@ -74,10 +80,6 @@
                    <div class="face" data-index="1"><div class="service-content"><h3 class="service-title">SEO Optimization</h3><p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p></div><div class="face-number">02</div></div>
                    <div class="face" data-index="2"><div class="service-content"><h3 class="service-title">UX/UI Design</h3><p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p></div><div class="face-number">03</div></div>
                    <div class="face" data-index="3"><div class="service-content"><h3 class="service-title">Graphic Design</h3><p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p></div><div class="face-number">04</div></div>
-                   <div class="face" data-index="4"><div class="service-content"><h3 class="service-title">E-commerce Solutions</h3><p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p></div><div class="face-number">05</div></div>
-                   <div class="face" data-index="5"><div class="service-content"><h3 class="service-title">Digital Marketing</h3><p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p></div><div class="face-number">06</div></div>
-                   <div class="face" data-index="6"><div class="service-content"><h3 class="service-title">Content Creation</h3><p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p></div><div class="face-number">07</div></div>
-                   <div class="face" data-index="7"><div class="service-content"><h3 class="service-title">Social Media Management</h3><p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p></div><div class="face-number">08</div></div>
                 </div>
             </section>
 
@@ -92,83 +94,66 @@
                     <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/openai.svg" alt="ChatGPT Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">ChatGPT</h4><p class="tool-category">AI Assistant</p></div></div>
                     <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="Figma Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Figma</h4><p class="tool-category">Design Tool</p></div></div>
                     <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="Photoshop Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Adobe Photoshop</h4><p class="tool-category">Image Editing</p></div></div>
-                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googleanalytics.svg" alt="Google Analytics Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Google Analytics</h4><p class="tool-category">Web Analytics</p></div></div>
-                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/semrush.svg" alt="SEMrush Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">SEMrush</h4><p class="tool-category">SEO & Content Marketing</p></div></div>
                 </div>
             </section>
 
-            <!-- ✅ UPDATED: Featured Websites Section -->
+            <!-- REFACTORED: Featured Websites Section (Grid Layout) -->
             <section id="gallery" class="gallery-section">
               <h2 class="gallery-heading reveal-item">
                 <span class="text-white">FEATURED</span>
                 <span class="text-gray">WEBSITES</span>
               </h2>
-              <div class="image-ring-container">
-                <div class="image-ring" role="list">
-
-                  <!-- Project 1: Sipologie -->
-                  <div class="gallery-item" role="listitem" data-index="0">
-                    <a href="https://sipologie.in/" target="_blank" rel="noopener noreferrer" class="gallery-item-link">
-                      <img src="sipologie.png" alt="Sipologie Website Preview" />
-                    </a>
-                    <p class="gallery-caption">Sipologie curates premium drinkware and tea essentials—everything from elegant teapots and infuser mugs to high-quality loose-leaf teas. It’s perfect for people who want to upgrade their daily tea or coffee ritual with beautiful, functional products.</p>
+              <div class="services-card-grid">
+                <div class="face">
+                  <div class="service-content">
+                    <h3 class="service-title">Sipologie</h3>
+                    <p class="service-description">Premium tea brand website with modern visuals and a clean user experience for e-commerce.</p>
                   </div>
-
-                  <!-- Project 2: Hotel Airdrop -->
-                  <div class="gallery-item" role="listitem" data-index="1">
-                    <a href="https://hotelairdrop.com/" target="_blank" rel="noopener noreferrer" class="gallery-item-link">
-                      <img src="hotel_airdrop.png" alt="Hotel Airdrop Website Preview" />
-                    </a>
-                    <p class="gallery-caption">Hotel Airdrop is a modern boutique hotel and café-bar offering stylish rooms, smart amenities, and cozy event spaces. It’s designed for travelers, professionals, and locals looking for comfort, convenience, and a great place to unwind.</p>
+                  <div class="face-number">01</div>
+                </div>
+                <div class="face">
+                  <div class="service-content">
+                    <h3 class="service-title">Hotel Airdrop</h3>
+                    <p class="service-description">A stylish and modern booking platform designed for a luxury boutique hotel and its travelers.</p>
                   </div>
-
-                  <!-- Project 3: TechMars -->
-                  <div class="gallery-item" role="listitem" data-index="2">
-                    <a href="https://techmars.in/" target="_blank" rel="noopener noreferrer" class="gallery-item-link">
-                      <img src="techmars.png" alt="TechMars Website Preview" />
-                    </a>
-                    <p class="gallery-caption">Techmars is a digital solutions agency that helps brands grow online. They offer services like digital marketing, web development, UI/UX design, and IT support—including cloud and cybersecurity—for startups and established businesses alike.</p>
+                  <div class="face-number">02</div>
+                </div>
+                <div class="face">
+                  <div class="service-content">
+                    <h3 class="service-title">Techmars</h3>
+                    <p class="service-description">Corporate website for a digital solutions agency, offering web development and IT support.</p>
                   </div>
-
-                  <!-- Project 4: Portfolio -->
-                  <div class="gallery-item" role="listitem" data-index="3">
-                    <a href="https://tushardugar.github.io/" target="_blank" rel="noopener noreferrer" class="gallery-item-link">
-                      <img src="portfolio.png" alt="Tushar Dugar Portfolio Preview" />
-                    </a>
-                    <p class="gallery-caption">Digital creator who brings brands to life online—through eye-catching web design, smart SEO strategy, intuitive UI/UX, compelling graphics, e‑commerce platforms, digital marketing, content creation, and social media management.</p>
+                  <div class="face-number">03</div>
+                </div>
+                <div class="face">
+                  <div class="service-content">
+                    <h3 class="service-title">Personal Portfolio</h3>
+                    <p class="service-description">A showcase of digital creation skills, including web design, SEO strategy, and UI/UX projects.</p>
                   </div>
-
+                  <div class="face-number">04</div>
                 </div>
               </div>
             </section>
-            <!-- END Featured Websites Section -->
-        </div> <!-- END .right-column-scroll -->
-    </div> <!-- END .main-layout-container -->
 
-    <footer id="contact">
-      <div class="inner">
-        <h2>Let’s Connect!</h2>
-        <p class="contact-tagline">
-          I am always open to discuss your project,<br>
-          improve your online presence or help with your website.
-        </p>
-        <div class="contact-buttons reveal-stagger-container">
-          <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
-            <div class="button-content-main">
-              <i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span>
-            </div>
-            <span class="copied-text">Copied!</span>
-          </button>
-          <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
-            <div class="button-content-main">
-              <i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span>
-            </div>
-            <span class="copied-text">Copied!</span>
-          </button>
+            <!-- Contact Section (Footer) -->
+            <footer id="contact" class="section reveal-item">
+                <h2>Let’s Connect!</h2>
+                <p class="contact-tagline">
+                    I am always open to discuss your project,<br>improve your online presence or help with your website.
+                </p>
+                <div class="contact-buttons reveal-stagger-container">
+                    <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
+                        <div class="button-content-main"><i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span></div>
+                        <span class="copied-text">Copied!</span>
+                    </button>
+                    <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
+                        <div class="button-content-main"><i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span></div>
+                        <span class="copied-text">Copied!</span>
+                    </button>
+                </div>
+            </footer>
         </div>
-        <div class="social-links"></div>
-      </div>
-    </footer>
+    </div>
 
     <script src="script.js" defer></script>
 </body>
