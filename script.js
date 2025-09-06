@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 setTimeout(() => { isScrolling = false; }, 600); // Throttle scroll events
             }, { passive: false });
         }
-
+        
         let resizeTimeout;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
