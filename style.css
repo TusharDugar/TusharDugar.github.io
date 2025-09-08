@@ -20,8 +20,8 @@
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
     /* Variables for gallery slider */
     --gallery-ring-radius: 320px;
-    --gallery-item-width: 200px;
-    --gallery-item-height: 260px;
+    --gallery-item-width: 220px;
+    --gallery-item-height: 140px;
     --gallery-dimmed-brightness: 0.5;
     --gallery-active-brightness: 1.1;
 }
@@ -72,12 +72,13 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .hero-description { font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); }
 
 /* Section Headings */
-.services-heading, .tools-heading, .gallery-heading { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; text-align: left; margin-bottom: 40px; }
+.services-heading, .tools-heading, .gallery-heading { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; margin-bottom: 40px; text-align: center; }
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
 /* Services Grid */
-.services-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; max-width: 1000px; margin: 0 auto; }
+.services-section { text-align: center; padding: 60px 40px; }
+.services-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; max-width: 1000px; margin: 0 auto; text-align: left; }
 .face { position: relative; display: flex; flex-direction: column; border-radius: 20px; background: var(--bg-gradient-2); padding: clamp(1.5rem, 4vw, 2.5rem); box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
 .service-title { font-size: clamp(1rem, 1.8vw, 1.8rem); font-weight: 700; color: #fff7ed; margin-bottom: 1rem; }
 .service-description { font-size: clamp(0.875rem, 1.2vw, 1rem); color: var(--text-medium); }
@@ -93,7 +94,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
 /* Featured Websites Section */
-.gallery-section { padding: 60px 20px; }
+.gallery-section { padding: 40px 20px; }
 .image-ring-container { perspective: 1200px; width: 100%; height: 320px; position: relative; display: flex; justify-content: center; align-items: center; }
 .image-ring { position: relative; width: var(--gallery-item-width); height: var(--gallery-item-height); transform-style: preserve-3d; cursor: grab; }
 .image-ring:active { cursor: grabbing; }
@@ -127,11 +128,12 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; }
     
     /* Responsive Gallery */
     :root {
-        --gallery-ring-radius: 200px;
-        --gallery-item-width: 160px;
-        --gallery-item-height: 100px;
+        --gallery-ring-radius: 140px;
+        --gallery-item-width: 180px;
+        --gallery-item-height: 120px;
     }
-    .gallery-heading { margin-bottom: 25px; }
+    .gallery-heading { margin-bottom: 15px; }
+    .gallery-section { padding-top: 40px; padding-bottom: 40px; }
 }
 @media (max-width: 767px) {
     .section { padding: 40px 15px; }
