@@ -18,8 +18,8 @@
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
-    /* Variables for gallery slider */
-    --gallery-ring-radius: clamp(140px, 22vw, 220px);
+    /* ✅ CORRECTED: Variables for gallery slider */
+    --gallery-ring-radius: clamp(120px, 20vw, 200px);
     --gallery-image-width: clamp(100px, 18vw, 170px);
     --gallery-image-height: calc(var(--gallery-image-width) * 0.66);
     --gallery-dimmed-brightness: 0.6;
@@ -101,6 +101,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 }
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
+.services-heading { margin-left: auto; margin-right: auto; max-width: fit-content; }
 
 /* Services Section Grid */
 .services-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin-left: auto; margin-right: auto; }
@@ -124,7 +125,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .image-ring { position: relative; transform-style: preserve-3d; width: var(--gallery-image-width); height: var(--gallery-image-height); will-change: transform; cursor: grab; }
 .image-ring:active { cursor: grabbing; }
 .gallery-item, .ring-image { width: var(--gallery-image-width); height: var(--gallery-image-height); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transform-style: preserve-3d; }
-.gallery-item-link img, .ring-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease, filter 0.3s ease; filter: brightness(var(--gallery-dimmed-brightness)); }
+.gallery-item-link img, .ring-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease, filter 0.3s ease; filter: brightness(var(--gallery-dimmed-brightness)); max-width: 100%; max-height: 100%; }
 .gallery-item-link img:hover, .ring-image img:hover { transform: scale(1.05); filter: brightness(var(--gallery-hover-brightness)); }
 
 /* Contact Section */
@@ -166,7 +167,6 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
-    /* ✅ CORRECTED: Mobile Gallery Scaling */
     :root {
         --gallery-ring-radius: clamp(80px, 28vw, 120px);
         --gallery-image-width: clamp(70px, 22vw, 110px);
