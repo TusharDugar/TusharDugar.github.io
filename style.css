@@ -18,9 +18,9 @@
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
-    /* ✅ CORRECTED: Adaptive Variables for gallery slider */
-    --gallery-ring-radius: clamp(120px, 20vw, 200px);
-    --gallery-image-width: clamp(100px, 18vw, 180px);
+    /* ✅ CORRECTED: Variables for gallery slider */
+    --gallery-ring-radius: clamp(140px, 22vw, 220px);
+    --gallery-image-width: clamp(100px, 18vw, 170px);
     --gallery-image-height: clamp(70px, 12vw, 120px);
     --gallery-dimmed-brightness: 0.6;
     --gallery-active-brightness: 1.1;
@@ -88,8 +88,18 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .hero-heading .crafting { color: #ffffff; } .hero-heading .digital { color: var(--text-sub-heading-grey); }
 .hero-description { text-align: justify; line-height: 1.8; font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); word-spacing: 1px; }
 
-/* Section Headings */
-.services-heading, .tools-heading, .gallery-heading { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; width: 100%; margin-bottom: 40px; padding-left: 40px; box-sizing: border-box; text-align: left; }
+/* ✅ CORRECTED: Section Headings */
+.services-heading, .tools-heading, .gallery-heading {
+    font-size: clamp(2.5rem, 8vw, 8rem);
+    line-height: 0.75em;
+    font-weight: 800;
+    text-transform: uppercase;
+    width: 100%;
+    margin-bottom: 40px;
+    padding-left: 40px;
+    box-sizing: border-box;
+    text-align: left;
+}
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
@@ -109,54 +119,14 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
-/* ✅ CORRECTED: Featured Websites Section */
-.gallery-section {
-  text-align: center;
-  background: var(--bg-main);
-  color: var(--text-light);
-  z-index: 1;
-  padding: 80px 40px;
-}
-.image-ring-container {
-  perspective: 1500px;
-  width: 100%;
-  height: calc(var(--gallery-ring-radius) * 2.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: visible;
-}
-.image-ring {
-  position: relative;
-  transform-style: preserve-3d;
-  width: var(--gallery-image-width);
-  height: var(--gallery-image-height);
-  will-change: transform;
-  cursor: grab;
-}
+/* Featured Websites Section */
+.gallery-section { padding: 100px 40px; text-align: center; background: var(--bg-main); color: var(--text-light); overflow: hidden; z-index: 1; }
+.image-ring-container { perspective: 1500px; width: 100%; height: calc(var(--gallery-image-height) * 1.5); position: relative; display: flex; justify-content: center; align-items: center; }
+.image-ring { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); transform-style: preserve-3d; width: var(--gallery-image-width); height: var(--gallery-image-height); will-change: transform; cursor: grab; }
 .image-ring:active { cursor: grabbing; }
-.gallery-item, .ring-image {
-  width: var(--gallery-image-width);
-  height: var(--gallery-image-height);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transform-style: preserve-3d;
-}
-.gallery-item-link img, .ring-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-  transition: transform 0.3s ease, filter 0.3s ease;
-  filter: brightness(var(--gallery-dimmed-brightness));
-}
-.gallery-item-link img:hover, .ring-image img:hover {
-  transform: scale(1.05);
-  filter: brightness(var(--gallery-hover-brightness));
-}
+.ring-image { position: absolute; width: var(--gallery-image-width); height: var(--gallery-image-height); left: 0; top: 0; transform: translate(-50%, -50%); transform-style: preserve-3d; transition: none !important; will-change: transform, filter; }
+.ring-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, filter 0.3s ease; cursor: pointer; filter: brightness(var(--gallery-dimmed-brightness)); }
+.ring-image img:hover { transform: scale(1.05); filter: brightness(var(--gallery-hover-brightness)); }
 
 /* Contact Section */
 footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; text-align: center; color: var(--text-light); }
@@ -185,12 +155,10 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .services-heading, .tools-heading, .gallery-heading { padding-left: 20px; }
     /* Responsive Gallery */
     :root {
-        --gallery-ring-radius: clamp(130px, 26vw, 180px);
-        --gallery-image-width: clamp(90px, 16vw, 140px);
-        --gallery-image-height: clamp(60px, 12vw, 100px);
+        --gallery-ring-radius: 120px;
+        --gallery-image-width: 150px;
+        --gallery-image-height: 100px;
     }
-    .gallery-section { padding: 60px 20px; }
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.2); }
 }
 
 @media (max-width: 767px) {
@@ -202,10 +170,8 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .contact-button { width: 100%; justify-content: center; }
     /* Responsive Gallery */
     :root {
-        --gallery-ring-radius: clamp(110px, 30vw, 150px);
-        --gallery-image-width: clamp(70px, 22vw, 110px);
-        --gallery-image-height: clamp(50px, 14vw, 80px);
+        --gallery-ring-radius: 90px;
+        --gallery-image-width: 120px;
+        --gallery-image-height: 85px;
     }
-    .gallery-section { padding: 40px 15px; }
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.2); }
 }
