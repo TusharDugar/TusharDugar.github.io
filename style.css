@@ -18,7 +18,7 @@
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
-    /* ✅ CORRECTED: Variables for gallery slider */
+    /* Variables for gallery slider */
     --gallery-ring-radius: 300px;
     --gallery-image-width: 240px;
     --gallery-image-height: 160px;
@@ -89,13 +89,13 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .hero-description { text-align: justify; line-height: 1.8; font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); word-spacing: 1px; }
 
 /* Section Headings */
-.services-heading, .tools-heading, .gallery-heading { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; text-align: left; width: 100%; margin-bottom: 40px; }
+.services-heading, .tools-heading, .gallery-heading { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; text-align: left; width: 100%; margin-bottom: 30px; }
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
-/* ✅ CORRECTED: Services Section Grid */
+/* Services Section Grid */
 .services-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin-left: auto; margin-right: auto; }
-.face { position: relative; display: flex; flex-direction: column; justify-content: flex-start; border-radius: 20px; background: var(--bg-gradient-2); padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); overflow: hidden; text-align: left; will-change: transform, box-shadow; }
+.face { position: relative; display: flex; flex-direction: column; justify-content: flex-start; border-radius: 20px; background: var(--bg-gradient-2); padding: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); overflow: hidden; text-align: left; will-change: transform, box-shadow; }
 .service-title { font-size: clamp(1rem, 1.8vw, 1.8rem); font-weight: 700; line-height: 1.2; color: #fff7ed; margin-bottom: clamp(0.5rem, 1vw, 1rem); }
 .service-description { font-size: clamp(0.875rem, 1.2vw, 1rem); line-height: 1.4; color: var(--text-medium); }
 .face-number { position: absolute; top: clamp(1rem, 2vw, 1.5rem); right: clamp(1rem, 2vw, 1.5rem); font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 500; color: rgba(255, 255, 255, 0.08); z-index: 0; line-height: 1; pointer-events: none; }
@@ -123,7 +123,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
 .contact-button.copied .copied-text { transform: translateY(0); opacity: 1; }
 
 /* Gallery Section */
-.gallery-section { padding: 100px 40px; text-align: center; background: var(--bg-main); color: var(--text-light); overflow: hidden; z-index: 1; }
+.gallery-section { padding: 80px 40px; text-align: center; background: var(--bg-main); color: var(--text-light); overflow: hidden; z-index: 1; }
 .image-ring-container { perspective: 1500px; width: 100%; height: calc(var(--gallery-image-height) * 1.5); position: relative; display: flex; justify-content: center; align-items: center; }
 .image-ring { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); transform-style: preserve-3d; width: var(--gallery-image-width); height: var(--gallery-image-height); will-change: transform; cursor: grab; }
 .image-ring:active { cursor: grabbing; }
