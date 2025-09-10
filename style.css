@@ -18,7 +18,7 @@
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
-    /* ✅ CORRECTED: Variables for gallery slider */
+    /* Variables for gallery slider */
     --gallery-ring-radius: clamp(140px, 22vw, 220px);
     --gallery-image-width: clamp(100px, 18vw, 170px);
     --gallery-image-height: calc(var(--gallery-image-width) * 0.66); /* keeps ~3:2 ratio */
@@ -109,7 +109,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
-/* ✅ CORRECTED: Featured Websites Section */
+/* Featured Websites Section */
 .gallery-section { text-align: center; background: var(--bg-main); color: var(--text-light); z-index: 1; padding: 80px 40px; }
 .image-ring-container { perspective: 1500px; width: 100%; height: calc(var(--gallery-ring-radius) * 2.2); display: flex; justify-content: center; align-items: center; overflow: visible; }
 .image-ring { position: relative; transform-style: preserve-3d; width: var(--gallery-image-width); height: var(--gallery-image-height); will-change: transform; cursor: grab; }
@@ -160,7 +160,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
     :root {
-        --gallery-ring-radius: clamp(90px, 32vw, 130px);
+        --gallery-ring-radius: clamp(80px, 28vw, 120px);
         --gallery-image-width: clamp(70px, 22vw, 110px);
         --gallery-image-height: calc(var(--gallery-image-width) * 0.66);
     }
