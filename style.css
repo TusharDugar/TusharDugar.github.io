@@ -76,9 +76,25 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
-/* Services Grid */
-.services-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; max-width: 1000px; margin: 0 auto; text-align: left; }
-.face { position: relative; display: flex; flex-direction: column; border-radius: 20px; background: var(--bg-gradient-2); padding: clamp(1.5rem, 4vw, 2.5rem); box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+/* ✅ CORRECTED: Services Section – alignment + size fix */
+.services-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+}
+.face {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background: var(--bg-gradient-2);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    padding: 1.5rem;
+    font-size: 0.95rem;
+}
 .service-title { font-size: clamp(1rem, 1.8vw, 1.8rem); font-weight: 700; color: #fff7ed; margin-bottom: 1rem; }
 .service-description { font-size: clamp(0.875rem, 1.2vw, 1rem); color: var(--text-medium); }
 .face-number { position: absolute; top: clamp(1rem, 2vw, 1.5rem); right: clamp(1rem, 2vw, 1.5rem); font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 500; color: rgba(255, 255, 255, 0.08); z-index: 0; line-height: 1; }
@@ -121,6 +137,10 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     height: var(--gallery-item-height);
     transform: translate(-50%, -50%);
     transform-style: preserve-3d;
+    background: var(--bg-gradient-2); /* frame restored */
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    padding: 8px; /* frame thickness */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -129,11 +149,10 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     display: block;
     width: 100%;
     height: 100%;
-    border-radius: 15px;
-    background: var(--bg-gradient-2);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-    padding: 6px;
+    border-radius: 12px;
     overflow: hidden;
+    background: none;
+    box-shadow: none;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .gallery-item-link:hover {
@@ -144,8 +163,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 12px;
-    display: block;
+    border-radius: 10px;
 }
 .gallery-caption {
     font-size: 0.85rem;
