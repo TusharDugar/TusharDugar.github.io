@@ -21,7 +21,7 @@
     /* Variables for gallery slider */
     --gallery-ring-radius: clamp(140px, 22vw, 220px);
     --gallery-image-width: clamp(100px, 18vw, 170px);
-    --gallery-image-height: calc(var(--gallery-image-width) * 0.66); /* keeps ~3:2 ratio */
+    --gallery-image-height: calc(var(--gallery-image-width) * 0.66);
     --gallery-dimmed-brightness: 0.6;
     --gallery-active-brightness: 1.1;
     --gallery-hover-brightness: 1.3;
@@ -88,8 +88,17 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .hero-heading .crafting { color: #ffffff; } .hero-heading .digital { color: var(--text-sub-heading-grey); }
 .hero-description { text-align: justify; line-height: 1.8; font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); word-spacing: 1px; }
 
-/* Section Headings */
-.services-heading, .tools-heading, .gallery-heading { font-size: clamp(2.5rem, 8vw, 8rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; width: 100%; margin-bottom: 40px; padding-left: 40px; box-sizing: border-box; text-align: left; }
+/* ✅ CORRECTED: Section Headings */
+.services-heading, .tools-heading, .gallery-heading {
+    font-size: clamp(2.5rem, 8vw, 8rem);
+    line-height: 0.75em;
+    font-weight: 800;
+    text-transform: uppercase;
+    width: 100%;
+    margin-bottom: 40px;
+    text-align: center;
+    padding-left: 0;
+}
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
@@ -110,7 +119,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
 /* Featured Websites Section */
-.gallery-section { text-align: center; background: var(--bg-main); color: var(--text-light); z-index: 1; padding: 80px 40px; }
+.gallery-section { text-align: center; background: transparent; color: var(--text-light); z-index: 1; padding: 80px 40px; }
 .image-ring-container { perspective: 1500px; width: 100%; height: calc(var(--gallery-ring-radius) * 2.2); display: flex; justify-content: center; align-items: center; overflow: visible; }
 .image-ring { position: relative; transform-style: preserve-3d; width: var(--gallery-image-width); height: var(--gallery-image-height); will-change: transform; cursor: grab; }
 .image-ring:active { cursor: grabbing; }
@@ -142,7 +151,6 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; align-items: center; }
     .left-column-sticky { position: relative; top: auto; transform: none; height: auto; width: 100%; max-width: 370px; margin: 0 auto 40px; }
     .services-card-grid, .tools-grid { grid-template-columns: 1fr; max-width: 400px; }
-    .services-heading, .tools-heading, .gallery-heading { padding-left: 20px; }
     :root {
         --gallery-ring-radius: clamp(110px, 26vw, 160px);
         --gallery-image-width: clamp(90px, 18vw, 140px);
@@ -156,9 +164,9 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .section { padding: 40px 15px; }
     .main-layout-container { padding: 15px; gap: 30px; }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
-    .services-heading, .tools-heading, .gallery-heading { padding-left: 15px; }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
+    /* ✅ CORRECTED: Mobile Gallery Scaling */
     :root {
         --gallery-ring-radius: clamp(80px, 28vw, 120px);
         --gallery-image-width: clamp(70px, 22vw, 110px);
@@ -166,4 +174,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     }
     .gallery-section { padding: 40px 15px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.2); }
+    .gallery-item, .ring-image {
+        scale: 0.9;
+    }
 }
