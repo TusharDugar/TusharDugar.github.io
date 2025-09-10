@@ -72,29 +72,13 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .hero-description { font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); }
 
 /* Section Headings */
-.services-heading, .tools-heading, .gallery-heading { font-size: clamp(2.8rem, 9vw, 9rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; margin-bottom: 30px; text-align: left; }
+.services-heading, .tools-heading, .gallery-heading { font-size: clamp(2.8rem, 9vw, 9rem); line-height: 0.75em; font-weight: 800; text-transform: uppercase; margin-bottom: 20px; text-align: left; }
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
-/* ✅ CORRECTED: Services Section – alignment + size fix */
-.services-card-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: left;
-}
-.face {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border-radius: 20px;
-    background: var(--bg-gradient-2);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    padding: 1.5rem;
-    font-size: 0.95rem;
-}
+/* Services Grid */
+.services-card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 900px; margin: 0 auto; text-align: left; justify-content: center; }
+.face { position: relative; display: flex; flex-direction: column; border-radius: 20px; background: var(--bg-gradient-2); padding: 1.25rem; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
 .service-title { font-size: clamp(1rem, 1.8vw, 1.8rem); font-weight: 700; color: #fff7ed; margin-bottom: 1rem; }
 .service-description { font-size: clamp(0.875rem, 1.2vw, 1rem); color: var(--text-medium); }
 .face-number { position: absolute; top: clamp(1rem, 2vw, 1.5rem); right: clamp(1rem, 2vw, 1.5rem); font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 500; color: rgba(255, 255, 255, 0.08); z-index: 0; line-height: 1; }
@@ -108,71 +92,15 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
-/* ✅ CORRECTED: Featured Websites Section */
-.gallery-section {
-    padding: 70px 20px;
-}
-.image-ring-container {
-    perspective: 1200px;
-    width: 100%;
-    height: 320px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.image-ring {
-    position: relative;
-    width: var(--gallery-item-width);
-    height: var(--gallery-item-height);
-    transform-style: preserve-3d;
-    cursor: grab;
-}
+/* Featured Websites Section */
+.gallery-section { padding: 70px 20px; }
+.image-ring-container { perspective: 1200px; width: 100%; height: 320px; position: relative; display: flex; justify-content: center; align-items: center; margin-top: 10px; }
+.image-ring { position: relative; width: var(--gallery-item-width); height: var(--gallery-item-height); transform-style: preserve-3d; cursor: grab; }
 .image-ring:active { cursor: grabbing; }
-.gallery-item {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: var(--gallery-item-width);
-    height: var(--gallery-item-height);
-    transform: translate(-50%, -50%);
-    transform-style: preserve-3d;
-    background: var(--bg-gradient-2); /* frame restored */
-    border-radius: 15px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-    padding: 8px; /* frame thickness */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.gallery-item-link {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    background: none;
-    box-shadow: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.gallery-item-link:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
-}
-.gallery-item-link img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-}
-.gallery-caption {
-    font-size: 0.85rem;
-    color: var(--text-medium);
-    text-align: center;
-    margin-top: 10px;
-    max-width: var(--gallery-item-width);
-    line-height: 1.4;
-}
+.gallery-item { position: absolute; top: 50%; left: 50%; width: var(--gallery-item-width); height: var(--gallery-item-height); transform: translate(-50%, -50%); transform-style: preserve-3d; background: var(--bg-gradient-2); border-radius: 15px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); padding: 8px; display: flex; justify-content: center; align-items: center; }
+.gallery-item-link { display: block; width: 100%; height: 100%; border-radius: 12px; overflow: hidden; }
+.gallery-item-link img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+.gallery-caption { font-size: 0.85rem; color: var(--text-medium); text-align: center; margin-top: 10px; max-width: var(--gallery-item-width); line-height: 1.4; }
 
 /* Contact Section */
 footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; margin-top: 70px; text-align: center; color: var(--text-light); }
@@ -198,8 +126,21 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; font-weight: 700; }
 }
 @media (max-width: 767px) {
     .section { padding: 50px 20px; }
-    .gallery-section { padding: 50px 15px; }
+    .gallery-section { padding: 40px 15px; }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2.2rem, 8vw, 6.8rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
+    
+    /* ✅ CORRECTED: Mobile Gallery View */
+    :root {
+        --gallery-ring-radius: 200px;
+        --gallery-item-width: 160px;
+        --gallery-item-height: 100px;
+    }
+    .image-ring-container {
+        height: 240px;
+    }
+    .gallery-heading {
+        margin-bottom: 20px;
+    }
 }
