@@ -95,16 +95,17 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     font-weight: 800;
     text-transform: uppercase;
     width: 100%;
-    margin-bottom: 40px;
-    text-align: center;
-    padding-left: 0;
+    /* Keep padding-left: 0; from original */
 }
+
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
-/* ✅ UPDATED: Services heading alignment fix (removed conflicting styles) */
+/* ✅ UPDATED: Services heading alignment fix */
 .services-heading {
-  /* Removed max-width: fit-content and margin auto, relying on shared text-align: center */
+  display: block; /* Ensure it takes full width for margin auto to work */
+  margin: 0 auto 40px auto; /* Centered with bottom margin */
+  text-align: center; /* Explicitly centered */
 }
 
 /* Services Section Grid */
@@ -197,37 +198,43 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); /* Base transform, GSAP adds more */
   transform-style: preserve-3d;
   backface-visibility: hidden;
   transform-origin: center center;
-  margin: 4px; /* ✅ UPDATED: Reduced spacing for more visible cards */
-  /* ✅ UPDATED: Translucent background for gallery items */
-  border-radius: 16px; /* Added border-radius for consistency */
+  margin: 6px; /* ✅ UPDATED: Slightly increased margin for better separation */
+  scale: 0.95; /* ✅ ADDED: Slight downscale to avoid visual collision */
+  border-radius: 16px; 
   background: rgba(20, 20, 20, 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden; /* Ensure content respects border-radius */
+  overflow: hidden;
 }
 
 .gallery-item-link img, .ring-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 14px; /* Image itself has a slightly smaller border-radius */
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  border-radius: 14px; 
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4); /* Existing shadow */
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: brightness(var(--gallery-dimmed-brightness));
   max-width: 100%;
   max-height: 100%;
 }
 
-.gallery-item-link img:hover,
-.ring-image img:hover {
-  transform: scale(1.05);
+/* ✅ UPDATED: Uniform hover effect for Featured Websites */
+.gallery-item-link:hover img, .ring-image:hover img { /* Target the image inside the link for hover effects */
+  transform: scale(1.05); /* Only scale the image */
   filter: brightness(var(--gallery-hover-brightness));
 }
+
+.gallery-item:hover, .ring-image:hover { /* Hover on the card wrapper itself */
+  /* Remove transform: scale here, as the image handles scaling */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6); /* Added box-shadow for card-like hover */
+}
+
 
 /* Contact Section */
 footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; text-align: center; color: var(--text-light); }
@@ -248,12 +255,18 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .left-column-sticky { position: sticky; top: 50%; transform: translateY(-50%); height: calc(100vh - 100px); margin: 0; align-self: flex-start; } 
 }
 
+/* ✅ ADDED: Services grid tweak for mid-sized devices */
+@media (max-width: 900px) {
+  .services-card-grid {
+    max-width: 700px; /* Prevents cards from stretching too wide on tablets */
+  }
+}
+
 @media (max-width: 1023px) {
     .section { padding: 60px 20px; }
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; align-items: center; }
     .left-column-sticky { position: relative; top: auto; transform: none; height: auto; width: 100%; max-width: 370px; margin: 0 auto 40px; }
     
-    /* ✅ UPDATED: Only tools grid collapses to 1 column here. Services remains 2 columns. */
     .tools-grid { grid-template-columns: 1fr; max-width: 400px; } 
 
     :root {
