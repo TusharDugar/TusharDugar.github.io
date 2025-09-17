@@ -95,12 +95,12 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     font-weight: 800;
     text-transform: uppercase;
     width: 100%;
-    padding-left: 0; 
     /* ✅ UPDATED: Consistent left alignment and bottom margin for ALL headings */
     text-align: left;
-    margin-left: 0;
+    margin-left: 0; /* Ensures it's not trying to auto-center relative to parent */
     margin-right: auto;
-    margin-bottom: 30px; /* Adjusted margin-bottom for a bit more space */
+    padding-left: 0; /* Override any potential default padding on section headings */
+    margin-bottom: 30px; 
 }
 
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
@@ -113,7 +113,9 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   grid-template-columns: repeat(2, 1fr); 
   gap: 20px; 
   max-width: 900px; 
-  margin: 0 auto; 
+  /* ✅ UPDATED: Align grid to the left */
+  margin-left: 0;
+  margin-right: auto;
 }
 .face {
   position: relative;
@@ -136,7 +138,15 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .face-number { position: absolute; top: clamp(1rem, 2vw, 1.5rem); right: clamp(1rem, 2vw, 1.5rem); font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 500; color: rgba(255, 255, 255, 0.08); z-index: 0; line-height: 1; pointer-events: none; }
 
 /* Premium Tools Section */
-.tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin-left: auto; margin-right: auto; }
+.tools-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 20px; 
+    max-width: 900px; 
+    /* ✅ UPDATED: Align grid to the left */
+    margin-left: 0;
+    margin-right: auto;
+}
 .tool-card {
   background: rgba(20, 20, 20, 0.6); 
   backdrop-filter: blur(12px);       
@@ -160,7 +170,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 
 /* Featured Websites Section */
 .gallery-section {
-  text-align: center;
+  text-align: left; /* Changed from center to left for heading alignment */
   background: transparent;
   color: var(--text-light);
   z-index: 1;
@@ -193,7 +203,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 
 .gallery-item, .ring-image {
   width: var(--gallery-image-width);
-  height: var(--gallery-image-height);
+  /* height: var(--gallery-image-height); REMOVED: Managed by flex content */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -202,11 +212,9 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   backface-visibility: hidden;
   transform-origin: center center;
   
-  /* ✅ UPDATED: Spacing between cards */
   margin: 12px; 
-  scale: 1; /* Ensure full size for content */
+  scale: 1; 
 
-  /* Translucent glass look for cards */
   border-radius: 16px; 
   background: rgba(20, 20, 20, 0.6);
   backdrop-filter: blur(12px);
@@ -214,23 +222,41 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   border: 1px solid rgba(255, 255, 255, 0.15); 
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); 
 
-  /* ✅ UPDATED: Flex container for content flow + inner padding */
+  /* ✅ UPDATED: Flex container for content flow + inner padding & gap */
   display: flex;
-  flex-direction: column;
+  flex-direction: column;   /* Stack image + text */
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 16px; /* More generous inner padding */
+  padding: 16px;            /* More breathing room inside */
+  gap: 12px;                /* ✅ UPDATED: Increased gap between image and text */
   overflow: hidden; 
 }
 
 /* Images inside the cards (updated for better content flow) */
 .gallery-item-link img, .ring-image img {
   width: 100%;
-  height: auto; /* ✅ UPDATED: Height auto to respect padding and fit content */
+  height: auto;             /* Height auto to respect padding and fit content */
+  max-height: 130px;        /* ✅ UPDATED: Control max image height for readability */
+  object-fit: cover;
   border-radius: 12px; 
   filter: brightness(var(--gallery-dimmed-brightness));
   transition: transform 0.3s ease, filter 0.3s ease;
-  margin-bottom: 10px; /* ✅ ADDED: Space between image and text/other content */
+  margin-bottom: 0; /* Ensure no conflicting margin here, use parent's gap */
+}
+
+/* Text styles for Featured Websites cards */
+.gallery-item .title,
+.ring-image .title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.gallery-item .description,
+.ring-image .description {
+  font-size: 0.85rem;
+  color: var(--text-medium);
+  line-height: 1.4;
 }
 
 /* Hover effect */
@@ -263,16 +289,10 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .left-column-sticky { position: sticky; top: 50%; transform: translateY(-50%); height: calc(100vh - 100px); margin: 0; align-self: flex-start; } 
 }
 
-/* Services grid switches to 1 column earlier on tablets */
+/* ✅ UPDATED: Services and Tools grids now only collapse to 1 column below 767px */
 @media (max-width: 900px) {
-    .services-card-grid {
-      grid-template-columns: 1fr; 
-      max-width: 400px; 
-    }
-    .tools-grid { 
-        grid-template-columns: 1fr;
-        max-width: 400px;
-    }
+    /* Removed previous 900px breakpoint rules that were forcing 1 column earlier */
+    /* .services-card-grid and .tools-grid will retain their 2-column layout from desktop up to 767px */
 }
 
 @media (max-width: 1023px) { 
@@ -303,7 +323,9 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .gallery-section { padding: 40px 15px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.5 + var(--gallery-image-height)); }
 
-    .services-card-grid {
+    /* Explicitly ensure services and tools grids are 1 column on smallest screens */
+    .services-card-grid, .tools-grid {
       grid-template-columns: 1fr;
+      max-width: 400px;
     }
 }
