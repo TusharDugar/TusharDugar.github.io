@@ -88,7 +88,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .hero-heading .crafting { color: #ffffff; } .hero-heading .digital { color: var(--text-sub-heading-grey); }
 .hero-description { text-align: justify; line-height: 1.8; font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); word-spacing: 1px; }
 
-/* ✅ CORRECTED: Section Headings */
+/* Section Headings */
 .services-heading, .tools-heading, .gallery-heading {
     font-size: clamp(2.5rem, 8vw, 8rem);
     line-height: 0.75em;
@@ -101,14 +101,18 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 }
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
-.services-heading { margin-left: auto; margin-right: auto; max-width: fit-content; }
+
+/* ✅ UPDATED: Services heading alignment fix (removed conflicting styles) */
+.services-heading {
+  /* Removed max-width: fit-content and margin auto, relying on shared text-align: center */
+}
 
 /* Services Section Grid */
 .services-card-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* ✅ UPDATED: Fixed 2-column layout */
-  gap: 25px; /* Slightly increased gap for better visual separation */
-  max-width: 1000px; /* ✅ UPDATED: Allow more width for 2 columns on larger screens */
+  grid-template-columns: repeat(2, 1fr); /* Fixed 2-column layout for desktop */
+  gap: 20px; /* Reverted gap to 20px */
+  max-width: 900px; /* Reverted max-width to 900px for smaller cards */
   margin: 0 auto; /* Center the grid */
 }
 .face {
@@ -117,12 +121,12 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   flex-direction: column;
   justify-content: flex-start;
   border-radius: 20px;
-  /* ✅ UPDATED: Translucent background with blur */
   background: rgba(20, 20, 20, 0.6); 
   backdrop-filter: blur(12px);       
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for definition */
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2); /* Existing shadow */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px; /* Reduced padding to 20px */
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
   overflow: hidden;
   text-align: left;
   will-change: transform, box-shadow;
@@ -134,11 +138,10 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 /* Premium Tools Section */
 .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin-left: auto; margin-right: auto; }
 .tool-card {
-  /* ✅ UPDATED: Translucent background with blur */
   background: rgba(20, 20, 20, 0.6); 
   backdrop-filter: blur(12px);       
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for definition */
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   padding: 25px;
   display: flex;
@@ -196,15 +199,23 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   left: 50%;
   transform: translate(-50%, -50%);
   transform-style: preserve-3d;
-  backface-visibility: hidden;   /* prevents flipped overlaps */
+  backface-visibility: hidden;
   transform-origin: center center;
+  margin: 4px; /* ✅ UPDATED: Reduced spacing for more visible cards */
+  /* ✅ UPDATED: Translucent background for gallery items */
+  border-radius: 16px; /* Added border-radius for consistency */
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden; /* Ensure content respects border-radius */
 }
 
 .gallery-item-link img, .ring-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 14px;
+  border-radius: 14px; /* Image itself has a slightly smaller border-radius */
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: brightness(var(--gallery-dimmed-brightness));
@@ -241,8 +252,9 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .section { padding: 60px 20px; }
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; align-items: center; }
     .left-column-sticky { position: relative; top: auto; transform: none; height: auto; width: 100%; max-width: 370px; margin: 0 auto 40px; }
-    /* Revert services grid to single column on small tablets/large phones */
-    .services-card-grid, .tools-grid { grid-template-columns: 1fr; max-width: 400px; } 
+    
+    /* ✅ UPDATED: Only tools grid collapses to 1 column here. Services remains 2 columns. */
+    .tools-grid { grid-template-columns: 1fr; max-width: 400px; } 
 
     :root {
         --gallery-ring-radius: clamp(110px, 26vw, 160px);
@@ -269,7 +281,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .gallery-item, .ring-image {
         scale: 0.9;
     }
-    /* Explicitly ensure services grid is 1 column on smaller screens */
+    /* Explicitly ensure services grid is 1 column on smallest screens */
     .services-card-grid {
       grid-template-columns: 1fr;
     }
