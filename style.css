@@ -120,13 +120,66 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
 /* Featured Websites Section */
-.gallery-section { text-align: center; background: transparent; color: var(--text-light); z-index: 1; padding: 80px 40px; }
-.image-ring-container { perspective: 1500px; width: 100%; height: calc(var(--gallery-ring-radius) * 2.2); display: flex; justify-content: center; align-items: center; overflow: visible; }
-.image-ring { position: relative; transform-style: preserve-3d; width: var(--gallery-image-width); height: var(--gallery-image-height); will-change: transform; cursor: grab; }
-.image-ring:active { cursor: grabbing; }
-.gallery-item, .ring-image { width: var(--gallery-image-width); height: var(--gallery-image-height); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transform-style: preserve-3d; }
-.gallery-item-link img, .ring-image img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); transition: transform 0.3s ease, filter 0.3s ease; filter: brightness(var(--gallery-dimmed-brightness)); max-width: 100%; max-height: 100%; }
-.gallery-item-link img:hover, .ring-image img:hover { transform: scale(1.05); filter: brightness(var(--gallery-hover-brightness)); }
+.gallery-section {
+  text-align: center;
+  background: transparent;
+  color: var(--text-light);
+  z-index: 1;
+  padding: 80px 40px;
+}
+
+.image-ring-container {
+  perspective: 1500px;
+  width: 100%;
+  height: calc(var(--gallery-ring-radius) * 2.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+}
+
+.image-ring {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  cursor: grab;
+  width: 100%;          /* ✅ UPDATED: Fill container width */
+  height: 100%;         /* ✅ UPDATED: Fill container height */
+}
+
+.image-ring:active {
+  cursor: grabbing;
+}
+
+.gallery-item, .ring-image {
+  width: var(--gallery-image-width);
+  height: var(--gallery-image-height);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;   /* ✅ prevents flipped overlaps */
+  transform-origin: center center;
+}
+
+.gallery-item-link img, .ring-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease, filter 0.3s ease;
+  filter: brightness(var(--gallery-dimmed-brightness));
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.gallery-item-link img:hover,
+.ring-image img:hover {
+  transform: scale(1.05);
+  filter: brightness(var(--gallery-hover-brightness));
+}
 
 /* Contact Section */
 footer#contact { background-color: var(--bg-section-card); padding: 100px 40px; text-align: center; color: var(--text-light); }
@@ -176,5 +229,6 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.2); }
     .gallery-item, .ring-image {
         scale: 0.9;
+        /* Kept your existing scale for small screens, it might help prevent overlapping at very tight radii */
     }
 }
