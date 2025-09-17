@@ -8,14 +8,14 @@
     --text-medium-card: #4B4B4B;
     --accent-primary-sawad: #FF6B00;
     --text-sub-heading-grey: #666666;
-    --bg-tool-card: #1A1A1A;
+    --bg-tool-card: #1A1A1A; /* This variable is effectively overridden below for translucency */
     --tool-icon-bg: #F8F8F8;
     --tool-name-color: var(--text-light);
     --tool-category-color: var(--text-medium);
     --shadow-color-card-white: rgba(0,0,0,0.25);
-    --bg-section-card: #141414;
+    --bg-section-card: #141414; /* This variable is effectively overridden below for translucency */
     --accent-secondary-sawad: #00FFC2; 
-    --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
+    --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); /* This variable is effectively overridden below for translucency */
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
     /* ✅ CORRECTED: Variables for gallery slider */
@@ -104,15 +104,51 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .services-heading { margin-left: auto; margin-right: auto; max-width: fit-content; }
 
 /* Services Section Grid */
-.services-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin-left: auto; margin-right: auto; }
-.face { position: relative; display: flex; flex-direction: column; justify-content: flex-start; border-radius: 20px; background: var(--bg-gradient-2); padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); overflow: hidden; text-align: left; will-change: transform, box-shadow; }
+.services-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* ✅ UPDATED: Fixed 2-column layout */
+  gap: 25px; /* Slightly increased gap for better visual separation */
+  max-width: 1000px; /* ✅ UPDATED: Allow more width for 2 columns on larger screens */
+  margin: 0 auto; /* Center the grid */
+}
+.face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-radius: 20px;
+  /* ✅ UPDATED: Translucent background with blur */
+  background: rgba(20, 20, 20, 0.6); 
+  backdrop-filter: blur(12px);       
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for definition */
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2); /* Existing shadow */
+  overflow: hidden;
+  text-align: left;
+  will-change: transform, box-shadow;
+}
 .service-title { font-size: clamp(1rem, 1.8vw, 1.8rem); font-weight: 700; line-height: 1.2; color: #fff7ed; margin-bottom: clamp(0.5rem, 1vw, 1rem); }
 .service-description { font-size: clamp(0.875rem, 1.2vw, 1rem); line-height: 1.4; color: var(--text-medium); }
 .face-number { position: absolute; top: clamp(1rem, 2vw, 1.5rem); right: clamp(1rem, 2vw, 1.5rem); font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 500; color: rgba(255, 255, 255, 0.08); z-index: 0; line-height: 1; pointer-events: none; }
 
 /* Premium Tools Section */
 .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 900px; margin-left: auto; margin-right: auto; }
-.tool-card { background: linear-gradient(145deg, #1c1c1c, #121212); border-radius: 15px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; will-change: transform, opacity; }
+.tool-card {
+  /* ✅ UPDATED: Translucent background with blur */
+  background: rgba(20, 20, 20, 0.6); 
+  backdrop-filter: blur(12px);       
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for definition */
+  border-radius: 15px;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  will-change: transform, opacity;
+}
 .tool-card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); }
 .tool-icon-wrapper { width: 50px; height: 50px; background-color: var(--tool-icon-bg); border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; overflow: hidden; }
 .tool-logo { max-width: 70%; max-height: 70%; object-fit: contain; }
@@ -131,12 +167,11 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .image-ring-container {
   perspective: 1500px;
   width: 100%;
-  /* ✅ UPDATED: Give sufficient height for ring diameter + image height for vertical clearance */
   height: calc(var(--gallery-ring-radius) * 2.5 + var(--gallery-image-height));
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: visible; /* Keep visible to allow images to extend beyond container bounds if needed */
+  overflow: visible;
 }
 
 .image-ring {
@@ -146,7 +181,6 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   cursor: grab;
   width: 100%;
   height: 100%;
-  /* ✅ ADDED: Ensure min-height to provide space for rotation within the container */
   min-height: calc(var(--gallery-ring-radius) * 2); 
 }
 
@@ -207,14 +241,15 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .section { padding: 60px 20px; }
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; align-items: center; }
     .left-column-sticky { position: relative; top: auto; transform: none; height: auto; width: 100%; max-width: 370px; margin: 0 auto 40px; }
-    .services-card-grid, .tools-grid { grid-template-columns: 1fr; max-width: 400px; }
+    /* Revert services grid to single column on small tablets/large phones */
+    .services-card-grid, .tools-grid { grid-template-columns: 1fr; max-width: 400px; } 
+
     :root {
         --gallery-ring-radius: clamp(110px, 26vw, 160px);
         --gallery-image-width: clamp(90px, 18vw, 140px);
         --gallery-image-height: calc(var(--gallery-image-width) * 0.66);
     }
     .gallery-section { padding: 60px 20px; }
-    /* Adjust container height for smaller screens too */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.5 + var(--gallery-image-height)); }
 }
 
@@ -230,9 +265,12 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
         --gallery-image-height: calc(var(--gallery-image-width) * 0.66);
     }
     .gallery-section { padding: 40px 15px; }
-    /* Adjust container height for smallest screens too */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.5 + var(--gallery-image-height)); }
     .gallery-item, .ring-image {
         scale: 0.9;
+    }
+    /* Explicitly ensure services grid is 1 column on smaller screens */
+    .services-card-grid {
+      grid-template-columns: 1fr;
     }
 }
