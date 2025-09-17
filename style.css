@@ -8,17 +8,17 @@
     --text-medium-card: #4B4B4B;
     --accent-primary-sawad: #FF6B00;
     --text-sub-heading-grey: #666666;
-    --bg-tool-card: #1A1A1A; /* This variable is effectively overridden below for translucency */
+    --bg-tool-card: #1A1A1A; 
     --tool-icon-bg: #F8F8F8;
     --tool-name-color: var(--text-light);
     --tool-category-color: var(--text-medium);
     --shadow-color-card-white: rgba(0,0,0,0.25);
-    --bg-section-card: #141414; /* This variable is effectively overridden below for translucency */
+    --bg-section-card: #141414; 
     --accent-secondary-sawad: #00FFC2; 
-    --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); /* This variable is effectively overridden below for translucency */
+    --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
-    /* ✅ CORRECTED: Variables for gallery slider */
+    /* Variables for gallery slider */
     --gallery-ring-radius: clamp(120px, 20vw, 200px);
     --gallery-image-width: clamp(100px, 18vw, 170px);
     --gallery-image-height: calc(var(--gallery-image-width) * 0.66);
@@ -95,26 +95,29 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     font-weight: 800;
     text-transform: uppercase;
     width: 100%;
-    /* Keep padding-left: 0; from original */
+    /* No padding-left: 0 here; default behavior is fine */
 }
 
 .services-heading .text-white, .tools-heading .text-white, .gallery-heading .text-white { color: var(--text-light); display: block; }
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
-/* ✅ UPDATED: Services heading alignment fix */
+/* ✅ UPDATED: Services heading alignment & margin consistency */
 .services-heading {
-  display: block; /* Ensure it takes full width for margin auto to work */
-  margin: 0 auto 40px auto; /* Centered with bottom margin */
-  text-align: center; /* Explicitly centered */
+  display: block; 
+  margin: 0 auto 20px auto; /* Consistent with Hero description spacing */
+  text-align: center; 
+}
+.tools-heading, .gallery-heading {
+    margin-bottom: 20px; /* Consistent with Hero description spacing */
 }
 
 /* Services Section Grid */
 .services-card-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Fixed 2-column layout for desktop */
-  gap: 20px; /* Reverted gap to 20px */
-  max-width: 900px; /* Reverted max-width to 900px for smaller cards */
-  margin: 0 auto; /* Center the grid */
+  gap: 20px; 
+  max-width: 900px; 
+  margin: 0 auto; 
 }
 .face {
   position: relative;
@@ -126,7 +129,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   backdrop-filter: blur(12px);       
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 20px; /* Reduced padding to 20px */
+  padding: 20px; 
   box-shadow: 0 5px 20px rgba(0,0,0,0.2);
   overflow: hidden;
   text-align: left;
@@ -202,8 +205,8 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   transform-style: preserve-3d;
   backface-visibility: hidden;
   transform-origin: center center;
-  margin: 6px; /* ✅ UPDATED: Slightly increased margin for better separation */
-  scale: 0.95; /* ✅ ADDED: Slight downscale to avoid visual collision */
+  margin: 8px; /* ✅ UPDATED: More breathing space */
+  scale: 1; /* ✅ UPDATED: Reset scale to avoid making cards too small */
   border-radius: 16px; 
   background: rgba(20, 20, 20, 0.6);
   backdrop-filter: blur(12px);
@@ -217,21 +220,20 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   height: 100%;
   object-fit: cover;
   border-radius: 14px; 
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4); /* Existing shadow */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4); 
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: brightness(var(--gallery-dimmed-brightness));
   max-width: 100%;
   max-height: 100%;
 }
 
-/* ✅ UPDATED: Uniform hover effect for Featured Websites */
-.gallery-item-link:hover img, .ring-image:hover img { /* Target the image inside the link for hover effects */
+/* Uniform hover effect for Featured Websites (adjusted for new scale: 1) */
+.gallery-item-link:hover img, .ring-image:hover img { 
   transform: scale(1.05); /* Only scale the image */
   filter: brightness(var(--gallery-hover-brightness));
 }
 
 .gallery-item:hover, .ring-image:hover { /* Hover on the card wrapper itself */
-  /* Remove transform: scale here, as the image handles scaling */
   box-shadow: 0 12px 30px rgba(0,0,0,0.6); /* Added box-shadow for card-like hover */
 }
 
@@ -255,19 +257,24 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .left-column-sticky { position: sticky; top: 50%; transform: translateY(-50%); height: calc(100vh - 100px); margin: 0; align-self: flex-start; } 
 }
 
-/* ✅ ADDED: Services grid tweak for mid-sized devices */
+/* ✅ UPDATED: Services grid switches to 1 column earlier on tablets */
 @media (max-width: 900px) {
-  .services-card-grid {
-    max-width: 700px; /* Prevents cards from stretching too wide on tablets */
-  }
+    .services-card-grid {
+      grid-template-columns: 1fr; /* Switch to single column */
+      max-width: 400px; /* Constrain width for single column readability */
+    }
+    .tools-grid { /* Also apply similar constraint to tools grid for consistency */
+        grid-template-columns: 1fr;
+        max-width: 400px;
+    }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1023px) { /* This media query runs first for smaller desktops/larger tablets */
     .section { padding: 60px 20px; }
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; align-items: center; }
     .left-column-sticky { position: relative; top: auto; transform: none; height: auto; width: 100%; max-width: 370px; margin: 0 auto 40px; }
     
-    .tools-grid { grid-template-columns: 1fr; max-width: 400px; } 
+    /* Removed tools-grid definition here as it's now handled by the 900px breakpoint */
 
     :root {
         --gallery-ring-radius: clamp(110px, 26vw, 160px);
@@ -292,7 +299,7 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .gallery-section { padding: 40px 15px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.5 + var(--gallery-image-height)); }
     .gallery-item, .ring-image {
-        scale: 0.9;
+        /* scale: 0.9; -- Removing scale here too to rely on global scale:1 and margin:8px */
     }
     /* Explicitly ensure services grid is 1 column on smallest screens */
     .services-card-grid {
