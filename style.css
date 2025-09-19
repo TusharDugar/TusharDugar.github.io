@@ -308,7 +308,7 @@ html::before {
     color: var(--text-light); /* Strong contrast */
     text-shadow: 0 2px 6px rgba(0,0,0,0.8); /* Stronger text shadow for readability */
     font-weight: 900; /* Bolder font */
-    font-size: clamp(2.5rem, 7vw, 5rem); /* Consistent font size */
+    font-size: clamp(2.5rem, 7vw, 5rem); /* ✅ Streamlined font-size declaration */
 
     /* ✅ FIXED: Services heading alignment */
     padding-left: 0; /* Align flush with section */
@@ -340,7 +340,7 @@ html::before {
   
   /* ✅ FIXED: Services grid alignment */
   margin-left: 0; /* Align cards with heading */
-  margin-right: auto;
+  margin-right: auto; /* Center grid under heading on wider screens if not full width */
 }
 .face {
   position: relative;
