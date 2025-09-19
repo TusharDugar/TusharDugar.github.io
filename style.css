@@ -168,7 +168,7 @@ html::before {
     animation: entryAnim 0.6s ease forwards; 
     background: transparent; 
     margin-bottom: 0.8rem; 
-    backface-visibility: hidden; 
+    backface-visibility: hidden; /* For smoother 3D transforms */
 }
 @keyframes entryAnim { 
     0% { transform: translate3d(0, 0, -80px); opacity: 0; } 
@@ -311,7 +311,7 @@ html::before {
 .services-heading, 
 .tools-heading, 
 .gallery-heading {
-    font-size: clamp(2.5rem, 7vw, 5rem); /* Streamlined font-size declaration */
+    font-size: clamp(2.5rem, 7vw, 5rem); 
     line-height: 0.75em;
     text-transform: uppercase;
     width: 100%;
@@ -806,6 +806,13 @@ footer h2 {
     .background-color-gradient { opacity: 0.01; }
     body::before, body::after { opacity: 0.01; filter: blur(100px); }
     .glitch-effect { display: none; } 
+}
+
+/* New breakpoint for very small mobile screens for hero description alignment */
+@media (max-width: 480px) {
+    .hero-description {
+        text-align: left; /* Prefer left alignment on very small screens to prevent "rivers" */
+    }
 }
 
 /* --- Accessibility: Reduce Motion --- */
