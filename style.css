@@ -21,7 +21,7 @@
     /* Variables for gallery slider */
     --gallery-ring-radius: clamp(120px, 20vw, 200px);
     --gallery-image-width: clamp(100px, 18vw, 170px);
-    --gallery-image-height: calc(var(--gallery-image-width) * 0.66);
+    --gallery-image-height: calc(var(--gallery-image-width) * 0.66); /* Used to define card height now */
     --gallery-dimmed-brightness: 0.6;
     --gallery-active-brightness: 1.1;
     --gallery-hover-brightness: 1.3;
@@ -88,18 +88,17 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .hero-heading .crafting { color: #ffffff; } .hero-heading .digital { color: var(--text-sub-heading-grey); }
 .hero-description { text-align: justify; line-height: 1.8; font-size: 1em; margin-bottom: 40px; max-width: 90%; color: var(--text-medium); word-spacing: 1px; }
 
-/* Section Headings */
+/* Section Headings - All left-aligned */
 .services-heading, .tools-heading, .gallery-heading {
     font-size: clamp(2.5rem, 8vw, 8rem);
     line-height: 0.75em;
     font-weight: 800;
     text-transform: uppercase;
     width: 100%;
-    /* ✅ UPDATED: Consistent left alignment and bottom margin for ALL headings */
     text-align: left;
-    margin-left: 0; /* Ensures it's not trying to auto-center relative to parent */
+    margin-left: 0; 
     margin-right: auto;
-    padding-left: 0; /* Override any potential default padding on section headings */
+    padding-left: 0; 
     margin-bottom: 30px; 
 }
 
@@ -107,14 +106,13 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .services-heading .text-gray, .tools-heading .text-gray, .gallery-heading .text-gray { color: var(--text-sub-heading-grey); display: block; } 
 
 
-/* Services Section Grid */
+/* Services Section Grid - Updated max-width and padding */
 .services-card-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   gap: 20px; 
-  max-width: 900px; 
-  /* ✅ UPDATED: Align grid to the left */
-  margin-left: 0;
+  max-width: 850px; /* Adjusted from 900px */
+  margin-left: 0; 
   margin-right: auto;
 }
 .face {
@@ -127,7 +125,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   backdrop-filter: blur(12px);       
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 20px; 
+  padding: 16px; /* Adjusted from 20px */
   box-shadow: 0 5px 20px rgba(0,0,0,0.2);
   overflow: hidden;
   text-align: left;
@@ -143,8 +141,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
     gap: 20px; 
     max-width: 900px; 
-    /* ✅ UPDATED: Align grid to the left */
-    margin-left: 0;
+    margin-left: 0; 
     margin-right: auto;
 }
 .tool-card {
@@ -168,9 +165,9 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--tool-name-color); margin: 0 0 5px 0; }
 .tool-category { font-size: 0.85em; color: var(--tool-category-color); margin: 0; }
 
-/* Featured Websites Section */
+/* Featured Websites Section (Gallery) - Updated for better 3D ring stability and content display */
 .gallery-section {
-  text-align: left; /* Changed from center to left for heading alignment */
+  text-align: left; 
   background: transparent;
   color: var(--text-light);
   z-index: 1;
@@ -179,8 +176,8 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 
 .image-ring-container {
   perspective: 1500px;
-  width: 100%;
-  height: calc(var(--gallery-ring-radius) * 2.5 + var(--gallery-image-height));
+  /* Adjusted height for a tighter but safe fit, preventing overlap with next section */
+  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 20px); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -203,7 +200,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 
 .gallery-item, .ring-image {
   width: var(--gallery-image-width);
-  /* height: var(--gallery-image-height); REMOVED: Managed by flex content */
+  height: var(--gallery-image-height);   /* Fixed height for consistent 3D transforms */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -212,51 +209,48 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   backface-visibility: hidden;
   transform-origin: center center;
   
-  margin: 12px; 
-  scale: 1; 
+  margin: 8px; /* Added subtle margin for breathing room between cards */
 
   border-radius: 16px; 
-  background: rgba(20, 20, 20, 0.6);
+  background: rgba(20, 20, 20, 0.7);     /* Translucent glass, slightly darker */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15); 
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); 
 
-  /* ✅ UPDATED: Flex container for content flow + inner padding & gap */
   display: flex;
   flex-direction: column;   /* Stack image + text */
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 16px;            /* More breathing room inside */
-  gap: 12px;                /* ✅ UPDATED: Increased gap between image and text */
+  padding: 12px;            /* Inner padding */
+  gap: 8px;                 /* Gap between image and text */
   overflow: hidden; 
 }
 
 /* Images inside the cards (updated for better content flow) */
 .gallery-item-link img, .ring-image img {
   width: 100%;
-  height: auto;             /* Height auto to respect padding and fit content */
-  max-height: 130px;        /* ✅ UPDATED: Control max image height for readability */
+  height: 70%;                 /* Image scales to 70% of card height */
   object-fit: cover;
   border-radius: 12px; 
   filter: brightness(var(--gallery-dimmed-brightness));
   transition: transform 0.3s ease, filter 0.3s ease;
-  margin-bottom: 0; /* Ensure no conflicting margin here, use parent's gap */
+  margin-bottom: 0; 
 }
 
 /* Text styles for Featured Websites cards */
 .gallery-item .title,
 .ring-image .title {
-  font-size: 1rem;
+  font-size: 0.9rem; /* Slightly smaller for better fit */
   font-weight: 600;
   color: var(--text-light);
 }
 
 .gallery-item .description,
 .ring-image .description {
-  font-size: 0.85rem;
+  font-size: 0.75rem; /* Slightly smaller for better fit */
   color: var(--text-medium);
-  line-height: 1.4;
+  line-height: 1.3; /* Adjusted line-height */
 }
 
 /* Hover effect */
@@ -289,12 +283,6 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
     .left-column-sticky { position: sticky; top: 50%; transform: translateY(-50%); height: calc(100vh - 100px); margin: 0; align-self: flex-start; } 
 }
 
-/* ✅ UPDATED: Services and Tools grids now only collapse to 1 column below 767px */
-@media (max-width: 900px) {
-    /* Removed previous 900px breakpoint rules that were forcing 1 column earlier */
-    /* .services-card-grid and .tools-grid will retain their 2-column layout from desktop up to 767px */
-}
-
 @media (max-width: 1023px) { 
     .section { padding: 60px 20px; }
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; align-items: center; }
@@ -306,7 +294,8 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
         --gallery-image-height: calc(var(--gallery-image-width) * 0.66);
     }
     .gallery-section { padding: 60px 20px; }
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.5 + var(--gallery-image-height)); }
+    /* Updated height for image-ring-container in media query */
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 20px); }
 }
 
 @media (max-width: 767px) {
@@ -321,9 +310,10 @@ footer h2 { font-size: 3.2em; margin-bottom: 25px; color: var(--text-light); fon
         --gallery-image-height: calc(var(--gallery-image-width) * 0.66);
     }
     .gallery-section { padding: 40px 15px; }
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2.5 + var(--gallery-image-height)); }
+    /* Updated height for image-ring-container in media query */
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 20px); }
 
-    /* Explicitly ensure services and tools grids are 1 column on smallest screens */
+    /* Services and tools grids now only collapse to 1 column below 767px */
     .services-card-grid, .tools-grid {
       grid-template-columns: 1fr;
       max-width: 400px;
