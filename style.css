@@ -28,8 +28,7 @@
     /* Hover Effects */
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
 
-    /* Featured Websites Ring Vars */
-    /* ✅ FIXED: Larger ring radius and slightly smaller card width for better spacing and visibility */
+    /* Featured Websites Ring Vars - FIXED: New landscape aspect ratio and increased radius for spacing */
     --gallery-ring-radius: clamp(240px, 32vw, 320px); /* wider so 3–4 faces visible */
     --gallery-image-width: clamp(150px, 18vw, 190px); /* broader cards */
     --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* landscape ratio */
@@ -295,7 +294,7 @@ html::before {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   gap: 20px; 
-  max-width: 700px; /* ✅ FIXED: Reduced max-width for a more compact look */
+  max-width: 850px; /* ✅ FIXED: Increased max-width for broader services section */
   margin-left: 0; 
   margin-right: auto;
 }
@@ -422,7 +421,6 @@ html::before {
   width: 100%;
   height: 100%;
   min-height: calc(var(--gallery-ring-radius) * 2);
-  /* Explicit padding removed in favor of `gallery-ring-radius` for spacing */
 }
 
 .image-ring:active {
@@ -438,13 +436,16 @@ html::before {
 
   width: var(--gallery-image-width); /* Fixed width from updated variable */
   height: var(--gallery-image-height); /* Fixed height from updated variable */
-  margin: 0 6px; /* ✅ FIXED: Small horizontal margin for visual breathing space */
-
-  /* Force exact placement in 3D ring */
+  
+  /* ✅ FIXED: Correct CSS centering (applies before JS transform) */
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  margin-left: calc(var(--gallery-image-width) / -2); 
+  margin-top: calc(var(--gallery-image-height) / -2);
+  padding: 6px; /* Added padding for visual breathing room around internal content */
+
+  /* Removed transform: translate(-50%, -50%); as it gets overridden by JS and margin now handles centering */
   transform-style: preserve-3d;
   backface-visibility: hidden;
 
@@ -455,7 +456,16 @@ html::before {
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4); /* Consistent shadow */
   overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease; /* Maintain hover/transform transition */
 }
+
+/* Hover effect for the whole card */
+.gallery-item:hover, .ring-image:hover {
+    /* Apply a lift relative to its current 3D position */
+    transform: translateZ(20px); 
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
 
 /* Image = top 70% of card */
 .gallery-item-link, .ring-image-link {
@@ -625,7 +635,7 @@ footer h2 {
     
     :root {
         /* ✅ Adjusted clamp for responsive ring radius (mobile) */
-        --gallery-ring-radius: clamp(180px, 28vw, 280px); /* Scaled from desktop for mobile */
+        --gallery-ring-radius: clamp(190px, 28vw, 290px); /* Scaled from desktop for mobile */
         --gallery-image-width: clamp(140px, 20vw, 170px); /* Scaled card width for mobile */
         --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Landscape ratio for mobile */
     }
@@ -641,7 +651,7 @@ footer h2 {
     .contact-button { width: 100%; justify-content: center; }
     :root {
         /* ✅ Adjusted clamp for responsive ring radius (small mobile) */
-        --gallery-ring-radius: clamp(140px, 32vw, 200px); /* Smaller still for very small screens */
+        --gallery-ring-radius: clamp(150px, 30vw, 220px); /* Smaller still for very small screens */
         --gallery-image-width: clamp(110px, 25vw, 140px); /* Adjusted card width for small mobile */
         --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Landscape ratio for small mobile */
     }
