@@ -28,7 +28,7 @@
     /* Hover Effects */
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
 
-    /* Featured Websites Ring Vars - ✅ FIXED: Optimized for large screens, scaled down responsively */
+    /* Featured Websites Ring Vars - FIXED: Optimized for large screens, scaled down responsively */
     --gallery-ring-radius: clamp(280px, 36vw, 380px); /* Increased spacing for default/medium screens */
     --gallery-image-width: clamp(140px, 16vw, 180px); /* Narrower cards for default/medium screens */
     --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* landscape ratio */
@@ -106,17 +106,30 @@ html::before {
     min-height: 100vh; 
     padding-top: 20px; 
 }
-.left-column-sticky { 
-    flex-shrink: 0; 
-    flex-basis: 370px; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
-    z-index: 2; 
-    position: relative; 
-    top: auto; 
-    height: auto; 
+/* ✅ FIXED: Left Sticky Column Animation */
+.left-column-sticky {
+  flex-shrink: 0;
+  flex-basis: 370px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  position: relative; /* Base position, will be sticky on larger screens */
+  top: auto; /* Reset top for non-sticky state */
+  height: auto;
+  animation: leftColumnPopIn 1.4s ease-out both; /* Apply animation */
+}
+
+@keyframes leftColumnPopIn {
+  0% {
+    transform: translateY(80px) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
 /* Striped Entry List (Animation for navigation/list items) */
@@ -499,7 +512,7 @@ html::before {
   object-fit: cover;
   border-radius: 12px 12px 0 0;
   display: block;
-  filter: brightness(0.8); /* ✅ FIXED: Stronger dimming for image background readability */
+  filter: brightness(0.8); /* ✅ FIXED: Adjusted image brightness */
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 .gallery-item-link:hover img, .ring-image-link:hover img {
@@ -559,7 +572,7 @@ html::before {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* ✅ FIXED: Text shadow for readability */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* Text shadow for readability */
     margin-bottom: 0; /* Override old margin */
 }
 .gallery-caption .description { /* Adapting style for p.memory-preview equivalent */
@@ -568,7 +581,7 @@ html::before {
     color: var(--text-light); /* ✅ FIXED: Explicitly set text-light for better contrast */
     overflow: hidden;
     text-overflow: ellipsis;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* ✅ FIXED: Text shadow for readability */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* Text shadow for readability */
     margin-bottom: 0; /* Override old margin */
 }
 
@@ -657,7 +670,19 @@ footer h2 {
 }
 
 /* Media Queries */
-@media (min-width: 1200px) { /* ✅ NEW BREAKPOINT: Larger screens */
+@media (min-width: 1024px) { 
+    .main-layout-container { align-items: stretch; } 
+    .left-column-sticky { 
+        position: sticky; 
+        top: 100px; /* ✅ FIXED: Consistent sticky top */
+        transform: none; /* ✅ FIXED: Remove transform to prevent conflict with animation */
+        height: calc(100vh - 100px); 
+        margin: 0; 
+        align-self: flex-start; 
+    } 
+}
+
+@media (min-width: 1200px) { /* ✅ NEW BREAKPOINT: Larger screens for more spacious carousel */
   :root {
     --gallery-ring-radius: clamp(350px, 40vw, 500px); /* Larger radius for more separation */
     --gallery-image-width: clamp(120px, 14vw, 160px); /* Slightly narrower cards */
@@ -696,7 +721,7 @@ footer h2 {
 
 @media (max-width: 767px) {
     .section { padding: 40px 15px; }
-    .main-layout-container { padding: 15px; gap: 30px; }
+    .main-layout-container { flex-direction: column; padding: 15px; gap: 30px; align-items: center; }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
