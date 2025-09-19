@@ -28,9 +28,9 @@
     /* Hover Effects */
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
 
-    /* Featured Websites Ring Vars - FIXED: New landscape aspect ratio and increased radius for spacing */
-    --gallery-ring-radius: clamp(240px, 32vw, 320px); /* wider so 3–4 faces visible */
-    --gallery-image-width: clamp(150px, 18vw, 190px); /* broader cards */
+    /* Featured Websites Ring Vars - ✅ FIXED: Larger ring radius and narrower card width for optimal spacing */
+    --gallery-ring-radius: clamp(280px, 36vw, 380px); /* Increased spacing */
+    --gallery-image-width: clamp(140px, 16vw, 180px); /* Narrower cards */
     --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* landscape ratio */
     --gallery-dimmed-brightness: 0.6; /* Default brightness for images (adjusted via filter below) */
     --gallery-active-brightness: 1.1;
@@ -274,24 +274,33 @@ html::before {
     text-transform: uppercase;
     width: 100%;
     text-align: left;
-    margin-left: 0; 
-    margin-right: auto;
     padding-left: 0; 
-    margin-bottom: 30px; 
+    
+    /* ✅ FIXED: Spacing and visibility for gallery heading */
+    margin-bottom: 60px; /* Space below heading */
+    position: relative;
+    z-index: 2; /* Ensure heading is above carousel cards */
+    color: var(--text-light); /* Strong contrast */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.7); /* Text shadow for readability */
+    font-weight: 900; /* Bolder font */
+    font-size: clamp(2.5rem, 7vw, 5rem); /* Consistent font size */
 }
-
+/* Ensure the text spans inside still override/set their specific colors if needed */
 .services-heading .text-white, 
 .tools-heading .text-white, 
 .gallery-heading .text-white { 
     color: var(--text-light); 
     display: block; /* Ensures the text takes its own line */
+    text-shadow: none; /* Remove shadow from this specific span if the parent has it */
 }
 .services-heading .text-gray, 
 .tools-heading .text-gray, 
 .gallery-heading .text-gray { 
     color: var(--text-secondary); /* Uses new variable */
     display: block; /* Ensures the text takes its own line */
+    text-shadow: none; /* Remove shadow from this specific span if the parent has it */
 } 
+
 
 /* Services Section Grid */
 .services-card-grid {
@@ -415,6 +424,11 @@ html::before {
   justify-content: center;
   align-items: center;
   overflow: visible;
+  
+  /* ✅ FIXED: Space between heading and ring */
+  margin-top: 60px;
+  position: relative;
+  z-index: 1; /* Ensure cards are below heading */
 }
 
 .image-ring {
@@ -461,6 +475,9 @@ html::before {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover */
+  
+  /* ✅ FIXED: z-index for layering */
+  z-index: 1; /* Ensure cards are below heading (z-index 2) */
 }
 
 /* Hover effect for the whole card */
@@ -532,7 +549,7 @@ html::before {
 .gallery-caption .memory-date { /* Existing date class, adapting style */
     font-family: "Orbitron", sans-serif;
     font-size: 0.8rem;
-    color: var(--carousel-accent); /* ✅ Using neon accent color from index.html */
+    color: var(--carousel-accent); /* Using neon accent color from index.html */
     text-shadow: 0 0 5px rgba(255, 0, 229, 0.7);
     margin-bottom: 0; /* Override old margin */
 }
