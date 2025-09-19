@@ -28,9 +28,9 @@
     /* Hover Effects */
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
 
-    /* Featured Websites Ring Vars - ✅ FIXED: Larger ring radius and narrower card width for optimal spacing */
-    --gallery-ring-radius: clamp(280px, 36vw, 380px); /* Increased spacing */
-    --gallery-image-width: clamp(140px, 16vw, 180px); /* Narrower cards */
+    /* Featured Websites Ring Vars - ✅ FIXED: Optimized for large screens, scaled down responsively */
+    --gallery-ring-radius: clamp(280px, 36vw, 380px); /* Increased spacing for default/medium screens */
+    --gallery-image-width: clamp(140px, 16vw, 180px); /* Narrower cards for default/medium screens */
     --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* landscape ratio */
     --gallery-dimmed-brightness: 0.6; /* Default brightness for images (adjusted via filter below) */
     --gallery-active-brightness: 1.1;
@@ -270,18 +270,17 @@ html::before {
 .gallery-heading {
     font-size: clamp(2.5rem, 8vw, 8rem);
     line-height: 0.75em;
-    font-weight: 800;
     text-transform: uppercase;
     width: 100%;
     text-align: left;
     padding-left: 0; 
     
     /* ✅ FIXED: Spacing and visibility for gallery heading */
-    margin-bottom: 60px; /* Space below heading */
+    margin-bottom: 100px; /* More space below heading */
     position: relative;
-    z-index: 2; /* Ensure heading is above carousel cards */
+    z-index: 10; /* Ensure heading is clearly above carousel cards */
     color: var(--text-light); /* Strong contrast */
-    text-shadow: 0 2px 4px rgba(0,0,0,0.7); /* Text shadow for readability */
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8); /* Stronger text shadow for readability */
     font-weight: 900; /* Bolder font */
     font-size: clamp(2.5rem, 7vw, 5rem); /* Consistent font size */
 }
@@ -426,9 +425,9 @@ html::before {
   overflow: visible;
   
   /* ✅ FIXED: Space between heading and ring */
-  margin-top: 60px;
+  margin-top: 100px; /* More space from heading */
   position: relative;
-  z-index: 1; /* Ensure cards are below heading */
+  z-index: 1; /* Ensure cards are below heading (z-index 10) */
 }
 
 .image-ring {
@@ -455,7 +454,7 @@ html::before {
   width: var(--gallery-image-width); /* Fixed width from updated variable */
   height: var(--gallery-image-height); /* Fixed height from updated variable */
   
-  /* ✅ FIXED: Correct CSS centering (applies before JS transform) */
+  /* FIXED: Correct CSS centering (applies before JS transform) - margin is critical here */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -468,22 +467,22 @@ html::before {
   backface-visibility: hidden; /* Recommended for 3D performance even on single face */
 
   border-radius: 16px;
-  /* ✅ Match index.html memory-card background & border */
+  /* Match index.html memory-card background & border */
   background: linear-gradient(135deg, rgba(30,30,60,0.8), rgba(20,20,40,0.9));
-  border: 1px solid rgba(157, 0, 255, 0.3); /* Using primary accent from index.html */
-  /* ✅ Match index.html memory-card box-shadow */
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(157, 0, 255, 0.6); /* ✅ FIXED: More vivid border using primary accent from index.html */
+  /* Match index.html memory-card box-shadow */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); /* ✅ FIXED: Stronger card shadow for better separation */
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover */
   
   /* ✅ FIXED: z-index for layering */
-  z-index: 1; /* Ensure cards are below heading (z-index 2) */
+  z-index: 1; /* Ensure cards are below heading (z-index 10) */
 }
 
-/* Hover effect for the whole card */
+/* Strengthen Glow / Depth on Hover */
 .gallery-item:hover, .ring-image:hover {
-  transform: translateZ(20px); /* Apply a lift relative to its current 3D position */
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  transform: translateZ(30px); /* ✅ FIXED: Stronger lift on hover */
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); /* ✅ FIXED: Stronger hover shadow */
 }
 
 
@@ -500,7 +499,7 @@ html::before {
   object-fit: cover;
   border-radius: 12px 12px 0 0;
   display: block;
-  filter: brightness(0.5); /* ✅ FIXED: Stronger dimming for image background readability */
+  filter: brightness(0.8); /* ✅ FIXED: Stronger dimming for image background readability */
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 .gallery-item-link:hover img, .ring-image-link:hover img {
@@ -539,7 +538,7 @@ html::before {
 .gallery-caption {
   flex: 1; /* Takes the remaining 30% of card height */
   padding: 10px 14px; /* Consistent padding with slightly wider horizontal */
-  background: rgba(0, 0, 0, 0.65); /* ✅ FIXED: Darker translucent backing for readability */
+  background: rgba(0, 0, 0, 0.4); /* ✅ FIXED: Less opaque caption background */
   display: flex;
   flex-direction: column;
   justify-content: center; /* Vertically centers content within caption */
@@ -556,7 +555,7 @@ html::before {
 .gallery-caption .title { /* Adapting style for h3 equivalent */
     font-size: 1rem; 
     font-weight: 600;
-    color: var(--text-light); /* Using text-light from original context */
+    color: var(--text-light); /* ✅ FIXED: Explicitly set text-light for better contrast */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -566,16 +565,11 @@ html::before {
 .gallery-caption .description { /* Adapting style for p.memory-preview equivalent */
     font-size: 0.8rem; 
     line-height: 1.3;
-    color: var(--text-medium); /* Using text-medium from original context */
+    color: var(--text-light); /* ✅ FIXED: Explicitly set text-light for better contrast */
     overflow: hidden;
     text-overflow: ellipsis;
     text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* ✅ FIXED: Text shadow for readability */
     margin-bottom: 0; /* Override old margin */
-}
-
-/* Hover effect for the whole card (already good) */
-.gallery-item:hover, .ring-image:hover {
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
 }
 
 /* Contact Section */
@@ -663,16 +657,12 @@ footer h2 {
 }
 
 /* Media Queries */
-@media (min-width: 1024px) { 
-    .main-layout-container { align-items: stretch; } 
-    .left-column-sticky { 
-        position: sticky; 
-        top: 50%; 
-        transform: translateY(-50%); 
-        height: calc(100vh - 100px); 
-        margin: 0; 
-        align-self: flex-start; 
-    } 
+@media (min-width: 1200px) { /* ✅ NEW BREAKPOINT: Larger screens */
+  :root {
+    --gallery-ring-radius: clamp(350px, 40vw, 500px); /* Larger radius for more separation */
+    --gallery-image-width: clamp(120px, 14vw, 160px); /* Slightly narrower cards */
+    --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* landscape ratio */
+  }
 }
 
 @media (max-width: 1023px) { 
@@ -689,13 +679,19 @@ footer h2 {
     }
     
     :root {
-        /* ✅ Adjusted clamp for responsive ring radius (mobile) */
-        --gallery-ring-radius: clamp(190px, 28vw, 290px); /* Scaled from desktop for mobile */
-        --gallery-image-width: clamp(140px, 20vw, 170px); /* Scaled card width for mobile */
+        /* ✅ Adjusted clamp for responsive ring radius (medium screens) */
+        --gallery-ring-radius: clamp(250px, 30vw, 350px); /* Scaled for mobile */
+        --gallery-image-width: clamp(100px, 16vw, 140px); /* Scaled card width for mobile */
         --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Landscape ratio for mobile */
     }
     .gallery-section { padding: 60px 20px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
+
+    /* Heading adjustments for smaller screens (already in global .gallery-heading, but refined for specific breakpoint) */
+    .gallery-heading {
+        margin-bottom: 50px; /* Less space needed on smaller screens */
+        font-size: clamp(2rem, 7vw, 4rem); /* Smaller font size for heading */
+    }
 }
 
 @media (max-width: 767px) {
@@ -706,8 +702,8 @@ footer h2 {
     .contact-button { width: 100%; justify-content: center; }
     :root {
         /* ✅ Adjusted clamp for responsive ring radius (small mobile) */
-        --gallery-ring-radius: clamp(150px, 30vw, 220px); /* Smaller still for very small screens */
-        --gallery-image-width: clamp(110px, 25vw, 140px); /* Adjusted card width for small mobile */
+        --gallery-ring-radius: clamp(180px, 32vw, 280px); /* Scaled for very small screens */
+        --gallery-image-width: clamp(80px, 20vw, 110px); /* Adjusted card width for small mobile */
         --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Landscape ratio for small mobile */
     }
     .gallery-section { padding: 40px 15px; }
