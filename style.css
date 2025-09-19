@@ -35,6 +35,10 @@
     --gallery-dimmed-brightness: 0.6; /* Default brightness for images (adjusted via filter below) */
     --gallery-active-brightness: 1.1;
     --gallery-hover-brightness: 1.3;
+
+    /* Additional colors from index.html memory carousel for consistent styling */
+    --carousel-primary: #9d00ff; /* Matches --primary from index.html */
+    --carousel-accent: #ff00e5; /* Matches --accent from index.html */
 }
 
 /* Universal Box-Sizing & Body */
@@ -394,7 +398,7 @@ html::before {
     margin: 0; 
 }
 
-/* Featured Websites Section (Gallery) - Refactored for structured content */
+/* Featured Websites Section (Gallery) - Refactored to match Memory Carousel style (No Flip) */
 .gallery-section {
   text-align: left; 
   background: transparent;
@@ -427,7 +431,7 @@ html::before {
   cursor: grabbing;
 }
 
-/* Featured Websites Cards – clean + consistent */
+/* Featured Websites Cards – clean + consistent (matching index.html memory-card look) */
 .gallery-item, .ring-image {
   display: flex;
   flex-direction: column;
@@ -446,24 +450,23 @@ html::before {
   padding: 6px; /* Added padding for visual breathing room around internal content */
 
   /* Removed transform: translate(-50%, -50%); as it gets overridden by JS and margin now handles centering */
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
+  transform-style: preserve-3d; /* Needed for the 3D ring environment, even if not flipping */
+  backface-visibility: hidden; /* Recommended for 3D performance even on single face */
 
   border-radius: 16px;
-  background: rgba(20, 20, 20, 0.75); /* translucent glass */
-  backdrop-filter: blur(12px); /* Consistent blur value */
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4); /* Consistent shadow */
+  /* ✅ Match index.html memory-card background & border */
+  background: linear-gradient(135deg, rgba(30,30,60,0.8), rgba(20,20,40,0.9));
+  border: 1px solid rgba(157, 0, 255, 0.3); /* Using primary accent from index.html */
+  /* ✅ Match index.html memory-card box-shadow */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease; /* Maintain hover/transform transition */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover */
 }
 
 /* Hover effect for the whole card */
 .gallery-item:hover, .ring-image:hover {
-    /* Apply a lift relative to its current 3D position */
-    transform: translateZ(20px); 
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  transform: translateZ(20px); /* Apply a lift relative to its current 3D position */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
 }
 
 
@@ -472,6 +475,7 @@ html::before {
   flex: 0 0 70%; /* Image container takes exactly 70% of card height */
   width: 100%;
   overflow: hidden;
+  position: relative; /* Needed for .glitch-effect positioning */
 }
 .gallery-item-link img, .ring-image-link img {
   width: 100%;
@@ -487,6 +491,33 @@ html::before {
   filter: brightness(var(--gallery-hover-brightness));
 }
 
+/* Optional: Glitch effect overlay for images (requires HTML div with class "glitch-effect" inside .gallery-item-link) */
+.glitch-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      45deg,
+      transparent 65%,
+      rgba(157, 0, 255, 0.3) 70%, /* Using var(--carousel-primary) for consistency */
+      transparent 75%
+    );
+    background-size: 200% 200%;
+    animation: glitch 3s linear infinite;
+    z-index: 1;
+    pointer-events: none; /* Allows clicks to pass through to the image link */
+}
+@keyframes glitch {
+    0% { background-position: 0 0; }
+    25% { background-position: 100% 0; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0 100%; }
+    100% { background-position: 0 0; }
+}
+
+
 /* Caption = bottom 30% of card */
 .gallery-caption {
   flex: 1; /* Takes the remaining 30% of card height */
@@ -497,22 +528,32 @@ html::before {
   justify-content: center; /* Vertically centers content within caption */
   gap: 6px; /* Consistent gap */
 }
-.gallery-caption .title {
-  font-size: 1rem; /* Adjusted font size */
-  font-weight: 600;
-  color: var(--text-light);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* ✅ FIXED: Text shadow for readability */
+/* Styling for elements within .gallery-caption to match memory carousel */
+.gallery-caption .memory-date { /* Existing date class, adapting style */
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.8rem;
+    color: var(--carousel-accent); /* ✅ Using neon accent color from index.html */
+    text-shadow: 0 0 5px rgba(255, 0, 229, 0.7);
+    margin-bottom: 0; /* Override old margin */
 }
-.gallery-caption .description {
-  font-size: 0.8rem; /* Adjusted font size */
-  line-height: 1.3;
-  color: var(--text-medium);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* ✅ FIXED: Text shadow for readability */
+.gallery-caption .title { /* Adapting style for h3 equivalent */
+    font-size: 1rem; 
+    font-weight: 600;
+    color: var(--text-light); /* Using text-light from original context */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* ✅ FIXED: Text shadow for readability */
+    margin-bottom: 0; /* Override old margin */
+}
+.gallery-caption .description { /* Adapting style for p.memory-preview equivalent */
+    font-size: 0.8rem; 
+    line-height: 1.3;
+    color: var(--text-medium); /* Using text-medium from original context */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* ✅ FIXED: Text shadow for readability */
+    margin-bottom: 0; /* Override old margin */
 }
 
 /* Hover effect for the whole card (already good) */
@@ -556,15 +597,12 @@ footer h2 {
     padding: 15px 25px; 
     border: none; 
     border-radius: 10px; 
-    font-size: 1rem; 
-    display: flex; 
-    align-items: center; 
-    gap: 8px; 
     box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
     cursor: pointer; 
     transition: all 0.3s, opacity 0.3s; 
     position: relative; 
     overflow: hidden; 
+    font-size: 1rem; /* Added for consistency */
 }
 .contact-button:hover { 
     transform: translateY(-2px); 
