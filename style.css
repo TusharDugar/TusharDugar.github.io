@@ -29,9 +29,9 @@
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
 
     /* Featured Websites Ring Vars - FIXED: Optimized for large screens, scaled down responsively */
-    --gallery-ring-radius: clamp(280px, 36vw, 380px); /* Increased spacing for default/medium screens */
-    --gallery-image-width: clamp(140px, 16vw, 180px); /* Narrower cards for default/medium screens */
-    --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* landscape ratio */
+    --gallery-ring-radius: clamp(350px, 38vw, 480px); /* Updated with new clamp value */
+    --gallery-image-width: clamp(180px, 18vw, 250px); /* Updated with new clamp value */
+    --gallery-image-height: calc(var(--gallery-image-width) * 0.7); /* landscape ratio (updated from 0.65) */
     --gallery-dimmed-brightness: 0.6; /* Default brightness for images (adjusted via filter below) */
     --gallery-active-brightness: 1.1;
     --gallery-hover-brightness: 1.3;
@@ -39,6 +39,8 @@
     /* Additional colors from index.html memory carousel for consistent styling */
     --carousel-primary: #9d00ff; /* Matches --primary from index.html */
     --carousel-accent: #ff00e5; /* Matches --accent from index.html */
+
+    --section-left-offset: 60px; /* ✅ ADDED: Matches hero left padding */
 }
 
 /* Universal Box-Sizing & Body */
@@ -91,7 +93,16 @@ html::before {
 .mouse-follower-glow { position: fixed; top: 0; left: 0; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, transparent 60%); filter: blur(50px); z-index: 100; pointer-events: none; transition: transform 0.1s ease-out; will-change: transform; }
 
 /* Global Section & Reveal Animations */
-.section { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; padding: 80px 40px; }
+.section { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    position: relative; 
+    z-index: 1; 
+    padding: 80px 40px; 
+    /* ✅ FIXED: Services section alignment - apply offset here */
+    padding-left: var(--section-left-offset);
+    padding-right: 0; /* Remove default right padding if needed */
+}
 .reveal-item, .reveal-child, .reveal-stagger { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, opacity; }
 .reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
 
@@ -119,6 +130,7 @@ html::before {
   top: auto; /* Default for mobile/smaller screens */
   height: auto;
   animation: leftColumnPopIn 1.4s ease-out both; /* Apply animation */
+  will-change: transform, opacity; /* ✅ OPTIONAL: Performance improvement */
 }
 
 @keyframes leftColumnPopIn {
@@ -152,12 +164,11 @@ html::before {
 .striped-entry-list li:nth-child(4) { animation-delay: 0.65s; } 
 .striped-entry-list li:nth-child(5) { animation-delay: 0.8s; }
 
-/* "About" Card Styles (Profile Card) */
+/* "About" Card Styles (Profile Card) - ✅ FIXED: Made more compact and aligned */
 .about-left-content { 
     background-color: var(--bg-profile-card); 
     color: var(--text-dark-card); 
     border-radius: 20px; 
-    padding: 30px 25px; 
     box-shadow: 0 10px 30px var(--shadow-color-card-white); 
     width: 100%; 
     max-width: 370px; 
@@ -169,13 +180,16 @@ html::before {
     overflow: hidden; 
     height: auto; 
     box-sizing: border-box; 
+    
+    padding: 20px 20px; /* ✅ Smaller padding */
+    max-height: 85vh; /* ✅ Prevent stretching */
 }
 .profile-image-container { 
-    width: 180px; 
-    height: 180px; 
-    border-radius: 0; /* Square profile image, intentional */
+    width: 140px; /* ✅ Smaller image container */
+    height: 140px; /* ✅ Smaller image container */
+    border-radius: 0; 
     overflow: hidden; 
-    margin-bottom: 25px; 
+    margin-bottom: 15px; /* ✅ Reduced margin */
 }
 .profile-photo { 
     width: 100%; 
@@ -184,20 +198,20 @@ html::before {
     object-position: center; 
 }
 .about-left-content h3 { 
-    font-size: 2.8em; 
+    font-size: 2.2em; /* ✅ Smaller font size */
     font-weight: 700; 
-    margin: 0 0 20px 0; 
+    margin: 0 0 12px 0; /* ✅ Reduced margin */
     line-height: 1.1; 
     color: var(--text-dark-card); 
 }
 .fire-icon-with-line { 
     position: relative; 
     width: 100%; 
-    height: 40px; 
+    height: 30px; /* ✅ Smaller height */
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    margin-bottom: 25px; 
+    margin-bottom: 15px; /* ✅ Reduced margin */
 }
 .fire-icon { 
     background-color: var(--accent-primary-sawad); 
@@ -221,19 +235,19 @@ html::before {
 .fire-icon-with-line::before { left: 0; width: calc(50% - 25px); } 
 .fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
 .about-short-desc { 
-    line-height: 1.8; 
-    font-size: 0.9em; 
+    line-height: 1.6; /* ✅ Reduced line height */
+    font-size: 0.85em; /* ✅ Smaller font size */
     color: var(--text-medium-card); 
-    margin-bottom: 25px; 
+    margin-bottom: 20px; /* ✅ Reduced margin */
     max-width: 90%; 
     word-spacing: 1px; 
 }
 .about-social-icons { 
     display: flex; 
     justify-content: center; 
-    gap: 15px; 
+    gap: 10px; /* ✅ Reduced gap */
     margin-top: auto; 
-    padding-top: 10px; 
+    padding-top: 5px; /* ✅ Reduced padding */
 }
 .about-social-icons a { 
     color: var(--accent-primary-sawad); 
@@ -286,9 +300,8 @@ html::before {
     text-transform: uppercase;
     width: 100%;
     text-align: left;
-    padding-left: 0; 
     
-    /* ✅ FIXED: Spacing and visibility for gallery heading */
+    /* Spacing and visibility for gallery heading */
     margin-bottom: 100px; /* More space below heading */
     position: relative;
     z-index: 10; /* Ensure heading is clearly above carousel cards */
@@ -296,6 +309,10 @@ html::before {
     text-shadow: 0 2px 6px rgba(0,0,0,0.8); /* Stronger text shadow for readability */
     font-weight: 900; /* Bolder font */
     font-size: clamp(2.5rem, 7vw, 5rem); /* Consistent font size */
+
+    /* ✅ FIXED: Services heading alignment */
+    padding-left: 0; /* Align flush with section */
+    margin-left: 0; /* Align heading to the left */
 }
 /* Ensure the text spans inside still override/set their specific colors if needed */
 .services-heading .text-white, 
@@ -319,8 +336,10 @@ html::before {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   gap: 20px; 
-  max-width: 850px; /* FIXED: Increased max-width for broader services section */
-  margin-left: 0; 
+  max-width: 850px; /* Increased max-width for broader services section */
+  
+  /* ✅ FIXED: Services grid alignment */
+  margin-left: 0; /* Align cards with heading */
   margin-right: auto;
 }
 .face {
@@ -383,7 +402,7 @@ html::before {
   align-items: center;
   gap: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s ease; /* ✅ OPTIONAL: Performance/Smoothness */
   cursor: pointer;
   will-change: transform, opacity;
 }
@@ -419,38 +438,40 @@ html::before {
     margin: 0; 
 }
 
-/* Featured Websites Section (Gallery) - Refactored to match Memory Carousel style (No Flip) */
+/* Featured Websites Section (Gallery) - ✅ FIXED: Corrected layout and visibility */
 .gallery-section {
   text-align: left; 
   background: transparent;
   color: var(--text-light);
   z-index: 1;
   padding: 80px 40px;
+
+  /* ✅ FIXED: Services section alignment - apply offset here */
+  padding-left: var(--section-left-offset);
+  padding-right: 0; /* Remove default right padding if needed */
 }
 
 .image-ring-container {
-  perspective: 1500px;
-  /* Height dynamically calculated based on new ring radius and card height */
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); 
+  perspective: 1500px; /* Set perspective */
+  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 40px); /* ✅ Dynamic height, reduced +40px */
+  width: 100%; /* Ensure full width to center the ring */
+  position: relative; /* Required for absolute children */
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: visible;
+  overflow: visible; /* Ensure ring is not clipped */
   
-  /* ✅ FIXED: Space between heading and ring */
-  margin-top: 100px; /* More space from heading */
-  position: relative;
-  z-index: 1; /* Ensure cards are below heading (z-index 10) */
+  margin-top: 100px; /* Space from heading */
+  z-index: 1; /* Below heading */
 }
 
 .image-ring {
   position: relative;
+  width: calc(var(--gallery-ring-radius) * 2); /* Set width to match ring diameter */
+  height: calc(var(--gallery-ring-radius) * 2); /* Set height to match ring diameter */
   transform-style: preserve-3d;
   will-change: transform;
   cursor: grab;
-  width: 100%;
-  height: 100%;
-  min-height: calc(var(--gallery-ring-radius) * 2);
 }
 
 .image-ring:active {
@@ -473,35 +494,35 @@ html::before {
   left: 50%;
   margin-left: calc(var(--gallery-image-width) / -2); 
   margin-top: calc(var(--gallery-image-height) / -2);
-  padding: 6px; /* Added padding for visual breathing room around internal content */
+  
+  min-width: 100px; /* ✅ Min width for cards */
+  min-height: 70px; /* ✅ Min height for cards */
 
-  /* Removed transform: translate(-50%, -50%); as it gets overridden by JS and margin now handles centering */
   transform-style: preserve-3d; /* Needed for the 3D ring environment, even if not flipping */
   backface-visibility: hidden; /* Recommended for 3D performance even on single face */
 
   border-radius: 16px;
   /* Match index.html memory-card background & border */
   background: linear-gradient(135deg, rgba(30,30,60,0.8), rgba(20,20,40,0.9));
-  border: 1px solid rgba(157, 0, 255, 0.6); /* FIXED: More vivid border using primary accent from index.html */
+  border: 1px solid rgba(157, 0, 255, 0.6); /* More vivid border using primary accent from index.html */
   /* Match index.html memory-card box-shadow */
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); /* FIXED: Stronger card shadow for better separation */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); /* Stronger card shadow for better separation */
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover */
   
-  /* ✅ FIXED: z-index for layering */
-  z-index: 1; /* Ensure cards are below heading (z-index 10) */
+  z-index: 1; /* Below heading */
 }
 
 /* Strengthen Glow / Depth on Hover */
 .gallery-item:hover, .ring-image:hover {
-  transform: translateZ(30px); /* ✅ FIXED: Stronger lift on hover */
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); /* ✅ FIXED: Stronger hover shadow */
+  transform: translateZ(30px); /* Stronger lift on hover */
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); /* Stronger hover shadow */
 }
 
 
 /* Image = top 70% of card */
 .gallery-item-link, .ring-image-link {
-  flex: 0 0 70%; /* Image container takes exactly 70% of card height */
+  flex: 0 0 65%; /* ✅ Reduced image height slightly to give caption more space */
   width: 100%;
   overflow: hidden;
   position: relative; /* Needed for .glitch-effect positioning */
@@ -512,7 +533,7 @@ html::before {
   object-fit: cover;
   border-radius: 12px 12px 0 0;
   display: block;
-  filter: brightness(0.8); /* ✅ FIXED: Adjusted image brightness */
+  filter: brightness(0.85); /* ✅ Adjusted image brightness for better visibility */
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 .gallery-item-link:hover img, .ring-image-link:hover img {
@@ -549,13 +570,15 @@ html::before {
 
 /* Caption = bottom 30% of card */
 .gallery-caption {
-  flex: 1; /* Takes the remaining 30% of card height */
-  padding: 10px 14px; /* Consistent padding with slightly wider horizontal */
-  background: rgba(0, 0, 0, 0.4); /* ✅ FIXED: Less opaque caption background */
+  flex: 1; /* ✅ Takes the remaining height (approx 35% after image) */
+  min-height: 50px; /* ✅ Ensures caption text fits */
+  padding: 8px 12px; /* ✅ Adjusted padding */
+  background: rgba(0, 0, 0, 0.5); /* ✅ Less opaque caption background */
   display: flex;
   flex-direction: column;
   justify-content: center; /* Vertically centers content within caption */
-  gap: 6px; /* Consistent gap */
+  gap: 4px; /* ✅ Reduced gap */
+  overflow: visible; /* ✅ Allow text to wrap/be visible within caption area */
 }
 /* Styling for elements within .gallery-caption to match memory carousel */
 .gallery-caption .memory-date { /* Existing date class, adapting style */
@@ -568,20 +591,19 @@ html::before {
 .gallery-caption .title { /* Adapting style for h3 equivalent */
     font-size: 1rem; 
     font-weight: 600;
-    color: var(--text-light); /* ✅ FIXED: Explicitly set text-light for better contrast */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* Text shadow for readability */
+    color: var(--text-light); /* ✅ Explicitly set text-light for better contrast */
+    white-space: normal; /* ✅ Allow multiline text */
+    overflow: visible; /* ✅ Allow text to show */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8); /* Stronger text shadow for readability */
     margin-bottom: 0; /* Override old margin */
 }
 .gallery-caption .description { /* Adapting style for p.memory-preview equivalent */
-    font-size: 0.8rem; 
+    font-size: 0.85rem; 
     line-height: 1.3;
-    color: var(--text-light); /* ✅ FIXED: Explicitly set text-light for better contrast */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7); /* Text shadow for readability */
+    color: var(--text-light); /* ✅ Explicitly set text-light for better contrast */
+    white-space: normal; /* ✅ Allow multiline text */
+    overflow: visible; /* ✅ Allow text to show */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8); /* Stronger text shadow for readability */
     margin-bottom: 0; /* Override old margin */
 }
 
@@ -675,15 +697,15 @@ footer h2 {
     /* ✅ FIXED: Correct sticky properties for left column on desktop */
     .left-column-sticky { 
         position: sticky; 
-        top: 100px; /* Sticky from 100px from top */
-        height: calc(100vh - 100px); /* Adjust height to fit sticky range */
-        transform: none; /* Prevents animation interference on sticky state */
+        top: 50%; /* Sticky from middle of viewport */
+        transform: translateY(-50%); /* Vertically center */
+        height: auto; /* Let content define height */
         align-self: flex-start; /* Ensures it aligns to the start of the flex container */
         margin: 0; /* Reset margins */
     } 
 }
 
-@media (min-width: 1200px) { /* ✅ NEW BREAKPOINT: Larger screens for more spacious carousel */
+@media (min-width: 1200px) { /* NEW BREAKPOINT: Larger screens for more spacious carousel */
   :root {
     --gallery-ring-radius: clamp(350px, 40vw, 500px); /* Larger radius for more separation */
     --gallery-image-width: clamp(120px, 14vw, 160px); /* Slightly narrower cards */
@@ -695,7 +717,7 @@ footer h2 {
     .section { padding: 60px 20px; }
     .main-layout-container { flex-direction: column; padding: 20px; gap: 40px; align-items: center; }
     .left-column-sticky { 
-        position: relative; /* Ensure it's not sticky on smaller screens */
+        position: relative; 
         top: auto; 
         transform: none; 
         height: auto; 
@@ -705,7 +727,7 @@ footer h2 {
     }
     
     :root {
-        /* ✅ Adjusted clamp for responsive ring radius (medium screens) */
+        /* Adjusted clamp for responsive ring radius (medium screens) */
         --gallery-ring-radius: clamp(250px, 30vw, 350px); /* Scaled for mobile */
         --gallery-image-width: clamp(100px, 16vw, 140px); /* Scaled card width for mobile */
         --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Landscape ratio for mobile */
@@ -713,11 +735,21 @@ footer h2 {
     .gallery-section { padding: 60px 20px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
-    /* Heading adjustments for smaller screens (already in global .gallery-heading, but refined for specific breakpoint) */
+    /* Heading adjustments for smaller screens */
     .gallery-heading {
         margin-bottom: 50px; /* Less space needed on smaller screens */
         font-size: clamp(2rem, 7vw, 4rem); /* Smaller font size for heading */
     }
+    /* ✅ FIXED: Services section alignment - apply offset here */
+    .section {
+        padding-left: 20px; /* Adjust to match main-layout-container padding */
+        padding-right: 0;
+    }
+    /* ✅ PERFORMANCE: Reduce background opacity/complexity on mobile */
+    .site-background-image { opacity: 0.05; }
+    .background-color-gradient { opacity: 0.03; }
+    body::before, body::after { opacity: 0.02; filter: blur(200px); }
+    html::before { opacity: 0; } /* Hide subtle grid on smaller screens */
 }
 
 @media (max-width: 767px) {
@@ -728,8 +760,8 @@ footer h2 {
     .contact-button { width: 100%; justify-content: center; }
     :root {
         /* ✅ Adjusted clamp for responsive ring radius (small mobile) */
-        --gallery-ring-radius: clamp(180px, 32vw, 280px); /* Scaled for very small screens */
-        --gallery-image-width: clamp(80px, 20vw, 110px); /* Adjusted card width for small mobile */
+        --gallery-ring-radius: clamp(200px, 40vw, 320px); /* Adjusted for very small screens */
+        --gallery-image-width: clamp(100px, 24vw, 130px); /* Adjusted card width for small mobile */
         --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Landscape ratio for small mobile */
     }
     .gallery-section { padding: 40px 15px; }
@@ -740,4 +772,25 @@ footer h2 {
       grid-template-columns: 1fr;
       max-width: 400px; /* Optional: constrain width on small screens */
     }
+    
+    /* ✅ Caption adjustments for very small screens */
+    .gallery-caption .title,
+    .gallery-caption .description {
+      font-size: 0.75rem; /* Smaller font size on small screens */
+    }
+
+    /* ✅ FIXED: Heading margin-bottom for small mobile */
+    .gallery-heading {
+        margin-bottom: 40px; /* Less space needed on very small screens */
+    }
+    /* ✅ FIXED: Services section alignment - apply offset here */
+    .section {
+        padding-left: 15px; /* Adjust to match main-layout-container padding */
+        padding-right: 0;
+    }
+    /* ✅ PERFORMANCE: Further reduce background opacity/complexity on very small mobile */
+    .site-background-image { opacity: 0.03; }
+    .background-color-gradient { opacity: 0.01; }
+    body::before, body::after { opacity: 0.01; filter: blur(100px); }
+    .glitch-effect { display: none; } /* Disable glitch effect on smallest screens */
 }
