@@ -1,6 +1,6 @@
 /* Basic Reset & Font */
 :root {
-    /* Colors */
+    /* --- Colors --- */
     --bg-main: #000000;
     --bg-profile-card: #FFFFFF;
     --text-light: #F0F0F0;
@@ -11,36 +11,37 @@
     --accent-secondary-sawad: #00FFC2; /* Secondary accent color */
     --text-secondary: #666666; /* Renamed from --text-sub-heading-grey for broader applicability */
 
-    /* Backgrounds */
+    /* Additional colors from index.html memory carousel for consistent styling */
+    --carousel-primary: #9d00ff; 
+    --carousel-accent: #ff00e5; 
+
+    /* --- Backgrounds --- */
     --bg-tool-card: #1A1A1A; 
     --bg-section-card: #141414; 
     --bg-gradient-2: linear-gradient(145deg, #1A1A1A, #0A0A0A); 
 
-    /* Tool Card Specifics */
-    --tool-icon-bg: #F8F8F8;
-    --tool-name-color: var(--text-light);
-    --tool-category-color: var(--text-medium);
-
-    /* Shadows */
+    /* --- Shadows --- */
     --shadow-color-card-white: rgba(0,0,0,0.25); /* Shadow specifically for white cards */
-    --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); 
+    --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4); /* Generic strong shadow */
 
-    /* Hover Effects */
+    /* --- Hover Effects --- */
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
 
-    /* Featured Websites Ring Vars - FIXED: Optimized for large screens, scaled down responsively */
-    --gallery-ring-radius: clamp(350px, 38vw, 480px); /* Updated with new clamp value */
-    --gallery-image-width: clamp(180px, 18vw, 250px); /* Updated with new clamp value */
-    --gallery-image-height: calc(var(--gallery-image-width) * 0.9); /* ✅ Increased card height multiplier */
-    --gallery-dimmed-brightness: 0.6; /* Default brightness for images (adjusted via filter below) */
+    /* --- Layout & Sizing --- */
+    --section-left-offset: 60px; /* Matches hero left padding */
+
+    /* --- Transitions & Animations --- */
+    --transition-speed-fast: 0.3s; /* For common hover transitions */
+    --transition-speed-medium: 0.8s; /* For reveal animations */
+    --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* --- Gallery Slider Variables --- */
+    --gallery-ring-radius: clamp(350px, 38vw, 480px); 
+    --gallery-image-width: clamp(180px, 18vw, 250px); 
+    --gallery-image-height: calc(var(--gallery-image-width) * 1.05); 
+    --gallery-dimmed-brightness: 0.85; /* Used in default img filter below */
     --gallery-active-brightness: 1.1;
     --gallery-hover-brightness: 1.3;
-
-    /* Additional colors from index.html memory carousel for consistent styling */
-    --carousel-primary: #9d00ff; /* Matches --primary from index.html */
-    --carousel-accent: #ff00e5; /* Matches --accent from index.html */
-
-    --section-left-offset: 60px; /* ✅ ADDED: Matches hero left padding */
 }
 
 /* Universal Box-Sizing & Body */
@@ -51,27 +52,28 @@ body {
     line-height: 1.6;
     color: var(--text-light);
     background-color: var(--bg-main);
-    overflow-x: hidden; /* Prevents horizontal scroll from large elements/glows */
-    position: relative; 
+    overflow-x: hidden; 
+    /* position: relative; Removed as not explicitly needed for z-index stacking on body */
     scroll-behavior: smooth;
     min-height: 100vh;
 }
 
 /* Background Layers & Mouse Glow */
-/* Full-screen repeating image background */
 .site-background-image { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.079; background-image: url('./71976 (1).jpg'); background-repeat: repeat; background-size: 400px auto; }
-/* Full-screen animated color gradient */
-.background-color-gradient { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.05; background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); background-size: 400% 400%; animation: gradient 15s ease infinite; }
+.background-color-gradient { 
+    background-color: #1A1A1A; /* Fallback for gradient */
+    position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.05; 
+    background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); 
+    background-size: 400% 400%; animation: gradient 15s ease infinite; 
+}
 @keyframes gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
-/* Large animated background glow effects */
-body::before, body::after { content: ''; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; filter: blur(400px); opacity: 0.03; z-index: -1; pointer-events: none; will-change: transform, opacity; }
+body::before, body::after { content: ''; position: fixed; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0); border-radius: 50%; filter: blur(400px); opacity: 0.03; z-index: -1; pointer-events: none; will-change: transform, opacity; }
 body::before { width: 1300px; height: 1300px; background: radial-gradient(circle at center, var(--accent-primary-sawad) 0%, transparent 60%); animation: glow1 25s infinite alternate ease-in-out; }
 body::after { width: 1200px; height: 1200px; background: radial-gradient(circle at center, var(--accent-secondary-sawad) 0%, transparent 60%); animation: glow2 28s infinite alternate-reverse ease-in-out; }
-@keyframes glow1 { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-55%, -45%) scale(1.05); } 100% { transform: translate(-45%, -55%) scale(1); } }
-@keyframes glow2 { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-45%, -55%) scale(1.03); } 100% { transform: translate(-55%, -45%) scale(1); } }
+@keyframes glow1 { 0% { transform: translate3d(-50%, -50%, 0) scale(1); } 50% { transform: translate3d(-55%, -45%, 0) scale(1.05); } 100% { transform: translate3d(-45%, -55%, 0) scale(1); } }
+@keyframes glow2 { 0% { transform: translate3d(-50%, -50%, 0) scale(1); } 50% { transform: translate3d(-45%, -55%, 0) scale(1.03); } 100% { transform: translate3d(-55%, -45%, 0) scale(1); } }
 
-/* Subtle grid overlay using mask-image for visual texture */
 html::before { 
     content: ''; 
     position: fixed; 
@@ -80,17 +82,22 @@ html::before {
     pointer-events: none; 
     opacity: 0.02; 
     mask-image: 
-        linear-gradient(to right, transparent 99.85%, white 0.15%), /* Vertical lines */
-        linear-gradient(to bottom, transparent 99.85%, white 0.15%), /* Horizontal lines */
-        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%), /* Diagonal / */
-        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%); /* Diagonal \ */
+        linear-gradient(to right, transparent 99.85%, white 0.15%), 
+        linear-gradient(to bottom, transparent 99.85%, white 0.15%), 
+        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%), 
+        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%); 
     mask-size: 40px 40px; 
     -webkit-mask-size: 40px 40px; 
     mask-repeat: repeat; 
     -webkit-mask-repeat: repeat; 
 }
-/* Mouse follower glow effect */
-.mouse-follower-glow { position: fixed; top: 0; left: 0; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, transparent 60%); filter: blur(50px); z-index: 100; pointer-events: none; transition: transform 0.1s ease-out; will-change: transform; }
+.mouse-follower-glow { 
+    position: fixed; top: 0; left: 0; width: 80px; height: 80px; border-radius: 50%; 
+    background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, transparent 60%); 
+    filter: blur(50px); z-index: 100; pointer-events: none; 
+    transition: transform 0.1s ease-out; 
+    will-change: transform; 
+}
 
 /* Global Section & Reveal Animations */
 .section { 
@@ -99,18 +106,26 @@ html::before {
     position: relative; 
     z-index: 1; 
     padding: 80px 40px; 
-    /* ✅ FIXED: Services section alignment - apply offset here */
     padding-left: var(--section-left-offset);
-    padding-right: 0; /* Remove default right padding if needed */
+    padding-right: 0; 
 }
-.reveal-item, .reveal-child, .reveal-stagger { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform, opacity; }
-.reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
+.reveal-item, .reveal-child, .reveal-stagger { 
+    opacity: 0; 
+    transform: translate3d(0, 40px, 0); /* Changed to translate3d */
+    transition: opacity var(--transition-speed-medium) var(--transition-timing-ease-out), 
+                transform var(--transition-speed-medium) var(--transition-timing-ease-out); 
+    will-change: transform, opacity; 
+}
+.reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { 
+    opacity: 1; 
+    transform: translate3d(0, 0, 0); /* Changed to translate3d */
+}
 
 /* Main Layout Structure */
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
-    align-items: center; /* ✅ Ensures vertical centering of main layout items */
+    align-items: center; 
     min-height: 100vh;
     max-width: 1920px; 
     margin: 0 auto; 
@@ -118,7 +133,6 @@ html::before {
     gap: 60px; 
     padding-top: 20px; 
 }
-/* Base styles for left column animation */
 .left-column-sticky {
   flex-shrink: 0;
   flex-basis: 370px;
@@ -127,20 +141,21 @@ html::before {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  position: relative; /* Default for mobile/smaller screens */
-  top: auto; /* Default for mobile/smaller screens */
+  position: relative; 
+  top: auto; 
   height: auto;
-  animation: leftColumnPopIn 1.4s ease-out both; /* Apply animation */
-  will-change: transform, opacity; /* ✅ OPTIONAL: Performance improvement */
+  animation: leftColumnPopIn 1.4s ease-out both; 
+  will-change: transform, opacity; 
+  backface-visibility: hidden; 
 }
 
 @keyframes leftColumnPopIn {
   0% {
-    transform: translateY(80px) scale(0.9);
+    transform: translate3d(0, 80px, 0) scale(0.9); /* Changed to translate3d */
     opacity: 0;
   }
   100% {
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1); /* Changed to translate3d */
     opacity: 1;
   }
 }
@@ -149,10 +164,11 @@ html::before {
 .striped-entry-list { list-style: none; margin: 0; padding: 0; perspective: 1000px; transform-style: preserve-3d; }
 .striped-entry-list li { 
     opacity: 0; 
-    transform: translate3d(0, 0, 0); /* Initial state for animation */
+    transform: translate3d(0, 0, 0); 
     animation: entryAnim 0.6s ease forwards; 
     background: transparent; 
     margin-bottom: 0.8rem; 
+    backface-visibility: hidden; 
 }
 @keyframes entryAnim { 
     0% { transform: translate3d(0, 0, -80px); opacity: 0; } 
@@ -181,16 +197,15 @@ html::before {
     overflow: hidden; 
     height: auto; 
     box-sizing: border-box; 
-    
-    padding: 20px 20px; /* ✅ Smaller padding */
-    max-height: 85vh; /* ✅ Prevent stretching */
+    padding: 20px 20px; 
+    max-height: 85vh; 
 }
 .profile-image-container { 
-    width: 140px; /* ✅ Smaller image container */
-    height: 140px; /* ✅ Smaller image container */
+    width: 140px; 
+    height: 140px; 
     border-radius: 0; 
     overflow: hidden; 
-    margin-bottom: 15px; /* ✅ Reduced margin */
+    margin-bottom: 15px; 
 }
 .profile-photo { 
     width: 100%; 
@@ -199,20 +214,20 @@ html::before {
     object-position: center; 
 }
 .about-left-content h3 { 
-    font-size: 2.2em; /* ✅ Smaller font size */
+    font-size: 2.2em; 
     font-weight: 700; 
-    margin: 0 0 12px 0; /* ✅ Reduced margin */
+    margin: 0 0 12px 0; 
     line-height: 1.1; 
     color: var(--text-dark-card); 
 }
 .fire-icon-with-line { 
     position: relative; 
     width: 100%; 
-    height: 30px; /* ✅ Smaller height */
+    height: 30px; 
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    margin-bottom: 15px; /* ✅ Reduced margin */
+    margin-bottom: 15px; 
 }
 .fire-icon { 
     background-color: var(--accent-primary-sawad); 
@@ -228,7 +243,7 @@ html::before {
     content: ''; 
     position: absolute; 
     top: 50%; 
-    transform: translateY(-50%); 
+    transform: translate3d(0, -50%, 0); /* Changed to translate3d */
     height: 2px; 
     border-top: 2px dashed var(--accent-primary-sawad); 
     z-index: 1; 
@@ -236,27 +251,27 @@ html::before {
 .fire-icon-with-line::before { left: 0; width: calc(50% - 25px); } 
 .fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
 .about-short-desc { 
-    line-height: 1.6; /* ✅ Reduced line height */
-    font-size: 0.85em; /* ✅ Smaller font size */
+    line-height: 1.6; 
+    font-size: 0.85em; 
     color: var(--text-medium-card); 
-    margin-bottom: 20px; /* ✅ Reduced margin */
+    margin-bottom: 20px; 
     max-width: 90%; 
     word-spacing: 1px; 
 }
 .about-social-icons { 
     display: flex; 
     justify-content: center; 
-    gap: 10px; /* ✅ Reduced gap */
+    gap: 10px; 
     margin-top: auto; 
-    padding-top: 5px; /* ✅ Reduced padding */
+    padding-top: 5px; 
 }
 .about-social-icons a { 
     color: var(--accent-primary-sawad); 
     font-size: 1.5em; 
-    transition: color 0.3s, transform 0.3s; 
+    transition: color var(--transition-speed-fast), transform var(--transition-speed-fast); 
 }
 .about-social-icons a:hover { 
-    transform: translateY(-2px); 
+    transform: translate3d(0, -2px, 0); /* Changed to translate3d */
 }
 
 /* Right Column (Scrollable Content Area) */
@@ -281,7 +296,7 @@ html::before {
     text-align: left; 
 }
 .hero-heading .crafting { color: var(--text-light); } 
-.hero-heading .digital { color: var(--text-secondary); } /* Uses new variable */
+.hero-heading .digital { color: var(--text-secondary); } 
 .hero-description { 
     text-align: justify; 
     line-height: 1.8; 
@@ -296,39 +311,36 @@ html::before {
 .services-heading, 
 .tools-heading, 
 .gallery-heading {
-    font-size: clamp(2.5rem, 8vw, 8rem);
+    font-size: clamp(2.5rem, 7vw, 5rem); /* Streamlined font-size declaration */
     line-height: 0.75em;
     text-transform: uppercase;
     width: 100%;
     text-align: left;
     
-    /* Spacing and visibility for gallery heading */
-    margin-bottom: 100px; /* More space below heading */
+    margin-bottom: 100px; 
     position: relative;
-    z-index: 10; /* Ensure heading is clearly above carousel cards */
-    color: var(--text-light); /* Strong contrast */
-    text-shadow: 0 2px 6px rgba(0,0,0,0.8); /* Stronger text shadow for readability */
-    font-weight: 900; /* Bolder font */
-    font-size: clamp(2.5rem, 7vw, 5rem); /* ✅ Streamlined font-size declaration */
+    z-index: 10; 
+    color: var(--text-light); 
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8); 
+    font-weight: 900; 
 
-    /* ✅ FIXED: Services heading alignment */
-    padding-left: 0; /* Align flush with section */
-    margin-left: 0; /* Align heading to the left */
+    padding-left: 0; 
+    margin-left: 0; 
 }
 /* Ensure the text spans inside still override/set their specific colors if needed */
 .services-heading .text-white, 
 .tools-heading .text-white, 
 .gallery-heading .text-white { 
     color: var(--text-light); 
-    display: block; /* Ensures the text takes its own line */
-    text-shadow: none; /* Remove shadow from this specific span if the parent has it */
+    display: block; 
+    text-shadow: none; 
 }
 .services-heading .text-gray, 
 .tools-heading .text-gray, 
 .gallery-heading .text-gray { 
-    color: var(--text-secondary); /* Uses new variable */
-    display: block; /* Ensures the text takes its own line */
-    text-shadow: none; /* Remove shadow from this specific span if the parent has it */
+    color: var(--text-secondary); 
+    display: block; 
+    text-shadow: none; 
 } 
 
 
@@ -337,11 +349,10 @@ html::before {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   gap: 20px; 
-  max-width: 850px; /* Increased max-width for broader services section */
+  max-width: 850px; 
   
-  /* ✅ FIXED: Services grid alignment */
-  margin-left: 0; /* Align cards with heading */
-  margin-right: auto; /* Center grid under heading on wider screens if not full width */
+  margin-left: 0; 
+  margin-right: auto; 
 }
 .face {
   position: relative;
@@ -363,7 +374,7 @@ html::before {
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
     font-weight: 700; 
     line-height: 1.2; 
-    color: #fff7ed; /* Specific title color */
+    color: #fff7ed; 
     margin-bottom: clamp(0.5rem, 1vw, 1rem); 
 }
 .service-description { 
@@ -403,12 +414,12 @@ html::before {
   align-items: center;
   gap: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s ease; /* ✅ OPTIONAL: Performance/Smoothness */
+  transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast), opacity var(--transition-speed-fast); 
   cursor: pointer;
   will-change: transform, opacity;
 }
 .tool-card:hover { 
-    transform: translateY(-6px); 
+    transform: translate3d(0, -6px, 0); /* Changed to translate3d */
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); 
 }
 .tool-icon-wrapper { 
@@ -447,31 +458,30 @@ html::before {
   z-index: 1;
   padding: 80px 40px;
 
-  /* ✅ FIXED: Services section alignment - apply offset here */
   padding-left: var(--section-left-offset);
-  padding-right: 0; /* Remove default right padding if needed */
+  padding-right: 0; 
 }
 
 .image-ring-container {
-  perspective: 1500px; /* Set perspective */
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 40px); /* ✅ Dynamic height, reduced +40px */
-  width: 100%; /* Ensure full width to center the ring */
-  position: relative; /* Required for absolute children */
+  perspective: 1500px; 
+  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 40px); /* Dynamic height */
+  width: 100%; 
+  position: relative; 
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: visible; /* Ensure ring is not clipped */
+  overflow: visible; 
   
-  margin-top: 100px; /* Space from heading */
-  z-index: 1; /* Below heading */
+  margin-top: 100px; 
+  z-index: 1; 
 }
 
 .image-ring {
   position: relative;
-  width: calc(var(--gallery-ring-radius) * 2); /* Set width to match ring diameter */
-  height: calc(var(--gallery-ring-radius) * 2); /* Set height to match ring diameter */
+  width: calc(var(--gallery-ring-radius) * 2); 
+  height: calc(var(--gallery-ring-radius) * 2); 
   transform-style: preserve-3d;
-  will-change: transform;
+  will-change: transform; /* For GPU acceleration of ring rotation */
   cursor: grab;
 }
 
@@ -486,56 +496,54 @@ html::before {
   justify-content: flex-start;
   align-items: stretch;
 
-  width: var(--gallery-image-width); /* Fixed width from updated variable */
-  height: var(--gallery-image-height); /* Fixed height from updated variable */
+  width: var(--gallery-image-width); 
+  height: var(--gallery-image-height); 
   
-  /* FIXED: Correct CSS centering (applies before JS transform) - margin is critical here */
   position: absolute;
   top: 50%;
   left: 50%;
   margin-left: calc(var(--gallery-image-width) / -2); 
   margin-top: calc(var(--gallery-image-height) / -2);
   
-  min-width: 100px; /* ✅ Min width for cards */
-  min-height: 220px; /* ✅ Min height for cards (Adjusted based on text content) */
+  min-width: 100px; 
+  min-height: 260px; /* Min height for cards to ensure text fits */
 
-  transform-style: preserve-3d; /* Needed for the 3D ring environment, even if not flipping */
-  backface-visibility: hidden; /* Recommended for 3D performance even on single face */
+  transform-style: preserve-3d; 
+  backface-visibility: hidden; 
 
   border-radius: 16px;
-  /* Match index.html memory-card background & border */
+  background-color: rgba(20,20,40,0.9); /* Fallback for gradient */
   background: linear-gradient(135deg, rgba(30,30,60,0.8), rgba(20,20,40,0.9));
-  border: 1px solid rgba(157, 0, 255, 0.6); /* More vivid border using primary accent from index.html */
-  /* Match index.html memory-card box-shadow */
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); /* Stronger card shadow for better separation */
+  border: 1px solid rgba(157, 0, 255, 0.6); 
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); 
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover */
+  transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); 
   
-  z-index: 1; /* Below heading */
+  z-index: 1; 
 }
 
 /* Strengthen Glow / Depth on Hover */
 .gallery-item:hover, .ring-image:hover {
-  transform: translateZ(30px); /* Stronger lift on hover */
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); /* Stronger hover shadow */
+  transform: translate3d(0, 0, 30px); /* Changed to translate3d */
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); 
 }
 
 
 /* Image = top 70% of card */
 .gallery-item-link, .ring-image-link {
-  flex: 0 0 65%; /* ✅ Reduced image height slightly to give caption more space */
+  flex: 0 0 65%; 
   width: 100%;
   overflow: hidden;
-  position: relative; /* Needed for .glitch-effect positioning */
+  position: relative; 
 }
 .gallery-item-link img, .ring-image-link img {
   width: 100%;
-  height: 100%; /* Image fills its container */
+  height: 100%; 
   object-fit: cover;
   border-radius: 12px 12px 0 0;
   display: block;
-  filter: brightness(0.85); /* ✅ Adjusted image brightness for better visibility */
-  transition: transform 0.3s ease, filter 0.3s ease;
+  filter: brightness(var(--gallery-dimmed-brightness)); 
+  transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast);
 }
 .gallery-item-link:hover img, .ring-image-link:hover img {
   transform: scale(1.05);
@@ -549,16 +557,17 @@ html::before {
     left: 0;
     width: 100%;
     height: 100%;
+    background-color: transparent; /* Fallback */
     background: linear-gradient(
       45deg,
       transparent 65%,
-      rgba(157, 0, 255, 0.3) 70%, /* Using var(--carousel-primary) for consistency */
+      rgba(157, 0, 255, 0.3) 70%, 
       transparent 75%
     );
     background-size: 200% 200%;
     animation: glitch 3s linear infinite;
     z-index: 1;
-    pointer-events: none; /* Allows clicks to pass through to the image link */
+    pointer-events: none; 
 }
 @keyframes glitch {
     0% { background-position: 0 0; }
@@ -571,41 +580,41 @@ html::before {
 
 /* Caption = bottom 30% of card */
 .gallery-caption {
-  flex: 1; /* ✅ Takes the remaining height (approx 35% after image) */
-  min-height: 80px; /* ✅ Increased min-height for caption */
-  padding: 12px 16px; /* ✅ More padding for readability */
-  background: rgba(0, 0, 0, 0.5); /* ✅ Less opaque caption background */
+  flex: 1; 
+  min-height: 100px; 
+  padding: 12px 16px; 
+  background: rgba(0, 0, 0, 0.5); 
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Vertically centers content within caption */
-  gap: 4px; /* ✅ Reduced gap */
-  overflow: visible; /* ✅ Allow text to wrap/be visible within caption area */
+  justify-content: center; 
+  gap: 4px; 
+  overflow: visible; 
 }
 /* Styling for elements within .gallery-caption to match memory carousel */
-.gallery-caption .memory-date { /* Existing date class, adapting style */
+.gallery-caption .memory-date { 
     font-family: "Orbitron", sans-serif;
     font-size: 0.8rem;
-    color: var(--carousel-accent); /* Using neon accent color from index.html */
+    color: var(--carousel-accent); 
     text-shadow: 0 0 5px rgba(255, 0, 229, 0.7);
-    margin-bottom: 0; /* Override old margin */
+    margin-bottom: 0; 
 }
-.gallery-caption .title { /* Adapting style for h3 equivalent */
+.gallery-caption .title { 
     font-size: 1rem; 
     font-weight: 600;
-    color: var(--text-light); /* ✅ Explicitly set text-light for better contrast */
-    white-space: normal; /* ✅ Allow multiline text */
-    overflow: visible; /* ✅ Allow text to show */
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8); /* Stronger text shadow for readability */
-    margin-bottom: 0; /* Override old margin */
+    color: var(--text-light); 
+    white-space: normal; 
+    overflow: visible; 
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8); 
+    margin-bottom: 0; 
 }
-.gallery-caption .description { /* Adapting style for p.memory-preview equivalent */
+.gallery-caption .description { 
     font-size: 0.85rem; 
     line-height: 1.3;
-    color: var(--text-light); /* ✅ Explicitly set text-light for better contrast */
-    white-space: normal; /* ✅ Allow multiline text */
-    overflow: visible; /* ✅ Allow text to show */
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8); /* Stronger text shadow for readability */
-    margin-bottom: 0; /* Override old margin */
+    color: var(--text-light); 
+    white-space: normal; 
+    overflow: visible; 
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8); 
+    margin-bottom: 0; 
 }
 
 /* Contact Section */
@@ -646,13 +655,13 @@ footer h2 {
     border-radius: 10px; 
     box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
     cursor: pointer; 
-    transition: all 0.3s, opacity 0.3s; 
+    transition: all var(--transition-speed-fast), opacity var(--transition-speed-fast); 
     position: relative; 
     overflow: hidden; 
-    font-size: 1rem; /* Added for consistency */
+    font-size: 1rem; 
 }
 .contact-button:hover { 
-    transform: translateY(-2px); 
+    transform: translate3d(0, -2px, 0); /* Changed to translate3d */
     box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
 }
 .contact-button i { 
@@ -660,7 +669,7 @@ footer h2 {
     color: var(--accent-primary-sawad); 
 }
 .button-content-main { 
-    transition: transform 0.3s, opacity 0.3s; 
+    transition: transform var(--transition-speed-fast), opacity var(--transition-speed-fast); 
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
@@ -679,51 +688,57 @@ footer h2 {
     font-weight: bold; 
     border-radius: 10px; 
     opacity: 0; 
-    transform: translateY(100%); 
-    transition: transform 0.3s, opacity 0.3s; 
+    transform: translate3d(0, 100%, 0); /* Changed to translate3d */
+    transition: transform var(--transition-speed-fast), opacity var(--transition-speed-fast); 
     z-index: 3; 
 }
 .contact-button.copied .button-content-main { 
-    transform: translateY(-100%); 
+    transform: translate3d(0, -100%, 0); /* Changed to translate3d */
     opacity: 0; 
 }
 .contact-button.copied .copied-text { 
-    transform: translateY(0); 
+    transform: translate3d(0, 0, 0); /* Changed to translate3d */
     opacity: 1; 
 }
 
-/* Media Queries */
+/* --- Media Queries --- */
+
+/* Desktop (>= 1024px) */
 @media (min-width: 1024px) { 
-    .main-layout-container { align-items: stretch; } 
-    /* ✅ FIXED: Correct sticky properties for left column on desktop */
+    .main-layout-container { 
+        align-items: flex-start; 
+    } 
     .left-column-sticky { 
         position: sticky; 
-        top: 50%; /* Sticky from middle of viewport */
-        transform: translateY(-50%); /* Vertically center */
-        height: auto; /* Let content define height */
-        align-self: flex-start; /* Ensures it aligns to the start of the flex container */
-        margin: 0; /* Reset margins */
+        top: 50%; 
+        transform: translate3d(0, -50%, 0); /* Changed to translate3d */
+        height: auto; 
+        align-self: flex-start; 
+        margin: 0; 
     } 
 }
 
-@media (min-width: 1200px) { /* NEW BREAKPOINT: Larger screens for more spacious carousel */
+/* Large Desktop (>= 1200px) */
+@media (min-width: 1200px) { 
   :root {
-    --gallery-ring-radius: clamp(350px, 40vw, 500px); /* Larger radius for more separation */
-    --gallery-image-width: clamp(120px, 14vw, 160px); /* Slightly narrower cards */
-    --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* landscape ratio */
+    --gallery-ring-radius: clamp(350px, 40vw, 500px); 
+    --gallery-image-width: clamp(120px, 14vw, 160px); 
+    --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Reverting to 0.65 for larger screens */
   }
 }
 
+/* Tablet / Small Desktop (<= 1023px) */
 @media (max-width: 1023px) { 
-    .section { padding: 60px 20px; }
+    .section { 
+        padding: 60px 20px; 
+        padding-left: 20px; 
+        padding-right: 0;
+    }
     .main-layout-container { 
         flex-direction: column; 
         padding: 20px; 
         gap: 40px; 
         align-items: center; 
-        /* Removed align-items: center here as it causes issues when switching to column.
-           main-layout-container should ensure content is centered overall for the column layout.
-           The left-column-sticky itself aligns its children centrally. */
     }
     .left-column-sticky { 
         position: relative; 
@@ -732,74 +747,92 @@ footer h2 {
         height: auto; 
         width: 100%; 
         max-width: 370px; 
-        margin: 0 auto 40px; /* Added margin-bottom for spacing when not sticky */
+        margin: 0 auto 40px; 
     }
     
     :root {
-        /* Adjusted clamp for responsive ring radius (medium screens) */
-        --gallery-ring-radius: clamp(250px, 30vw, 350px); /* Scaled for mobile */
-        --gallery-image-width: clamp(100px, 16vw, 140px); /* Scaled card width for mobile */
-        --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Landscape ratio for mobile */
+        --gallery-ring-radius: clamp(250px, 30vw, 350px); 
+        --gallery-image-width: clamp(100px, 16vw, 140px); 
+        --gallery-image-height: calc(var(--gallery-image-width) * 0.9); 
     }
     .gallery-section { padding: 60px 20px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
-    /* Heading adjustments for smaller screens */
     .gallery-heading {
-        margin-bottom: 50px; /* Less space needed on smaller screens */
-        font-size: clamp(2rem, 7vw, 4rem); /* Smaller font size for heading */
+        margin-bottom: 50px; 
+        font-size: clamp(2rem, 7vw, 4rem); 
     }
-    /* ✅ FIXED: Services section alignment - apply offset here */
-    .section {
-        padding-left: 20px; /* Adjust to match main-layout-container padding */
-        padding-right: 0;
-    }
-    /* ✅ PERFORMANCE: Reduce background opacity/complexity on mobile */
+    /* --- PERFORMANCE: Reduce background opacity/complexity on mobile --- */
     .site-background-image { opacity: 0.05; }
     .background-color-gradient { opacity: 0.03; }
     body::before, body::after { opacity: 0.02; filter: blur(200px); }
-    html::before { opacity: 0; } /* Hide subtle grid on smaller screens */
+    html::before { opacity: 0; } 
 }
 
+/* Mobile (<= 767px) */
 @media (max-width: 767px) {
-    .section { padding: 40px 15px; }
+    .section { 
+        padding: 40px 15px; 
+        padding-left: 15px; 
+        padding-right: 0;
+    }
     .main-layout-container { flex-direction: column; padding: 15px; gap: 30px; align-items: center; }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
     :root {
-        /* ✅ Adjusted clamp for responsive ring radius (small mobile) */
-        --gallery-ring-radius: clamp(200px, 40vw, 320px); /* Adjusted for very small screens */
-        --gallery-image-width: clamp(100px, 24vw, 130px); /* Adjusted card width for small mobile */
-        --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Landscape ratio for small mobile */
+        --gallery-ring-radius: clamp(200px, 40vw, 320px); 
+        --gallery-image-width: clamp(100px, 24vw, 130px); 
+        --gallery-image-height: calc(var(--gallery-image-width) * 0.9); 
     }
     .gallery-section { padding: 40px 15px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
-    /* Services and tools grids now collapse to 1 column */
     .services-card-grid, .tools-grid {
       grid-template-columns: 1fr;
-      max-width: 400px; /* Optional: constrain width on small screens */
+      max-width: 400px; 
     }
     
-    /* ✅ Caption adjustments for very small screens */
     .gallery-caption .title,
     .gallery-caption .description {
-      font-size: 0.75rem; /* Smaller font size on small screens */
+      font-size: 0.75rem; 
     }
 
-    /* ✅ FIXED: Heading margin-bottom for small mobile */
     .gallery-heading {
-        margin-bottom: 40px; /* Less space needed on very small screens */
+        margin-bottom: 40px; 
     }
-    /* ✅ FIXED: Services section alignment - apply offset here */
-    .section {
-        padding-left: 15px; /* Adjust to match main-layout-container padding */
-        padding-right: 0;
-    }
-    /* ✅ PERFORMANCE: Further reduce background opacity/complexity on very small mobile */
+    /* --- PERFORMANCE: Further reduce background opacity/complexity on very small mobile --- */
     .site-background-image { opacity: 0.03; }
     .background-color-gradient { opacity: 0.01; }
     body::before, body::after { opacity: 0.01; filter: blur(100px); }
-    .glitch-effect { display: none; } /* Disable glitch effect on smallest screens */
+    .glitch-effect { display: none; } 
+}
+
+/* --- Accessibility: Reduce Motion --- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    /* Disable specific complex visual effects */
+    .background-color-gradient,
+    body::before,
+    body::after,
+    .mouse-follower-glow,
+    .glitch-effect {
+        display: none !important;
+        animation: none !important;
+        transition: none !important;
+        opacity: 0 !important;
+    }
+    .left-column-sticky { animation: none !important; transform: none !important; opacity: 1 !important; }
+    .striped-entry-list li { animation: none !important; transform: none !important; opacity: 1 !important; }
+    .image-ring { animation: none !important; transition: none !important; }
+    .gallery-item:hover, .ring-image:hover { transform: none !important; }
+    .gallery-item-link:hover img, .ring-image-link:hover img { transform: none !important; }
+    .contact-button:hover { transform: none !important; }
+    .contact-button.copied .button-content-main,
+    .contact-button.copied .copied-text { animation: none !important; transition: none !important; }
 }
