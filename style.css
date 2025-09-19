@@ -405,8 +405,8 @@ html::before {
 
 .image-ring-container {
   perspective: 1500px;
-  /* Height now depends on the new --gallery-image-height for the card */
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 20px); 
+  /* ✅ BUMPED OFFSET for card height */
+  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -420,7 +420,9 @@ html::before {
   cursor: grab;
   width: 100%;
   height: 100%;
-  min-height: calc(var(--gallery-ring-radius) * 2); 
+  min-height: calc(var(--gallery-ring-radius) * 2);
+  /* ✅ ADDED PADDING for spacing between cards */
+  padding: 12px; 
 }
 
 .image-ring:active {
@@ -439,8 +441,7 @@ html::before {
   backface-visibility: hidden;
   transform-origin: center center;
 
-  /* Removed margin for precise GSAP calculations */
-  /* margin: 8px; */ 
+  padding: 0;     /* ✅ Removed inner padding */
 
   border-radius: 16px;
   background: rgba(20, 20, 20, 0.7);   /* translucent glass */
@@ -453,18 +454,14 @@ html::before {
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch; /* Allows children (image/caption blocks) to stretch full width */
-  padding: 0;     /* Removed inner padding, now handled by .gallery-caption */
-  /* Removed gap, as image and caption are distinct blocks now */
   overflow: hidden; 
 }
 
 /* Top block = image */
 .gallery-item-link, .ring-image-link {
   width: 100%;
-  height: 65%;                /* top portion reserved for image */
+  height: 60%;                /* ✅ Adjusted image block height */
   overflow: hidden;
-  /* Removed background color here, as the card's translucent background shows through */
-  /* Removed display: flex, justify-content, align-items, as img will fill 100% */
 }
 
 .gallery-item-link img, .ring-image-link img {
@@ -483,8 +480,9 @@ html::before {
 
 /* Bottom block = caption */
 .gallery-caption {
-  flex-grow: 1; /* Allows caption to take remaining vertical space */
-  padding: 12px;
+  /* No explicit height needed here, flex-grow will take care of the remaining 40% */
+  flex-grow: 1; 
+  padding: 12px; /* ✅ Added padding back to caption block */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -627,8 +625,8 @@ footer h2 {
         --gallery-image-height: calc(var(--gallery-image-width) * 1.3); /* ADJUSTED for responsive scaling */
     }
     .gallery-section { padding: 60px 20px; }
-    /* Updated height for image-ring-container in media query */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 20px); }
+    /* ✅ BUMPED OFFSET for card height in media query */
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 }
 
 @media (max-width: 767px) {
@@ -643,8 +641,8 @@ footer h2 {
         --gallery-image-height: calc(var(--gallery-image-width) * 1.3); /* ADJUSTED for responsive scaling */
     }
     .gallery-section { padding: 40px 15px; }
-    /* Updated height for image-ring-container in media query */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 20px); }
+    /* ✅ BUMPED OFFSET for card height in media query */
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
     /* Services and tools grids now collapse to 1 column */
     .services-card-grid, .tools-grid {
