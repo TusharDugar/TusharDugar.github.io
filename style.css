@@ -124,7 +124,7 @@ html::before {
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
-    align-items: center; 
+    align-items: stretch; /* ✅ Changed to stretch for sticky sidebar to fill height */
     min-height: 100vh;
     max-width: 1920px; 
     margin: 0 auto; 
@@ -180,7 +180,7 @@ html::before {
 .striped-entry-list li:nth-child(4) { animation-delay: 0.65s; } 
 .striped-entry-list li:nth-child(5) { animation-delay: 0.8s; }
 
-/* "About" Card Styles (Profile Card) */
+/* "About" Card Styles (Profile Card) - ✅ Restored height/padding */
 .about-left-content { 
     background-color: var(--bg-profile-card); 
     color: var(--text-dark-card); 
@@ -196,8 +196,8 @@ html::before {
     overflow: hidden; 
     height: auto; 
     box-sizing: border-box; 
-    padding: 20px 20px; 
-    max-height: 85vh; 
+    padding: 30px 25px; /* ✅ Reverted padding for larger feel */
+    /* max-height: 85vh; Removed to allow it to expand */
 }
 .profile-image-container { 
     width: 140px; 
@@ -703,13 +703,13 @@ footer h2 {
 /* Desktop (>= 1024px) */
 @media (min-width: 1024px) { 
     .main-layout-container { 
-        align-items: stretch; /* Reverted to stretch for sticky sidebar to fill height */
+        align-items: stretch; 
     } 
     .left-column-sticky { 
         position: sticky; 
         top: 50%; 
         transform: translate3d(0, -50%, 0); 
-        height: auto; 
+        height: calc(100vh - 100px); /* ✅ Restored height for sticky column */
         align-self: flex-start; 
         margin: 0; 
     } 
