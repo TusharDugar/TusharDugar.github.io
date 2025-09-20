@@ -124,7 +124,7 @@ html::before {
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
-    align-items: stretch; /* ✅ Changed to stretch for sticky sidebar to fill height */
+    align-items: stretch; /* Allows sticky sidebar to fill height */
     min-height: 100vh;
     max-width: 1920px; 
     margin: 0 auto; 
@@ -145,7 +145,8 @@ html::before {
   height: auto;
   animation: leftColumnPopIn 1.4s ease-out both; 
   will-change: transform, opacity; 
-  backface-visibility: hidden; 
+  backface-visibility: hidden; /* Kept for animation if needed, removed perspective/transform-style */
+  /* ✅ REMOVED: perspective: 1000px; transform-style: preserve-3d; from here */
 }
 
 @keyframes leftColumnPopIn {
@@ -703,14 +704,14 @@ footer h2 {
 /* Desktop (>= 1024px) */
 @media (min-width: 1024px) { 
     .main-layout-container { 
-        align-items: stretch; 
+        align-items: stretch; /* Allows sticky sidebar to fill height */
     } 
     .left-column-sticky { 
         position: sticky; 
         top: 50%; 
-        transform: translate3d(0, -50%, 0); 
+        transform: translate3d(0, -50%, 0); /* Reverted to 3d for consistency if browser handles well */
         height: calc(100vh - 100px); /* ✅ Restored height for sticky column */
-        align-self: flex-start; 
+        align-self: flex-start; /* Kept for alignment before sticky takes over */
         margin: 0; 
     } 
 }
