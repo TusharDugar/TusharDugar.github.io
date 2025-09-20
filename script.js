@@ -28,18 +28,18 @@
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
 
     /* --- Layout & Sizing --- */
-    --section-left-offset: 60px; /* Matches hero left padding */
+    /* --section-left-offset: 60px; Removed, not used in this stable state */
 
     /* --- Transitions & Animations --- */
     --transition-speed-fast: 0.3s; /* For common hover transitions */
     --transition-speed-medium: 0.8s; /* For reveal animations */
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* --- Gallery Slider Variables --- */
-    --gallery-ring-radius: clamp(350px, 38vw, 480px); 
-    --gallery-image-width: clamp(180px, 18vw, 250px); 
-    --gallery-image-height: calc(var(--gallery-image-width) * 1.05); 
-    --gallery-dimmed-brightness: 0.85; /* Used in default img filter below */
+    /* --- Gallery Slider Variables (reset to stable fixed px values) --- */
+    --gallery-ring-radius: 320px; /* ✅ revert */
+    --gallery-image-width: 200px; /* ✅ revert */
+    --gallery-image-height: 260px; /* ✅ revert */
+    --gallery-dimmed-brightness: 0.5; /* ✅ keep images dimmed */
     --gallery-active-brightness: 1.1;
     --gallery-hover-brightness: 1.3;
 }
@@ -53,21 +53,26 @@ body {
     color: var(--text-light);
     background-color: var(--bg-main);
     overflow-x: hidden; 
-    position: relative; 
+    /* position: relative; Removed as not explicitly needed for z-index stacking on body */
     scroll-behavior: smooth;
     min-height: 100vh;
 }
 
 /* Background Layers & Mouse Glow */
 .site-background-image { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.079; background-image: url('./71976 (1).jpg'); background-repeat: repeat; background-size: 400px auto; }
-.background-color-gradient { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.05; background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); background-size: 400% 400%; animation: gradient 15s ease infinite; }
+.background-color-gradient { 
+    background-color: #1A1A1A; /* Fallback for gradient */
+    position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.05; 
+    background-image: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3); 
+    background-size: 400% 400%; animation: gradient 15s ease infinite; 
+}
 @keyframes gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
-body::before, body::after { content: ''; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; filter: blur(400px); opacity: 0.03; z-index: -1; pointer-events: none; will-change: transform, opacity; }
+body::before, body::after { content: ''; position: fixed; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0); border-radius: 50%; filter: blur(400px); opacity: 0.03; z-index: -1; pointer-events: none; will-change: transform, opacity; }
 body::before { width: 1300px; height: 1300px; background: radial-gradient(circle at center, var(--accent-primary-sawad) 0%, transparent 60%); animation: glow1 25s infinite alternate ease-in-out; }
 body::after { width: 1200px; height: 1200px; background: radial-gradient(circle at center, var(--accent-secondary-sawad) 0%, transparent 60%); animation: glow2 28s infinite alternate-reverse ease-in-out; }
-@keyframes glow1 { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-55%, -45%) scale(1.05); } 100% { transform: translate(-45%, -55%) scale(1); } }
-@keyframes glow2 { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-45%, -55%) scale(1.03); } 100% { transform: translate(-55%, -45%) scale(1); } }
+@keyframes glow1 { 0% { transform: translate3d(-50%, -50%, 0) scale(1); } 50% { transform: translate3d(-55%, -45%, 0) scale(1.05); } 100% { transform: translate3d(-45%, -55%, 0) scale(1); } }
+@keyframes glow2 { 0% { transform: translate3d(-50%, -50%, 0) scale(1); } 50% { transform: translate3d(-45%, -55%, 0) scale(1.03); } 100% { transform: translate3d(-55%, -45%, 0) scale(1); } }
 
 html::before { 
     content: ''; 
@@ -101,19 +106,19 @@ html::before {
     position: relative; 
     z-index: 1; 
     padding: 80px 40px; 
-    padding-left: var(--section-left-offset);
+    /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
     padding-right: 0; 
 }
 .reveal-item, .reveal-child, .reveal-stagger { 
     opacity: 0; 
-    transform: translateY(40px); 
+    transform: translate3d(0, 40px, 0); 
     transition: opacity var(--transition-speed-medium) var(--transition-timing-ease-out), 
                 transform var(--transition-speed-medium) var(--transition-timing-ease-out); 
     will-change: transform, opacity; 
 }
 .reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { 
     opacity: 1; 
-    transform: translateY(0); 
+    transform: translate3d(0, 0, 0); 
 }
 
 /* Main Layout Structure */
@@ -146,11 +151,11 @@ html::before {
 
 @keyframes leftColumnPopIn {
   0% {
-    transform: translateY(80px) scale(0.9);
+    transform: translate3d(0, 80px, 0) scale(0.9); 
     opacity: 0;
   }
   100% {
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1); 
     opacity: 1;
   }
 }
@@ -163,7 +168,7 @@ html::before {
     animation: entryAnim 0.6s ease forwards; 
     background: transparent; 
     margin-bottom: 0.8rem; 
-    backface-visibility: hidden; /* For smoother 3D transforms */
+    backface-visibility: hidden; 
 }
 @keyframes entryAnim { 
     0% { transform: translate3d(0, 0, -80px); opacity: 0; } 
@@ -238,7 +243,7 @@ html::before {
     content: ''; 
     position: absolute; 
     top: 50%; 
-    transform: translateY(-50%); 
+    transform: translate3d(0, -50%, 0); 
     height: 2px; 
     border-top: 2px dashed var(--accent-primary-sawad); 
     z-index: 1; 
@@ -260,13 +265,8 @@ html::before {
     margin-top: auto; 
     padding-top: 5px; 
 }
-.about-social-icons a { 
-    color: var(--accent-primary-sawad); 
-    font-size: 1.5em; 
-    transition: color var(--transition-speed-fast), transform var(--transition-speed-fast); 
-}
 .about-social-icons a:hover { 
-    transform: translateY(-2px); 
+    transform: translate3d(0, -2px, 0); 
 }
 
 /* Right Column (Scrollable Content Area) */
@@ -306,13 +306,13 @@ html::before {
 .services-heading, 
 .tools-heading, 
 .gallery-heading {
-    font-size: clamp(2.5rem, 7vw, 5rem); /* Streamlined font-size declaration */
+    font-size: clamp(2.5rem, 8vw, 8rem); /* Reverted font-size to stable backup */
     line-height: 0.75em;
     text-transform: uppercase;
     width: 100%;
     text-align: left;
     
-    margin-bottom: 100px; 
+    margin-bottom: 60px; /* ✅ FIXED: Reverted margin-bottom to 60px */
     position: relative;
     z-index: 10; 
     color: var(--text-light); 
@@ -414,7 +414,7 @@ html::before {
   will-change: transform, opacity;
 }
 .tool-card:hover { 
-    transform: translateY(-6px); 
+    transform: translate3d(0, -6px, 0); 
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); 
 }
 .tool-icon-wrapper { 
@@ -453,13 +453,13 @@ html::before {
   z-index: 1;
   padding: 80px 40px;
 
-  padding-left: var(--section-left-offset);
+  /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
   padding-right: 0; 
 }
 
 .image-ring-container {
-  perspective: 1500px; 
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 40px); /* ✅ Dynamic height, adjusted to +40px */
+  perspective: 2000px; /* ✅ FIXED: Perspective to stable backup */
+  height: 400px; /* ✅ FIXED: Height to stable backup */
   width: 100%; 
   position: relative; 
   display: flex;
@@ -467,14 +467,14 @@ html::before {
   align-items: center;
   overflow: visible; 
   
-  margin-top: 100px; 
+  margin-top: -20px; /* ✅ FIXED: margin-top to stable backup */
   z-index: 1; 
 }
 
 .image-ring {
   position: relative;
-  width: calc(var(--gallery-ring-radius) * 2); 
-  height: calc(var(--gallery-ring-radius) * 2); 
+  width: 300px; /* ✅ FIXED: Width to stable backup */
+  height: 300px; /* ✅ FIXED: Height to stable backup */
   transform-style: preserve-3d;
   will-change: transform; /* For GPU acceleration of ring rotation */
   cursor: grab;
@@ -484,33 +484,30 @@ html::before {
   cursor: grabbing;
 }
 
-/* Featured Websites Cards – clean + consistent (matching index.html memory-card look) */
+/* Gallery Items – card look fixed */
 .gallery-item, .ring-image {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-
-  width: var(--gallery-image-width); 
-  height: var(--gallery-image-height); 
-  
   position: absolute;
+  width: var(--gallery-image-width);
+  height: var(--gallery-image-height);
   top: 50%;
   left: 50%;
-  margin-left: calc(var(--gallery-image-width) / -2); 
-  margin-top: calc(var(--gallery-image-height) / -2);
-  
-  min-width: 100px; 
-  min-height: 260px; /* Min height for cards to ensure text fits */
+  margin-top: calc(var(--gallery-image-height) / -2); /* ✅ FIXED: Centering margin */
+  margin-left: calc(var(--gallery-image-width) / -2); /* ✅ FIXED: Centering margin */
+  padding: 10px; /* ✅ revert */
+  border-radius: 12px; /* ✅ revert */
+  background: rgba(255, 255, 255, 0.08); /* ✅ revert */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); /* ✅ revert */
+  backdrop-filter: blur(10px); /* ✅ revert */
+  text-align: center; /* ✅ revert */
+  display: flex; /* ✅ revert */
+  flex-direction: column; /* ✅ revert */
+  align-items: center; /* ✅ revert */
+  justify-content: flex-start; /* ✅ revert */
+  overflow: hidden; /* Ensure content stays within bounds */
 
   transform-style: preserve-3d; 
   backface-visibility: hidden; 
 
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(30,30,60,0.8), rgba(20,20,40,0.9));
-  border: 1px solid rgba(157, 0, 255, 0.6); 
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7); 
-  overflow: hidden;
   transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); 
   
   z-index: 1; 
@@ -518,26 +515,26 @@ html::before {
 
 /* Strengthen Glow / Depth on Hover */
 .gallery-item:hover, .ring-image:hover {
-  transform: translateZ(30px); 
+  transform: translate3d(0, 0, 30px); 
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); 
 }
 
 
-/* Image = top 70% of card */
+/* Gallery images – revert sizing */
 .gallery-item-link, .ring-image-link {
-  flex: 0 0 65%; 
-  width: 100%;
+  /* No flex properties needed here, img directly styled */
   overflow: hidden;
-  position: relative; 
+  /* position: relative; Removed, not needed for glitch effect here as it's not a child of this */
 }
 .gallery-item-link img, .ring-image-link img {
-  width: 100%;
-  height: 100%; 
+  width: 100%; /* ✅ revert */
+  height: 120px; /* ✅ revert */
   object-fit: cover;
-  border-radius: 12px 12px 0 0;
+  border-radius: 8px; /* ✅ revert */
   display: block;
-  filter: brightness(var(--gallery-dimmed-brightness)); 
+  filter: brightness(var(--gallery-dimmed-brightness)); /* Uses variable from root */
   transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast);
+  margin-bottom: 10px; /* ✅ revert */
 }
 .gallery-item-link:hover img, .ring-image-link:hover img {
   transform: scale(1.05);
@@ -545,7 +542,10 @@ html::before {
 }
 
 /* Optional: Glitch effect overlay for images (requires HTML div with class "glitch-effect" inside .gallery-item-link) */
+/* This element is removed/simplified in the stable context, but keeping definition if HTML implies it */
 .glitch-effect {
+    /* Styles as previously defined if HTML includes this element, otherwise it's inert */
+    background-color: transparent; /* Fallback */
     position: absolute;
     top: 0;
     left: 0;
@@ -571,19 +571,15 @@ html::before {
 }
 
 
-/* Caption = bottom 30% of card */
+/* Gallery caption – simple stable text */
 .gallery-caption {
-  flex: 1; 
-  min-height: 100px; 
-  padding: 12px 16px; 
-  background: rgba(0, 0, 0, 0.5); 
-  display: flex;
-  flex-direction: column;
-  justify-content: center; 
-  gap: 4px; 
-  overflow: visible; 
+  font-size: 0.8rem; /* ✅ revert */
+  line-height: 1.3;
+  color: #ddd; /* ✅ revert */
+  padding: 0 5px; /* ✅ revert */
 }
-/* Styling for elements within .gallery-caption to match memory carousel */
+/* Styling for elements within .gallery-caption to match memory carousel (if any) */
+/* The memory-date, title, description classes should now directly inherit from .gallery-caption or be re-applied as needed */
 .gallery-caption .memory-date { 
     font-family: "Orbitron", sans-serif;
     font-size: 0.8rem;
@@ -654,7 +650,7 @@ footer h2 {
     font-size: 1rem; 
 }
 .contact-button:hover { 
-    transform: translateY(-2px); 
+    transform: translate3d(0, -2px, 0); 
     box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
 }
 .contact-button i { 
@@ -681,16 +677,16 @@ footer h2 {
     font-weight: bold; 
     border-radius: 10px; 
     opacity: 0; 
-    transform: translateY(100%); 
+    transform: translate3d(0, 100%, 0); 
     transition: transform var(--transition-speed-fast), opacity var(--transition-speed-fast); 
     z-index: 3; 
 }
 .contact-button.copied .button-content-main { 
-    transform: translateY(-100%); 
+    transform: translate3d(0, -100%, 0); 
     opacity: 0; 
 }
 .contact-button.copied .copied-text { 
-    transform: translateY(0); 
+    transform: translate3d(0, 0, 0); 
     opacity: 1; 
 }
 
@@ -699,12 +695,12 @@ footer h2 {
 /* Desktop (>= 1024px) */
 @media (min-width: 1024px) { 
     .main-layout-container { 
-        align-items: flex-start; /* Keeps sticky alignment correct (allows self-centering of sticky) */
+        align-items: flex-start; 
     } 
     .left-column-sticky { 
         position: sticky; 
         top: 50%; 
-        transform: translateY(-50%); 
+        transform: translate3d(0, -50%, 0); 
         height: auto; 
         align-self: flex-start; 
         margin: 0; 
@@ -714,9 +710,9 @@ footer h2 {
 /* Large Desktop (>= 1200px) */
 @media (min-width: 1200px) { 
   :root {
-    --gallery-ring-radius: clamp(350px, 40vw, 500px); 
-    --gallery-image-width: clamp(120px, 14vw, 160px); 
-    --gallery-image-height: calc(var(--gallery-image-width) * 0.65); /* Reverting to 0.65 for larger screens */
+    --gallery-ring-radius: 320px; /* Kept fixed px for stable ring */
+    --gallery-image-width: 200px; /* Kept fixed px for stable ring */
+    --gallery-image-height: 260px; /* Kept fixed px for stable ring */
   }
 }
 
@@ -744,9 +740,9 @@ footer h2 {
     }
     
     :root {
-        --gallery-ring-radius: clamp(250px, 30vw, 350px); 
-        --gallery-image-width: clamp(100px, 16vw, 140px); 
-        --gallery-image-height: calc(var(--gallery-image-width) * 0.9); 
+        --gallery-ring-radius: 250px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-image-width: 140px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-image-height: 180px; /* Adjusted to fixed px for stability on this breakpoint */
     }
     .gallery-section { padding: 60px 20px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
@@ -774,9 +770,9 @@ footer h2 {
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
     :root {
-        --gallery-ring-radius: clamp(200px, 40vw, 320px); 
-        --gallery-image-width: clamp(100px, 24vw, 130px); 
-        --gallery-image-height: calc(var(--gallery-image-width) * 0.9); 
+        --gallery-ring-radius: 200px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-image-width: 120px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-image-height: 156px; /* Adjusted to fixed px for stability on this breakpoint */
     }
     .gallery-section { padding: 40px 15px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
@@ -799,6 +795,13 @@ footer h2 {
     .background-color-gradient { opacity: 0.01; }
     body::before, body::after { opacity: 0.01; filter: blur(100px); }
     .glitch-effect { display: none; } 
+}
+
+/* New breakpoint for very small mobile screens for hero description alignment */
+@media (max-width: 480px) {
+    .hero-description {
+        text-align: left; 
+    }
 }
 
 /* --- Accessibility: Reduce Motion --- */
