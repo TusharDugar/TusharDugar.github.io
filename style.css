@@ -295,7 +295,7 @@ html::before {
     text-align: left; 
 }
 .hero-heading .crafting { color: var(--text-light); } 
-.hero-heading .digital { color: var(--text-sub-heading-grey); } /* Using original variable name */
+.hero-heading .digital { color: var(--text-sub-heading-grey); } 
 .hero-description { 
     text-align: justify; 
     line-height: 1.8; 
@@ -338,7 +338,7 @@ html::before {
 .services-heading .text-gray, 
 .tools-heading .text-gray, 
 .gallery-heading .text-gray { 
-    color: var(--text-sub-heading-grey); /* Using original variable name */
+    color: var(--text-sub-heading-grey); 
     display: block; 
     text-shadow: none; 
 } 
@@ -550,6 +550,7 @@ html::before {
 }
 
 /* Optional: Glitch effect overlay for images (requires HTML div with class "glitch-effect" inside .gallery-item-link) */
+/* This element is removed/simplified in the stable context, but keeping definition if HTML implies it */
 .glitch-effect {
     background-color: transparent; 
     position: absolute;
@@ -586,6 +587,7 @@ html::before {
   text-align: left; /* Ensure caption itself is left-aligned */
 }
 /* Styling for elements within .gallery-caption to match memory carousel (if any) */
+/* The memory-date, title, description classes should now directly inherit from .gallery-caption or be re-applied as needed */
 .gallery-caption .memory-date { 
     font-family: "Orbitron", sans-serif;
     font-size: 0.8rem;
