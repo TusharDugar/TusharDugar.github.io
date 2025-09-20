@@ -140,13 +140,14 @@ html::before {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  position: relative; 
+  position: relative; /* Default position */
   top: auto; 
   height: auto;
   animation: leftColumnPopIn 1.4s ease-out both; 
   will-change: transform, opacity; 
-  backface-visibility: hidden; /* Kept for animation if needed, removed perspective/transform-style */
-  /* ✅ REMOVED: perspective: 1000px; transform-style: preserve-3d; from here */
+  backface-visibility: hidden; 
+  perspective: 1000px; /* ✅ Restored: Applied here for children's 3D animations */
+  transform-style: preserve-3d; /* ✅ Restored: Applied here for children's 3D animations */
 }
 
 @keyframes leftColumnPopIn {
@@ -709,9 +710,9 @@ footer h2 {
     .left-column-sticky { 
         position: sticky; 
         top: 50%; 
-        transform: translate3d(0, -50%, 0); /* Reverted to 3d for consistency if browser handles well */
+        transform: translateY(-50%); /* ✅ Changed to translateY for better sticky compatibility */
         height: calc(100vh - 100px); /* ✅ Restored height for sticky column */
-        align-self: flex-start; /* Kept for alignment before sticky takes over */
+        /* align-self: flex-start; Removed as it can conflict with sticky + parent stretch */
         margin: 0; 
     } 
 }
