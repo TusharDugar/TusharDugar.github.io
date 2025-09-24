@@ -35,12 +35,10 @@
     --transition-speed-medium: 0.8s; /* For reveal animations */
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* ✅ RE-CORRECTED & ADJUSTED: Gallery Slider Variables - Responsive clamp values, adjusted for wider spacing */
-    --gallery-ring-radius: clamp(120px, 22vw, 250px); /* Increased radius for more breathing room */
-    --gallery-item-width: clamp(90px, 16vw, 160px);    /* Base card width variable (actual width will be 80% of this) */
-    /* gallery-item-height is now 'auto' controlled by content, but we keep a variable
-       to inform other calc() functions that depend on it for container height */
-    --gallery-item-expected-min-height: calc(var(--gallery-item-width) * 1.5); 
+    /* ✅ UPDATED: Gallery Slider Variables - Base card width variable remains, ring radius increased */
+    --gallery-ring-radius: clamp(300px, 50vw, 600px); /* ~2.5x larger ring radius for desktop */
+    --gallery-item-width: clamp(90px, 16vw, 160px);    /* Base variable remains for scaling */
+    --gallery-item-expected-min-height: calc(var(--gallery-item-width) * 1.5); /* Height calc based on base width */
     --gallery-dimmed-brightness: 0.6; 
     --gallery-active-brightness: 1.1;
     --gallery-hover-brightness: 1.3;
@@ -477,8 +475,8 @@ html::before {
 /* Container holding the rotating image ring, manages 3D perspective */
 .image-ring-container {
   perspective: 2000px;              /* Increased depth for a more pronounced 3D effect */
-  /* Keeps dynamic height based on ring radius and item height for responsiveness */
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height) * 0.75); 
+  /* ✅ UPDATED: Container height scales with larger ring radius and card height, removed *0.75 multiplier */
+  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height)); 
   width: 100%;                      /* Stretch across section */
   position: relative;               /* Anchor child absolutely */
   display: flex;                    /* Flexbox center */
@@ -513,7 +511,8 @@ html::before {
   margin: 0;                        /* No extra margin, to make cards closer */
   transform: translate3d(-50%, -50%, 0); /* Center origin before JS override for rotation */
 
-  width: calc(var(--gallery-item-width) * 0.8); /* ✅ FIX #1: Reduce card width to 80% */
+  /* ✅ UPDATED: Card width is now 2.5 times the base variable, as requested */
+  width: calc(var(--gallery-item-width) * 2.5); 
 
   height: auto;                     /* Keep height flexible, so captions don’t get cut */
 
@@ -540,7 +539,7 @@ html::before {
 /* Hover effect — lift card forward while maintaining its center */
 .gallery-item:hover,
 .ring-image:hover {
-  transform: translate3d(-50%, -50%, 30px); /* ✅ Keep centered + lift up from the ring */
+  transform: translate3d(-50%, -50%, 30px); /* Preserve hover lift and centering, as requested */
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); /* Stronger shadow on hover */
 }
 
@@ -602,7 +601,8 @@ html::before {
 
 /* Gallery caption – simple stable text, now centered */
 .gallery-caption {
-  font-size: 0.8rem;                /* Small text size */
+  /* ✅ UPDATED: Font size increased to match larger card, as requested */
+  font-size: 1rem;                  
   line-height: 1.3;                 /* Readable line spacing */
   color: #ddd;                      /* Light grey text color */
   padding: 0 5px;                   /* Side padding for text */
@@ -739,9 +739,9 @@ footer h2 {
 /* Large Desktop (>= 1200px) */
 @media (min-width: 1200px) { 
   :root { 
-    /* ✅ RE-CORRECTED: Responsive gallery variables for large desktop with increased spacing */
-    --gallery-ring-radius: clamp(150px, 25vw, 360px); /* Increased max radius for more breathing room */
-    --gallery-item-width: clamp(100px, 18vw, 170px); 
+    /* ✅ UPDATED: Responsive gallery variables for large desktop, ring radius scaled by ~2.5x */
+    --gallery-ring-radius: clamp(375px, 62.5vw, 900px); /* Scaled from previous 360px max to 900px */
+    --gallery-item-width: clamp(100px, 18vw, 170px); /* Base variable remains */
     --gallery-item-expected-min-height: calc(var(--gallery-item-width) * 1.5); 
   }
 }
@@ -770,14 +770,14 @@ footer h2 {
     }
     
     :root { 
-        /* ✅ RE-CORRECTED: Responsive gallery variables for medium screens with increased spacing */
-        --gallery-ring-radius: clamp(110px, 28vw, 200px); /* Increased max radius for more breathing room */
-        --gallery-item-width: clamp(75px, 16vw, 130px);   
+        /* ✅ UPDATED: Responsive gallery variables for medium screens, ring radius updated as per prompt */
+        --gallery-ring-radius: clamp(275px, 45vw, 500px); /* Explicit value from prompt */
+        --gallery-item-width: clamp(75px, 16vw, 130px);   /* Base variable remains */
         --gallery-item-expected-min-height: calc(var(--gallery-item-width) * 1.5); 
     }
     .gallery-section { padding: 60px 20px; }
-    /* ✅ CORRECTED HEIGHT: dynamically calculates based on ring radius and item height */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height) * 0.75); } 
+    /* ✅ UPDATED: Container height scales with larger ring radius and card height, removed *0.75 multiplier */
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height)); } 
 
     .gallery-heading {
         margin-bottom: 50px; 
@@ -802,14 +802,14 @@ footer h2 {
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
     :root { 
-        /* ✅ RE-CORRECTED: Responsive gallery variables for small screens with increased spacing */
-        --gallery-ring-radius: clamp(80px, 30vw, 150px); /* Increased max radius for more breathing room */
-        --gallery-item-width: clamp(55px, 20vw, 90px);   
+        /* ✅ UPDATED: Responsive gallery variables for small screens, ring radius updated as per prompt */
+        --gallery-ring-radius: clamp(200px, 40vw, 400px); /* Explicit value from prompt */
+        --gallery-item-width: clamp(55px, 20vw, 90px);   /* Base variable remains */
         --gallery-item-expected-min-height: calc(var(--gallery-item-width) * 1.5); 
     }
     .gallery-section { padding: 40px 15px; }
-    /* ✅ CORRECTED HEIGHT: dynamically calculates based on ring radius and item height */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height) * 0.75); } 
+    /* ✅ UPDATED: Container height scales with larger ring radius and card height, removed *0.75 multiplier */
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height)); } 
 
     .services-card-grid, .tools-grid {
       grid-template-columns: 1fr;
