@@ -480,14 +480,14 @@ html::before {
   align-items: center;
   overflow: visible; 
   margin-top: 0; 
-  z-index: 1; 
+  z-index: 10; 
 }
 
 .image-ring {
   position: relative;
   width: 100%; /* Flexible width for the ring container */
   height: 100%; /* Flexible height for the ring container */
-  min-height: calc(var(--gallery-ring-radius) * 2); /* Ensures it's at least as tall as the ring diameter */
+  min-height: calc(var(--gallery-ring-radius) * 3); /* Ensures it's at least as tall as the ring diameter */
   transform-style: preserve-3d;
   will-change: transform; 
   cursor: grab;
