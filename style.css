@@ -324,7 +324,8 @@ html::before {
     width: 100%;
     text-align: left;
     
-    margin-bottom: 30px; 
+    /* MODIFIED: Adjusted margin-bottom for a tighter gap with the carousel */
+    margin-bottom: 20px; 
     position: relative;
     z-index: 10; 
     color: var(--text-light); 
@@ -483,7 +484,8 @@ html::before {
   justify-content: center;          /* Center horizontally */
   align-items: center;              /* Center vertically */
   overflow: visible;                /* Allow 3D elements to go outside container bounds */
-  margin-top: -20px;                /* Slight lift upwards for visual balance */
+  /* MODIFIED: Removed negative margin-top to allow explicit margin from heading to control spacing */
+  margin-top: 0;                 
   z-index: 1;                       /* Above background elements */
 }
 
@@ -492,7 +494,8 @@ html::before {
   position: relative;               /* Base for positioned children */
   width: 100%;                      /* Flexible width for the ring container */
   height: 100%;                     /* Flexible height for the ring container */
-  min-height: calc(var(--gallery-ring-radius) * 3); /* Ensures it's at least as tall as the ring diameter */
+  /* REMOVED: min-height property was creating excessive vertical space */
+  /* min-height: calc(var(--gallery-ring-radius) * 3); */ 
   transform-style: preserve-3d;     /* Keep depth when rotated */
   will-change: transform;           /* GPU optimize transforms */
   cursor: grab;                     /* Show draggable hand */
@@ -511,8 +514,8 @@ html::before {
   margin: 0;                        /* No extra margin, to make cards closer */
   transform: translate3d(-50%, -50%, 0); /* Center origin before JS override for rotation */
 
-  /* ✅ UPDATED: Card width is now 2.5 times the base variable, as requested */
-  width: calc(var(--gallery-item-width) * 2.5); 
+  /* ✅ UPDATED: Card width multiplier reduced to prevent overlapping */
+  width: calc(var(--gallery-item-width) * 1.8); 
 
   height: auto;                     /* Keep height flexible, so captions don’t get cut */
 
@@ -780,7 +783,8 @@ footer h2 {
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height)); } 
 
     .gallery-heading {
-        margin-bottom: 50px; 
+        /* MODIFIED: Adjusted for smaller screens */
+        margin-bottom: 30px; 
         font-size: clamp(2rem, 7vw, 4rem); 
     }
     /* --- PERFORMANCE: Reduce background opacity/complexity on mobile --- */
@@ -822,7 +826,8 @@ footer h2 {
     }
 
     .gallery-heading {
-        margin-bottom: 40px; 
+        /* MODIFIED: Adjusted for smaller screens */
+        margin-bottom: 25px; 
     }
     /* --- PERFORMANCE: Further reduce background opacity/complexity on very small mobile --- */
     .site-background-image { opacity: 0.03; }
