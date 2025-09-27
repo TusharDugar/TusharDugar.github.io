@@ -128,7 +128,7 @@ html::before {
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
-    /* MODIFIED: Align items to start for sticky element to work on desktop/tablet */
+    /* MODIFIED: Align items to start to properly support position: sticky children */
     align-items: flex-start; 
     min-height: 100vh;
     max-width: 1920px; 
@@ -466,7 +466,7 @@ html::before {
 
 .image-ring-container {
   perspective: 2000px; 
-  /* MODIFIED: Adjusted height, +60px reduced to +30px */
+  /* MODIFIED: Adjusted height to accommodate the current ring and items, +60px reduced to +30px */
   height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); 
   width: 100%; 
   position: relative; 
@@ -704,7 +704,7 @@ footer h2 {
 /* Desktop & Tablet (>= 768px) */
 @media (min-width: 768px) { 
     .main-layout-container { 
-        /* Essential for position: sticky on flex items */
+        /* MODIFIED: Essential for position: sticky on flex items */
         align-items: flex-start; 
     } 
     .left-column-sticky { 
