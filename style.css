@@ -35,12 +35,10 @@
     --transition-speed-medium: 0.8s; /* For reveal animations */
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* --- Gallery Slider Variables --- */
-    /* MODIFIED: Reduced to half of current values for desktop (default) */
-    --gallery-ring-radius: 160px; 
-    --gallery-image-width: 100px; 
-    --gallery-image-height: 130px; 
-    --gallery-inner-image-height: 60px; /* NEW: for image inside card */
+    /* --- Gallery Slider Variables (HALVED from previous fixed pixel values) --- */
+    --gallery-ring-radius: 160px; /* Half of 320px */
+    --gallery-image-width: 100px; /* Half of 200px */
+    --gallery-image-height: 130px; /* Half of 260px */
 
     --gallery-dimmed-brightness: 0.5; 
     --gallery-active-brightness: 1.1;
@@ -145,7 +143,7 @@ html::before {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  /* Default to relative, overridden by media queries for sticky */
+  /* Default to relative, overridden by media queries for sticky or specific mobile layout */
   position: relative; 
   top: auto; 
   height: auto;
@@ -175,11 +173,7 @@ html::before {
     margin-bottom: 0.8rem; 
     backface-visibility: hidden; 
 }
-@keyframes entryAnim { 
-    0% { transform: translate3d(0, 0, -80px); opacity: 0; } 
-    60% { transform: translate3d(0, 0, 20px); opacity: 0.5; } 
-    100% { transform: translate3d(0, 0, 0); opacity: 1; } 
-}
+@keyframes entryAnim { 0% { transform: translate3d(0, 0, -80px); opacity: 0; } 60% { transform: translate3d(0, 0, 20px); opacity: 0.5; } 100% { transform: translate3d(0, 0, 0); opacity: 1; } }
 .striped-entry-list li:nth-child(1) { animation-delay: 0.2s; } 
 .striped-entry-list li:nth-child(2) { animation-delay: 0.35s; } 
 .striped-entry-list li:nth-child(3) { animation-delay: 0.5s; } 
@@ -235,7 +229,7 @@ html::before {
     margin-bottom: 15px; 
 }
 .fire-icon { 
-    /* Ensured background-color is orange as per --accent-primary-sawad */
+    /* Ensures background-color is orange as per --accent-primary-sawad */
     background-color: var(--accent-primary-sawad); 
     border-radius: 50%; 
     padding: 8px; 
@@ -322,7 +316,8 @@ html::before {
     width: 100%;
     text-align: left;
     
-    margin-bottom: 60px; 
+    /* MODIFIED: Reduced margin-bottom for a tighter gap */
+    margin-bottom: 30px; 
     position: relative;
     z-index: 10; 
     color: var(--text-light); 
@@ -469,7 +464,7 @@ html::before {
 
 .image-ring-container {
   perspective: 2000px; 
-  /* MODIFIED: Adjusted height to accommodate smaller ring */
+  /* MODIFIED: Adjusted height to accommodate smaller ring and items */
   height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); 
   width: 100%; 
   position: relative; 
@@ -484,9 +479,8 @@ html::before {
 
 .image-ring {
   position: relative;
-  /* MODIFIED: Use ring radius variable */
-  width: calc(var(--gallery-ring-radius) * 2); 
-  height: calc(var(--gallery-ring-radius) * 2); 
+  width: calc(var(--gallery-ring-radius) * 2); /* Use variable for width */
+  height: calc(var(--gallery-ring-radius) * 2); /* Use variable for height */
   transform-style: preserve-3d;
   will-change: transform; 
   cursor: grab;
@@ -513,7 +507,7 @@ html::before {
   text-align: center; 
   display: flex; 
   flex-direction: column; 
-  align-items: center; 
+  align-items: center; /* MODIFIED: Center align items for image/text within card */
   justify-content: flex-start; 
   overflow: hidden; 
 
@@ -536,17 +530,19 @@ html::before {
 /* Gallery images */
 .gallery-item-link, .ring-image-link {
   overflow: hidden;
+  width: 100%; /* Ensure link takes full width for image */
+  flex-shrink: 0; /* Prevent image from shrinking if text is long */
 }
 .gallery-item-link img, .ring-image-link img {
   width: 100%; 
-  /* MODIFIED: Use the new responsive inner image height variable */
-  height: var(--gallery-inner-image-height); 
+  /* MODIFIED: Use a percentage of the card's height to ensure visibility */
+  height: 70%; /* This allows the image to scale within the card */
   object-fit: cover;
   border-radius: 8px; 
   display: block;
   filter: brightness(var(--gallery-dimmed-brightness)); 
   transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast);
-  margin-bottom: 10px; 
+  margin-bottom: 5px; /* Reduced margin */
 }
 .gallery-item-link:hover img, .ring-image-link:hover img {
   transform: scale(1.05);
@@ -587,6 +583,7 @@ html::before {
   line-height: 1.3;
   color: #ddd; 
   padding: 0 5px; 
+  width: 100%; /* Ensure caption takes full width */
 }
 .gallery-caption .memory-date { 
     font-family: "Orbitron", sans-serif;
@@ -700,31 +697,30 @@ footer h2 {
 
 /* --- Media Queries --- */
 
-/* Desktop (>= 1024px) */
-@media (min-width: 1024px) { 
+/* Desktop & Tablet (>= 768px) */
+@media (min-width: 768px) { 
     .main-layout-container { 
-        /* Essential for position: sticky to work on flex items */
+        /* Essential for position: sticky on flex items */
         align-items: flex-start; 
     } 
     .left-column-sticky { 
-        /* MODIFIED: Explicitly keep sticky positioning for desktop, previous was already good */
+        /* MODIFIED: Apply sticky for tablet screens as well, centered vertically */
         position: sticky; 
         top: 50%; 
         transform: translate3d(0, -50%, 0); 
         height: auto; 
-        align-self: flex-start; 
-        margin: 0; 
-    } 
+        align-self: flex-start; /* Important for sticky inside flex container */
+        margin: 0; /* Remove auto margins that might conflict with align-self */
+    }
 }
 
 /* Large Desktop (>= 1200px) */
 @media (min-width: 1200px) { 
   :root {
-    /* MODIFIED: Reduced to half */
+    /* HALVED: Desktop values (default) */
     --gallery-ring-radius: 160px; 
     --gallery-image-width: 100px; 
     --gallery-image-height: 130px; 
-    --gallery-inner-image-height: 60px; /* Adjusted */
   }
 }
 
@@ -739,36 +735,23 @@ footer h2 {
         flex-direction: column; 
         padding: 20px; 
         gap: 40px; 
-        /* MODIFIED: Ensure align-items: flex-start for sticky functionality */
+        /* On tablet, even though it's a column, align-items: flex-start is kept
+           if the intention is for the sticky column to still attempt to stick,
+           but it might behave more like a standard element if the content is short. */
         align-items: flex-start; 
     }
-    .left-column-sticky { 
-        /* MODIFIED: Apply sticky for tablet screens as well, centered vertically */
-        position: sticky; 
-        top: 50%; 
-        transform: translate3d(0, -50%, 0); 
-        height: auto; 
-        width: 100%; 
-        max-width: 400px; 
-        align-self: flex-start; /* Important for sticky inside flex container */
-        margin: 0; /* Remove auto margins that might conflict with align-self */
-    }
+    /* `left-column-sticky` already handled by `min-width: 768px` rule */
     
     :root {
-        /* MODIFIED: Reduced to half */
-        --gallery-ring-radius: 125px; 
-        --gallery-image-width: 70px; 
-        --gallery-image-height: 90px; 
-        --gallery-inner-image-height: 50px; /* Adjusted */
+        /* HALVED: Tablet values */
+        --gallery-ring-radius: 125px; /* Half of 250px */
+        --gallery-image-width: 70px; /* Half of 140px */
+        --gallery-image-height: 90px; /* Half of 180px */
     }
     .gallery-section { padding: 60px 20px; }
-    /* MODIFIED: Adjusted height to accommodate smaller ring */
+    /* MODIFIED: Adjusted height to accommodate smaller ring and items */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
-    .gallery-heading {
-        margin-bottom: 50px; 
-        font-size: clamp(2rem, 7vw, 4rem); 
-    }
     /* --- PERFORMANCE: Reduce background opacity/complexity on mobile --- */
     .site-background-image { opacity: 0.05; }
     .background-color-gradient { opacity: 0.03; }
@@ -783,7 +766,10 @@ footer h2 {
         padding-left: 15px; 
         padding-right: 0;
     }
-    .main-layout-container { flex-direction: column; padding: 15px; gap: 30px; 
+    .main-layout-container { 
+        flex-direction: column; 
+        padding: 15px; 
+        gap: 30px; 
         /* MODIFIED: Center align items for standard mobile layout (non-sticky) */
         align-items: center; 
     }
@@ -791,7 +777,7 @@ footer h2 {
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
     .left-column-sticky {
-        /* MODIFIED: Revert to relative for mobile, ensuring it's not sticky */
+        /* MODIFIED: Revert to relative for mobile, ensuring it's not sticky and is horizontally centered */
         position: relative;
         top: auto;
         transform: none;
@@ -799,14 +785,13 @@ footer h2 {
         margin: 0 auto 40px; /* Restore auto margins for horizontal centering */
     }
     :root {
-        /* MODIFIED: Reduced to half */
-        --gallery-ring-radius: 100px; 
-        --gallery-image-width: 60px; 
-        --gallery-image-height: 78px; 
-        --gallery-inner-image-height: 40px; /* Adjusted */
+        /* HALVED: Mobile values */
+        --gallery-ring-radius: 100px; /* Half of 200px */
+        --gallery-image-width: 60px; /* Half of 120px */
+        --gallery-image-height: 78px; /* Half of 156px */
     }
     .gallery-section { padding: 40px 15px; }
-    /* MODIFIED: Adjusted height to accommodate smaller ring */
+    /* MODIFIED: Adjusted height to accommodate smaller ring and items */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
     .services-card-grid, .tools-grid {
@@ -815,17 +800,17 @@ footer h2 {
     }
     
     .gallery-caption .memory-date { 
-        font-size: 0.7rem; /* MODIFIED: Smaller font for mobile */
+        font-size: 0.7rem; /* Smaller font for mobile */
     }
     .gallery-caption .title { 
-        font-size: 0.8rem; /* MODIFIED: Smaller font for mobile */
+        font-size: 0.8rem; /* Smaller font for mobile */
     }
     .gallery-caption .description { 
-        font-size: 0.7rem; /* MODIFIED: Smaller font for mobile */
+        font-size: 0.7rem; /* Smaller font for mobile */
     }
 
     .gallery-heading {
-        margin-bottom: 40px; 
+        margin-bottom: 30px; /* Reduced margin */
     }
     /* --- PERFORMANCE: Further reduce background opacity/complexity on very small mobile --- */
     .site-background-image { opacity: 0.03; }
