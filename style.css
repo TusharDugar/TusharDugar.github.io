@@ -35,10 +35,12 @@
     --transition-speed-medium: 0.8s; /* For reveal animations */
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* --- Gallery Slider Variables (RESTORED TO ORIGINAL LARGER VALUES for desktop) --- */
-    --gallery-ring-radius: 320px; 
-    --gallery-image-width: 200px; 
-    --gallery-image-height: 260px; 
+    /* --- Gallery Slider Variables (ORIGINAL VALUES * 2/3 for desktop) --- */
+    /* Original desktop: R=320, W=200, H=260 */
+    /* New desktop: R=213, W=133, H=173 */
+    --gallery-ring-radius: 213px; 
+    --gallery-image-width: 133px; 
+    --gallery-image-height: 173px; 
 
     --gallery-dimmed-brightness: 0.5; 
     --gallery-active-brightness: 1.1;
@@ -317,7 +319,7 @@ html::before {
     text-align: left;
     
     /* MODIFIED: Reduced margin-bottom for a tighter gap */
-    margin-bottom: 30px; 
+    margin-bottom: 20px; /* Further reduced from 30px to 20px for tighter gap */
     position: relative;
     z-index: 10; 
     color: var(--text-light); 
@@ -712,15 +714,18 @@ footer h2 {
         align-self: flex-start; /* Important for sticky inside flex container */
         margin: 0; /* Remove auto margins that might conflict with align-self */
     }
+    /* `main-layout-container` flex-direction is row by default for desktop, 
+       then column for tablets. Keeping the `align-items: flex-start` 
+       here ensures the sticky property is respected. */
 }
 
 /* Large Desktop (>= 1200px) */
 @media (min-width: 1200px) { 
   :root {
-    /* RESTORED: Original larger desktop values (default) */
-    --gallery-ring-radius: 320px; 
-    --gallery-image-width: 200px; 
-    --gallery-image-height: 260px; 
+    /* MODIFIED: Desktop values (default) - 2/3 of original large values */
+    --gallery-ring-radius: 213px; /* ~320 * 0.666 */
+    --gallery-image-width: 133px; /* ~200 * 0.666 */
+    --gallery-image-height: 173px; /* ~260 * 0.666 */
   }
 }
 
@@ -732,20 +737,17 @@ footer h2 {
         padding-right: 0;
     }
     .main-layout-container { 
-        flex-direction: column; 
+        flex-direction: column; /* Tablet layouts often switch to column */
         padding: 20px; 
         gap: 40px; 
-        /* On tablet, even though it's a column, align-items: flex-start is kept
-           if the intention is for the sticky column to still attempt to stick,
-           but it might behave more like a standard element if the content is short. */
-        align-items: flex-start; 
+        align-items: flex-start; /* Main layout container aligns children (including sticky) to start */
     }
     
     :root {
-        /* RESTORED: Original larger tablet values */
-        --gallery-ring-radius: 250px; 
-        --gallery-image-width: 140px; 
-        --gallery-image-height: 180px; 
+        /* MODIFIED: Tablet values - 2/3 of original large values */
+        --gallery-ring-radius: 167px; /* ~250 * 0.666 */
+        --gallery-image-width: 94px; /* ~140 * 0.666 */
+        --gallery-image-height: 120px; /* ~180 * 0.666 */
     }
     .gallery-section { padding: 60px 20px; }
     /* MODIFIED: Adjusted height to accommodate current ring and items */
@@ -770,7 +772,7 @@ footer h2 {
         padding: 15px; 
         gap: 30px; 
         /* MODIFIED: Center align items for standard mobile layout (non-sticky) */
-        align-items: center; 
+        align-items: center; /* Center horizontally in column flow for mobile */
     }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
@@ -784,10 +786,10 @@ footer h2 {
         margin: 0 auto 40px; /* Restore auto margins for horizontal centering */
     }
     :root {
-        /* RESTORED: Original larger mobile values */
-        --gallery-ring-radius: 200px; 
-        --gallery-image-width: 120px; 
-        --gallery-image-height: 156px; 
+        /* MODIFIED: Mobile values - 2/3 of original large values */
+        --gallery-ring-radius: 133px; /* ~200 * 0.666 */
+        --gallery-image-width: 80px; /* ~120 * 0.666 */
+        --gallery-image-height: 104px; /* ~156 * 0.666 */
     }
     .gallery-section { padding: 40px 15px; }
     /* MODIFIED: Adjusted height to accommodate current ring and items */
@@ -809,7 +811,7 @@ footer h2 {
     }
 
     .gallery-heading {
-        margin-bottom: 30px; /* Reduced margin */
+        margin-bottom: 20px; /* Reduced margin */
     }
     /* --- PERFORMANCE: Further reduce background opacity/complexity on very small mobile --- */
     .site-background-image { opacity: 0.03; }
