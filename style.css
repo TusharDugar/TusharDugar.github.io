@@ -458,7 +458,9 @@ html::before {
   background: transparent;
   color: var(--text-light);
   z-index: 1;
-  padding: 80px 40px 40px; /* MODIFIED: Reduced padding-bottom from 80px to 40px */
+  /* MODIFIED: Reduced padding-top from 80px to 40px */
+  /* MODIFIED: Reduced padding-bottom from 40px to 20px */
+  padding: 40px 40px 20px; 
 
   /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
   padding-right: 0; 
@@ -751,7 +753,8 @@ footer h2 {
         --gallery-image-width: 154px; 
         --gallery-image-height: 198px; 
     }
-    .gallery-section { padding: 60px 20px 40px; } /* MODIFIED: Reduced padding-bottom */
+    /* MODIFIED: Reduced padding-top and padding-bottom for gallery section */
+    .gallery-section { padding: 40px 20px 20px; } 
     /* MODIFIED: Adjusted height to accommodate current ring and items, +60px reduced to +30px */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); }
 
@@ -794,7 +797,8 @@ footer h2 {
         --gallery-image-width: 132px; 
         --gallery-image-height: 172px; 
     }
-    .gallery-section { padding: 40px 15px 40px; } /* MODIFIED: Reduced padding-bottom */
+    /* MODIFIED: Reduced padding-top and padding-bottom for gallery section */
+    .gallery-section { padding: 40px 15px 20px; } 
     /* MODIFIED: Adjusted height to accommodate current ring and items, +60px reduced to +30px */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); }
 
