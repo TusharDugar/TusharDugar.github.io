@@ -35,12 +35,12 @@
     --transition-speed-medium: 0.8s; /* For reveal animations */
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* --- Gallery Slider Variables (ORIGINAL VALUES * 2/3 for desktop) --- */
+    /* --- Gallery Slider Variables (RING REDUCED by ~1/3, CARDS RESTORED TO ORIGINAL LARGE SIZE) --- */
     /* Original desktop: R=320, W=200, H=260 */
-    /* New desktop: R=213, W=133, H=173 */
-    --gallery-ring-radius: 213px; 
-    --gallery-image-width: 133px; 
-    --gallery-image-height: 173px; 
+    /* New desktop: R=213, W=200, H=260 */
+    --gallery-ring-radius: 213px; /* ~320 * 0.666 */
+    --gallery-image-width: 200px; /* RESTORED to original large value */
+    --gallery-image-height: 260px; /* RESTORED to original large value */
 
     --gallery-dimmed-brightness: 0.5; 
     --gallery-active-brightness: 1.1;
@@ -128,8 +128,8 @@ html::before {
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
-    /* MODIFIED: Align items to start for sticky element to work on desktop/tablet */
-    align-items: flex-start; 
+    /* MODIFIED: Align items to CENTER as per "old code" for non-sticky behavior */
+    align-items: center; 
     min-height: 100vh;
     max-width: 1920px; 
     margin: 0 auto; 
@@ -145,7 +145,7 @@ html::before {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  /* Default to relative, overridden by media queries for sticky or specific mobile layout */
+  /* MODIFIED: Set to relative as per "old code" for "frozer" (non-sticky) behavior */
   position: relative; 
   top: auto; 
   height: auto;
@@ -319,7 +319,7 @@ html::before {
     text-align: left;
     
     /* MODIFIED: Reduced margin-bottom for a tighter gap */
-    margin-bottom: 20px; /* Further reduced from 30px to 20px for tighter gap */
+    margin-bottom: 20px; /* Reduced to 20px for tighter gap */
     position: relative;
     z-index: 10; 
     color: var(--text-light); 
@@ -466,7 +466,7 @@ html::before {
 
 .image-ring-container {
   perspective: 2000px; 
-  /* MODIFIED: Adjusted height to accommodate the current ring and items */
+  /* MODIFIED: Height now correctly uses the new, smaller ring radius and the larger image height */
   height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); 
   width: 100%; 
   position: relative; 
@@ -495,8 +495,9 @@ html::before {
 /* Gallery Items – card look fixed */
 .gallery-item, .ring-image {
   position: absolute;
-  width: var(--gallery-image-width);
-  height: var(--gallery-image-height);
+  /* MODIFIED: Card width and height restored to original large values */
+  width: var(--gallery-image-width); 
+  height: var(--gallery-image-height); 
   top: 50%;
   left: 50%;
   margin-top: calc(var(--gallery-image-height) / -2); 
@@ -537,7 +538,7 @@ html::before {
 }
 .gallery-item-link img, .ring-image-link img {
   width: 100%; 
-  /* MODIFIED: Flexible height based on aspect ratio, constrained by max-height */
+  /* Flexible height based on aspect ratio, constrained by max-height */
   height: auto; 
   max-height: calc(var(--gallery-image-height) * 0.7); /* Image takes up to 70% of card height */
   object-fit: cover; /* Ensures image covers the available space */
@@ -703,29 +704,27 @@ footer h2 {
 /* Desktop & Tablet (>= 768px) */
 @media (min-width: 768px) { 
     .main-layout-container { 
-        /* Essential for position: sticky on flex items */
-        align-items: flex-start; 
+        /* MODIFIED: Align items to CENTER as per "old code" for non-sticky behavior */
+        align-items: center; 
     } 
     .left-column-sticky { 
-        position: sticky; 
-        top: 50%; 
-        transform: translate3d(0, -50%, 0); 
+        /* MODIFIED: Set to relative as per "old code" for "frozer" (non-sticky) behavior */
+        position: relative; 
+        top: auto; 
+        transform: none; 
         height: auto; 
-        align-self: flex-start; /* Important for sticky inside flex container */
-        margin: 0; /* Remove auto margins that might conflict with align-self */
+        align-self: center; /* Ensures it's horizontally centered within the flex container */
+        margin: 0 auto 40px; /* Provides bottom margin and auto horizontal margin for centering */
     }
-    /* `main-layout-container` flex-direction is row by default for desktop, 
-       then column for tablets. Keeping the `align-items: flex-start` 
-       here ensures the sticky property is respected. */
 }
 
 /* Large Desktop (>= 1200px) */
 @media (min-width: 1200px) { 
   :root {
-    /* MODIFIED: Desktop values (default) - 2/3 of original large values */
+    /* MODIFIED: Ring reduced by 1/3, cards restored to original larger size */
     --gallery-ring-radius: 213px; /* ~320 * 0.666 */
-    --gallery-image-width: 133px; /* ~200 * 0.666 */
-    --gallery-image-height: 173px; /* ~260 * 0.666 */
+    --gallery-image-width: 200px; /* RESTORED to original 200px */
+    --gallery-image-height: 260px; /* RESTORED to original 260px */
   }
 }
 
@@ -737,17 +736,19 @@ footer h2 {
         padding-right: 0;
     }
     .main-layout-container { 
-        flex-direction: column; /* Tablet layouts often switch to column */
+        flex-direction: column; 
         padding: 20px; 
         gap: 40px; 
-        align-items: flex-start; /* Main layout container aligns children (including sticky) to start */
+        /* MODIFIED: Align items to CENTER for tablet column layout */
+        align-items: center; 
     }
+    /* `left-column-sticky` behavior handled by `min-width: 768px` rule */
     
     :root {
-        /* MODIFIED: Tablet values - 2/3 of original large values */
+        /* MODIFIED: Ring reduced by 1/3, cards restored to original larger size */
         --gallery-ring-radius: 167px; /* ~250 * 0.666 */
-        --gallery-image-width: 94px; /* ~140 * 0.666 */
-        --gallery-image-height: 120px; /* ~180 * 0.666 */
+        --gallery-image-width: 140px; /* RESTORED to original 140px */
+        --gallery-image-height: 180px; /* RESTORED to original 180px */
     }
     .gallery-section { padding: 60px 20px; }
     /* MODIFIED: Adjusted height to accommodate current ring and items */
@@ -771,14 +772,14 @@ footer h2 {
         flex-direction: column; 
         padding: 15px; 
         gap: 30px; 
-        /* MODIFIED: Center align items for standard mobile layout (non-sticky) */
-        align-items: center; /* Center horizontally in column flow for mobile */
+        /* MODIFIED: Center align items for standard mobile layout */
+        align-items: center; 
     }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
     .left-column-sticky {
-        /* MODIFIED: Revert to relative for mobile, ensuring it's not sticky and is horizontally centered */
+        /* MODIFIED: Explicitly define for mobile, matching the general rule from 768px up */
         position: relative;
         top: auto;
         transform: none;
@@ -786,10 +787,10 @@ footer h2 {
         margin: 0 auto 40px; /* Restore auto margins for horizontal centering */
     }
     :root {
-        /* MODIFIED: Mobile values - 2/3 of original large values */
+        /* MODIFIED: Ring reduced by 1/3, cards restored to original larger size */
         --gallery-ring-radius: 133px; /* ~200 * 0.666 */
-        --gallery-image-width: 80px; /* ~120 * 0.666 */
-        --gallery-image-height: 104px; /* ~156 * 0.666 */
+        --gallery-image-width: 120px; /* RESTORED to original 120px */
+        --gallery-image-height: 156px; /* RESTORED to original 156px */
     }
     .gallery-section { padding: 40px 15px; }
     /* MODIFIED: Adjusted height to accommodate current ring and items */
