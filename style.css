@@ -458,9 +458,9 @@ html::before {
   background: transparent;
   color: var(--text-light);
   z-index: 1;
-  /* MODIFIED: Reduced padding-top from 80px to 40px */
-  /* MODIFIED: Reduced padding-bottom from 40px to 20px */
-  padding: 40px 40px 20px; 
+  /* MODIFIED: Reduced padding-top from 80px to 20px for tighter gap */
+  /* MODIFIED: Reduced padding-bottom from 40px to 10px for tighter gap */
+  padding: 20px 40px 10px; 
 
   /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
   padding-right: 0; 
@@ -710,10 +710,10 @@ footer h2 {
         align-items: flex-start; 
     } 
     .left-column-sticky { 
-        /* MODIFIED: Apply sticky and TOP alignment for tablet and desktop */
+        /* MODIFIED: Apply sticky and vertical centering for tablet and desktop */
         position: sticky; 
-        top: 0; /* Sticks to the top of the viewport */
-        transform: none; /* No vertical offset needed */
+        top: 50%; 
+        transform: translate3d(0, -50%, 0); 
         height: auto; 
         align-self: flex-start; /* Important for sticky inside flex container */
         margin: 0; /* Remove auto margins that might conflict with align-self */
@@ -754,7 +754,7 @@ footer h2 {
         --gallery-image-height: 198px; 
     }
     /* MODIFIED: Reduced padding-top and padding-bottom for gallery section */
-    .gallery-section { padding: 40px 20px 20px; } 
+    .gallery-section { padding: 20px 20px 10px; } /* Further reduced padding */
     /* MODIFIED: Adjusted height to accommodate current ring and items, +60px reduced to +30px */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); }
 
@@ -798,7 +798,7 @@ footer h2 {
         --gallery-image-height: 172px; 
     }
     /* MODIFIED: Reduced padding-top and padding-bottom for gallery section */
-    .gallery-section { padding: 40px 15px 20px; } 
+    .gallery-section { padding: 20px 15px 10px; } /* Further reduced padding */
     /* MODIFIED: Adjusted height to accommodate current ring and items, +60px reduced to +30px */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); }
 
