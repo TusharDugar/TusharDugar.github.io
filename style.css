@@ -128,7 +128,7 @@ html::before {
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
-    /* MODIFIED: Align items to start to properly support position: sticky children */
+    /* MODIFIED: Essential for position: sticky on flex items - align to start */
     align-items: flex-start; 
     min-height: 100vh;
     max-width: 1920px; 
@@ -706,7 +706,7 @@ footer h2 {
 /* Desktop & Tablet (>= 768px) */
 @media (min-width: 768px) { 
     .main-layout-container { 
-        /* MODIFIED: Essential for position: sticky on flex items */
+        /* MODIFIED: Essential for position: sticky on flex items - align to start */
         align-items: flex-start; 
     } 
     .left-column-sticky { 
