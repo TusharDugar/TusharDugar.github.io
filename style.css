@@ -9,7 +9,7 @@
     --text-medium-card: #4B4B4B; /* Medium grey text specifically for light cards */
     --accent-primary-sawad: #FF6B00; /* Primary accent color */
     --accent-secondary-sawad: #00FFC2; /* Secondary accent color */
-    --text-sub-heading-grey: #666666; /* Renamed from --text-sub-heading-grey for broader applicability */
+    --text-secondary: #666666; /* Renamed from --text-sub-heading-grey for broader applicability */
 
     /* Additional colors from index.html memory carousel for consistent styling */
     --carousel-primary: #9d00ff; 
@@ -35,11 +35,11 @@
     --transition-speed-medium: 0.8s; /* For reveal animations */
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* ✅ UPDATED: Gallery Slider Variables - Base card width variable remains, ring radius increased */
-    --gallery-ring-radius: clamp(300px, 50vw, 600px); /* ~2.5x larger ring radius for desktop */
-    --gallery-item-width: clamp(90px, 16vw, 160px);    /* Base variable remains for scaling */
-    --gallery-item-expected-min-height: calc(var(--gallery-item-width) * 1.5); /* Height calc based on base width */
-    --gallery-dimmed-brightness: 0.6; 
+    /* --- Gallery Slider Variables (reset to stable fixed px values) --- */
+    --gallery-ring-radius: 320px; /* ✅ revert */
+    --gallery-image-width: 200px; /* ✅ revert */
+    --gallery-image-height: 260px; /* ✅ revert */
+    --gallery-dimmed-brightness: 0.5; /* ✅ keep images dimmed */
     --gallery-active-brightness: 1.1;
     --gallery-hover-brightness: 1.3;
 }
@@ -53,7 +53,7 @@ body {
     color: var(--text-light);
     background-color: var(--bg-main);
     overflow-x: hidden; 
-    position: relative; 
+    /* position: relative; Removed as not explicitly needed for z-index stacking on body */
     scroll-behavior: smooth;
     min-height: 100vh;
 }
@@ -106,6 +106,7 @@ html::before {
     position: relative; 
     z-index: 1; 
     padding: 80px 40px; 
+    /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
     padding-right: 0; 
 }
 .reveal-item, .reveal-child, .reveal-stagger { 
@@ -124,7 +125,8 @@ html::before {
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
-    align-items: stretch; /* Allows sticky sidebar to fill height */
+    /* MODIFIED: Align items to start for sticky element to work */
+    align-items: flex-start; 
     min-height: 100vh;
     max-width: 1920px; 
     margin: 0 auto; 
@@ -140,13 +142,14 @@ html::before {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  position: relative; /* Default position */
-  top: auto; 
-  height: auto;
+  /* MODIFIED: Ensure sticky positioning is active for desktop */
+  position: sticky; 
+  top: 50%; /* Position from the top */
+  transform: translate3d(0, -50%, 0); /* Center vertically */
+  height: auto; /* Allow content to dictate height */
   animation: leftColumnPopIn 1.4s ease-out both; 
   will-change: transform, opacity; 
   backface-visibility: hidden; 
-  /* Removed perspective/transform-style from here, they are now on striped-entry-list */
 }
 
 @keyframes leftColumnPopIn {
@@ -161,13 +164,7 @@ html::before {
 }
 
 /* Striped Entry List (Animation for navigation/list items) */
-.striped-entry-list { 
-    list-style: none; 
-    margin: 0; 
-    padding: 0; 
-    perspective: 1000px; /* ✅ Restored here for 3D animation */
-    transform-style: preserve-3d; /* ✅ Restored here for 3D animation */
-}
+.striped-entry-list { list-style: none; margin: 0; padding: 0; perspective: 1000px; transform-style: preserve-3d; }
 .striped-entry-list li { 
     opacity: 0; 
     transform: translate3d(0, 0, 0); 
@@ -187,14 +184,15 @@ html::before {
 .striped-entry-list li:nth-child(4) { animation-delay: 0.65s; } 
 .striped-entry-list li:nth-child(5) { animation-delay: 0.8s; }
 
-/* "About" Card Styles (Profile Card) - Restored height/padding */
+/* "About" Card Styles (Profile Card) - ✅ FIXED: Made more compact and aligned */
 .about-left-content { 
     background-color: var(--bg-profile-card); 
     color: var(--text-dark-card); 
     border-radius: 20px; 
     box-shadow: 0 10px 30px var(--shadow-color-card-white); 
     width: 100%; 
-    max-width: 370px; 
+    /* MODIFIED: Increased max-width for the white card */
+    max-width: 400px; 
     display: flex; 
     flex-direction: column; 
     align-items: center; 
@@ -203,12 +201,14 @@ html::before {
     overflow: hidden; 
     height: auto; 
     box-sizing: border-box; 
-    padding: 30px 25px; /* Reverted padding for larger feel */
-    /* max-height: 85vh; Removed to allow it to expand */
+    /* MODIFIED: Increased padding for more internal space */
+    padding: 30px 25px; 
+    max-height: 85vh; 
 }
 .profile-image-container { 
-    width: 140px; 
-    height: 140px; 
+    /* MODIFIED: Increased size for profile image */
+    width: 160px; 
+    height: 160px; 
     border-radius: 0; 
     overflow: hidden; 
     margin-bottom: 15px; 
@@ -220,7 +220,8 @@ html::before {
     object-position: center; 
 }
 .about-left-content h3 { 
-    font-size: 2.2em; 
+    /* MODIFIED: Slightly increased font size */
+    font-size: 2.4em; 
     font-weight: 700; 
     margin: 0 0 12px 0; 
     line-height: 1.1; 
@@ -258,7 +259,8 @@ html::before {
 .fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
 .about-short-desc { 
     line-height: 1.6; 
-    font-size: 0.85em; 
+    /* MODIFIED: Slightly increased font size */
+    font-size: 0.9em; 
     color: var(--text-medium-card); 
     margin-bottom: 20px; 
     max-width: 90%; 
@@ -270,11 +272,6 @@ html::before {
     gap: 10px; 
     margin-top: auto; 
     padding-top: 5px; 
-}
-.about-social-icons a { 
-    color: var(--accent-primary-sawad); 
-    font-size: 1.5em; 
-    transition: color var(--transition-speed-fast), transform var(--transition-speed-fast); 
 }
 .about-social-icons a:hover { 
     transform: translate3d(0, -2px, 0); 
@@ -302,7 +299,7 @@ html::before {
     text-align: left; 
 }
 .hero-heading .crafting { color: var(--text-light); } 
-.hero-heading .digital { color: var(--text-sub-heading-grey); } 
+.hero-heading .digital { color: var(--text-secondary); } 
 .hero-description { 
     text-align: justify; 
     line-height: 1.8; 
@@ -317,23 +314,21 @@ html::before {
 .services-heading, 
 .tools-heading, 
 .gallery-heading {
-    font-size: clamp(2.5rem, 8vw, 8rem); 
+    font-size: clamp(2.5rem, 8vw, 8rem); /* Reverted font-size to stable backup */
     line-height: 0.75em;
-    font-weight: 800; 
     text-transform: uppercase;
     width: 100%;
     text-align: left;
     
-    /* MODIFIED: Adjusted margin-bottom for a tighter gap with the carousel */
-    margin-bottom: 20px; 
+    margin-bottom: 60px; /* ✅ FIXED: Reverted margin-bottom to 60px */
     position: relative;
     z-index: 10; 
     color: var(--text-light); 
-    text-shadow: none; 
-    
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8); 
+    font-weight: 900; 
+
     padding-left: 0; 
     margin-left: 0; 
-    margin-right: auto;
 }
 /* Ensure the text spans inside still override/set their specific colors if needed */
 .services-heading .text-white, 
@@ -346,7 +341,7 @@ html::before {
 .services-heading .text-gray, 
 .tools-heading .text-gray, 
 .gallery-heading .text-gray { 
-    color: var(--text-sub-heading-grey); 
+    color: var(--text-secondary); 
     display: block; 
     text-shadow: none; 
 } 
@@ -357,10 +352,10 @@ html::before {
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   gap: 20px; 
-  max-width: 900px; /* ✅ Updated max-width to 900px */
+  max-width: 850px; 
   
-  margin-left: 0; /* ✅ Ensures left alignment */
-  margin-right: auto; /* ✅ Ensures left alignment */
+  margin-left: 0; 
+  margin-right: auto; 
 }
 .face {
   position: relative;
@@ -410,7 +405,6 @@ html::before {
     max-width: 900px; 
     margin-left: 0; 
     margin-right: auto;
-    margin-top: 30px;  
 }
 .tool-card {
   background: rgba(20, 20, 20, 0.6); 
@@ -434,7 +428,8 @@ html::before {
 .tool-icon-wrapper { 
     width: 50px; 
     height: 50px; 
-    background-color: var(--tool-icon-bg); /* Using original variable, assuming it's #F8F8F8 */
+    /* NEW: Added white background for tool icons */
+    background-color: #FFFFFF; 
     border-radius: 10px; 
     display: flex; 
     justify-content: center; 
@@ -459,124 +454,111 @@ html::before {
     margin: 0; 
 }
 
-/* ----------------------------- */
-/* Featured Websites (Gallery)   */
-/* ----------------------------- */
-
-/* Section wrapper for the gallery */
+/* Featured Websites Section (Gallery) - ✅ FIXED: Corrected layout and visibility */
 .gallery-section {
-  text-align: left;                 /* Align heading & captions left */
-  background: transparent;          /* Transparent background */
-  color: var(--text-light);         /* Default text color */
-  z-index: 1;                       /* Sit above background visuals */
-  padding: 80px 40px;               /* Spacing inside section */
-  padding-right: 0;                 /* No extra padding on right side */
+  text-align: left; 
+  background: transparent;
+  color: var(--text-light);
+  z-index: 1;
+  padding: 80px 40px;
+
+  /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
+  padding-right: 0; 
 }
 
-/* Container holding the rotating image ring, manages 3D perspective */
 .image-ring-container {
-  perspective: 2000px;              /* Increased depth for a more pronounced 3D effect */
-  /* ✅ UPDATED: Container height scales with larger ring radius and card height, removed *0.75 multiplier */
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height)); 
-  width: 100%;                      /* Stretch across section */
-  position: relative;               /* Anchor child absolutely */
-  display: flex;                    /* Flexbox center */
-  justify-content: center;          /* Center horizontally */
-  align-items: center;              /* Center vertically */
-  overflow: visible;                /* Allow 3D elements to go outside container bounds */
-  /* MODIFIED: Removed negative margin-top to allow explicit margin from heading to control spacing */
-  margin-top: 0;                 
-  z-index: 1;                       /* Above background elements */
+  perspective: 2000px; /* ✅ FIXED: Perspective to stable backup */
+  height: 400px; /* ✅ FIXED: Height to stable backup */
+  width: 100%; 
+  position: relative; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible; 
+  
+  margin-top: -20px; /* ✅ FIXED: margin-top to stable backup */
+  z-index: 1; 
 }
 
-/* The 3D rotating ring itself */
 .image-ring {
-  position: relative;               /* Base for positioned children */
-  width: 100%;                      /* Flexible width for the ring container */
-  height: 100%;                     /* Flexible height for the ring container */
-  /* REMOVED: min-height property was creating excessive vertical space */
-  /* min-height: calc(var(--gallery-ring-radius) * 3); */ 
-  transform-style: preserve-3d;     /* Keep depth when rotated */
-  will-change: transform;           /* GPU optimize transforms */
-  cursor: grab;                     /* Show draggable hand */
+  position: relative;
+  width: 300px; /* ✅ FIXED: Width to stable backup */
+  height: 300px; /* ✅ FIXED: Height to stable backup */
+  transform-style: preserve-3d;
+  will-change: transform; /* For GPU acceleration of ring rotation */
+  cursor: grab;
 }
-/* Change cursor while dragging */
+
 .image-ring:active {
-  cursor: grabbing;                 /* Change cursor while dragging */
+  cursor: grabbing;
 }
 
-/* Individual gallery cards (items placed around the ring) */
-.gallery-item,
-.ring-image {
-  position: absolute;               /* Placed around the ring via JS */
-  top: 50%;                         /* Start centered vertically */
-  left: 50%;                        /* Start centered horizontally */
-  margin: 0;                        /* No extra margin, to make cards closer */
-  transform: translate3d(-50%, -50%, 0); /* Center origin before JS override for rotation */
+/* Gallery Items – card look fixed */
+.gallery-item, .ring-image {
+  position: absolute;
+  width: var(--gallery-image-width);
+  height: var(--gallery-image-height);
+  top: 50%;
+  left: 50%;
+  margin-top: calc(var(--gallery-image-height) / -2); /* ✅ FIXED: Centering margin */
+  margin-left: calc(var(--gallery-image-width) / -2); /* ✅ FIXED: Centering margin */
+  /* MODIFIED: Increased padding for more space between cards */
+  padding: 18px; 
+  border-radius: 12px; /* ✅ revert */
+  background: rgba(255, 255, 255, 0.08); /* ✅ revert */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); /* ✅ revert */
+  backdrop-filter: blur(10px); /* ✅ revert */
+  text-align: center; /* ✅ revert */
+  display: flex; /* ✅ revert */
+  flex-direction: column; /* ✅ revert */
+  align-items: center; /* ✅ revert */
+  justify-content: flex-start; /* ✅ revert */
+  overflow: hidden; /* Ensure content stays within bounds */
 
-  /* ✅ UPDATED: Card width multiplier reduced to prevent overlapping */
-  width: calc(var(--gallery-item-width) * 1.8); 
+  transform-style: preserve-3d; 
+  backface-visibility: hidden; 
 
-  height: auto;                     /* Keep height flexible, so captions don’t get cut */
-
-  padding: 10px;                    /* Inner spacing inside the card */
-  border-radius: 12px;              /* Rounded corners */
-  background: rgba(255, 255, 255, 0.08); /* Glassy background */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); /* Subtle shadow */
-  backdrop-filter: blur(10px);      /* Blur background behind the card */
-  -webkit-backdrop-filter: blur(10px); /* Webkit vendor prefix for blur */
-  text-align: center;               /* Center text inside */
-  display: flex;                    /* Use flex layout inside */
-  flex-direction: column;           /* Stack image + caption vertically */
-  align-items: center;              /* Center content horizontally */
-  justify-content: flex-start;      /* Align content to the top */
-  overflow: hidden;                 /* Keep everything inside rounded box */
-
-  transform-style: preserve-3d;     /* Maintain 3D depth */
-  backface-visibility: hidden;      /* Hide backside of card */
-  transition: transform var(--transition-speed-fast), /* Smooth transition for transform */
-              box-shadow var(--transition-speed-fast); /* Smooth transition for shadow */
-  z-index: 1;                       /* Sit above background */
+  transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); 
+  /* NEW: Added subtle border for better visual separation */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  
+  z-index: 1; 
 }
 
-/* Hover effect — lift card forward while maintaining its center */
-.gallery-item:hover,
-.ring-image:hover {
-  transform: translate3d(-50%, -50%, 30px); /* Preserve hover lift and centering, as requested */
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); /* Stronger shadow on hover */
+/* Strengthen Glow / Depth on Hover */
+.gallery-item:hover, .ring-image:hover {
+  transform: translate3d(0, 0, 30px); 
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); 
 }
 
-/* Links wrapping gallery images */
-.gallery-item-link,
-.ring-image-link {
-  overflow: hidden;                 /* Crop overflow */
-  display: block;                   /* Make the link a block element */
-  width: 100%;                      /* Fill card width */
+
+/* Gallery images – revert sizing */
+.gallery-item-link, .ring-image-link {
+  /* No flex properties needed here, img directly styled */
+  overflow: hidden;
+  /* position: relative; Removed, not needed for glitch effect here as it's not a child of this */
 }
-/* Gallery images – now responsive within card, no cropping */
-.gallery-item-link img,
-.ring-image-link img {
-  width: 100%;                      /* Fill card width */
-  height: auto;                     /* Height adjusts based on image content, no fixed height */
-  aspect-ratio: auto;               /* No fixed aspect ratio to allow flexibility */
-  object-fit: contain;              /* Ensure entire image is visible, not cropped */
-  border-radius: 8px;               /* Rounded edges for the image */
-  filter: brightness(var(--gallery-dimmed-brightness)); /* Dimmed by default */
-  transition: transform var(--transition-speed-fast), /* Smooth transition for transform */
-              filter var(--transition-speed-fast);    /* Smooth transition for filter */
-  margin-bottom: 10px;              /* Space below image before caption */
+.gallery-item-link img, .ring-image-link img {
+  width: 100%; /* ✅ revert */
+  /* MODIFIED: Slightly increased image height to fill new padding */
+  height: 140px; 
+  object-fit: cover;
+  border-radius: 8px; /* ✅ revert */
+  display: block;
+  filter: brightness(var(--gallery-dimmed-brightness)); /* Uses variable from root */
+  transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast);
+  margin-bottom: 10px; /* ✅ revert */
 }
-/* Image hover effect — slight zoom and brighten */
-.gallery-item-link:hover img,
-.ring-image-link:hover img {
-  transform: scale(1.05);           /* Slight zoom on hover */
-  filter: brightness(var(--gallery-hover-brightness)); /* Brighten on hover */
+.gallery-item-link:hover img, .ring-image-link:hover img {
+  transform: scale(1.05);
+  filter: brightness(var(--gallery-hover-brightness));
 }
 
 /* Optional: Glitch effect overlay for images (requires HTML div with class "glitch-effect" inside .gallery-item-link) */
 /* This element is removed/simplified in the stable context, but keeping definition if HTML implies it */
 .glitch-effect {
-    background-color: transparent; 
+    /* Styles as previously defined if HTML includes this element, otherwise it's inert */
+    background-color: transparent; /* Fallback */
     position: absolute;
     top: 0;
     left: 0;
@@ -602,40 +584,39 @@ html::before {
 }
 
 
-/* Gallery caption – simple stable text, now centered */
+/* Gallery caption – simple stable text */
 .gallery-caption {
-  /* ✅ UPDATED: Font size increased to match larger card, as requested */
-  font-size: 1rem;                  
-  line-height: 1.3;                 /* Readable line spacing */
-  color: #ddd;                      /* Light grey text color */
-  padding: 0 5px;                   /* Side padding for text */
-  text-align: center;               /* Ensure caption text is center-aligned */
+  font-size: 0.8rem; /* ✅ revert */
+  line-height: 1.3;
+  color: #ddd; /* ✅ revert */
+  padding: 0 5px; /* ✅ revert */
 }
-/* Styling for elements within .gallery-caption to match memory carousel */
+/* Styling for elements within .gallery-caption to match memory carousel (if any) */
+/* The memory-date, title, description classes should now directly inherit from .gallery-caption or be re-applied as needed */
 .gallery-caption .memory-date { 
-    font-family: "Orbitron", sans-serif; /* Specific font for date */
-    font-size: 0.8rem;                  /* Date font size */
-    color: var(--carousel-accent);      /* Accent color for date */
-    text-shadow: 0 0 5px rgba(255, 0, 229, 0.7); /* Glow effect for date */
-    margin-bottom: 0;                   /* No bottom margin */
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.8rem;
+    color: var(--carousel-accent); 
+    text-shadow: 0 0 5px rgba(255, 0, 229, 0.7);
+    margin-bottom: 0; 
 }
 .gallery-caption .title { 
-    font-size: 1rem;                    /* Title font size */
-    font-weight: 600;                   /* Title font weight */
-    color: var(--text-light);           /* Light text color for title */
-    white-space: normal;                /* Allow text to wrap */
-    overflow: visible;                  /* Ensure full title is visible */
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8); /* Shadow for title */
-    margin-bottom: 0;                   /* No bottom margin */
+    font-size: 1rem; 
+    font-weight: 600;
+    color: var(--text-light); 
+    white-space: normal; 
+    overflow: visible; 
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8); 
+    margin-bottom: 0; 
 }
 .gallery-caption .description { 
-    font-size: 0.85rem;                 /* Description font size */
-    line-height: 1.3;                   /* Readable line spacing */
-    color: var(--text-light);           /* Light text color for description */
-    white-space: normal;                /* Allow text to wrap */
-    overflow: visible;                  /* Ensure full description is visible */
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8); /* Shadow for description */
-    margin-bottom: 0;                   /* No bottom margin */
+    font-size: 0.85rem; 
+    line-height: 1.3;
+    color: var(--text-light); 
+    white-space: normal; 
+    overflow: visible; 
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8); 
+    margin-bottom: 0; 
 }
 
 /* Contact Section */
@@ -727,25 +708,25 @@ footer h2 {
 /* Desktop (>= 1024px) */
 @media (min-width: 1024px) { 
     .main-layout-container { 
-        align-items: stretch; /* Allows sticky sidebar to fill height */
+        align-items: flex-start; 
     } 
     .left-column-sticky { 
+        /* MODIFIED: Explicitly keep sticky positioning for desktop, previous was already good */
         position: sticky; 
         top: 50%; 
-        transform: translateY(-50%); /* Changed to translateY for better sticky compatibility */
-        height: calc(100vh - 100px); /* Restored height for sticky column */
-        align-self: flex-start; /* Kept for alignment before sticky takes over */
+        transform: translate3d(0, -50%, 0); 
+        height: auto; 
+        align-self: flex-start; 
         margin: 0; 
     } 
 }
 
 /* Large Desktop (>= 1200px) */
 @media (min-width: 1200px) { 
-  :root { 
-    /* ✅ UPDATED: Responsive gallery variables for large desktop, ring radius scaled by ~2.5x */
-    --gallery-ring-radius: clamp(375px, 62.5vw, 900px); /* Scaled from previous 360px max to 900px */
-    --gallery-item-width: clamp(100px, 18vw, 170px); /* Base variable remains */
-    --gallery-item-expected-min-height: calc(var(--gallery-item-width) * 1.5); 
+  :root {
+    --gallery-ring-radius: 320px; /* Kept fixed px for stable ring */
+    --gallery-image-width: 200px; /* Kept fixed px for stable ring */
+    --gallery-image-height: 260px; /* Kept fixed px for stable ring */
   }
 }
 
@@ -763,28 +744,26 @@ footer h2 {
         align-items: center; 
     }
     .left-column-sticky { 
+        /* MODIFIED: Revert to relative for non-sticky behavior on smaller screens */
         position: relative; 
         top: auto; 
         transform: none; 
         height: auto; 
         width: 100%; 
-        max-width: 370px; 
+        max-width: 400px; /* Use the new max-width for consistency */
         margin: 0 auto 40px; 
     }
     
-    :root { 
-        /* ✅ UPDATED: Responsive gallery variables for medium screens, ring radius updated as per prompt */
-        --gallery-ring-radius: clamp(275px, 45vw, 500px); /* Explicit value from prompt */
-        --gallery-item-width: clamp(75px, 16vw, 130px);   /* Base variable remains */
-        --gallery-item-expected-min-height: calc(var(--gallery-item-width) * 1.5); 
+    :root {
+        --gallery-ring-radius: 250px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-image-width: 140px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-image-height: 180px; /* Adjusted to fixed px for stability on this breakpoint */
     }
     .gallery-section { padding: 60px 20px; }
-    /* ✅ UPDATED: Container height scales with larger ring radius and card height, removed *0.75 multiplier */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height)); } 
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
     .gallery-heading {
-        /* MODIFIED: Adjusted for smaller screens */
-        margin-bottom: 30px; 
+        margin-bottom: 50px; 
         font-size: clamp(2rem, 7vw, 4rem); 
     }
     /* --- PERFORMANCE: Reduce background opacity/complexity on mobile --- */
@@ -805,15 +784,13 @@ footer h2 {
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
-    :root { 
-        /* ✅ UPDATED: Responsive gallery variables for small screens, ring radius updated as per prompt */
-        --gallery-ring-radius: clamp(200px, 40vw, 400px); /* Explicit value from prompt */
-        --gallery-item-width: clamp(55px, 20vw, 90px);   /* Base variable remains */
-        --gallery-item-expected-min-height: calc(var(--gallery-item-width) * 1.5); 
+    :root {
+        --gallery-ring-radius: 200px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-image-width: 120px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-image-height: 156px; /* Adjusted to fixed px for stability on this breakpoint */
     }
     .gallery-section { padding: 40px 15px; }
-    /* ✅ UPDATED: Container height scales with larger ring radius and card height, removed *0.75 multiplier */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-item-expected-min-height)); } 
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
     .services-card-grid, .tools-grid {
       grid-template-columns: 1fr;
@@ -826,8 +803,7 @@ footer h2 {
     }
 
     .gallery-heading {
-        /* MODIFIED: Adjusted for smaller screens */
-        margin-bottom: 25px; 
+        margin-bottom: 40px; 
     }
     /* --- PERFORMANCE: Further reduce background opacity/complexity on very small mobile --- */
     .site-background-image { opacity: 0.03; }
@@ -859,17 +835,15 @@ footer h2 {
     .glitch-effect {
         display: none !important;
         animation: none !important;
-        -webkit-animation: none !important; /* Ensure vendor prefix for animation */
         transition: none !important;
-        -webkit-transition: none !important; /* Ensure vendor prefix for transition */
         opacity: 0 !important;
     }
-    .left-column-sticky { animation: none !important; -webkit-animation: none !important; transform: none !important; opacity: 1 !important; }
-    .striped-entry-list li { animation: none !important; -webkit-animation: none !important; transform: none !important; opacity: 1 !important; }
-    .image-ring { animation: none !important; -webkit-animation: none !important; transition: none !important; -webkit-transition: none !important;}
+    .left-column-sticky { animation: none !important; transform: none !important; opacity: 1 !important; }
+    .striped-entry-list li { animation: none !important; transform: none !important; opacity: 1 !important; }
+    .image-ring { animation: none !important; transition: none !important; }
     .gallery-item:hover, .ring-image:hover { transform: none !important; }
     .gallery-item-link:hover img, .ring-image-link:hover img { transform: none !important; }
     .contact-button:hover { transform: none !important; }
     .contact-button.copied .button-content-main,
-    .contact-button.copied .copied-text { animation: none !important; -webkit-animation: none !important; transition: none !important; -webkit-transition: none !important; }
+    .contact-button.copied .copied-text { animation: none !important; transition: none !important; }
 }
