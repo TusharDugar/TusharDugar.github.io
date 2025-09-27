@@ -503,7 +503,7 @@ html::before {
   margin-top: calc(var(--gallery-image-height) / -2); /* ✅ FIXED: Centering margin */
   margin-left: calc(var(--gallery-image-width) / -2); /* ✅ FIXED: Centering margin */
   /* MODIFIED: Increased padding for more space between cards */
-  padding: 18px; 
+  padding: 10px; 
   border-radius: 12px; /* ✅ revert */
   background: rgba(255, 255, 255, 0.08); /* ✅ revert */
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); /* ✅ revert */
