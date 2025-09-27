@@ -35,10 +35,10 @@
     --transition-speed-medium: 0.8s; /* For reveal animations */
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* --- Gallery Slider Variables (HALVED from previous fixed pixel values) --- */
-    --gallery-ring-radius: 160px; /* Half of 320px */
-    --gallery-image-width: 100px; /* Half of 200px */
-    --gallery-image-height: 130px; /* Half of 260px */
+    /* --- Gallery Slider Variables (RESTORED TO ORIGINAL LARGER VALUES) --- */
+    --gallery-ring-radius: 320px; /* Original larger value */
+    --gallery-image-width: 200px; /* Original larger value */
+    --gallery-image-height: 260px; /* Original larger value */
 
     --gallery-dimmed-brightness: 0.5; 
     --gallery-active-brightness: 1.1;
@@ -464,7 +464,7 @@ html::before {
 
 .image-ring-container {
   perspective: 2000px; 
-  /* MODIFIED: Adjusted height to accommodate smaller ring and items */
+  /* MODIFIED: Adjusted height to accommodate the current ring and items */
   height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); 
   width: 100%; 
   position: relative; 
@@ -507,7 +507,7 @@ html::before {
   text-align: center; 
   display: flex; 
   flex-direction: column; 
-  align-items: center; /* MODIFIED: Center align items for image/text within card */
+  align-items: center; /* Center align items for image/text within card */
   justify-content: flex-start; 
   overflow: hidden; 
 
@@ -535,7 +535,7 @@ html::before {
 }
 .gallery-item-link img, .ring-image-link img {
   width: 100%; 
-  /* MODIFIED: Use a percentage of the card's height to ensure visibility */
+  /* MODIFIED: Use a percentage of the card's height to ensure visibility with larger card sizes */
   height: 70%; /* This allows the image to scale within the card */
   object-fit: cover;
   border-radius: 8px; 
@@ -717,10 +717,10 @@ footer h2 {
 /* Large Desktop (>= 1200px) */
 @media (min-width: 1200px) { 
   :root {
-    /* HALVED: Desktop values (default) */
-    --gallery-ring-radius: 160px; 
-    --gallery-image-width: 100px; 
-    --gallery-image-height: 130px; 
+    /* RESTORED: Original larger desktop values */
+    --gallery-ring-radius: 320px; 
+    --gallery-image-width: 200px; 
+    --gallery-image-height: 260px; 
   }
 }
 
@@ -740,16 +740,15 @@ footer h2 {
            but it might behave more like a standard element if the content is short. */
         align-items: flex-start; 
     }
-    /* `left-column-sticky` already handled by `min-width: 768px` rule */
     
     :root {
-        /* HALVED: Tablet values */
-        --gallery-ring-radius: 125px; /* Half of 250px */
-        --gallery-image-width: 70px; /* Half of 140px */
-        --gallery-image-height: 90px; /* Half of 180px */
+        /* RESTORED: Original larger tablet values */
+        --gallery-ring-radius: 250px; 
+        --gallery-image-width: 140px; 
+        --gallery-image-height: 180px; 
     }
     .gallery-section { padding: 60px 20px; }
-    /* MODIFIED: Adjusted height to accommodate smaller ring and items */
+    /* MODIFIED: Adjusted height to accommodate current ring and items */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
     /* --- PERFORMANCE: Reduce background opacity/complexity on mobile --- */
@@ -785,13 +784,13 @@ footer h2 {
         margin: 0 auto 40px; /* Restore auto margins for horizontal centering */
     }
     :root {
-        /* HALVED: Mobile values */
-        --gallery-ring-radius: 100px; /* Half of 200px */
-        --gallery-image-width: 60px; /* Half of 120px */
-        --gallery-image-height: 78px; /* Half of 156px */
+        /* RESTORED: Original larger mobile values */
+        --gallery-ring-radius: 200px; 
+        --gallery-image-width: 120px; 
+        --gallery-image-height: 156px; 
     }
     .gallery-section { padding: 40px 15px; }
-    /* MODIFIED: Adjusted height to accommodate smaller ring and items */
+    /* MODIFIED: Adjusted height to accommodate current ring and items */
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
 
     .services-card-grid, .tools-grid {
