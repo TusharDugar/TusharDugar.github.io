@@ -7,7 +7,7 @@
     --text-medium: #A0A0A0; /* General medium grey text */
     --text-dark-card: #000000; /* Text color specifically for light cards */
     --text-medium-card: #4B4B4B; /* Medium grey text specifically for light cards */
-    --accent-primary-sawad: #FF6B00; /* Primary accent color */
+    --accent-primary-sawad: #FF6B00; /* Primary accent color (Orange) */
     --accent-secondary-sawad: #00FFC2; /* Secondary accent color */
     --text-secondary: #666666; /* Renamed from --text-sub-heading-grey for broader applicability */
 
@@ -125,8 +125,8 @@ html::before {
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
-    /* MODIFIED: Align items to start for sticky element to work */
-    align-items: flex-start; 
+    /* For desktop, this will be overridden to flex-start for sticky functionality */
+    align-items: center; 
     min-height: 100vh;
     max-width: 1920px; 
     margin: 0 auto; 
@@ -142,11 +142,9 @@ html::before {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  /* MODIFIED: Ensure sticky positioning is active for desktop */
-  position: sticky; 
-  top: 50%; /* Position from the top */
-  transform: translate3d(0, -50%, 0); /* Center vertically */
-  height: auto; /* Allow content to dictate height */
+  position: relative; /* Default for non-sticky behavior on smaller screens */
+  top: auto; 
+  height: auto;
   animation: leftColumnPopIn 1.4s ease-out both; 
   will-change: transform, opacity; 
   backface-visibility: hidden; 
@@ -184,7 +182,7 @@ html::before {
 .striped-entry-list li:nth-child(4) { animation-delay: 0.65s; } 
 .striped-entry-list li:nth-child(5) { animation-delay: 0.8s; }
 
-/* "About" Card Styles (Profile Card) - ✅ FIXED: Made more compact and aligned */
+/* "About" Card Styles (Profile Card) */
 .about-left-content { 
     background-color: var(--bg-profile-card); 
     color: var(--text-dark-card); 
@@ -237,11 +235,12 @@ html::before {
     margin-bottom: 15px; 
 }
 .fire-icon { 
+    /* Ensured background-color is orange as per --accent-primary-sawad */
     background-color: var(--accent-primary-sawad); 
     border-radius: 50%; 
     padding: 8px; 
     font-size: 1.1em; 
-    color: var(--text-light); 
+    color: var(--text-light); /* The icon/text *inside* the orange circle remains light */
     box-shadow: 0 2px 8px rgba(0,0,0,0.5); 
     z-index: 2; 
     position: relative; 
@@ -272,6 +271,10 @@ html::before {
     gap: 10px; 
     margin-top: auto; 
     padding-top: 5px; 
+}
+.about-social-icons a {
+    /* NEW: Set social icon color to orange */
+    color: var(--accent-primary-sawad); 
 }
 .about-social-icons a:hover { 
     transform: translate3d(0, -2px, 0); 
@@ -314,13 +317,13 @@ html::before {
 .services-heading, 
 .tools-heading, 
 .gallery-heading {
-    font-size: clamp(2.5rem, 8vw, 8rem); /* Reverted font-size to stable backup */
+    font-size: clamp(2.5rem, 8vw, 8rem); 
     line-height: 0.75em;
     text-transform: uppercase;
     width: 100%;
     text-align: left;
     
-    margin-bottom: 60px; /* ✅ FIXED: Reverted margin-bottom to 60px */
+    margin-bottom: 60px; 
     position: relative;
     z-index: 10; 
     color: var(--text-light); 
@@ -454,7 +457,7 @@ html::before {
     margin: 0; 
 }
 
-/* Featured Websites Section (Gallery) - ✅ FIXED: Corrected layout and visibility */
+/* Featured Websites Section (Gallery) */
 .gallery-section {
   text-align: left; 
   background: transparent;
@@ -467,8 +470,8 @@ html::before {
 }
 
 .image-ring-container {
-  perspective: 2000px; /* ✅ FIXED: Perspective to stable backup */
-  height: 400px; /* ✅ FIXED: Height to stable backup */
+  perspective: 2000px; 
+  height: 400px; 
   width: 100%; 
   position: relative; 
   display: flex;
@@ -476,16 +479,16 @@ html::before {
   align-items: center;
   overflow: visible; 
   
-  margin-top: -20px; /* ✅ FIXED: margin-top to stable backup */
+  margin-top: -20px; 
   z-index: 1; 
 }
 
 .image-ring {
   position: relative;
-  width: 300px; /* ✅ FIXED: Width to stable backup */
-  height: 300px; /* ✅ FIXED: Height to stable backup */
+  width: 300px; 
+  height: 300px; 
   transform-style: preserve-3d;
-  will-change: transform; /* For GPU acceleration of ring rotation */
+  will-change: transform; 
   cursor: grab;
 }
 
@@ -500,26 +503,26 @@ html::before {
   height: var(--gallery-image-height);
   top: 50%;
   left: 50%;
-  margin-top: calc(var(--gallery-image-height) / -2); /* ✅ FIXED: Centering margin */
-  margin-left: calc(var(--gallery-image-width) / -2); /* ✅ FIXED: Centering margin */
-  /* MODIFIED: Increased padding for more space between cards */
+  margin-top: calc(var(--gallery-image-height) / -2); 
+  margin-left: calc(var(--gallery-image-width) / -2); 
+  /* MODIFIED: Set padding for space between cards */
   padding: 10px; 
-  border-radius: 12px; /* ✅ revert */
-  background: rgba(255, 255, 255, 0.08); /* ✅ revert */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); /* ✅ revert */
-  backdrop-filter: blur(10px); /* ✅ revert */
-  text-align: center; /* ✅ revert */
-  display: flex; /* ✅ revert */
-  flex-direction: column; /* ✅ revert */
-  align-items: center; /* ✅ revert */
-  justify-content: flex-start; /* ✅ revert */
-  overflow: hidden; /* Ensure content stays within bounds */
+  border-radius: 12px; 
+  background: rgba(255, 255, 255, 0.08); 
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); 
+  backdrop-filter: blur(10px); 
+  text-align: center; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: flex-start; 
+  overflow: hidden; 
 
   transform-style: preserve-3d; 
   backface-visibility: hidden; 
 
   transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); 
-  /* NEW: Added subtle border for better visual separation */
+  /* Added subtle border for better visual separation */
   border: 1px solid rgba(255, 255, 255, 0.15);
   
   z-index: 1; 
@@ -534,31 +537,27 @@ html::before {
 
 /* Gallery images – revert sizing */
 .gallery-item-link, .ring-image-link {
-  /* No flex properties needed here, img directly styled */
   overflow: hidden;
-  /* position: relative; Removed, not needed for glitch effect here as it's not a child of this */
 }
 .gallery-item-link img, .ring-image-link img {
-  width: 100%; /* ✅ revert */
-  /* MODIFIED: Slightly increased image height to fill new padding */
-  height: 140px; 
+  width: 100%; 
+  /* Adjusted image height to fit new padding */
+  height: 120px; 
   object-fit: cover;
-  border-radius: 8px; /* ✅ revert */
+  border-radius: 8px; 
   display: block;
-  filter: brightness(var(--gallery-dimmed-brightness)); /* Uses variable from root */
+  filter: brightness(var(--gallery-dimmed-brightness)); 
   transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast);
-  margin-bottom: 10px; /* ✅ revert */
+  margin-bottom: 10px; 
 }
 .gallery-item-link:hover img, .ring-image-link:hover img {
   transform: scale(1.05);
   filter: brightness(var(--gallery-hover-brightness));
 }
 
-/* Optional: Glitch effect overlay for images (requires HTML div with class "glitch-effect" inside .gallery-item-link) */
-/* This element is removed/simplified in the stable context, but keeping definition if HTML implies it */
+/* Optional: Glitch effect overlay for images */
 .glitch-effect {
-    /* Styles as previously defined if HTML includes this element, otherwise it's inert */
-    background-color: transparent; /* Fallback */
+    background-color: transparent; 
     position: absolute;
     top: 0;
     left: 0;
@@ -586,13 +585,11 @@ html::before {
 
 /* Gallery caption – simple stable text */
 .gallery-caption {
-  font-size: 0.8rem; /* ✅ revert */
+  font-size: 0.8rem; 
   line-height: 1.3;
-  color: #ddd; /* ✅ revert */
-  padding: 0 5px; /* ✅ revert */
+  color: #ddd; 
+  padding: 0 5px; 
 }
-/* Styling for elements within .gallery-caption to match memory carousel (if any) */
-/* The memory-date, title, description classes should now directly inherit from .gallery-caption or be re-applied as needed */
 .gallery-caption .memory-date { 
     font-family: "Orbitron", sans-serif;
     font-size: 0.8rem;
@@ -708,10 +705,10 @@ footer h2 {
 /* Desktop (>= 1024px) */
 @media (min-width: 1024px) { 
     .main-layout-container { 
+        /* Essential for position: sticky to work on flex items */
         align-items: flex-start; 
     } 
     .left-column-sticky { 
-        /* MODIFIED: Explicitly keep sticky positioning for desktop, previous was already good */
         position: sticky; 
         top: 50%; 
         transform: translate3d(0, -50%, 0); 
@@ -724,9 +721,9 @@ footer h2 {
 /* Large Desktop (>= 1200px) */
 @media (min-width: 1200px) { 
   :root {
-    --gallery-ring-radius: 320px; /* Kept fixed px for stable ring */
-    --gallery-image-width: 200px; /* Kept fixed px for stable ring */
-    --gallery-image-height: 260px; /* Kept fixed px for stable ring */
+    --gallery-ring-radius: 320px; 
+    --gallery-image-width: 200px; 
+    --gallery-image-height: 260px; 
   }
 }
 
@@ -744,20 +741,20 @@ footer h2 {
         align-items: center; 
     }
     .left-column-sticky { 
-        /* MODIFIED: Revert to relative for non-sticky behavior on smaller screens */
+        /* Revert to relative for non-sticky behavior on smaller screens */
         position: relative; 
         top: auto; 
         transform: none; 
         height: auto; 
         width: 100%; 
-        max-width: 400px; /* Use the new max-width for consistency */
+        max-width: 400px; /* Consistent with the larger card size */
         margin: 0 auto 40px; 
     }
     
     :root {
-        --gallery-ring-radius: 250px; /* Adjusted to fixed px for stability on this breakpoint */
-        --gallery-image-width: 140px; /* Adjusted to fixed px for stability on this breakpoint */
-        --gallery-image-height: 180px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-ring-radius: 250px; 
+        --gallery-image-width: 140px; 
+        --gallery-image-height: 180px; 
     }
     .gallery-section { padding: 60px 20px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
@@ -785,9 +782,9 @@ footer h2 {
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
     :root {
-        --gallery-ring-radius: 200px; /* Adjusted to fixed px for stability on this breakpoint */
-        --gallery-image-width: 120px; /* Adjusted to fixed px for stability on this breakpoint */
-        --gallery-image-height: 156px; /* Adjusted to fixed px for stability on this breakpoint */
+        --gallery-ring-radius: 200px; 
+        --gallery-image-width: 120px; 
+        --gallery-image-height: 156px; 
     }
     .gallery-section { padding: 40px 15px; }
     .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 60px); }
