@@ -35,10 +35,10 @@
     --transition-speed-medium: 0.8s; /* For reveal animations */
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* --- Gallery Slider Variables (RESTORED TO ORIGINAL LARGER VALUES) --- */
-    --gallery-ring-radius: 320px; /* Original larger value */
-    --gallery-image-width: 200px; /* Original larger value */
-    --gallery-image-height: 260px; /* Original larger value */
+    /* --- Gallery Slider Variables (RESTORED TO ORIGINAL LARGER VALUES for desktop) --- */
+    --gallery-ring-radius: 320px; 
+    --gallery-image-width: 200px; 
+    --gallery-image-height: 260px; 
 
     --gallery-dimmed-brightness: 0.5; 
     --gallery-active-brightness: 1.1;
@@ -527,7 +527,7 @@ html::before {
 }
 
 
-/* Gallery images */
+/* Gallery images (Auto adjust within card) */
 .gallery-item-link, .ring-image-link {
   overflow: hidden;
   width: 100%; /* Ensure link takes full width for image */
@@ -535,14 +535,15 @@ html::before {
 }
 .gallery-item-link img, .ring-image-link img {
   width: 100%; 
-  /* MODIFIED: Use a percentage of the card's height to ensure visibility with larger card sizes */
-  height: 70%; /* This allows the image to scale within the card */
-  object-fit: cover;
+  /* MODIFIED: Flexible height based on aspect ratio, constrained by max-height */
+  height: auto; 
+  max-height: calc(var(--gallery-image-height) * 0.7); /* Image takes up to 70% of card height */
+  object-fit: cover; /* Ensures image covers the available space */
   border-radius: 8px; 
   display: block;
   filter: brightness(var(--gallery-dimmed-brightness)); 
   transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast);
-  margin-bottom: 5px; /* Reduced margin */
+  margin-bottom: 5px; /* Small gap between image and caption */
 }
 .gallery-item-link:hover img, .ring-image-link:hover img {
   transform: scale(1.05);
@@ -704,7 +705,6 @@ footer h2 {
         align-items: flex-start; 
     } 
     .left-column-sticky { 
-        /* MODIFIED: Apply sticky for tablet screens as well, centered vertically */
         position: sticky; 
         top: 50%; 
         transform: translate3d(0, -50%, 0); 
@@ -717,7 +717,7 @@ footer h2 {
 /* Large Desktop (>= 1200px) */
 @media (min-width: 1200px) { 
   :root {
-    /* RESTORED: Original larger desktop values */
+    /* RESTORED: Original larger desktop values (default) */
     --gallery-ring-radius: 320px; 
     --gallery-image-width: 200px; 
     --gallery-image-height: 260px; 
