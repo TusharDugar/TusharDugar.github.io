@@ -231,7 +231,6 @@ html::before {
     margin-bottom: 15px; 
 }
 .fire-icon { 
-    /* Ensures background-color is orange as per --accent-primary-sawad */
     background-color: var(--accent-primary-sawad); 
     border-radius: 50%; 
     padding: 8px; 
@@ -268,7 +267,6 @@ html::before {
     padding-top: 5px; 
 }
 .about-social-icons a {
-    /* MODIFIED: Set social icon color to orange */
     color: var(--accent-primary-sawad); 
 }
 .about-social-icons a:hover { 
@@ -318,7 +316,6 @@ html::before {
     width: 100%;
     text-align: left;
     
-    /* MODIFIED: Reduced margin-bottom for a tighter gap */
     margin-bottom: 20px; 
     position: relative;
     z-index: 10; 
@@ -459,7 +456,8 @@ html::before {
   background: transparent;
   color: var(--text-light);
   z-index: 1;
-  /* MODIFIED: Reduced padding-top and padding-bottom for tighter gaps */
+  /* MODIFIED: Reduced padding-top from 80px to 20px for tighter gap */
+  /* MODIFIED: Reduced padding-bottom from 40px to 10px for tighter gap */
   padding: 20px 40px 10px; 
 
   /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
