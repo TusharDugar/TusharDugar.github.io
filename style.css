@@ -456,8 +456,7 @@ html::before {
   background: transparent;
   color: var(--text-light);
   z-index: 1;
-  /* MODIFIED: Reduced padding-top from 80px to 20px for tighter gap */
-  /* MODIFIED: Reduced padding-bottom from 40px to 10px for tighter gap */
+  /* MODIFIED: Reduced padding-top and padding-bottom for tighter gaps */
   padding: 20px 40px 10px; 
 
   /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
@@ -715,6 +714,7 @@ footer h2 {
         height: auto; 
         align-self: flex-start; /* Important for sticky inside flex container */
         margin: 0; /* Remove auto margins that might conflict with align-self */
+        animation: none !important; /* Disable initial animation when sticky */
     }
 }
 
@@ -787,6 +787,7 @@ footer h2 {
         transform: none;
         align-self: center; /* Center horizontally in column flow */
         margin: 0 auto 40px; /* Restore auto margins for horizontal centering */
+        animation: leftColumnPopIn 1.4s ease-out both; /* Re-enable animation for mobile non-sticky */
     }
     :root {
         /* MODIFIED: Ring reduced by 1/3, cards increased by 10% */
