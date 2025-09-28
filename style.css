@@ -108,7 +108,8 @@ html::before {
     margin: 0 auto; 
     position: relative; 
     z-index: 1; 
-    padding: 80px 40px; 
+    /* MODIFIED: Reduced padding-top for global sections */
+    padding: 60px 40px; 
     /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
     padding-right: 0; 
 }
@@ -298,9 +299,10 @@ html::before {
 .hero-heading .digital { color: var(--text-secondary); } 
 .hero-description { 
     text-align: justify; 
+    /* MODIFIED: Reduced margin-bottom */
     line-height: 1.8; 
     font-size: 1em; 
-    margin-bottom: 40px; 
+    margin-bottom: 20px; 
     max-width: 90%; 
     color: var(--text-medium); 
     word-spacing: 1px; 
@@ -436,7 +438,6 @@ html::before {
     max-width: 70%; 
     max-height: 70%; 
     object-fit: contain; 
-    /* REMOVED: filter: brightness(0.01); to show original logo colors */
 }
 .tool-name { 
     font-size: 1.1em; 
@@ -456,7 +457,8 @@ html::before {
   background: transparent;
   color: var(--text-light);
   z-index: 1;
-  /* MODIFIED: Reduced padding-top and padding-bottom for tighter gaps */
+  /* MODIFIED: Reduced padding-top from 40px to 20px for tighter gap */
+  /* MODIFIED: Reduced padding-bottom from 10px to 10px (no change, already tight) */
   padding: 20px 40px 10px; 
 
   /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
@@ -617,7 +619,8 @@ html::before {
 /* Contact Section */
 footer#contact { 
     background-color: var(--bg-section-card); 
-    padding: 100px 40px; 
+    /* MODIFIED: Reduced padding-top */
+    padding: 60px 40px 100px; 
     text-align: center; 
     color: var(--text-light); 
 }
@@ -732,7 +735,7 @@ footer h2 {
 /* Tablet / Small Desktop (<= 1023px) */
 @media (max-width: 1023px) { 
     .section { 
-        padding: 60px 20px; 
+        padding: 60px 20px; /* Kept horizontal padding consistent with previous rule */
         padding-left: 20px; 
         padding-right: 0;
     }
