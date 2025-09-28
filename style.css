@@ -128,8 +128,8 @@ html::before {
 .main-layout-container { 
     display: flex; 
     justify-content: center; 
-    /* MODIFIED: Essential for position: sticky on flex items - align to start */
-    align-items: flex-start; 
+    /* MODIFIED: RESTORED TO OLD CODE's align-items: center */
+    align-items: center; 
     min-height: 100vh;
     max-width: 1920px; 
     margin: 0 auto; 
@@ -145,10 +145,11 @@ html::before {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  /* Default to relative, overridden by media queries for sticky or specific mobile layout */
+  /* MODIFIED: RESTORED TO OLD CODE's position: relative, top: auto, height: auto, transform: none */
   position: relative; 
   top: auto; 
   height: auto;
+  transform: none; /* Ensure no conflicting transforms from previous attempts */
   animation: leftColumnPopIn 1.4s ease-out both; 
   will-change: transform, opacity; 
   backface-visibility: hidden; 
@@ -706,17 +707,17 @@ footer h2 {
 /* Desktop & Tablet (>= 768px) */
 @media (min-width: 768px) { 
     .main-layout-container { 
-        /* MODIFIED: Essential for position: sticky on flex items - align to start */
-        align-items: flex-start; 
+        /* MODIFIED: Align items to center as per the old code's behavior for non-sticky */
+        align-items: center; 
     } 
     .left-column-sticky { 
-        /* MODIFIED: Apply sticky and vertical centering for tablet and desktop */
-        position: sticky; 
-        top: 50%; 
-        transform: translate3d(0, -50%, 0); 
+        /* MODIFIED: Reverted to position: relative as per the old code's behavior */
+        position: relative; 
+        top: auto; 
+        transform: none; /* Ensure no conflicting transforms */
         height: auto; 
-        align-self: flex-start; /* Important for sticky inside flex container */
-        margin: 0; /* Remove auto margins that might conflict with align-self */
+        align-self: center; /* Ensures it's centered horizontally if main-layout-container is column (e.g., on tablet) */
+        margin: 0 auto; /* Auto margins to center horizontally in available space */
     }
 }
 
@@ -742,7 +743,7 @@ footer h2 {
         flex-direction: column; 
         padding: 20px; 
         gap: 40px; 
-        align-items: flex-start; /* Still flex-start to allow sticky behavior for left-column-sticky */
+        align-items: center; /* Centered in column layout */
     }
     /* `left-column-sticky` behavior handled by `min-width: 768px` rule */
     
@@ -776,14 +777,13 @@ footer h2 {
         flex-direction: column; 
         padding: 15px; 
         gap: 30px; 
-        /* MODIFIED: Center align items for standard mobile layout (non-sticky) */
         align-items: center; 
     }
     .hero-heading, .services-heading, .tools-heading, .gallery-heading { font-size: clamp(2rem, 7vw, 6rem); }
     .contact-buttons { flex-direction: column; gap: 10px; }
     .contact-button { width: 100%; justify-content: center; }
     .left-column-sticky {
-        /* MODIFIED: Revert to relative for mobile, ensuring it's not sticky and is horizontally centered */
+        /* MODIFIED: Explicitly define for mobile, matching the general rule from 768px up */
         position: relative;
         top: auto;
         transform: none;
