@@ -1,4 +1,6 @@
-/* Basic Reset & Font */
+/* ===================================== */
+/*         0. CSS Variables              */
+/* ===================================== */
 :root {
     /* --- Colors --- */
     --bg-main: #000000;
@@ -6,7 +8,7 @@
     --text-light: #F0F0F0;
     --text-medium: #A0A0A0; /* General medium grey text */
     --text-dark-card: #000000; /* Text color specifically for light cards */
-    --text-medium-card: #4B4B4B; /* Medium grey text specifically for light cards */
+    --text-medium-card: #4B4B4B; /* Medium grey text specifically for light cards (unified to --text-medium for consistency below) */
     --accent-primary-sawad: #FF6B00; /* Primary accent color (Orange) */
     --accent-secondary-sawad: #00FFC2; /* Secondary accent color */
     --text-secondary: #666666; /* Renamed from --text-sub-heading-grey for broader applicability */
@@ -27,20 +29,25 @@
     /* --- Hover Effects --- */
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
 
-    /* --- Layout & Sizing --- */
-    /* --section-left-offset: 60px; Removed, not used in this stable state */
+    /* --- Layout & Sizing - Spacing System (NEW) --- */
+    --space-xxs: 4px;   /* 0.25rem */
+    --space-xs: 8px;    /* 0.5rem */
+    --space-s: 16px;    /* 1rem */
+    --space-m: 24px;    /* 1.5rem */
+    --space-l: 40px;    /* 2.5rem */
+    --space-xl: 60px;   /* 3.75rem */
+    --space-xxl: 80px;  /* 5rem */
 
     /* --- Transitions & Animations --- */
     --transition-speed-fast: 0.3s; /* For common hover transitions */
     --transition-speed-medium: 0.8s; /* For reveal animations */
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-    /* --- Gallery Slider Variables (RING REDUCED by ~1/3, CARDS INCREASED by 10%) --- */
-    /* Base Original Desktop values: R=320, W=200, H=260 */
-    /* New Desktop: R = 320*0.666 = 213px; W = 200*1.1 = 220px; H = 260*1.1 = 286px */
-    --gallery-ring-radius: 213px; 
-    --gallery-image-width: 220px; 
-    --gallery-image-height: 286px; 
+    /* --- Gallery Slider Variables (Mobile-First Defaults, then scaled up in MQs) --- */
+    /* Mobile: R = 133px; W = 132px; H = 172px (adjusted from original 156px) */
+    --gallery-ring-radius: 133px; 
+    --gallery-image-width: 132px; 
+    --gallery-image-height: 172px; /* Mobile base height */
 
     --gallery-dimmed-brightness: 0.5; 
     --gallery-active-brightness: 1.1;
@@ -51,17 +58,20 @@
 *, *::before, *::after { box-sizing: border-box; }
 body {
     margin: 0;
-    font-family: 'Poppins', sans-serif; /* Added sans-serif fallback */
+    font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     color: var(--text-light);
     background-color: var(--bg-main);
     overflow-x: hidden; 
-    /* position: relative; Removed as not explicitly needed for z-index stacking on body */
     scroll-behavior: smooth;
     min-height: 100vh;
 }
 
-/* Background Layers & Mouse Glow */
+/* ===================================== */
+/*         2. Background Effects         */
+/* ===================================== */
+
+/* Site background image (pattern) */
 .site-background-image { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.079; background-image: url('./71976 (1).jpg'); background-repeat: repeat; background-size: 400px auto; }
 .background-color-gradient { 
     background-color: #1A1A1A; /* Fallback for gradient */
@@ -84,13 +94,14 @@ html::before {
     z-index: 0; 
     pointer-events: none; 
     opacity: 0.02; 
+    /* MODIFIED: Subtle Gen-Z gradient/texture integration */
     mask-image: 
-        linear-gradient(to right, transparent 99.85%, white 0.15%), 
-        linear-gradient(to bottom, transparent 99.85%, white 0.15%), 
-        linear-gradient(45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%), 
-        linear-gradient(-45deg, transparent 75%, white 75.02%, white 75.18%, transparent 75.2%); 
-    mask-size: 40px 40px; 
-    -webkit-mask-size: 40px 40px; 
+        linear-gradient(to right, transparent 99.85%, var(--text-light) 0.15%), 
+        linear-gradient(to bottom, transparent 99.85%, var(--text-light) 0.15%), 
+        linear-gradient(45deg, transparent 75%, rgba(var(--carousel-primary), 0.1) 75.02%, rgba(var(--carousel-primary), 0.1) 75.18%, transparent 75.2%), 
+        linear-gradient(-45deg, transparent 75%, rgba(var(--carousel-accent), 0.1) 75.02%, rgba(var(--carousel-accent), 0.1) 75.18%, transparent 75.2%); 
+    mask-size: var(--space-l) var(--space-l); /* Using spacing variable */
+    -webkit-mask-size: var(--space-l) var(--space-l);
     mask-repeat: repeat; 
     -webkit-mask-repeat: repeat; 
 }
@@ -102,20 +113,14 @@ html::before {
     will-change: transform; 
 }
 
-/* Global Section & Reveal Animations */
-.section { 
-    max-width: 1200px; 
-    margin: 0 auto; 
-    position: relative; 
-    z-index: 1; 
-    /* MODIFIED: Reduced padding-top for global sections */
-    padding: 60px 40px; /* This padding defines the content alignment for desktop/tablet */
-    /* padding-left: var(--section-left-offset); Removed, as per stable CSS */
-    padding-right: 0; 
-}
+/* ===================================== */
+/*         3. Global Animations          */
+/* ===================================== */
+
+/* Reveal-on-scroll animation */
 .reveal-item, .reveal-child, .reveal-stagger { 
     opacity: 0; 
-    transform: translate3d(0, 40px, 0); 
+    transform: translate3d(0, var(--space-l), 0); /* Using spacing variable */
     transition: opacity var(--transition-speed-medium) var(--transition-timing-ease-out), 
                 transform var(--transition-speed-medium) var(--transition-timing-ease-out); 
     will-change: transform, opacity; 
@@ -125,39 +130,10 @@ html::before {
     transform: translate3d(0, 0, 0); 
 }
 
-/* Main Layout Structure */
-.main-layout-container { 
-    display: flex; 
-    justify-content: center; 
-    /* MODIFIED: Essential for position: sticky on flex items - align to start */
-    align-items: flex-start; 
-    min-height: 100vh;
-    max-width: 1920px; 
-    margin: 0 auto; 
-    padding: 0 60px; 
-    gap: 60px; 
-    padding-top: 20px; 
-}
-.left-column-sticky {
-  flex-shrink: 0;
-  flex-basis: 370px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  /* Default to relative, overridden by media queries for sticky or specific mobile layout */
-  position: relative; 
-  top: auto; 
-  height: auto;
-  animation: leftColumnPopIn 1.4s ease-out both; /* Initial pop-in animation */
-  will-change: transform, opacity; 
-  backface-visibility: hidden; 
-}
-
+/* Left column initial pop-in animation */
 @keyframes leftColumnPopIn {
   0% {
-    transform: translate3d(0, 80px, 0) scale(0.9); 
+    transform: translate3d(0, var(--space-xxl), 0) scale(0.9); /* Using spacing variable */
     opacity: 0;
   }
   100% {
@@ -173,7 +149,7 @@ html::before {
     transform: translate3d(0, 0, 0); 
     animation: entryAnim 0.6s ease forwards; 
     background: transparent; 
-    margin-bottom: 0.8rem; 
+    margin-bottom: 0.8rem; /* Using rem for scalability */
     backface-visibility: hidden; 
 }
 @keyframes entryAnim { 0% { transform: translate3d(0, 0, -80px); opacity: 0; } 60% { transform: translate3d(0, 0, 20px); opacity: 0.5; } 100% { transform: translate3d(0, 0, 0); opacity: 1; } }
@@ -183,14 +159,73 @@ html::before {
 .striped-entry-list li:nth-child(4) { animation-delay: 0.65s; } 
 .striped-entry-list li:nth-child(5) { animation-delay: 0.8s; }
 
-/* "About" Card Styles (Profile Card) */
+/* ===================================== */
+/*         4. Main Layout Structure      */
+/* ===================================== */
+
+/* Main Layout Container (Mobile-First) */
+.main-layout-container { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    max-width: 1920px; 
+    margin: 0 auto; 
+    padding: var(--space-s); 
+    gap: var(--space-l); 
+    padding-top: var(--space-m); 
+}
+.left-column-sticky {
+  flex-shrink: 0;
+  flex-basis: 370px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* MODIFIED: Ensures vertical centering */
+  z-index: 2;
+  position: relative; 
+  top: auto; 
+  height: auto;
+  animation: leftColumnPopIn 1.4s ease-out both; 
+  will-change: transform, opacity; 
+  backface-visibility: hidden; 
+  margin: 0 auto var(--space-l); /* Centered with bottom margin for mobile */
+}
+
+/* Right Column (Scrollable Content Area) */
+.right-column-scroll { 
+    flex-grow: 1; 
+    padding-top: var(--space-xl); 
+    padding-bottom: 6.25rem; 
+    box-sizing: border-box; 
+    min-height: 150vh; 
+    position: relative; 
+    z-index: 0; 
+    text-align: left; 
+    width: 100%; 
+}
+
+/* Global Section Styles (Mobile-First) */
+.section { 
+    max-width: 100%; /* Default for mobile, overridden in MQs */
+    margin: 0 auto; 
+    position: relative; 
+    z-index: 1; 
+    padding: var(--space-xl) var(--space-l); /* Original 60px 40px desktop padding, converted to variables */
+    padding-right: 0; 
+}
+
+/* ===================================== */
+/*         5. "About" Card Styles        */
+/* ===================================== */
 .about-left-content { 
     background-color: var(--bg-profile-card); 
     color: var(--text-dark-card); 
     border-radius: 20px; 
     box-shadow: 0 10px 30px var(--shadow-color-card-white); 
     width: 100%; 
-    max-width: 400px; 
+    max-width: 380px; /* MODIFIED: Reduced width by 5% (400px * 0.95 = 380px) */
     display: flex; 
     flex-direction: column; 
     align-items: center; 
@@ -201,6 +236,7 @@ html::before {
     box-sizing: border-box; 
     padding: 30px 25px; 
     max-height: 85vh; 
+    margin: auto; /* MODIFIED: Centrally aligns card vertically and horizontally */
 }
 .profile-image-container { 
     width: 160px; 
@@ -236,7 +272,7 @@ html::before {
     border-radius: 50%; 
     padding: 8px; 
     font-size: 1.1em; 
-    color: var(--text-light); /* The icon/text *inside* the orange circle remains light */
+    color: var(--text-light); 
     box-shadow: 0 2px 8px rgba(0,0,0,0.5); 
     z-index: 2; 
     position: relative; 
@@ -255,7 +291,7 @@ html::before {
 .about-short-desc { 
     line-height: 1.6; 
     font-size: 0.9em; 
-    color: var(--text-medium-card); 
+    color: var(--text-medium); /* Unified with --text-medium */
     margin-bottom: 20px; 
     max-width: 90%; 
     word-spacing: 1px; 
@@ -269,26 +305,20 @@ html::before {
 }
 .about-social-icons a {
     color: var(--accent-primary-sawad); 
+    transition: transform var(--transition-speed-fast); /* Add transition for consistency */
 }
-.about-social-icons a:hover { 
+.about-social-icons a:hover,
+.about-social-icons a:focus-visible { /* NEW: Add focus-visible for accessibility */
     transform: translate3d(0, -2px, 0); 
+    outline: 2px solid var(--accent-primary-sawad);
+    outline-offset: 3px;
 }
 
-/* Right Column (Scrollable Content Area) */
-.right-column-scroll { 
-    flex-grow: 1; 
-    padding-top: 50px; 
-    padding-bottom: 100px; 
-    box-sizing: border-box; 
-    min-height: 150vh; 
-    position: relative; 
-    z-index: 0; 
-    text-align: left; 
-}
-
-/* Hero Section */
+/* ===================================== */
+/*         6. Hero Section               */
+/* ===================================== */
 .hero-heading { 
-    font-size: clamp(4rem, 10vw, 7.75em); 
+    font-size: clamp(4rem, 10vw, 7.75em); /* Original value for mobile/default */
     line-height: 0.8em; 
     font-weight: 900; 
     margin-bottom: 20px; 
@@ -299,7 +329,6 @@ html::before {
 .hero-heading .digital { color: var(--text-secondary); } 
 .hero-description { 
     text-align: justify; 
-    /* MODIFIED: Reduced margin-bottom */
     line-height: 1.8; 
     font-size: 1em; 
     margin-bottom: 20px; 
@@ -308,7 +337,10 @@ html::before {
     word-spacing: 1px; 
 }
 
-/* Section Headings - All left-aligned */
+/* ===================================== */
+/*         7. Section Headings           */
+/* ===================================== */
+/* Consolidated styles for all main section headings */
 .services-heading, 
 .tools-heading, 
 .gallery-heading {
@@ -318,7 +350,7 @@ html::before {
     width: 100%;
     text-align: left;
     
-    margin-bottom: 20px; 
+    margin-bottom: 20px; /* Base margin-bottom, will be reduced for gallery */
     position: relative;
     z-index: 10; 
     color: var(--text-light); 
@@ -328,7 +360,6 @@ html::before {
     padding-left: 0; 
     margin-left: 0; 
 }
-/* Ensure the text spans inside still override/set their specific colors if needed */
 .services-heading .text-white, 
 .tools-heading .text-white, 
 .gallery-heading .text-white { 
@@ -345,14 +376,16 @@ html::before {
 } 
 
 
-/* Services Section Grid */
+/* ===================================== */
+/*         8. Services Section Grid      */
+/* ===================================== */
 .services-card-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); 
+  grid-template-columns: 1fr; /* Mobile default */
   gap: 20px; 
-  /* MODIFIED: Removed max-width and auto margins, will align within parent .section */
-  width: 100%; /* Take full width of parent section */
-  margin: 0; 
+  width: 100%; 
+  margin: 0 auto; 
+  max-width: 400px; 
 }
 .face {
   position: relative;
@@ -369,6 +402,14 @@ html::before {
   overflow: hidden;
   text-align: left;
   will-change: transform, box-shadow;
+  transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); 
+}
+.face:hover,
+.face:focus-visible { /* NEW: Add focus-visible for accessibility */
+  transform: translate3d(0, -6px, 0); 
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  outline: 2px solid var(--accent-primary-sawad);
+  outline-offset: 4px;
 }
 .service-title { 
     font-size: clamp(1rem, 1.8vw, 1.8rem); 
@@ -394,14 +435,16 @@ html::before {
     pointer-events: none; 
 }
 
-/* Premium Tools Section */
+/* ===================================== */
+/*         9. Premium Tools Section      */
+/* ===================================== */
 .tools-grid { 
     display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    grid-template-columns: 1fr; /* Mobile default */
     gap: 20px; 
-    /* MODIFIED: Removed max-width and auto margins, will align within parent .section */
-    width: 100%; /* Take full width of parent section */
-    margin: 0; 
+    width: 100%; 
+    margin: 0 auto; 
+    max-width: 400px; 
 }
 .tool-card {
   background: rgba(20, 20, 20, 0.6); 
@@ -418,14 +461,17 @@ html::before {
   cursor: pointer;
   will-change: transform, opacity;
 }
-.tool-card:hover { 
+.tool-card:hover,
+.tool-card:focus-visible { /* NEW: Add focus-visible for accessibility */
     transform: translate3d(0, -6px, 0); 
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); 
+    outline: 2px solid var(--accent-primary-sawad);
+    outline-offset: 4px;
 }
 .tool-icon-wrapper { 
     width: 50px; 
     height: 50px; 
-    background-color: #FFFFFF; /* White background for tool icons */
+    background-color: #FFFFFF; 
     border-radius: 10px; 
     display: flex; 
     justify-content: center; 
@@ -441,33 +487,37 @@ html::before {
 .tool-name { 
     font-size: 1.1em; 
     font-weight: 600; 
-    color: var(--tool-name-color); 
+    color: var(--text-light); 
     margin: 0 0 5px 0; 
 }
 .tool-category { 
     font-size: 0.85em; 
-    color: var(--tool-category-color); 
+    color: var(--text-medium); /* Unified with --text-medium */
     margin: 0; 
 }
 
-/* Featured Websites Section (Gallery) */
+/* ===================================== */
+/*         10. Featured Websites Section */
+/* ===================================== */
 .gallery-section {
   text-align: left; 
   background: transparent;
   color: var(--text-light);
   z-index: 1;
-  /* MODIFIED: Reduced padding-top and padding-bottom for tighter gaps */
-  padding: 20px 40px 10px; 
-  width: 100%; /* Take full width of parent section */
-  margin: 0; /* Remove auto margins */
-
+  /* MODIFIED: Reduce padding-top (20px * 0.8 = 16px) and padding-bottom (10px * 0.8 = 8px) by 20% for mobile */
+  padding: 16px 40px 8px; /* Original horizontal 40px remains */
+  width: 100%; 
+  margin: 0; 
   padding-right: 0; 
+}
+
+.gallery-heading { /* Targeting specific heading for margin reduction */
+    margin-bottom: 16px; /* MODIFIED: Reduced from 20px * 0.8 = 16px */
 }
 
 .image-ring-container {
   perspective: 2000px; 
-  /* MODIFIED: Adjusted height to accommodate the current ring and items, +60px reduced to +30px */
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); 
+  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); /* Original height calculation */
   width: 100%; 
   position: relative; 
   display: flex;
@@ -475,14 +525,16 @@ html::before {
   align-items: center;
   overflow: visible; 
   
-  margin-top: -20px; 
+  margin: 0; /* MODIFIED: Set margin-top from -20px to 0, and margin-bottom to 0 */
+  padding-top: 8px; /* NEW: Added internal padding (20% reduction of original 10px for top)*/
+  padding-bottom: 8px; /* NEW: Added internal padding (20% reduction of original 10px for bottom) */
   z-index: 1; 
 }
 
 .image-ring {
   position: relative;
-  width: calc(var(--gallery-ring-radius) * 2); /* Use variable for width */
-  height: calc(var(--gallery-ring-radius) * 2); /* Use variable for height */
+  width: calc(var(--gallery-ring-radius) * 2); 
+  height: calc(var(--gallery-ring-radius) * 2); 
   transform-style: preserve-3d;
   will-change: transform; 
   cursor: grab;
@@ -492,16 +544,16 @@ html::before {
   cursor: grabbing;
 }
 
-/* Gallery Items – card look fixed */
+/* Gallery Items (unified .gallery-item, .ring-image) */
 .gallery-item, .ring-image {
   position: absolute;
-  width: var(--gallery-image-width); /* RESTORED then increased by 10% */
-  height: var(--gallery-image-height); /* RESTORED then increased by 10% */
+  width: var(--gallery-image-width); 
+  height: var(--gallery-image-height); 
   top: 50%;
   left: 50%;
   margin-top: calc(var(--gallery-image-height) / -2); 
   margin-left: calc(var(--gallery-image-width) / -2); 
-  padding: 10px; /* Kept as requested */
+  padding: 10px; 
   border-radius: 12px; 
   background: rgba(255, 255, 255, 0.08); 
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); 
@@ -509,7 +561,7 @@ html::before {
   text-align: center; 
   display: flex; 
   flex-direction: column; 
-  align-items: center; /* Center align items for image/text within card */
+  align-items: center; 
   justify-content: flex-start; 
   overflow: hidden; 
 
@@ -517,43 +569,45 @@ html::before {
   backface-visibility: hidden; 
 
   transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); 
-  /* MODIFIED: Border opacity reduced by ~15% (0.15 to 0.1) */
   border: 1px solid rgba(255, 255, 255, 0.1); 
   
   z-index: 1; 
 }
 
-/* Strengthen Glow / Depth on Hover */
-.gallery-item:hover, .ring-image:hover {
+/* Strengthen Glow / Depth on Hover & Focus */
+.gallery-item:hover, .ring-image:hover,
+.gallery-item:focus-visible, .ring-image:focus-visible { /* NEW: Add focus-visible */
   transform: translate3d(0, 0, 30px); 
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); 
+  outline: 2px solid var(--accent-primary-sawad);
+  outline-offset: 4px;
 }
 
 
-/* Gallery images (Auto adjust within card) */
+/* Gallery images (unified .gallery-item-link, .ring-image-link) */
 .gallery-item-link, .ring-image-link {
   overflow: hidden;
-  width: 100%; /* Ensure link takes full width for image */
-  flex-shrink: 0; /* Prevent image from shrinking if text is long */
+  width: 100%; 
+  flex-shrink: 0; 
 }
 .gallery-item-link img, .ring-image-link img {
   width: 100%; 
-  /* Flexible height based on aspect ratio, constrained by max-height */
   height: auto; 
-  max-height: calc(var(--gallery-image-height) * 0.7); /* Image takes up to 70% of card height */
-  object-fit: cover; /* Ensures image covers the available space */
+  max-height: calc(var(--gallery-image-height) * 0.7); 
+  object-fit: cover; 
   border-radius: 8px; 
   display: block;
   filter: brightness(var(--gallery-dimmed-brightness)); 
   transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast);
-  margin-bottom: 5px; /* Small gap between image and caption */
+  margin-bottom: 5px; 
 }
-.gallery-item-link:hover img, .ring-image-link:hover img {
+.gallery-item-link:hover img, .ring-image-link:hover img,
+.gallery-item-link:focus-visible img, .ring-image-link:focus-visible img { /* NEW: Add focus-visible */
   transform: scale(1.05);
   filter: brightness(var(--gallery-hover-brightness));
 }
 
-/* Optional: Glitch effect overlay for images */
+/* Optional: Glitch effect overlay for images (UPDATED KEYFRAMES) */
 .glitch-effect {
     background-color: transparent; 
     position: absolute;
@@ -573,11 +627,50 @@ html::before {
     pointer-events: none; 
 }
 @keyframes glitch {
-    0% { background-position: 0 0; }
-    25% { background-position: 100% 0; }
-    50% { background-position: 100% 100%; }
-    75% { background-position: 0 100%; }
-    100% { background-position: 0 0; }
+  0% {
+    clip-path: inset(0 0 80% 0);
+    transform: translate(0);
+  }
+  10% {
+    clip-path: inset(10% 0 60% 0);
+    transform: translate(-5px, -2px);
+  }
+  20% {
+    clip-path: inset(20% 0 40% 0);
+    transform: translate(5px, 2px);
+  }
+  30% {
+    clip-path: inset(30% 0 20% 0);
+    transform: translate(-2px, 1px);
+  }
+  40% {
+    clip-path: inset(40% 0 10% 0);
+    transform: translate(2px, -1px);
+  }
+  50% {
+    clip-path: inset(50% 0 0 0);
+    transform: translate(-1px, 2px);
+  }
+  60% {
+    clip-path: inset(20% 0 60% 0);
+    transform: translate(3px, -3px);
+  }
+  70% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(-3px, 3px);
+  }
+  80% {
+    clip-path: inset(0 0 80% 0);
+    transform: translate(2px, -2px);
+  }
+  90% {
+    clip-path: inset(5% 0 75% 0);
+    transform: translate(-2px, 2px);
+  }
+  100% {
+    clip-path: inset(0 0 80% 0);
+    transform: translate(0);
+  }
 }
 
 
@@ -587,7 +680,7 @@ html::before {
   line-height: 1.3;
   color: #ddd; 
   padding: 0 5px; 
-  width: 100%; /* Ensure caption takes full width */
+  width: 100%; 
 }
 .gallery-caption .memory-date { 
     font-family: "Orbitron", sans-serif;
@@ -615,10 +708,11 @@ html::before {
     margin-bottom: 0; 
 }
 
-/* Contact Section */
+/* ===================================== */
+/*         11. Contact Section (Footer)  */
+/* ===================================== */
 footer#contact { 
     background-color: var(--bg-section-card); 
-    /* MODIFIED: Reduced padding-top */
     padding: 60px 40px 100px; 
     text-align: center; 
     color: var(--text-light); 
@@ -642,7 +736,7 @@ footer h2 {
 .contact-buttons { 
     display: flex; 
     flex-wrap: wrap; 
-    justify-content: center; 
+    justify-content: center; /* MODIFIED: Ensures buttons are center-aligned */
     gap: 20px; 
     margin-bottom: 40px; 
 }
@@ -659,9 +753,12 @@ footer h2 {
     overflow: hidden; 
     font-size: 1rem; 
 }
-.contact-button:hover { 
+.contact-button:hover,
+.contact-button:focus-visible { /* NEW: Add focus-visible */
     transform: translate3d(0, -2px, 0); 
     box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
+    outline: 2px solid var(--accent-primary-sawad);
+    outline-offset: 3px;
 }
 .contact-button i { 
     font-size: 1.5em; 
@@ -700,180 +797,147 @@ footer h2 {
     opacity: 1; 
 }
 
-/* --- Media Queries --- */
+/* ===================================== */
+/*         12. Media Queries             */
+/* ===================================== */
 
-/* Desktop & Tablet (>= 768px) */
-@media (min-width: 768px) { 
-    .main-layout-container { 
-        align-items: flex-start; /* Crucial for sticky behavior */
-    } 
-    .left-column-sticky { 
+/* --- Mobile-First Baseline Performance (<= 767px) --- */
+/* These are the defaults, overridden by min-width for larger screens */
+/* Note: Original draft had these as max-width, now explicit mobile-first */
+.site-background-image { opacity: 0.03; }
+.background-color-gradient { opacity: 0.01; }
+body::before, body::after { opacity: 0.01; filter: blur(100px); }
+html::before { opacity: 0; } 
+.glitch-effect { display: none; } 
+
+/* Tablet (≥768px) */
+@media (min-width: 768px) {
+  /* Performance Reversion for larger screens */
+  .site-background-image { opacity: 0.079; }
+  .background-color-gradient { opacity: 0.05; }
+  body::before, body::after { opacity: 0.03; filter: blur(400px); }
+  html::before { opacity: 0.02; } 
+  .glitch-effect { display: block; } /* Re-enable glitch */
+
+  /* Main Layout & Section Alignment */
+  .main-layout-container { 
+        flex-direction: row; 
+        align-items: flex-start; 
+        padding: 0 var(--space-xl); 
+        gap: var(--space-xl); 
+        padding-top: var(--space-m); 
+  } 
+  .left-column-sticky { 
         position: sticky; 
-        top: 60px; /* Sticks 60px from the top, like tushardugar.github.io */
-        transform: none; /* Remove any previous centering transforms */
+        top: var(--space-xl); /* Sticks 60px from the top */
+        transform: none; 
         height: auto; 
         align-self: flex-start; 
         margin: 0; 
-        animation: none !important; /* Disable initial animation when sticky */
-    }
+        animation: none !important; 
+  }
+  .section {
+      max-width: 1000px; 
+      margin: 0 auto; 
+      padding: var(--space-l) var(--space-m); 
+      padding-right: 0; 
+  }
+  .hero-heading, .hero-description, .services-heading, .tools-heading, .gallery-heading {
+      margin-left: 0; 
+      margin-right: auto; 
+      text-align: left;
+  }
+  
+  /* Services and Tools grid columns for Tablet */
+  .services-card-grid,
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr); /* MODIFIED: 2 columns for tablet */
+    max-width: 700px; /* MODIFIED: Set max-width for tablet grids */
+    margin: 0 auto; 
+    gap: var(--space-l); /* Using spacing variable */
+  }
 
-    /* Right-side content alignment for Desktop/Tablet */
-    .section {
-        max-width: 1000px; /* Consistent max-width for all right sections */
-        margin: 0 auto; /* Center the content block within the right-column-scroll */
-        padding: 40px 20px; /* Consistent padding inside the content block */
-        /* Adjusted vertical padding from 60px 40px to 40px 20px */
-    }
-    .hero-heading, .hero-description, .services-heading, .tools-heading, .gallery-heading {
-        margin-left: 0; /* Ensure left alignment within the centered section block */
-        margin-right: auto; 
-        text-align: left;
-    }
-    .services-card-grid, .tools-grid {
-        width: 100%; /* Ensure grids take full width of the section block */
-        margin: 0; /* Remove conflicting auto margins */
-    }
-    .gallery-section {
-        padding: 20px 20px 10px; /* Adjusted padding within the section for desktop/tablet */
-    }
-    footer#contact {
-        padding: 60px 20px 100px; /* Consistent with other sections */
-    }
-}
+  /* Hero Heading font size for Tablet */
+  .hero-heading {
+    font-size: clamp(3.5rem, 6vw, 5em); /* MODIFIED: Tablet specific font size */
+  }
 
-/* Large Desktop (>= 1200px) */
-@media (min-width: 1200px) { 
+  /* About Card size & alignment for Tablet */
+  .about-left-content {
+    max-width: 340px; /* MODIFIED: Reduced width for tablet */
+    margin: auto; /* Keeps it centered vertically within sticky column */
+  }
+
+  /* Gallery variables for Tablet (from original max-width: 1023px block) */
   :root {
-    /* MODIFIED: Ring reduced by 1/3, cards increased by 10% */
-    /* R = 320*0.666 = 213px; W = 200*1.1 = 220px; H = 260*1.1 = 286px */
-    --gallery-ring-radius: 213px; 
-    --gallery-image-width: 220px; 
-    --gallery-image-height: 286px; 
+      /* R = 250*0.666 = 167px; W = 140*1.1 = 154px; H = 180*1.1 = 198px */
+      --gallery-ring-radius: 167px; 
+      --gallery-image-width: 154px; 
+      --gallery-image-height: 198px; 
+  }
+  /* Gallery section padding: Original 20px 40px 10px. Reduced by 20% -> 16px 32px 8px */
+  .gallery-section { padding: 16px 32px 8px; padding-right: 0; } 
+  .gallery-heading { margin-bottom: 16px; } /* MODIFIED: Reduced from 20px * 0.8 = 16px */
+  .image-ring-container { 
+    height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 24px); /* 30px reduced by 20% to 24px */
+    margin: 0; /* Ensures margin is reset */
+    padding-top: 8px; /* 20% reduction of original 10px for top padding */
+    padding-bottom: 8px; /* 20% reduction of original 10px for bottom padding */
+  }
+  .gallery-caption .memory-date { font-size: 0.8rem; }
+  .gallery-caption .title { font-size: 1rem; }
+  .gallery-caption .description { font-size: 0.85rem; }
+
+  /* Footer for Tablet */
+  footer#contact {
+      padding: var(--space-xl) var(--space-m) 6.25rem; 
   }
 }
 
-/* Tablet / Small Desktop (<= 1023px) */
-@media (max-width: 1023px) { 
-    .section { 
-        padding: 40px 20px; /* Consistent padding for tablet */
-        padding-left: 20px; 
-        padding-right: 0; /* Already handled by .section margin:0 auto */
-        max-width: 100%; /* Allow section to take full width on tablet column layout */
-    }
-    .main-layout-container { 
-        flex-direction: column; /* Columns on tablet */
-        padding: 20px; 
-        gap: 40px; 
-        align-items: flex-start; /* Still flex-start for sticky, but the layout is column now */
-    }
-    /* `left-column-sticky` sticky behavior handled by `min-width: 768px` rule */
-    
-    :root {
-        /* MODIFIED: Ring reduced by 1/3, cards increased by 10% */
-        /* R = 250*0.666 = 167px; W = 140*1.1 = 154px; H = 180*1.1 = 198px */
-        --gallery-ring-radius: 167px; 
-        --gallery-image-width: 154px; 
-        --gallery-image-height: 198px; 
-    }
-    /* MODIFIED: Reduced padding-top and padding-bottom for gallery section */
-    .gallery-section { padding: 20px 20px 10px; } 
-    /* MODIFIED: Adjusted height to accommodate current ring and items, +60px reduced to +30px */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); }
+/* Desktop (≥1024px) */
+@media (min-width: 1024px) {
+  /* Services and Tools grid columns for Desktop */
+  .services-card-grid,
+  .tools-grid {
+    grid-template-columns: repeat(3, 1fr); /* MODIFIED: 3 columns for desktop */
+    max-width: 1100px; /* MODIFIED: Set max-width for desktop grids */
+    gap: var(--space-xl); /* Using spacing variable */
+  }
 
-    /* --- PERFORMANCE: Reduce background opacity/complexity on mobile --- */
-    .site-background-image { opacity: 0.05; }
-    .background-color-gradient { opacity: 0.03; }
-    body::before, body::after { opacity: 0.02; filter: blur(200px); }
-    html::before { opacity: 0; } 
+  /* Gallery section padding for Desktop (20% reduction from 20px 40px 10px -> 16px 0 8px) */
+  .gallery-section {
+    padding: 16px 0 8px; /* MODIFIED: Apply 20% reduction, horizontal to 0 as per instructions */
+    padding-right: 0; 
+  }
+
+  /* Hero Heading font size for Desktop */
+  .hero-heading {
+    font-size: clamp(4rem, 5vw, 6em); /* MODIFIED: Desktop specific font size */
+  }
+
+  /* About Card size for Desktop */
+  .about-left-content {
+    max-width: 360px; /* MODIFIED: Specific width for desktop */
+  }
+
+  /* Gallery Item height for Desktop (15% reduction) */
+  .gallery-item,
+  .ring-image {
+    /* Base height from Tablet MQ is 198px. 15% reduction: 198 * 0.85 = 168.3px */
+    height: calc(var(--gallery-image-height) * 0.85); /* MODIFIED: 15% reduction for desktop */
+  }
 }
 
-/* Mobile (<= 767px) */
-@media (max-width: 767px) {
-    .section { 
-        /* MODIFIED: Adjusted padding to align with hero heading on mobile */
-        padding: 40px 15px; 
-        padding-left: 15px; 
-        padding-right: 15px; /* Ensure right padding is consistent */
-        max-width: 100%; /* Section takes full width */
-        margin: 0 auto; /* Center the section if parent allows */
-    }
-    .main-layout-container { 
-        flex-direction: column; 
-        padding: 15px; 
-        gap: 30px; 
-        /* MODIFIED: Center align items for standard mobile layout (non-sticky) */
-        align-items: center; 
-    }
-    .hero-heading, .services-heading, .tools-heading, .gallery-heading { 
-        font-size: clamp(2rem, 7vw, 6rem); 
-        margin-left: 0; /* Align with section padding */
-        margin-right: auto;
-        width: 100%;
-        text-align: left;
-    }
-    .contact-buttons { flex-direction: column; gap: 10px; }
-    .contact-button { width: 100%; justify-content: center; }
-    .left-column-sticky {
-        /* MODIFIED: Revert to relative for mobile, ensuring it's not sticky and is horizontally centered */
-        position: relative;
-        top: auto;
-        transform: none;
-        align-self: center; /* Center horizontally in column flow */
-        margin: 0 auto 40px; /* Restore auto margins for horizontal centering */
-        animation: leftColumnPopIn 1.4s ease-out both; /* Re-enable animation for mobile non-sticky */
-    }
-    :root {
-        /* MODIFIED: Ring reduced by 1/3, cards increased by 10% */
-        /* R = 200*0.666 = 133px; W = 120*1.1 = 132px; H = 156*1.1 = 172px */
-        --gallery-ring-radius: 133px; 
-        --gallery-image-width: 132px; 
-        --gallery-image-height: 172px; 
-    }
-    /* MODIFIED: Adjusted padding-top and padding-bottom for gallery section on mobile */
-    .gallery-section { padding: 20px 15px 10px; } 
-    /* MODIFIED: Adjusted height to accommodate current ring and items, +60px reduced to +30px */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); }
-
-    .services-card-grid, .tools-grid {
-      grid-template-columns: 1fr;
-      width: 100%; /* Take full width of parent section */
-      margin: 0; /* Remove auto margins */
-      max-width: 400px; /* Constrain grid width for single column */
-    }
-    
-    .gallery-caption .memory-date { 
-        font-size: 0.7rem; /* Smaller font for mobile */
-    }
-    .gallery-caption .title { 
-        font-size: 0.8rem; /* Smaller font for mobile */
-    }
-    .gallery-caption .description { 
-        font-size: 0.7rem; /* Smaller font for mobile */
-    }
-
-    .gallery-heading {
-        margin-bottom: 20px; /* Reduced margin */
-        margin-left: 0;
-        margin-right: auto;
-        text-align: left;
-    }
-    /* MODIFIED: Adjusted footer padding for mobile */
-    footer#contact {
-        padding: 40px 15px 60px;
-    }
-
-    /* --- PERFORMANCE: Further reduce background opacity/complexity on very small mobile --- */
-    .site-background-image { opacity: 0.03; }
-    .background-color-gradient { opacity: 0.01; }
-    body::before, body::after { opacity: 0.01; filter: blur(100px); }
-    .glitch-effect { display: none; } 
-}
-
-/* New breakpoint for very small mobile screens for hero description alignment */
-@media (max-width: 480px) {
-    .hero-description {
-        text-align: left; 
-    }
+/* Large Desktop (≥1200px) - Original Block, adapted */
+@media (min-width: 1200px) { 
+  :root {
+    /* Original Desktop values: R=320, W=200, H=260. New: R = 213px; W = 220px; H = 286px */
+    --gallery-ring-radius: 213px; 
+    --gallery-image-width: 220px; 
+    --gallery-image-height: 286px; /* Base height for 1200px+ desktop */
+  }
+  /* The 15% height reduction from 1024px still applies here, so the actual height for gallery items will be 286 * 0.85 = 243.1px */
+  /* The .gallery-item and .ring-image rule from min-width: 1024px will handle the height calculation correctly. */
 }
 
 /* --- Accessibility: Reduce Motion --- */
@@ -898,9 +962,11 @@ footer h2 {
     .left-column-sticky { animation: none !important; transform: none !important; opacity: 1 !important; }
     .striped-entry-list li { animation: none !important; transform: none !important; opacity: 1 !important; }
     .image-ring { animation: none !important; transition: none !important; }
-    .gallery-item:hover, .ring-image:hover { transform: none !important; }
-    .gallery-item-link:hover img, .ring-image-link:hover img { transform: none !important; }
-    .contact-button:hover { transform: none !important; }
+    .gallery-item:hover, .ring-image:hover,
+    .gallery-item:focus-visible, .ring-image:focus-visible { transform: none !important; box-shadow: none !important; } /* Also disable outline on reduced motion */
+    .gallery-item-link:hover img, .ring-image-link:hover img,
+    .gallery-item-link:focus-visible img, .ring-image-link:focus-visible img { transform: none !important; filter: brightness(var(--gallery-dimmed-brightness)); }
+    .contact-button:hover, .contact-button:focus-visible { transform: none !important; box-shadow: none !important; }
     .contact-button.copied .button-content-main,
     .contact-button.copied .copied-text { animation: none !important; transition: none !important; }
 }
