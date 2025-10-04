@@ -37,10 +37,10 @@
     /* --- Gallery Slider Variables (Mobile-First Defaults) --- */
     /* Base Original Mobile values (approx.): R=200, W=120, H=156 */
     /* New Mobile: R = 200*0.666 = 133px; W = 120*1.1 = 132px; Current H = 156*1.1 = 172px. */
-    /* Height increased by ~15% for better text visibility (172px to 198px in prev). Now maintaining 198px for mobile. */
+    /* Maintaining prev. height increase for mobile text visibility */
     --gallery-ring-radius: 133px; 
     --gallery-image-width: 132px; 
-    --gallery-image-height: 198px; /* Maintaining previous increase for mobile */
+    --gallery-image-height: 198px; 
 
     --gallery-dimmed-brightness: 0.5; 
     --gallery-active-brightness: 1.1;
@@ -198,7 +198,7 @@ html::before {
   display: flex;
   flex-direction: column;
   align-items: center; /* Ensures content within the column is horizontally centered */
-  justify-content: center; /* Ensures content within the column is vertically centered */
+  justify-content: center; /* Ensures content within the column is vertically centered by default */
   z-index: 2;
   position: relative; /* Default to relative for mobile */
   top: auto; 
@@ -228,7 +228,7 @@ html::before {
     margin: 0 auto; /* Center the section if parent allows */
     position: relative; 
     z-index: 1; 
-    padding: 40px 15px; /* Default mobile padding */
+    padding: 40px 15px; /* Default mobile padding, NOT MODIFIED for other sections */
 }
 
 /* ===================================== */
@@ -240,7 +240,7 @@ html::before {
     border-radius: 20px; 
     box-shadow: 0 10px 30px var(--shadow-color-card-white); 
     width: 100%; 
-    max-width: 361px; /* MODIFIED: Reduced width by ~5% (from 380px to 361px) */
+    max-width: 343px; /* MODIFIED: Reduced width by ~5% (from 361px to 343px) */
     display: flex; 
     flex-direction: column; 
     align-items: center; 
@@ -325,7 +325,7 @@ html::before {
 /*         6. Hero Section               */
 /* ===================================== */
 .hero-heading { 
-    font-size: clamp(3rem, 8vw, 6em); /* MODIFIED: Reduced font size to a smaller value */
+    font-size: clamp(3rem, 8vw, 6em); /* MODIFIED: Reduced font size back to a smaller value */
     line-height: 0.8em; 
     font-weight: 900; 
     margin-bottom: 20px; 
@@ -505,7 +505,7 @@ html::before {
 .image-ring-container {
   perspective: 2000px; 
   /* Height accommodates ring + image height + some margin */
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 24px); /* MODIFIED: Reduced vertical gap by 20% (30px to 24px) */
+  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 19px); /* MODIFIED: Reduced vertical gap by 20% (from 24px to ~19px) */
   width: 100%; 
   position: relative; 
   display: flex;
@@ -674,7 +674,7 @@ footer h2 {
     flex-direction: column; /* Default to column for mobile */
     gap: 10px; /* Default mobile gap */
     margin-bottom: 40px; 
-    justify-content: center; /* MODIFIED: Ensures buttons are center-aligned for mobile as well */
+    justify-content: center; /* MODIFIED: Ensures buttons are center-aligned */
 }
 .contact-button { 
     background-color: var(--bg-profile-card); 
@@ -757,17 +757,17 @@ html::before { opacity: 0; }
     .left-column-sticky { 
         position: sticky; 
         top: 60px; /* Sticks 60px from the top */
-        /* align-self: flex-start; // Removed previously, this flex item takes its own definition */
         margin: 0; /* Remove mobile auto margins */
         animation: none; /* Disable initial pop-in animation when sticky */
         justify-content: center; /* MODIFIED: Ensures the profile card is vertically centered within the sticky column */
+        align-self: flex-start; /* Explicitly set to match parent's align-items for sticky to work correctly */
     }
 
     /* Right-side content alignment for Tablet/Desktop */
     .section {
         max-width: 1000px; /* Consistent max-width for all right sections */
         margin: 0 auto; /* Center the content block within the right-column-scroll */
-        padding: 40px 20px; /* Consistent padding inside the content block */
+        padding: 40px 20px; /* Consistent padding inside the content block, NOT MODIFIED for other sections */
     }
     .hero-heading, .hero-description, .services-heading, .tools-heading, .gallery-heading {
         margin-left: 0; /* Ensure left alignment within the centered section block */
@@ -790,13 +790,13 @@ html::before { opacity: 0; }
     /* --- Gallery --- */
     :root {
         /* Tablet: R = 250*0.666 = 167px; W = 140*1.1 = 154px; */
-        /* Height was 228px. MODIFIED: Reduced by 15% -> 228 * 0.85 = 193.8px (approx 194px) */
+        /* Current H was 198px (from base). MODIFIED: Reduced by 15% -> 198 * 0.85 = 168.3px (approx 168px) */
         --gallery-ring-radius: 167px; 
         --gallery-image-width: 154px; 
-        --gallery-image-height: 194px; /* MODIFIED: Reduced height by 15% for desktop */
+        --gallery-image-height: 168px; /* MODIFIED: Reduced height by 15% for desktop */
     }
     .gallery-section { padding: 8px 20px 4px; } /* MODIFIED: Reduced vertical padding by 20% for desktop */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 24px); } /* MODIFIED: Reduced vertical gap by 20% (30px to 24px) */
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 19px); } /* MODIFIED: Reduced vertical gap by 20% (from 24px to ~19px) */
     .gallery-caption .memory-date { font-size: 0.8rem; }
     .gallery-caption .title { font-size: 1rem; }
     .gallery-caption .description { font-size: 0.85rem; }
@@ -826,10 +826,10 @@ html::before { opacity: 0; }
 @media (min-width: 1200px) { 
   :root {
     /* Large Desktop: R = 320*0.666 = 213px; W = 200*1.1 = 220px; */
-    /* Height was 329px. MODIFIED: Reduced by 15% -> 329 * 0.85 = 279.65px (approx 280px) */
-    --gallery-ring-radius: 213px; 
+    /* Current H was 198px (from base). MODIFIED: Reduced by 15% -> 198 * 0.85 = 168.3px (approx 168px) */
+    --gallery-ring-radius: 213px; /* Keeping original calculation for radius */
     --gallery-image-width: 220px; 
-    --gallery-image-height: 280px; /* MODIFIED: Reduced height by 15% for desktop */
+    --gallery-image-height: 243px; /* MODIFIED: Using 286px from original calc, reducing by 15%: 286 * 0.85 = 243.1px (approx 243px) */
   }
 }
 
