@@ -228,7 +228,7 @@ html::before {
     margin: 0 auto; /* Center the section if parent allows */
     position: relative; 
     z-index: 1; 
-    padding: 40px 15px; /* Default mobile padding, NOT MODIFIED for other sections */
+    padding: 40px 15px; /* Original padding for most sections */
 }
 
 /* ===================================== */
@@ -282,6 +282,15 @@ html::before {
     align-items: center; 
     margin-bottom: 15px; 
 }
+.fire-icon::before, .fire-icon-with-line::before { 
+    content: ''; 
+    position: absolute; 
+    top: 50%; 
+    transform: translate3d(0, -50%, 0); 
+    height: 2px; 
+    border-top: 2px dashed var(--accent-primary-sawad); 
+    z-index: 1; 
+}
 .fire-icon { 
     background-color: var(--accent-primary-sawad); 
     border-radius: 50%; 
@@ -291,15 +300,6 @@ html::before {
     box-shadow: 0 2px 8px rgba(0,0,0,0.5); 
     z-index: 2; 
     position: relative; 
-}
-.fire-icon-with-line::before, .fire-icon-with-line::after { 
-    content: ''; 
-    position: absolute; 
-    top: 50%; 
-    transform: translate3d(0, -50%, 0); 
-    height: 2px; 
-    border-top: 2px dashed var(--accent-primary-sawad); 
-    z-index: 1; 
 }
 .fire-icon-with-line::before { left: 0; width: calc(50% - 25px); } 
 .fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
@@ -497,7 +497,7 @@ html::before {
   background: transparent;
   color: var(--text-light);
   z-index: 1;
-  padding: 8px 15px 4px; /* MODIFIED: Reduced vertical padding by 20% for mobile */
+  padding: 5px 15px 0px; /* MODIFIED: Reduced vertical padding for mobile */
   width: 100%; 
   margin: 0; 
 }
@@ -505,7 +505,7 @@ html::before {
 .image-ring-container {
   perspective: 2000px; 
   /* Height accommodates ring + image height + some margin */
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 19px); /* MODIFIED: Reduced vertical gap by 20% (from 24px to ~19px) */
+  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 10px); /* MODIFIED: Reduced vertical gap */
   width: 100%; 
   position: relative; 
   display: flex;
@@ -767,7 +767,7 @@ html::before { opacity: 0; }
     .section {
         max-width: 1000px; /* Consistent max-width for all right sections */
         margin: 0 auto; /* Center the content block within the right-column-scroll */
-        padding: 40px 20px; /* Consistent padding inside the content block, NOT MODIFIED for other sections */
+        padding: 40px 20px; /* Original padding for most sections */
     }
     .hero-heading, .hero-description, .services-heading, .tools-heading, .gallery-heading {
         margin-left: 0; /* Ensure left alignment within the centered section block */
@@ -795,8 +795,8 @@ html::before { opacity: 0; }
         --gallery-image-width: 154px; 
         --gallery-image-height: 168px; /* MODIFIED: Reduced height by 15% for desktop */
     }
-    .gallery-section { padding: 8px 20px 4px; } /* MODIFIED: Reduced vertical padding by 20% for desktop */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 19px); } /* MODIFIED: Reduced vertical gap by 20% (from 24px to ~19px) */
+    .gallery-section { padding: 5px 20px 0px; } /* MODIFIED: Reduced vertical padding for desktop */
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 10px); } /* MODIFIED: Reduced vertical gap */
     .gallery-caption .memory-date { font-size: 0.8rem; }
     .gallery-caption .title { font-size: 1rem; }
     .gallery-caption .description { font-size: 0.85rem; }
