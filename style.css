@@ -29,6 +29,15 @@
     /* --- Hover Effects --- */
     --services-card-hover-glow: rgba(156, 255, 51, 0.3);
 
+    /* --- Layout & Sizing - Spacing System (NEW) --- */
+    --space-xxs: 4px;
+    --space-xs: 8px;
+    --space-s: 16px;
+    --space-m: 24px;
+    --space-l: 40px;
+    --space-xl: 60px;
+    --space-xxl: 80px;
+
     /* --- Transitions & Animations --- */
     --transition-speed-fast: 0.3s; /* For common hover transitions */
     --transition-speed-medium: 0.8s; /* For reveal animations */
@@ -36,11 +45,11 @@
 
     /* --- Gallery Slider Variables (Mobile-First Defaults) --- */
     /* Base Original Mobile values (approx.): R=200, W=120, H=156 */
-    /* New Mobile: R = 200*0.666 = 133px; W = 120*1.1 = 132px; Current H = 156*1.1 = 172px. */
-    /* Maintaining prev. height increase for mobile text visibility */
+    /* New Mobile: R = 200*0.666 = 133px; W = 120*1.1 = 132px; Original H = 156*1.1 = 172px. */
+    /* Height was previously increased for text visibility (to 198px). This is the mobile base. */
     --gallery-ring-radius: 133px; 
     --gallery-image-width: 132px; 
-    --gallery-image-height: 198px; 
+    --gallery-image-height: 198px; /* Mobile base height */
 
     --gallery-dimmed-brightness: 0.5; 
     --gallery-active-brightness: 1.1;
@@ -186,9 +195,9 @@ html::before {
     min-height: 100vh;
     max-width: 1920px; 
     margin: 0 auto; 
-    padding: 15px; /* Default mobile padding */
-    gap: 30px; /* Default mobile gap */
-    padding-top: 20px; 
+    padding: var(--space-s); /* Using spacing variable */
+    gap: var(--space-l); /* Using spacing variable */
+    padding-top: var(--space-m); /* Using spacing variable */
 }
 
 /* Left column (Profile card/navigation) */
@@ -198,7 +207,7 @@ html::before {
   display: flex;
   flex-direction: column;
   align-items: center; /* Ensures content within the column is horizontally centered */
-  justify-content: center; /* Ensures content within the column is vertically centered by default */
+  justify-content: center; /* MODIFIED: Ensures content within the column is vertically centered by default */
   z-index: 2;
   position: relative; /* Default to relative for mobile */
   top: auto; 
@@ -206,7 +215,7 @@ html::before {
   animation: leftColumnPopIn 1.4s ease-out both; /* Initial pop-in animation for non-sticky */
   will-change: transform, opacity; 
   backface-visibility: hidden; 
-  margin: 0 auto 40px; /* Centered with bottom margin for mobile */
+  margin: 0 auto var(--space-l); /* Centered with bottom margin for mobile, using spacing variable */
 }
 
 /* Right column (Scrollable content) */
@@ -228,7 +237,7 @@ html::before {
     margin: 0 auto; /* Center the section if parent allows */
     position: relative; 
     z-index: 1; 
-    padding: 40px 15px; /* Original padding for most sections */
+    padding: var(--space-l) var(--space-s); /* Original padding for most sections, using spacing variables */
 }
 
 /* ===================================== */
@@ -240,7 +249,7 @@ html::before {
     border-radius: 20px; 
     box-shadow: 0 10px 30px var(--shadow-color-card-white); 
     width: 100%; 
-    max-width: 343px; /* MODIFIED: Reduced width by ~5% (from 361px to 343px) */
+    max-width: 380px; /* MODIFIED: Reduced width by 5% from original 400px (400 * 0.95 = 380px) */
     display: flex; 
     flex-direction: column; 
     align-items: center; 
@@ -282,15 +291,6 @@ html::before {
     align-items: center; 
     margin-bottom: 15px; 
 }
-.fire-icon::before, .fire-icon-with-line::before { 
-    content: ''; 
-    position: absolute; 
-    top: 50%; 
-    transform: translate3d(0, -50%, 0); 
-    height: 2px; 
-    border-top: 2px dashed var(--accent-primary-sawad); 
-    z-index: 1; 
-}
 .fire-icon { 
     background-color: var(--accent-primary-sawad); 
     border-radius: 50%; 
@@ -300,6 +300,15 @@ html::before {
     box-shadow: 0 2px 8px rgba(0,0,0,0.5); 
     z-index: 2; 
     position: relative; 
+}
+.fire-icon-with-line::before, .fire-icon-with-line::after { 
+    content: ''; 
+    position: absolute; 
+    top: 50%; 
+    transform: translate3d(0, -50%, 0); 
+    height: 2px; 
+    border-top: 2px dashed var(--accent-primary-sawad); 
+    z-index: 1; 
 }
 .fire-icon-with-line::before { left: 0; width: calc(50% - 25px); } 
 .fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
@@ -386,10 +395,10 @@ html::before {
 .services-card-grid {
   display: grid;
   grid-template-columns: 1fr; /* Default to single column for mobile */
-  gap: 20px; 
+  gap: var(--space-m); /* MODIFIED: Using spacing variable for consistency */
   width: 100%; 
-  margin: 0 auto; /* Center for single column layout */
-  max-width: 400px; /* Constrain width for single column */
+  margin: 0 auto; 
+  max-width: 400px; /* Constrain width for single column on mobile */
 }
 .face {
   position: relative;
@@ -437,7 +446,7 @@ html::before {
 .tools-grid { 
     display: grid; 
     grid-template-columns: 1fr; /* Default to single column for mobile */
-    gap: 20px; 
+    gap: var(--space-m); /* MODIFIED: Using spacing variable for consistency */
     width: 100%; 
     margin: 0 auto; /* Center for single column layout */
     max-width: 400px; /* Constrain width for single column */
@@ -497,15 +506,17 @@ html::before {
   background: transparent;
   color: var(--text-light);
   z-index: 1;
-  padding: 5px 15px 0px; /* MODIFIED: Reduced vertical padding for mobile */
+  /* MODIFIED: Reduce padding-top (20*0.8=16px) and padding-bottom (10*0.8=8px) by 20% for mobile */
+  padding: 16px var(--space-s) 8px; /* Using spacing variables for horizontal, calculated for vertical */
   width: 100%; 
   margin: 0; 
 }
 
 .image-ring-container {
   perspective: 2000px; 
-  /* Height accommodates ring + image height + some margin */
-  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 10px); /* MODIFIED: Reduced vertical gap */
+  /* Height accommodates ring + image height + remaining vertical gap */
+  /* Original +30px. MODIFIED: Reduced by 20% (30 * 0.8 = 24px) */
+  height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 24px); 
   width: 100%; 
   position: relative; 
   display: flex;
@@ -649,20 +660,20 @@ html::before {
 /* ===================================== */
 footer#contact { 
     background-color: var(--bg-section-card); 
-    padding: 40px 15px 60px; /* Default mobile padding */
+    padding: var(--space-l) var(--space-s) var(--space-xl); /* Default mobile padding, using spacing variables */
     text-align: center; 
     color: var(--text-light); 
 }
 footer h2 { 
     font-size: 3.2em; 
-    margin-bottom: 25px; 
+    margin-bottom: var(--space-m); /* Using spacing variable */
     color: var(--text-light); 
     font-weight: 700; 
     letter-spacing: 1.5px; 
 }
 .contact-tagline { 
     font-size: 1.1rem; 
-    margin-bottom: 40px; 
+    margin-bottom: var(--space-l); /* Using spacing variable */
     color: var(--text-medium); 
     max-width: 700px; 
     margin-left: auto; 
@@ -672,8 +683,8 @@ footer h2 {
 .contact-buttons { 
     display: flex; 
     flex-direction: column; /* Default to column for mobile */
-    gap: 10px; /* Default mobile gap */
-    margin-bottom: 40px; 
+    gap: var(--space-xs); /* Using spacing variable */
+    margin-bottom: var(--space-l); /* Using spacing variable */
     justify-content: center; /* MODIFIED: Ensures buttons are center-aligned */
 }
 .contact-button { 
@@ -751,12 +762,12 @@ html::before { opacity: 0; }
     .main-layout-container { 
         flex-direction: row; /* Two columns */
         align-items: flex-start; /* Crucial for sticky behavior of the column itself */
-        padding: 0 60px; 
-        gap: 60px; 
+        padding: 0 var(--space-xl); /* Using spacing variable */
+        gap: var(--space-xl); /* Using spacing variable */
     }
     .left-column-sticky { 
         position: sticky; 
-        top: 60px; /* Sticks 60px from the top */
+        top: var(--space-xl); /* Sticks 60px from the top, using spacing variable */
         margin: 0; /* Remove mobile auto margins */
         animation: none; /* Disable initial pop-in animation when sticky */
         justify-content: center; /* MODIFIED: Ensures the profile card is vertically centered within the sticky column */
@@ -767,7 +778,7 @@ html::before { opacity: 0; }
     .section {
         max-width: 1000px; /* Consistent max-width for all right sections */
         margin: 0 auto; /* Center the content block within the right-column-scroll */
-        padding: 40px 20px; /* Original padding for most sections */
+        padding: var(--space-l) var(--space-m); /* Original padding for most sections, using spacing variables */
     }
     .hero-heading, .hero-description, .services-heading, .tools-heading, .gallery-heading {
         margin-left: 0; /* Ensure left alignment within the centered section block */
@@ -777,13 +788,15 @@ html::before { opacity: 0; }
 
     /* --- Services Grid --- */
     .services-card-grid {
-        grid-template-columns: repeat(2, 1fr); 
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablet */
+        gap: var(--space-l); /* MODIFIED: Larger gap for tablet */
         max-width: none; /* Remove mobile max-width */
     }
     
     /* --- Tools Grid --- */
     .tools-grid { 
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+        grid-template-columns: repeat(2, 1fr); /* MODIFIED: Explicitly 2 columns for tablet */
+        gap: var(--space-l); /* MODIFIED: Larger gap for tablet */
         max-width: none; /* Remove mobile max-width */
     }
 
@@ -795,8 +808,10 @@ html::before { opacity: 0; }
         --gallery-image-width: 154px; 
         --gallery-image-height: 168px; /* MODIFIED: Reduced height by 15% for desktop */
     }
-    .gallery-section { padding: 5px 20px 0px; } /* MODIFIED: Reduced vertical padding for desktop */
-    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 10px); } /* MODIFIED: Reduced vertical gap */
+    /* MODIFIED: Reduce padding-top (20*0.8=16px) and padding-bottom (10*0.8=8px) by 20% for desktop */
+    .gallery-section { padding: 16px var(--space-m) 8px; } /* Using spacing variables for horizontal, calculated for vertical */
+    /* MODIFIED: Vertical gap reduced by 20% (30 * 0.8 = 24px) */
+    .image-ring-container { height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 24px); } 
     .gallery-caption .memory-date { font-size: 0.8rem; }
     .gallery-caption .title { font-size: 1rem; }
     .gallery-caption .description { font-size: 0.85rem; }
@@ -805,14 +820,14 @@ html::before { opacity: 0; }
     .contact-buttons { 
         flex-direction: row; /* Buttons side-by-side */
         flex-wrap: wrap; 
-        gap: 20px; 
+        gap: var(--space-m); /* Using spacing variable */
         justify-content: center; /* MODIFIED: Ensures buttons are center-aligned */
     }
     .contact-button { 
         width: auto; /* Allow buttons to size based on content */
         max-width: 300px; /* Prevent overly wide buttons */
     }
-    footer#contact { padding: 60px 20px 100px; }
+    footer#contact { padding: var(--space-xl) var(--space-m) 100px; } /* Using spacing variables */
 
     /* --- Performance Reversion --- */
     .site-background-image { opacity: 0.079; }
@@ -826,11 +841,21 @@ html::before { opacity: 0; }
 @media (min-width: 1200px) { 
   :root {
     /* Large Desktop: R = 320*0.666 = 213px; W = 200*1.1 = 220px; */
-    /* Current H was 198px (from base). MODIFIED: Reduced by 15% -> 198 * 0.85 = 168.3px (approx 168px) */
-    --gallery-ring-radius: 213px; /* Keeping original calculation for radius */
+    /* Original H for this size was 286px. MODIFIED: Reduced by 15% -> 286 * 0.85 = 243.1px (approx 243px) */
+    --gallery-ring-radius: 213px; 
     --gallery-image-width: 220px; 
-    --gallery-image-height: 243px; /* MODIFIED: Using 286px from original calc, reducing by 15%: 286 * 0.85 = 243.1px (approx 243px) */
+    --gallery-image-height: 243px; /* MODIFIED: Reduced height by 15% for large desktop */
   }
+    /* --- Services Grid --- */
+    .services-card-grid {
+        grid-template-columns: repeat(3, 1fr); /* MODIFIED: 3 columns for large desktop */
+        gap: var(--space-xl); /* MODIFIED: Even larger gap for large desktop */
+    }
+    /* --- Tools Grid --- */
+    .tools-grid {
+        grid-template-columns: repeat(3, 1fr); /* MODIFIED: 3 columns for large desktop */
+        gap: var(--space-xl); /* MODIFIED: Even larger gap for large desktop */
+    }
 }
 
 /* --- Accessibility: Reduce Motion --- */
