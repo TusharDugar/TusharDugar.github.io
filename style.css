@@ -1,4 +1,4 @@
-/* ===================================== */
+/* = =================================== */
 /*         0. CSS Variables              */
 /* ===================================== */
 :root {
@@ -8,14 +8,15 @@
     --text-light: #F0F0F0;
     --text-medium: #A0A0A0; /* General medium grey text */
     --text-dark-card: #000000; /* Text color specifically for light cards */
-    --text-medium-card: #4B4B4B; /* Medium grey text specifically for light cards (unified to --text-medium for consistency below) */
     --accent-primary-sawad: #FF6B00; /* Primary accent color (Orange) */
     --accent-secondary-sawad: #00FFC2; /* Secondary accent color */
     --text-secondary: #666666; /* Renamed from --text-sub-heading-grey for broader applicability */
 
     /* Additional colors from index.html memory carousel for consistent styling */
-    --carousel-primary: #9d00ff; 
-    --carousel-accent: #ff00e5; 
+    --carousel-primary: #9d00ff;
+    --carousel-primary-rgb: 157, 0, 255; /* CORRECTED: RGB values for use in rgba() */
+    --carousel-accent: #ff00e5;
+    --carousel-accent-rgb: 255, 0, 229; /* CORRECTED: RGB values for use in rgba() */
 
     /* --- Backgrounds --- */
     --bg-tool-card: #1A1A1A; 
@@ -98,8 +99,9 @@ html::before {
     mask-image: 
         linear-gradient(to right, transparent 99.85%, var(--text-light) 0.15%), 
         linear-gradient(to bottom, transparent 99.85%, var(--text-light) 0.15%), 
-        linear-gradient(45deg, transparent 75%, rgba(var(--carousel-primary), 0.1) 75.02%, rgba(var(--carousel-primary), 0.1) 75.18%, transparent 75.2%), 
-        linear-gradient(-45deg, transparent 75%, rgba(var(--carousel-accent), 0.1) 75.02%, rgba(var(--carousel-accent), 0.1) 75.18%, transparent 75.2%); 
+        /* CORRECTED: Using RGB variables in rgba() */
+        linear-gradient(45deg, transparent 75%, rgba(var(--carousel-primary-rgb), 0.1) 75.02%, rgba(var(--carousel-primary-rgb), 0.1) 75.18%, transparent 75.2%), 
+        linear-gradient(-45deg, transparent 75%, rgba(var(--carousel-accent-rgb), 0.1) 75.02%, rgba(var(--carousel-accent-rgb), 0.1) 75.18%, transparent 75.2%); 
     mask-size: var(--space-l) var(--space-l); /* Using spacing variable */
     -webkit-mask-size: var(--space-l) var(--space-l);
     mask-repeat: repeat; 
@@ -318,8 +320,9 @@ html::before {
 /*         6. Hero Section               */
 /* ===================================== */
 .hero-heading { 
-    font-size: clamp(4rem, 10vw, 7.75em); /* Original value for mobile/default */
-    line-height: 0.8em; 
+    /* MODIFIED: Increased font size for more impact */
+    font-size: clamp(4.5rem, 12vw, 8.5rem); 
+    line-height: 0.9em; /* MODIFIED: Slightly increased line-height to prevent overlap with new line break */
     font-weight: 900; 
     margin-bottom: 20px; 
     text-transform: uppercase; 
@@ -374,7 +377,6 @@ html::before {
     display: block; 
     text-shadow: none; 
 } 
-
 
 /* ===================================== */
 /*         8. Services Section Grid      */
@@ -849,17 +851,24 @@ html::before { opacity: 0; }
   }
   
   /* Services and Tools grid columns for Tablet */
-  .services-card-grid,
-  .tools-grid {
-    grid-template-columns: repeat(2, 1fr); /* MODIFIED: 2 columns for tablet */
-    max-width: 700px; /* MODIFIED: Set max-width for tablet grids */
+  .services-card-grid {
+    /* MODIFIED: Set to 2 columns as requested */
+    grid-template-columns: repeat(2, 1fr); 
+    max-width: 800px; /* MODIFIED: Adjusted max-width for a 2-column layout */
     margin: 0 auto; 
-    gap: var(--space-l); /* Using spacing variable */
+    gap: var(--space-l);
+  }
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr); 
+    max-width: 700px; 
+    margin: 0 auto; 
+    gap: var(--space-l); 
   }
 
   /* Hero Heading font size for Tablet */
   .hero-heading {
-    font-size: clamp(3.5rem, 6vw, 5em); /* MODIFIED: Tablet specific font size */
+    /* MODIFIED: Increased font size for tablets */
+    font-size: clamp(5rem, 10vw, 7.5rem); 
   }
 
   /* About Card size & alignment for Tablet */
@@ -897,11 +906,16 @@ html::before { opacity: 0; }
 /* Desktop (≥1024px) */
 @media (min-width: 1024px) {
   /* Services and Tools grid columns for Desktop */
-  .services-card-grid,
+  .services-card-grid {
+    /* MODIFIED: Enforced 2 columns for desktop as well */
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 860px; /* MODIFIED: Adjusted max-width for a 2-column layout */
+    gap: var(--space-xl);
+  }
   .tools-grid {
-    grid-template-columns: repeat(3, 1fr); /* MODIFIED: 3 columns for desktop */
-    max-width: 1100px; /* MODIFIED: Set max-width for desktop grids */
-    gap: var(--space-xl); /* Using spacing variable */
+    grid-template-columns: repeat(3, 1fr); 
+    max-width: 1100px; 
+    gap: var(--space-xl); 
   }
 
   /* Gallery section padding for Desktop (20% reduction from 20px 40px 10px -> 16px 0 8px) */
@@ -912,7 +926,8 @@ html::before { opacity: 0; }
 
   /* Hero Heading font size for Desktop */
   .hero-heading {
-    font-size: clamp(4rem, 5vw, 6em); /* MODIFIED: Desktop specific font size */
+    /* MODIFIED: Increased font size for desktop */
+    font-size: clamp(6rem, 9vw, 9rem);
   }
 
   /* About Card size for Desktop */
@@ -962,11 +977,36 @@ html::before { opacity: 0; }
     .left-column-sticky { animation: none !important; transform: none !important; opacity: 1 !important; }
     .striped-entry-list li { animation: none !important; transform: none !important; opacity: 1 !important; }
     .image-ring { animation: none !important; transition: none !important; }
-    .gallery-item:hover, .ring-image:hover,
-    .gallery-item:focus-visible, .ring-image:focus-visible { transform: none !important; box-shadow: none !important; } /* Also disable outline on reduced motion */
+
+    /* CORRECTED: Preserve focus outlines while disabling hover effects */
+    .gallery-item:hover, .ring-image:hover {
+        transform: none !important;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3) !important; /* Revert to base shadow */
+    }
+    .gallery-item:focus-visible, .ring-image:focus-visible {
+        transform: none !important;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3) !important; /* Revert to base shadow */
+        outline: 2px solid var(--accent-primary-sawad) !important; /* Ensure outline remains */
+        outline-offset: 4px !important;
+    }
     .gallery-item-link:hover img, .ring-image-link:hover img,
-    .gallery-item-link:focus-visible img, .ring-image-link:focus-visible img { transform: none !important; filter: brightness(var(--gallery-dimmed-brightness)); }
-    .contact-button:hover, .contact-button:focus-visible { transform: none !important; box-shadow: none !important; }
+    .gallery-item-link:focus-visible img, .ring-image-link:focus-visible img { 
+        transform: none !important; 
+        filter: brightness(var(--gallery-dimmed-brightness)); 
+    }
+    .contact-button:hover { 
+        transform: none !important; 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important; /* Revert to base shadow */
+    }
+    .contact-button:focus-visible {
+        transform: none !important; 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important; /* Revert to base shadow */
+        outline: 2px solid var(--accent-primary-sawad) !important; /* Ensure outline remains */
+        outline-offset: 3px !important;
+    }
     .contact-button.copied .button-content-main,
-    .contact-button.copied .copied-text { animation: none !important; transition: none !important; }
+    .contact-button.copied .copied-text { 
+        animation: none !important; 
+        transition: none !important; 
+    }
 }
