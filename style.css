@@ -92,10 +92,10 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 /* ===================================== */
 /*         4. Main Layout Structure      */
 /* ===================================== */
-.main-layout-container { display: flex; flex-direction: column; min-height: 100vh; max-width: 1920px; margin: 0 auto; /* OPTIMIZED: Fluid padding */ padding: var(--space-m) clamp(var(--space-s), 5vw, var(--space-xl)); }
-.left-column-sticky { display: flex; flex-direction: column; width: 100%; max-width: 380px; /* Centered on mobile */ margin-inline: auto; margin-bottom: var(--space-l); animation: leftColumnPopIn 1.4s ease-out both; will-change: transform, opacity; }
+.main-layout-container { display: flex; flex-direction: column; min-height: 100vh; max-width: 1920px; margin: 0 auto; padding: var(--space-m) clamp(var(--space-s), 5vw, var(--space-xl)); }
+.left-column-sticky { display: flex; flex-direction: column; width: 100%; max-width: 380px; margin-inline: auto; margin-bottom: var(--space-l); animation: leftColumnPopIn 1.4s ease-out both; will-change: transform, opacity; }
 .right-column-scroll { flex-grow: 1; width: 100%; }
-.section { /* OPTIMIZED: Fluid vertical padding for rhythm */ padding-block: clamp(var(--space-l), 10vh, var(--space-xxl)); }
+.section { padding-block: clamp(var(--space-l), 10vh, var(--space-xxl)); }
 
 /* ===================================== */
 /*         5. "About" Card Styles        */
@@ -117,22 +117,30 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 /* ===================================== */
 /*         6. Hero Section               */
 /* ===================================== */
-.hero-heading { /* OPTIMIZED: Refined fluid font size for better control */ font-size: clamp(3.5rem, 8vw + 1rem, 8rem); line-height: 0.95; font-weight: 900; margin: 0; text-transform: uppercase; }
+.hero-heading { font-size: clamp(3.5rem, 8vw + 1rem, 8rem); line-height: 0.95; font-weight: 900; margin: 0; text-transform: uppercase; }
 .hero-heading .crafting { color: var(--text-light); } 
 .hero-heading .digital { color: var(--text-secondary); } 
-.hero-description { max-width: 60ch; /* Better for readability */ text-align: justify; line-height: 1.8; font-size: 1em; margin-block-start: var(--space-m); color: var(--text-medium); }
+.hero-description { max-width: 60ch; text-align: justify; line-height: 1.8; font-size: 1em; margin-block-start: var(--space-m); color: var(--text-medium); }
 
 /* ===================================== */
 /*         7. Section Headings           */
 /* ===================================== */
-.section-heading { /* OPTIMIZED: Consolidated heading styles */ font-size: clamp(3rem, 10vw, 7rem); line-height: 0.85; text-transform: uppercase; font-weight: 900; margin-bottom: var(--space-l); position: relative; color: var(--text-light); text-shadow: 0 2px 6px rgba(0,0,0,0.8); }
+.section-heading { font-size: clamp(3rem, 10vw, 7rem); line-height: 0.85; text-transform: uppercase; font-weight: 900; margin-bottom: var(--space-l); position: relative; color: var(--text-light); text-shadow: 0 2px 6px rgba(0,0,0,0.8); }
 .section-heading .text-white { color: var(--text-light); display: block; text-shadow: none; }
 .section-heading .text-gray { color: var(--text-secondary); display: block; text-shadow: none; } 
 
 /* ===================================== */
 /*         8. Services & Tools Grids     */
 /* ===================================== */
-.services-card-grid, .tools-grid { display: grid; grid-template-columns: 1fr; /* OPTIMIZED: Fluid gap */ gap: clamp(var(--space-m), 4vw, var(--space-l)); width: 100%; max-width: 500px; /* Mobile constraint */ margin-inline: auto; }
+.services-card-grid, .tools-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* MODIFIED: Reduced the minimum, fluid, and maximum gap sizes */
+    gap: clamp(var(--space-s), 2.5vw, var(--space-m));
+    width: 100%;
+    max-width: 500px; /* Mobile constraint */
+    margin-inline: auto;
+}
 .face, .tool-card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); will-change: transform, box-shadow; }
 .face:hover, .face:focus-visible, .tool-card:hover, .tool-card:focus-visible { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0,0,0,0.6); outline: 2px solid var(--accent-primary-sawad); outline-offset: 4px; }
 /* Service Card Specifics */
