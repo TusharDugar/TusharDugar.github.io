@@ -40,7 +40,8 @@
     /* --- Gallery Slider Variables (Mobile-First) --- */
     --gallery-ring-radius: 133px; 
     --gallery-image-width: 132px; 
-    --gallery-image-height: 172px;
+    /* [FIXED] Increased base height for mobile to prevent text overflow */
+    --gallery-image-height: 198px;
 
     --gallery-dimmed-brightness: 0.5; 
     --gallery-active-brightness: 1.1;
@@ -93,14 +94,14 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 /*         4. Main Layout Structure      */
 /* ===================================== */
 .main-layout-container { display: flex; flex-direction: column; min-height: 100vh; max-width: 1920px; margin: 0 auto; padding: var(--space-m) clamp(var(--space-s), 5vw, var(--space-xl)); }
-.left-column-sticky { display: flex; flex-direction: column; width: 100%; /* MODIFIED: Width reduced by 10% */ max-width: 342px; margin-inline: auto; margin-bottom: var(--space-l); animation: leftColumnPopIn 1.4s ease-out both; will-change: transform, opacity; }
+.left-column-sticky { display: flex; flex-direction: column; width: 100%; max-width: 342px; margin-inline: auto; margin-bottom: var(--space-l); animation: leftColumnPopIn 1.4s ease-out both; will-change: transform, opacity; }
 .right-column-scroll { flex-grow: 1; width: 100%; }
 .section { padding-block: clamp(var(--space-l), 10vh, var(--space-xxl)); }
 
 /* ===================================== */
 /*         5. "About" Card Styles        */
 /* ===================================== */
-.about-left-content { background-color: var(--bg-profile-card); color: var(--text-dark-card); border-radius: 20px; box-shadow: 0 10px 30px var(--shadow-color-card-white); display: flex; flex-direction: column; align-items: center; text-align: center; /* MODIFIED: Vertical padding increased by 20% to increase height */ padding: 3rem var(--space-m); max-height: 90vh; }
+.about-left-content { background-color: var(--bg-profile-card); color: var(--text-dark-card); border-radius: 20px; box-shadow: 0 10px 30px var(--shadow-color-card-white); display: flex; flex-direction: column; align-items: center; text-align: center; padding: 3rem var(--space-m); max-height: 90vh; }
 .profile-image-container { width: 160px; height: 160px; overflow: hidden; margin-bottom: var(--space-s); }
 .profile-photo { width: 100%; height: 100%; object-fit: cover; }
 .about-left-content h3 { font-size: 2.2em; font-weight: 700; margin: 0 0 var(--space-xs); line-height: 1.1; }
@@ -117,7 +118,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 /* ===================================== */
 /*         6. Hero Section               */
 /* ===================================== */
-.hero-heading { /* MODIFIED: Font size reduced by 20% */ font-size: clamp(2.8rem, 6.4vw + 0.8rem, 6.4rem); line-height: 0.95; font-weight: 900; margin: 0; text-transform: uppercase; }
+.hero-heading { /* [REVERTED] Font size restored to the previous larger value */ font-size: clamp(3.5rem, 8vw + 1rem, 8rem); line-height: 0.95; font-weight: 900; margin: 0; text-transform: uppercase; }
 .hero-heading .crafting { color: var(--text-light); } 
 .hero-heading .digital { color: var(--text-secondary); } 
 .hero-description { max-width: 60ch; text-align: justify; line-height: 1.8; font-size: 1em; margin-block-start: var(--space-m); color: var(--text-medium); }
@@ -135,7 +136,6 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .services-card-grid, .tools-grid {
     display: grid;
     grid-template-columns: 1fr;
-    /* MODIFIED: Gap reduced by a further 10% */
     gap: clamp(0.9rem, 2.25vw, 1.35rem);
     width: 100%;
     max-width: 500px; /* Mobile constraint */
@@ -204,7 +204,7 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
 /* Tablet (≥768px) */
 @media (min-width: 768px) {
   .main-layout-container { flex-direction: row; align-items: flex-start; gap: var(--space-l); } 
-  .left-column-sticky { position: sticky; top: var(--space-l); flex-shrink: 0; /* MODIFIED: Width reduced by 10% */ width: 306px; margin-inline: 0; margin-bottom: 0; animation: none !important; }
+  .left-column-sticky { position: sticky; top: var(--space-l); flex-shrink: 0; width: 306px; margin-inline: 0; margin-bottom: 0; animation: none !important; }
   .right-column-scroll { max-width: 900px; margin-inline: auto; }
   .services-card-grid { grid-template-columns: repeat(2, 1fr); max-width: none; }
   .tools-grid { grid-template-columns: repeat(2, 1fr); max-width: none; }
@@ -212,18 +212,19 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
   :root {
       --gallery-ring-radius: 167px; 
       --gallery-image-width: 154px; 
-      --gallery-image-height: 198px; 
+      /* [FIXED] Increased height for tablet to prevent text overflow */
+      --gallery-image-height: 228px; 
   }
 }
 
 /* Desktop (≥1024px) */
 @media (min-width: 1024px) {
   .main-layout-container { gap: var(--space-xl); }
-  .left-column-sticky { /* MODIFIED: Width reduced by 10% */ width: 333px; }
-  /* Services grid stays 2 columns, Tools grid becomes 3 */
+  .left-column-sticky { width: 333px; }
   .tools-grid { grid-template-columns: repeat(3, 1fr); }
   :root {
-    --gallery-image-height: 220px; /* Adjusting height for desktop */
+    /* [FIXED] Adjusted height for desktop for consistent scaling */
+    --gallery-image-height: 240px;
   }
 }
 
