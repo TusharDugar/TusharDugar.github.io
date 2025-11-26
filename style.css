@@ -247,39 +247,51 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
 
 @media (max-width: 768px) {
 
-  /* 20% bigger card padding */
+  /* Card container should grow naturally */
   .gallery-item {
-      padding: 12px; /* 10px → 12px */
+      width: 100%;
+      height: auto;        /* IMPORTANT FIX */
+      padding: 14px 0;     /* looks cleaner on mobile */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
   }
 
-  /* 20% bigger image size */
+  /* Make the image fully responsive */
   .gallery-item img,
   .gallery-item-link img,
   .ring-image {
-      width: 158.4px;   /* 132px → 158.4px */
-      height: 237.6px;  /* 198px → 237.6px */
+      width: 80%;          /* Perfect size for mobile */
+      height: auto;        /* Prevents distortion */
+      max-width: 260px;    /* Controlled max size */
+      border-radius: 14px;
+      display: block;
+      margin: 0 auto 10px;
   }
 
-  /* 20% bigger image bottom gap */
-  .gallery-item-link img {
-      margin-bottom: 6px; /* 5px → 6px */
-  }
-
-  /* 20% bigger caption text */
+  /* Fix caption overflow + center alignment */
   .gallery-caption {
-      font-size: 0.96rem; /* 0.8rem → 0.96rem */
-      padding: 0 6px;     /* 5px → 6px */
-  }
-
-  .gallery-caption .memory-date {
-      font-size: 0.96rem;
+      width: 100%;
+      max-width: 260px;
+      text-align: center;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
   }
 
   .gallery-caption .title {
-      font-size: 1.2rem; /* 1rem → 1.2rem */
+      margin-bottom: 6px;
   }
 
-  .gallery-caption .description {
-      font-size: 1.02rem; /* 0.85rem → 1.02rem */
+  /* Reduce gap ABOVE the Featured Websites heading */
+  .gallery-section {
+      margin-top: 0 !important;
+      padding-top: 10px !important; /* previously around 40–60px */
+  }
+
+  /* Reduce heading spacing itself */
+  .section-heading {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
   }
 }
