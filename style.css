@@ -245,7 +245,6 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
 
 /* --- Mobile-Only Fixes --- */
 @media (max-width: 768px) {
-  /* Card container should grow naturally */
   .gallery-item {
       width: 100%;
       height: auto;
@@ -254,7 +253,6 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
       flex-direction: column;
       align-items: center;
   }
-  /* Make the image fully responsive */
   .gallery-item img,
   .gallery-item-link img,
   .ring-image {
@@ -265,7 +263,6 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
       display: block;
       margin: 0 auto 10px;
   }
-  /* Fix caption overflow + center alignment */
   .gallery-caption {
       width: 100%;
       max-width: 260px;
@@ -277,43 +274,45 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
   .gallery-caption .title {
       margin-bottom: 6px;
   }
-  /* Reduce gap ABOVE the Featured Websites heading */
   .gallery-section {
       padding-top: 10px !important;
   }
-  /* Reduce heading spacing itself */
   .gallery-section .section-heading {
       margin-top: 0 !important;
   }
 }
 
-/* --- Tablet & Desktop Fixes --- */
+/* --- Tablet & Desktop Alignment Fixes --- */
 @media (min-width: 769px) {
-    /* Make ALL Service Cards the SAME SIZE */
+    /* Reduce gaps and align Service Cards */
+    .services-card-grid {
+        gap: 20px !important;
+        align-items: stretch !important;
+    }
+
     .face {
+        height: 260px;
+        justify-content: space-between;
+        padding: 28px !important;
+    }
+    
+    .services-card-grid .face:nth-child(1),
+    .services-card-grid .face:nth-child(2) {
+        align-self: stretch !important;
         height: 260px;
     }
 
-    .service-description {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
-    }
-
-    /* Increase width of the paragraph under hero heading */
+    /* Widen Hero Description */
     .hero-description {
         max-width: 720px;
         width: 90%;
     }
 
-    /* Align all section headings with the hero heading */
+    /* Align Section Headings and Content */
     .right-column-scroll .section-heading {
         padding-left: var(--space-l);
     }
     
-    /* Align section content blocks with hero layout */
     .services-card-grid,
     .tools-grid,
     .gallery-section {
