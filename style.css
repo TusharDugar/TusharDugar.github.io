@@ -11,7 +11,7 @@
     --accent-primary-sawad: #FF6B00;
     --accent-secondary-sawad: #00FFC2;
     --text-secondary: #666666;
-    --text-highlight-subtle: #fff7ed; /* Added from new styles for consistency */
+    --text-highlight-subtle: #fff7ed; /* NEW: Added for service card titles */
 
     --carousel-primary: #9d00ff;
     --carousel-primary-rgb: 157, 0, 255;
@@ -24,7 +24,7 @@
     /* --- Shadows --- */
     --shadow-color-card-white: rgba(0,0,0,0.25);
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Added from new styles */
+    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* NEW: Added for service card hover */
 
     /* --- Layout & Sizing - Spacing System --- */
     --space-xs: 0.5rem;  /* 8px */
@@ -38,7 +38,7 @@
     --transition-speed-fast: 0.3s;
     --transition-speed-medium: 0.8s;
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-    --transition-timing-line: cubic-bezier(0, 0, 0.2, 1); /* Added from new styles */
+    --transition-timing-line: cubic-bezier(0, 0, 0.2, 1); /* NEW: Added for service line animation */
 
     /* --- Gallery Slider Variables (Mobile-First) --- */
     --gallery-ring-radius: 133px; 
@@ -64,8 +64,6 @@ body {
     scroll-behavior: smooth;
     min-height: 100vh;
 }
-
-/* ... Sections 2 through 7 remain unchanged ... */
 
 /* ===================================== */
 /*         2. Background Effects         */
@@ -132,9 +130,9 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .section-heading .text-white { color: var(--text-light); display: block; text-shadow: none; }
 .section-heading .text-gray { color: var(--text-secondary); display: block; text-shadow: none; } 
 
-/* ===================================== */
-/*     8. Services & Tools Grids (UPDATED) */
-/* ===================================== */
+/* ================================================= */
+/*         8. Services & Tools Grids (UPDATED)       */
+/* ================================================= */
 
 /* --- Services --- */
 .services-card-grid {
@@ -163,6 +161,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   transform: translateY(-8px);
   box-shadow: var(--shadow-xl);
   border-color: var(--accent-primary-sawad);
+  outline: none; /* Add this to prevent default focus rings from clashing with border change */
 }
 
 .service-title {
@@ -204,7 +203,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .service-line {
   width: 3rem;
   height: 0.25rem;
-  background-color: rgba(255, 107, 0, 0.5); /* Using direct value for 50% opacity */
+  background-color: rgba(255, 107, 0, 0.5);
   margin-top: 2rem;
   border-radius: 9999px;
   transition: width 0.5s var(--transition-timing-line);
@@ -252,9 +251,6 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-logo { max-width: 70%; max-height: 70%; object-fit: contain; }
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--text-light); margin: 0 0 4px 0; }
 .tool-category { font-size: 0.85em; color: var(--text-medium); margin: 0; }
-
-
-/* ... Sections 10 and 11 remain unchanged ... */
 
 /* ===================================== */
 /*         10. Featured Websites Section */
@@ -393,10 +389,6 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
 @media (min-width: 769px) {
     /* Make card grid uniform */
     .services-card-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        column-gap: 40px;
-        row-gap: 40px;
         grid-auto-rows: 1fr;
     }
 
