@@ -11,6 +11,7 @@
     --accent-primary-sawad: #FF6B00;
     --accent-secondary-sawad: #00FFC2;
     --text-secondary: #666666;
+    --text-highlight-subtle: #fff7ed; /* Added from new styles for consistency */
 
     --carousel-primary: #9d00ff;
     --carousel-primary-rgb: 157, 0, 255;
@@ -23,6 +24,7 @@
     /* --- Shadows --- */
     --shadow-color-card-white: rgba(0,0,0,0.25);
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Added from new styles */
 
     /* --- Layout & Sizing - Spacing System --- */
     --space-xs: 0.5rem;  /* 8px */
@@ -36,6 +38,7 @@
     --transition-speed-fast: 0.3s;
     --transition-speed-medium: 0.8s;
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-timing-line: cubic-bezier(0, 0, 0.2, 1); /* Added from new styles */
 
     /* --- Gallery Slider Variables (Mobile-First) --- */
     --gallery-ring-radius: 133px; 
@@ -62,19 +65,19 @@ body {
     min-height: 100vh;
 }
 
+/* ... Sections 2 through 7 remain unchanged ... */
+
 /* ===================================== */
 /*         2. Background Effects         */
 /* ===================================== */
 .site-background-image { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.079; background-image: url('./71976 (1).jpg'); background-repeat: repeat; background-size: 400px auto; }
 .background-color-gradient { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.05; background: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3) 0% 0% / 400% 400%; animation: gradient 15s ease infinite; }
 @keyframes gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-
 body::before, body::after { content: ''; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; filter: blur(400px); opacity: 0.03; z-index: -1; pointer-events: none; will-change: transform, opacity; }
 body::before { width: 1300px; height: 1300px; background: radial-gradient(circle, var(--accent-primary-sawad) 0%, transparent 60%); animation: glow1 25s infinite alternate ease-in-out; }
 body::after { width: 1200px; height: 1200px; background: radial-gradient(circle, var(--accent-secondary-sawad) 0%, transparent 60%); animation: glow2 28s infinite alternate-reverse ease-in-out; }
 @keyframes glow1 { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-55%, -45%) scale(1.05); } 100% { transform: translate(-45%, -55%) scale(1); } }
 @keyframes glow2 { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-45%, -55%) scale(1.03); } 100% { transform: translate(-55%, -45%) scale(1); } }
-
 html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.02; mask-image: linear-gradient(to right, transparent 99.85%, var(--text-light) 0.15%), linear-gradient(to bottom, transparent 99.85%, var(--text-light) 0.15%), linear-gradient(45deg, transparent 75%, rgba(var(--carousel-primary-rgb), 0.1) 75.02%, rgba(var(--carousel-primary-rgb), 0.1) 75.18%, transparent 75.2%), linear-gradient(-45deg, transparent 75%, rgba(var(--carousel-accent-rgb), 0.1) 75.02%, rgba(var(--carousel-accent-rgb), 0.1) 75.18%, transparent 75.2%); mask-size: var(--space-l) var(--space-l); -webkit-mask-size: var(--space-l) var(--space-l); mask-repeat: repeat; -webkit-mask-repeat: repeat; }
 .mouse-follower-glow { position: fixed; top: 0; left: 0; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 107, 0, 0.15) 0%, transparent 60%); filter: blur(50px); z-index: 100; pointer-events: none; transition: transform 0.1s ease-out; will-change: transform; }
 
@@ -130,9 +133,90 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .section-heading .text-gray { color: var(--text-secondary); display: block; text-shadow: none; } 
 
 /* ===================================== */
-/*         8. Services & Tools Grids     */
+/*     8. Services & Tools Grids (UPDATED) */
 /* ===================================== */
-.services-card-grid, .tools-grid {
+
+/* --- Services --- */
+.services-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+}
+
+.service-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 2rem;
+  background-color: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  transition: all var(--transition-speed-fast) ease;
+}
+
+.service-card:hover, .service-card:focus-visible {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--accent-primary-sawad);
+}
+
+.service-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-highlight-subtle);
+  margin-bottom: var(--space-s);
+  transition: color var(--transition-speed-fast) ease;
+}
+
+.service-card:hover .service-title,
+.service-card:focus-visible .service-title {
+  color: var(--accent-primary-sawad);
+}
+
+.service-description {
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: var(--text-medium);
+}
+
+.service-number {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 3.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+  user-select: none;
+  transition: color var(--transition-speed-fast) ease;
+}
+
+.service-card:hover .service-number,
+.service-card:focus-visible .service-number {
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.service-line {
+  width: 3rem;
+  height: 0.25rem;
+  background-color: rgba(255, 107, 0, 0.5); /* Using direct value for 50% opacity */
+  margin-top: 2rem;
+  border-radius: 9999px;
+  transition: width 0.5s var(--transition-timing-line);
+}
+
+.service-card:hover .service-line,
+.service-card:focus-visible .service-line {
+  width: 100%;
+}
+
+/* --- Tools --- */
+.tools-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: clamp(0.9rem, 2.25vw, 1.35rem);
@@ -140,19 +224,37 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
     max-width: 500px;
     margin-inline: auto;
 }
-.face, .tool-card { background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); will-change: transform, box-shadow; }
-.face:hover, .face:focus-visible, .tool-card:hover, .tool-card:focus-visible { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0,0,0,0.6); outline: 2px solid var(--accent-primary-sawad); outline-offset: 4px; }
-/* Service Card Specifics */
-.face { padding: var(--space-m); display: flex; flex-direction: column; }
-.service-title { font-size: clamp(1.1rem, 3vw, 1.5rem); font-weight: 700; line-height: 1.2; color: #fff7ed; margin-bottom: var(--space-xs); }
-.service-description { font-size: clamp(0.875rem, 2vw, 1rem); line-height: 1.5; color: var(--text-medium); }
-.face-number { position: absolute; top: var(--space-m); right: var(--space-m); font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 500; color: rgba(255, 255, 255, 0.08); line-height: 1; pointer-events: none; }
-/* Tool Card Specifics */
-.tool-card { padding: var(--space-m); display: flex; align-items: center; gap: var(--space-m); cursor: pointer; }
+
+.tool-card { 
+    background: rgba(20, 20, 20, 0.6); 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 20px; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2); 
+    transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); 
+    will-change: transform, box-shadow; 
+    padding: var(--space-m); 
+    display: flex; 
+    align-items: center; 
+    gap: var(--space-m); 
+    cursor: pointer; 
+}
+
+.tool-card:hover, .tool-card:focus-visible { 
+    transform: translateY(-6px); 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
+    outline: 2px solid var(--accent-primary-sawad); 
+    outline-offset: 4px; 
+}
+
 .tool-icon-wrapper { width: 50px; height: 50px; background-color: #FFFFFF; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; overflow: hidden; }
 .tool-logo { max-width: 70%; max-height: 70%; object-fit: contain; }
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--text-light); margin: 0 0 4px 0; }
 .tool-category { font-size: 0.85em; color: var(--text-medium); margin: 0; }
+
+
+/* ... Sections 10 and 11 remain unchanged ... */
 
 /* ===================================== */
 /*         10. Featured Websites Section */
@@ -205,8 +307,11 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
   .main-layout-container { flex-direction: row; align-items: flex-start; gap: var(--space-l); } 
   .left-column-sticky { position: sticky; top: var(--space-l); flex-shrink: 0; width: 306px; margin-inline: 0; margin-bottom: 0; animation: none !important; }
   .right-column-scroll { max-width: 900px; margin-inline: auto; }
+  
   .services-card-grid { grid-template-columns: repeat(2, 1fr); max-width: none; }
   .tools-grid { grid-template-columns: repeat(2, 1fr); max-width: none; }
+  
+  .service-description { font-size: 1rem; }
   
   :root {
       --gallery-ring-radius: 167px; 
@@ -220,6 +325,8 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
   .main-layout-container { gap: var(--space-xl); }
   .left-column-sticky { width: 333px; }
   .tools-grid { grid-template-columns: repeat(3, 1fr); }
+  .services-card-grid { gap: 2.5rem; }
+
   :root {
     --gallery-image-height: 220px;
   }
@@ -239,7 +346,7 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
     *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
     .background-color-gradient, body::before, body::after, .mouse-follower-glow, .glitch-effect, .left-column-sticky, .striped-entry-list li { animation: none !important; }
     .reveal-item, .reveal-child, .reveal-stagger, .left-column-sticky { opacity: 1 !important; transform: none !important; }
-    .face:hover, .face:focus-visible, .tool-card:hover, .tool-card:focus-visible, .gallery-item:hover, .gallery-item:focus-visible, .contact-button:hover, .contact-button:focus-visible { transform: none !important; }
+    .service-card:hover, .service-card:focus-visible, .tool-card:hover, .tool-card:focus-visible, .gallery-item:hover, .gallery-item:focus-visible, .contact-button:hover, .contact-button:focus-visible { transform: none !important; }
     .gallery-item-link:hover img, .gallery-item-link:focus-visible img { transform: none !important; filter: brightness(var(--gallery-dimmed-brightness)); }
 }
 
@@ -291,17 +398,6 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
         column-gap: 40px;
         row-gap: 40px;
         grid-auto-rows: 1fr;
-    }
-
-    /* Equal card heights and internal spacing */
-    .face {
-        width: 100%;
-        height: 100%;
-        min-height: 260px;
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
     }
 
     /* Widen Hero Description */
