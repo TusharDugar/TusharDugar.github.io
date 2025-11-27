@@ -288,7 +288,7 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
     .services-card-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 28px;
+        gap: 14px; /* 50% reduction from 28px */
         grid-auto-rows: 1fr; /* enforce equal height */
         padding-left: 0; /* remove forced indent */
     }
