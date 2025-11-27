@@ -284,22 +284,34 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
 
 /* --- Tablet & Desktop Alignment Fixes --- */
 @media (min-width: 769px) {
-    /* Reduce gaps and align Service Cards */
+    /* Make card grid uniform */
     .services-card-grid {
-        gap: 20px !important;
-        align-items: stretch !important;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px 28px;
+        align-items: stretch;
+        padding-left: var(--space-l); /* Align content block */
     }
 
+    /* Equal card heights */
     .face {
-        height: 260px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
         justify-content: space-between;
-        padding: 28px !important;
+        padding: 32px;
+        box-sizing: border-box;
     }
-    
-    .services-card-grid .face:nth-child(1),
-    .services-card-grid .face:nth-child(2) {
-        align-self: stretch !important;
-        height: 260px;
+
+    /* Prevent text pushing some cards wider */
+    .service-description {
+        flex-grow: 1;
+    }
+
+    /* Card number styling fix */
+    .face-number {
+        margin-top: auto;
+        opacity: 0.08;
     }
 
     /* Widen Hero Description */
@@ -308,12 +320,8 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
         width: 90%;
     }
 
-    /* Align Section Headings and Content */
-    .right-column-scroll .section-heading {
-        padding-left: var(--space-l);
-    }
-    
-    .services-card-grid,
+    /* Align Section Headings and other content blocks */
+    .right-column-scroll .section-heading,
     .tools-grid,
     .gallery-section {
         padding-left: var(--space-l);
