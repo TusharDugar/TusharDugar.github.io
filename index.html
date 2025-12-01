@@ -1,191 +1,416 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tushar Dugar - Digital Portfolio</title>
-    <!-- Google Fonts Import -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=72"> <!-- Incremented version -->
+/* ===================================== */
+/*         0. CSS Variables              */
+/* ===================================== */
+:root {
+    /* --- Colors --- */
+    --bg-main: #000000;
+    --bg-profile-card: #FFFFFF;
+    --text-light: #F0F0F0;
+    --text-medium: #A0A0A0;
+    --text-dark-card: #000000;
+    --accent-primary-sawad: #FF6B00;
+    --accent-secondary-sawad: #00FFC2;
+    --text-secondary: #666666;
+    --text-highlight-subtle: #fff7ed;
 
-    <!-- GSAP & ScrollTrigger CDNs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <!-- Register ScrollTrigger Plugin -->
-    <script>
-        gsap.registerPlugin(ScrollTrigger);
-    </script>
-</head>
-<body>
-    <!-- Background Layers -->
-    <div class="site-background-image"></div>
-    <div class="background-color-gradient"></div>
+    /* --- Typography (NEW) --- */
+    --font-size-h2: clamp(2.5rem, 6vw, 3.2rem); /* Standard size for all section headings */
 
-    <!-- Mouse Follower Glow Element -->
-    <div class="mouse-follower-glow"></div>
+    /* --- Carousel Colors --- */
+    --carousel-primary: #9d00ff;
+    --carousel-primary-rgb: 157, 0, 255;
+    --carousel-accent: #ff00e5;
+    --carousel-accent-rgb: 255, 0, 229;
 
-    <div class="main-layout-container">
-        <!-- Left Column (Sticky) -->
-        <div class="left-column-sticky">
-            <section id="about" class="about-left-content">
-              <div class="profile-image-container">
-                <img src="New Project (1).png" alt="Tushar Dugar Profile" class="profile-photo">
-              </div>
-              <h3>Tushar Dugar</h3>
-              <div class="fire-icon-with-line">
-                <span class="fire-icon"><i class="fas fa-fire"></i></span>
-              </div>
-              <p class="about-short-desc">
-                A Digital Marketing professional who transforms data into dynamic strategies and creates engaging visual content.
-              </p>
-              <div class="about-social-icons">
-                <a href="https://dribbble.com/" target="_blank" title="Dribbble"><i class="fab fa-dribbble"></i></a>
-                <a href="https://twitter.com/" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="https://instagram.com/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="mailto:imtushar4621@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
-              </div>
-            </section>
-        </div>
+    /* --- Backgrounds --- */
+    --bg-section-card: #141414;
 
-        <!-- Right Column (Scrolling) -->
-        <div class="right-column-scroll">
-            <!-- Hero Section -->
-            <section id="hero-right" class="section reveal-item"> 
-                <h2 class="hero-heading reveal-item">
-    <span class="crafting">Crafting</span><br>
-    <span class="digital">Digital<br>Experiences</span>
-</h2>
-                <p class="hero-description">I'm a creative developer who builds dynamic and user-centric web solutions. From intricate front-end designs to robust back-end systems, I transform ideas into powerful digital realities. My passion lies in blending design aesthetics with seamless functionality.</p>
-            </section>
+    /* --- Shadows --- */
+    --shadow-color-card-white: rgba(0,0,0,0.25);
+    --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 
-            <!-- Services Section -->
-            <section id="services" class="services-section">
-                <h2 class="services-heading reveal-item">
-                    <span class="text-white">MY</span><br>
-                    <span class="text-gray">SERVICES</span>
-                </h2>
-                <div class="services-card-grid"> 
-                   <div class="face" data-index="0"><div class="service-content"><h3 class="service-title">Web Design</h3><p class="service-description">Crafting visually stunning and user-friendly websites tailored to your brand’s identity and goals.</p></div><div class="face-number">01</div></div>
-                   <div class="face" data-index="1"><div class="service-content"><h3 class="service-title">SEO Optimization</h3><p class="service-description">Enhancing your website’s visibility and ranking on search engines through strategic keyword integration and technical optimization.</p></div><div class="face-number">02</div></div>
-                   <div class="face" data-index="2"><div class="service-content"><h3 class="service-title">UX/UI Design</h3><p class="service-description">Creating intuitive and engaging user experiences and interfaces that prioritize user satisfaction and ease of use.</p></div><div class="face-number">03</div></div>
-                   <div class="face" data-index="3"><div class="service-content"><h3 class="service-title">Graphic Design</h3><p class="service-description">Designing compelling and creative visuals for print and digital media to communicate your message effectively.</p></div><div class="face-number">04</div></div>
-                   <div class="face" data-index="4"><div class="service-content"><h3 class="service-title">E-commerce Solutions</h3><p class="service-description">Developing robust and scalable online stores that drive sales and provide seamless shopping experiences for your customers.</p></div><div class="face-number">05</div></div>
-                   <div class="face" data-index="5"><div class="service-content"><h3 class="service-title">Digital Marketing</h3><p class="service-description">Strategizing and executing comprehensive digital marketing campaigns to boost your online presence and engagement.</p></div><div class="face-number">06</div></div>
-                   <div class="face" data-index="6"><div class="service-content"><h3 class="service-title">Content Creation</h3><p class="service-description">Crafting engaging and relevant content, including blogs, videos, and graphics, to connect with your audience and enhance your brand story.</p></div><div class="face-number">07</div></div>
-                   <div class="face" data-index="7"><div class="service-content"><h3 class="service-title">Social Media Management</h3><p class="service-description">Managing and growing your social media presence effectively to engage with your audience and build your brand.</p></div><div class="face-number">08</div></div>
-                </div>
-            </section>
+    /* --- Layout & Sizing - Spacing System --- */
+    --space-xs: 0.5rem;  /* 8px */
+    --space-s: 1rem;     /* 16px */
+    --space-m: 1.5rem;   /* 24px */
+    --space-l: 2.5rem;   /* 40px */
+    --space-xl: 3.75rem; /* 60px */
+    --space-xxl: 5rem;   /* 80px */
 
-            <!-- Premium Tools Section -->
-            <section id="tools" class="section reveal-item">
-                <h2 class="tools-heading">
-                    <span class="text-white">PREMIUM</span><br>
-                    <span class="text-gray">TOOLS</span>
-                </h2>
-                <div class="tools-grid reveal-stagger-container">
-                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/google.svg" alt="Google Gemini Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Google Gemini</h4><p class="tool-category">AI Assistant</p></div></div>
-                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/openai.svg" alt="ChatGPT Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">ChatGPT</h4><p class="tool-category">AI Assistant</p></div></div>
-                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/figma.svg" alt="Figma Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Figma</h4><p class="tool-category">Design Tool</p></div></div>
-                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/adobephotoshop.svg" alt="Photoshop Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Adobe Photoshop</h4><p class="tool-category">Image Editing</p></div></div>
-                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googleanalytics.svg" alt="Google Analytics Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">Google Analytics</h4><p class="tool-category">Web Analytics</p></div></div>
-                    <div class="tool-card reveal-stagger"><div class="tool-icon-wrapper"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/semrush.svg" alt="SEMrush Logo" class="tool-logo"></div><div class="tool-info"><h4 class="tool-name">SEMrush</h4><p class="tool-category">SEO & Content Marketing</p></div></div>
-                </div>
-            </section>
+    /* --- Transitions & Animations --- */
+    --transition-speed-fast: 0.3s;
+    --transition-speed-medium: 0.8s;
+    --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-timing-line: cubic-bezier(0, 0, 0.2, 1);
 
-            <!-- ✅ FIXED: Featured Websites Section (Carousel Style) -->
-<section id="gallery" class="gallery-section reveal-item">
-  <h2 class="gallery-heading">
-    <span class="text-white">FEATURED</span><br>
-    <span class="text-gray">WEBSITES</span>
-  </h2>
+    /* --- Gallery Slider Variables (Mobile-First) --- */
+    --gallery-ring-radius: 133px; 
+    --gallery-image-width: 132px; 
+    --gallery-image-height: 172px;
 
-  <div class="image-ring-container">
-    <div class="image-ring" role="list">
+    --gallery-dimmed-brightness: 0.5; 
+    --gallery-active-brightness: 1.1;
+    --gallery-hover-brightness: 1.3;
+}
 
-      <!-- Card 1 -->
-      <div class="gallery-item" role="listitem" data-index="0">
-        <a href="https://sipologie.in/" target="_blank" class="gallery-item-link">
-          <img src="sipologie.png" alt="Sipologie Website Preview" />
-          <div class="glitch-effect"></div>
-        </a>
-        <div class="gallery-caption">
-          <p class="title">Sipologie</p>
-          <p class="description">Premium drinkware and tea essentials to enhance your daily rituals.</p>
-        </div>
-      </div>
+/* ===================================== */
+/*         1. Global Styles & Resets     */
+/* ===================================== */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-light);
+    background-color: var(--bg-main);
+    overflow-x: hidden; 
+    scroll-behavior: smooth;
+    min-height: 100vh;
+}
 
-      <!-- Card 2 -->
-      <div class="gallery-item" role="listitem" data-index="1">
-        <a href="https://hotelairdrop.com/" target="_blank" class="gallery-item-link">
-          <img src="hotel_airdrop.png" alt="Hotel Airdrop Website Preview" />
-          <div class="glitch-effect"></div>
-        </a>
-        <div class="gallery-caption">
-          <p class="title">Hotel Airdrop</p>
-          <p class="description">A boutique hotel & café for modern travelers and locals.</p>
-        </div>
-      </div>
+/* ===================================== */
+/*         2. Background Effects         */
+/* ===================================== */
+.site-background-image { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.079; background-image: url('./71976 (1).jpg'); background-repeat: repeat; background-size: 400px auto; }
+.background-color-gradient { position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: 0.05; background: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab,#9600FF,#aebaf8,#bb73e0,#c1fcd3) 0% 0% / 400% 400%; animation: gradient 15s ease infinite; }
+@keyframes gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+body::before, body::after { content: ''; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; filter: blur(400px); opacity: 0.03; z-index: -1; pointer-events: none; will-change: transform, opacity; }
+body::before { width: 1300px; height: 1300px; background: radial-gradient(circle, var(--accent-primary-sawad) 0%, transparent 60%); animation: glow1 25s infinite alternate ease-in-out; }
+body::after { width: 1200px; height: 1200px; background: radial-gradient(circle, var(--accent-secondary-sawad) 0%, transparent 60%); animation: glow2 28s infinite alternate-reverse ease-in-out; }
+@keyframes glow1 { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-55%, -45%) scale(1.05); } 100% { transform: translate(-45%, -55%) scale(1); } }
+@keyframes glow2 { 0% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-45%, -55%) scale(1.03); } 100% { transform: translate(-55%, -45%) scale(1); } }
+html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.02; mask-image: linear-gradient(to right, transparent 99.85%, var(--text-light) 0.15%), linear-gradient(to bottom, transparent 99.85%, var(--text-light) 0.15%), linear-gradient(45deg, transparent 75%, rgba(var(--carousel-primary-rgb), 0.1) 75.02%, rgba(var(--carousel-primary-rgb), 0.1) 75.18%, transparent 75.2%), linear-gradient(-45deg, transparent 75%, rgba(var(--carousel-accent-rgb), 0.1) 75.02%, rgba(var(--carousel-accent-rgb), 0.1) 75.18%, transparent 75.2%); mask-size: var(--space-l) var(--space-l); -webkit-mask-size: var(--space-l) var(--space-l); mask-repeat: repeat; -webkit-mask-repeat: repeat; }
+.mouse-follower-glow { position: fixed; top: 0; left: 0; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 107, 0, 0.15) 0%, transparent 60%); filter: blur(50px); z-index: 100; pointer-events: none; transition: transform 0.1s ease-out; will-change: transform; }
 
-      <!-- Card 3 -->
-      <div class="gallery-item" role="listitem" data-index="2">
-        <a href="https://techmars.in/" target="_blank" class="gallery-item-link">
-          <img src="techmars.png" alt="TechMars Website Preview" />
-          <div class="glitch-effect"></div>
-        </a>
-        <div class="gallery-caption">
-          <p class="title">TechMars</p>
-          <p class="description">A digital agency for brand marketing and web development.</p>
-        </div>
-      </div>
+/* ===================================== */
+/*         3. Global Animations          */
+/* ===================================== */
+.reveal-item, .reveal-child, .reveal-stagger { opacity: 0; transform: translateY(var(--space-l)); transition: opacity var(--transition-speed-medium) var(--transition-timing-ease-out), transform var(--transition-speed-medium) var(--transition-timing-ease-out); will-change: transform, opacity; }
+.reveal-item.visible, .reveal-child.visible, .reveal-stagger.visible { opacity: 1; transform: translateY(0); }
+@keyframes leftColumnPopIn { from { transform: translateY(var(--space-xxl)) scale(0.9); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+.striped-entry-list { list-style: none; margin: 0; padding: 0; perspective: 1000px; transform-style: preserve-3d; }
+.striped-entry-list li { opacity: 0; animation: entryAnim 0.6s ease forwards; margin-bottom: 0.8rem; backface-visibility: hidden; }
+@keyframes entryAnim { 0% { transform: translateZ(-80px); opacity: 0; } 60% { transform: translateZ(20px); opacity: 0.5; } 100% { transform: translateZ(0); opacity: 1; } }
+.striped-entry-list li:nth-child(1) { animation-delay: 0.2s; } .striped-entry-list li:nth-child(2) { animation-delay: 0.35s; } .striped-entry-list li:nth-child(3) { animation-delay: 0.5s; } .striped-entry-list li:nth-child(4) { animation-delay: 0.65s; } .striped-entry-list li:nth-child(5) { animation-delay: 0.8s; }
 
-      <!-- Card 4 -->
-      <div class="gallery-item" role="listitem" data-index="3">
-        <a href="https://tushardugar.github.io/" target="_blank" class="gallery-item-link">
-          <img src="portfolio.png" alt="Portfolio Preview" />
-          <div class="glitch-effect"></div>
-        </a>
-        <div class="gallery-caption">
-          <p class="title">Portfolio</p>
-          <p class="description">Tushar's creative portfolio with projects and UI/UX work.</p>
-        </div>
-      </div>
+/* ===================================== */
+/*         4. Main Layout Structure      */
+/* ===================================== */
+.main-layout-container { display: flex; flex-direction: column; min-height: 100vh; max-width: 1920px; margin: 0 auto; padding: var(--space-m) clamp(var(--space-s), 5vw, var(--space-xl)); }
+.left-column-sticky { display: flex; flex-direction: column; width: 100%; max-width: 342px; margin-inline: auto; margin-bottom: var(--space-l); animation: leftColumnPopIn 1.4s ease-out both; will-change: transform, opacity; }
+.right-column-scroll { flex-grow: 1; width: 100%; }
+.section { padding-block: clamp(var(--space-l), 10vh, var(--space-xxl)); }
 
-    </div>
-  </div>
-</section>
-            
-        </div>
-    </div>
+/* ===================================== */
+/*         5. "About" Card Styles        */
+/* ===================================== */
+.about-left-content { background-color: var(--bg-profile-card); color: var(--text-dark-card); border-radius: 20px; box-shadow: 0 10px 30px var(--shadow-color-card-white); display: flex; flex-direction: column; align-items: center; text-align: center; padding: 3rem var(--space-m); max-height: 90vh; }
+.profile-image-container { width: 160px; height: 160px; overflow: hidden; margin-bottom: var(--space-s); }
+.profile-photo { width: 100%; height: 100%; object-fit: cover; }
+/* MODIFIED: Changed h3 font-size to match standard h2 size */
+.about-left-content h3 { font-size: var(--font-size-h2); font-weight: 700; margin: 0 0 var(--space-xs); line-height: 1.1; }
+.fire-icon-with-line { position: relative; width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; margin-bottom: var(--space-s); }
+.fire-icon { background-color: var(--accent-primary-sawad); border-radius: 50%; padding: 8px; font-size: 1.1em; color: var(--text-light); box-shadow: 0 2px 8px rgba(0,0,0,0.5); z-index: 2; position: relative; }
+.fire-icon-with-line::before, .fire-icon-with-line::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); height: 2px; border-top: 2px dashed var(--accent-primary-sawad); z-index: 1; }
+.fire-icon-with-line::before { left: 0; width: calc(50% - 25px); }
+.fire-icon-with-line::after { right: 0; width: calc(50% - 25px); }
+.about-short-desc { line-height: 1.6; font-size: 0.9em; color: var(--text-medium); margin-bottom: var(--space-m); max-width: 95%; }
+.about-social-icons { display: flex; justify-content: center; gap: var(--space-s); margin-top: auto; padding-top: var(--space-xs); }
+.about-social-icons a { color: var(--accent-primary-sawad); transition: transform var(--transition-speed-fast); }
+.about-social-icons a:hover, .about-social-icons a:focus-visible { transform: translateY(-2px); outline: 2px solid var(--accent-primary-sawad); outline-offset: 3px; }
 
-    <footer id="contact">
-      <div class="inner">
-        <h2 class="reveal-item">Let’s Connect!</h2>
-        <p class="contact-tagline reveal-item">
-          I am always open to discuss your project,<br>
-          improve your online presence or help with your website.
-        </p>
-        <div class="contact-buttons reveal-stagger-container">
-          <button class="contact-button reveal-stagger" id="phone-button" data-contact="+919330077650">
-            <div class="button-content-main">
-              <i class="fas fa-phone-alt"></i><span class="button-value">+91 9330077650</span>
-            </div>
-            <span class="copied-text">Copied!</span>
-          </button>
-          <button class="contact-button reveal-stagger" id="email-button" data-contact="imtushar4621@gmail.com">
-            <div class="button-content-main">
-              <i class="fas fa-envelope"></i><span class="button-value">imtushar4621@gmail.com</span>
-            </div>
-            <span class="copied-text">Copied!</span>
-          </button>
-        </div>
-      </div>
-    </footer>
+/* ===================================== */
+/*         6. Hero Section               */
+/* ===================================== */
+/* UNCHANGED: Hero heading size is preserved */
+.hero-heading { font-size: clamp(2.8rem, 6.4vw + 0.8rem, 6.4rem); line-height: 0.95; font-weight: 900; margin: 0; text-transform: uppercase; }
+.hero-heading .crafting { color: var(--text-light); } 
+.hero-heading .digital { color: var(--text-secondary); } 
+.hero-description { max-width: 60ch; text-align: justify; line-height: 1.8; font-size: 1em; margin-block-start: var(--space-m); color: var(--text-medium); }
 
-    <script src="script.js" defer></script>
-</body>
-</html>
+/* ===================================== */
+/*         7. Section Headings           */
+/* ===================================== */
+/* MODIFIED: Changed font-size to standard h2 size and adjusted line-height for readability */
+.section-heading { font-size: var(--font-size-h2); line-height: 1.1; text-transform: uppercase; font-weight: 700; margin-bottom: var(--space-l); position: relative; color: var(--text-light); text-shadow: 0 2px 6px rgba(0,0,0,0.8); }
+.section-heading .text-white { color: var(--text-light); display: block; text-shadow: none; }
+.section-heading .text-gray { color: var(--text-secondary); display: block; text-shadow: none; } 
+
+/* ================================================= */
+/*         8. Services & Tools Grids                 */
+/* ================================================= */
+
+/* --- Services --- */
+.services-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+}
+
+.service-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 2rem;
+  background-color: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  transition: all var(--transition-speed-fast) ease;
+}
+
+.service-card:hover, .service-card:focus-visible {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--accent-primary-sawad);
+  outline: none;
+}
+
+/* UNCHANGED: Card titles are smaller than section headings for hierarchy */
+.service-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-highlight-subtle);
+  margin-bottom: var(--space-s);
+  transition: color var(--transition-speed-fast) ease;
+}
+
+.service-card:hover .service-title,
+.service-card:focus-visible .service-title {
+  color: var(--accent-primary-sawad);
+}
+
+.service-description {
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: var(--text-medium);
+}
+
+.service-number {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 3.75rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+  user-select: none;
+  transition: color var(--transition-speed-fast) ease;
+}
+
+.service-card:hover .service-number,
+.service-card:focus-visible .service-number {
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.service-line {
+  width: 3rem;
+  height: 0.25rem;
+  background-color: rgba(255, 107, 0, 0.5);
+  margin-top: 2rem;
+  border-radius: 9999px;
+  transition: width 0.5s var(--transition-timing-line);
+}
+
+.service-card:hover .service-line,
+.service-card:focus-visible .service-line {
+  width: 100%;
+}
+
+/* --- Tools --- */
+.tools-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.9rem, 2.25vw, 1.35rem);
+    width: 100%;
+    max-width: 500px;
+    margin-inline: auto;
+}
+
+.tool-card { 
+    background: rgba(20, 20, 20, 0.6); 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 20px; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2); 
+    transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); 
+    will-change: transform, box-shadow; 
+    padding: var(--space-m); 
+    display: flex; 
+    align-items: center; 
+    gap: var(--space-m); 
+    cursor: pointer; 
+}
+
+.tool-card:hover, .tool-card:focus-visible { 
+    transform: translateY(-6px); 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6); 
+    outline: 2px solid var(--accent-primary-sawad); 
+    outline-offset: 4px; 
+}
+
+.tool-icon-wrapper { width: 50px; height: 50px; background-color: #FFFFFF; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; overflow: hidden; }
+.tool-logo { max-width: 70%; max-height: 70%; object-fit: contain; }
+.tool-name { font-size: 1.1em; font-weight: 600; color: var(--text-light); margin: 0 0 4px 0; }
+.tool-category { font-size: 0.85em; color: var(--text-medium); margin: 0; }
+
+/* ===================================== */
+/*         10. Featured Websites Section */
+/* ===================================== */
+.gallery-section { text-align: left; }
+.image-ring-container { perspective: 2000px; height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); width: 100%; position: relative; display: flex; justify-content: center; align-items: center; }
+.image-ring { position: relative; width: calc(var(--gallery-ring-radius) * 2); height: calc(var(--gallery-ring-radius) * 2); transform-style: preserve-3d; will-change: transform; cursor: grab; }
+.image-ring:active { cursor: grabbing; }
+.gallery-item { position: absolute; width: var(--gallery-image-width); height: var(--gallery-image-height); top: 50%; left: 50%; margin-top: calc(var(--gallery-image-height) / -2); margin-left: calc(var(--gallery-image-width) / -2); padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.08); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; transform-style: preserve-3d; backface-visibility: hidden; transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); border: 1px solid rgba(255, 255, 255, 0.1); }
+.gallery-item:hover, .gallery-item:focus-visible { transform: translateZ(30px); box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); outline: 2px solid var(--accent-primary-sawad); outline-offset: 4px; }
+.gallery-item-link { overflow: hidden; width: 100%; flex-shrink: 0; }
+.gallery-item-link img { width: 100%; height: auto; max-height: calc(var(--gallery-image-height) * 0.7); object-fit: cover; border-radius: 8px; display: block; filter: brightness(var(--gallery-dimmed-brightness)); transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast); margin-bottom: 5px; }
+.gallery-item-link:hover img, .gallery-item-link:focus-visible img { transform: scale(1.05); filter: brightness(var(--gallery-hover-brightness)); }
+.glitch-effect { background-color: transparent; position: absolute; inset: 0; background: linear-gradient(45deg, transparent 65%, rgba(157, 0, 255, 0.3) 70%, transparent 75%) 0% 0% / 200% 200%; animation: glitch 3s linear infinite; pointer-events: none; }
+@keyframes glitch { 0%,100%{clip-path:inset(0 0 80% 0);transform:translate(0)}10%{clip-path:inset(10% 0 60% 0);transform:translate(-5px,-2px)}20%{clip-path:inset(20% 0 40% 0);transform:translate(5px,2px)}30%{clip-path:inset(30% 0 20% 0);transform:translate(-2px,1px)}40%{clip-path:inset(40% 0 10% 0);transform:translate(2px,-1px)}50%{clip-path:inset(50% 0 0 0);transform:translate(-1px,2px)}60%{clip-path:inset(20% 0 60% 0);transform:translate(3px,-3px)}70%{clip-path:inset(10% 0 70% 0);transform:translate(-3px,3px)}80%{clip-path:inset(0 0 80% 0);transform:translate(2px,-2px)}90%{clip-path:inset(5% 0 75% 0);transform:translate(-2px,2px)} }
+.gallery-caption { font-size: 0.8rem; line-height: 1.3; color: #ddd; padding: 0 5px; width: 100%; }
+.gallery-caption .memory-date { font-family: "Orbitron", sans-serif; font-size: 0.8rem; color: var(--carousel-accent); text-shadow: 0 0 5px rgba(255, 0, 229, 0.7); }
+.gallery-caption .title { font-size: 1rem; font-weight: 600; color: var(--text-light); white-space: normal; }
+.gallery-caption .description { font-size: 0.85rem; line-height: 1.3; color: var(--text-light); white-space: normal; }
+
+/* ===================================== */
+/*         11. Contact Section (Footer)  */
+/* ===================================== */
+footer#contact { background-color: var(--bg-section-card); padding: var(--space-xl) clamp(var(--space-s), 5vw, var(--space-xl)) var(--space-xxl); text-align: center; color: var(--text-light); }
+/* MODIFIED: Changed h2 font-size to standard h2 size */
+footer h2 { font-size: var(--font-size-h2); margin-bottom: var(--space-m); font-weight: 700; }
+.contact-tagline { font-size: 1.1rem; margin-bottom: var(--space-l); color: var(--text-medium); max-width: 65ch; margin-inline: auto; line-height: 1.8; }
+.contact-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-m); margin-bottom: var(--space-l); }
+.contact-button { background-color: var(--bg-profile-card); color: var(--text-dark-card); padding: 15px 25px; border: none; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; transition: all var(--transition-speed-fast); position: relative; overflow: hidden; font-size: 1rem; }
+.contact-button:hover, .contact-button:focus-visible { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); outline: 2px solid var(--accent-primary-sawad); outline-offset: 3px; }
+.contact-button i { font-size: 1.5em; color: var(--accent-primary-sawad); }
+.button-content-main { transition: transform var(--transition-speed-fast), opacity var(--transition-speed-fast); white-space: nowrap; }
+.copied-text { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; background: var(--accent-primary-sawad); color: var(--text-light); font-weight: bold; border-radius: 10px; opacity: 0; transform: translateY(100%); transition: transform var(--transition-speed-fast), opacity var(--transition-speed-fast); }
+.contact-button.copied .button-content-main { transform: translateY(-100%); opacity: 0; }
+.contact-button.copied .copied-text { transform: translateY(0); opacity: 1; }
+
+/* ===================================== */
+/*         12. Media Queries             */
+/* ===================================== */
+/* --- Low-spec devices (can be any size) --- */
+@media (max-width: 767px) {
+  .site-background-image { opacity: 0.03; }
+  .background-color-gradient { opacity: 0.01; }
+  body::before, body::after { opacity: 0.01; filter: blur(100px); }
+  html::before { display: none; } 
+  .glitch-effect { display: none; } 
+}
+
+/* Tablet (≥768px) */
+@media (min-width: 768px) {
+  .main-layout-container { flex-direction: row; align-items: flex-start; gap: var(--space-l); } 
+  .left-column-sticky { position: sticky; top: var(--space-l); flex-shrink: 0; width: 306px; margin-inline: 0; margin-bottom: 0; animation: none !important; }
+  .right-column-scroll { max-width: 900px; margin-inline: auto; }
+  
+  .services-card-grid { grid-template-columns: repeat(2, 1fr); max-width: none; }
+  .tools-grid { grid-template-columns: repeat(2, 1fr); max-width: none; }
+  
+  .service-description { font-size: 1rem; }
+  
+  :root {
+      --gallery-ring-radius: 167px; 
+      --gallery-image-width: 154px; 
+      --gallery-image-height: 198px; 
+  }
+}
+
+/* Desktop (≥1024px) */
+@media (min-width: 1024px) {
+  .main-layout-container { gap: var(--space-xl); }
+  .left-column-sticky { width: 333px; }
+  .tools-grid { grid-template-columns: repeat(3, 1fr); }
+  .services-card-grid { gap: 2.5rem; }
+
+  :root {
+    --gallery-image-height: 220px;
+  }
+}
+
+/* Large Desktop (≥1200px) */
+@media (min-width: 1200px) { 
+  :root {
+    --gallery-ring-radius: 213px; 
+    --gallery-image-width: 220px; 
+    --gallery-image-height: 260px;
+  }
+}
+
+/* --- Accessibility: Reduce Motion --- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    .background-color-gradient, body::before, body::after, .mouse-follower-glow, .glitch-effect, .left-column-sticky, .striped-entry-list li { animation: none !important; }
+    .reveal-item, .reveal-child, .reveal-stagger, .left-column-sticky { opacity: 1 !important; transform: none !important; }
+    .service-card:hover, .service-card:focus-visible, .tool-card:hover, .tool-card:focus-visible, .gallery-item:hover, .gallery-item:focus-visible, .contact-button:hover, .contact-button:focus-visible { transform: none !important; }
+    .gallery-item-link:hover img, .gallery-item-link:focus-visible img { transform: none !important; filter: brightness(var(--gallery-dimmed-brightness)); }
+}
+
+/* --- Mobile-Only Fixes --- */
+@media (max-width: 768px) {
+  .gallery-item {
+      width: 100%;
+      height: auto;
+      padding: 14px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  }
+  .gallery-item img,
+  .gallery-item-link img,
+  .ring-image {
+      width: 80%;
+      height: auto;
+      max-width: 260px;
+      border-radius: 14px;
+      display: block;
+      margin: 0 auto 10px;
+  }
+  .gallery-caption {
+      width: 100%;
+      max-width: 260px;
+      text-align: center;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+  }
+  .gallery-caption .title {
+      margin-bottom: 6px;
+  }
+  .gallery-section {
+      padding-top: 10px !important;
+  }
+  .gallery-section .section-heading {
+      margin-top: 0 !important;
+  }
+}
+
+/* --- Tablet & Desktop Alignment Fixes --- */
+@media (min-width: 769px) {
+    /* Make card grid uniform */
+    .services-card-grid {
+        grid-auto-rows: 1fr;
+    }
+
+    /* Widen Hero Description */
+    .hero-description {
+        max-width: 720px;
+        width: 90%;
+    }
+
+    /* Align Section Headings and other content blocks */
+    .right-column-scroll .section-heading,
+    .tools-grid,
+    .gallery-section {
+        padding-left: var(--space-l);
+    }
+}
