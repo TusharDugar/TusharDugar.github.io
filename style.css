@@ -11,7 +11,7 @@
     --accent-primary-sawad: #FF6B00;
     --accent-secondary-sawad: #00FFC2;
     --text-secondary: #666666;
-    --text-highlight-subtle: #fff7ed; /* NEW: Added for service card titles */
+    --text-highlight-subtle: #fff7ed; /* For service card titles */
 
     --carousel-primary: #9d00ff;
     --carousel-primary-rgb: 157, 0, 255;
@@ -24,7 +24,7 @@
     /* --- Shadows --- */
     --shadow-color-card-white: rgba(0,0,0,0.25);
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* NEW: Added for service card hover */
+    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* For service card hover */
 
     /* --- Layout & Sizing - Spacing System --- */
     --space-xs: 0.5rem;  /* 8px */
@@ -38,7 +38,7 @@
     --transition-speed-fast: 0.3s;
     --transition-speed-medium: 0.8s;
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-    --transition-timing-line: cubic-bezier(0, 0, 0.2, 1); /* NEW: Added for service line animation */
+    --transition-timing-line: cubic-bezier(0, 0, 0.2, 1); /* For service line animation */
 
     /* --- Gallery Slider Variables (Mobile-First) --- */
     --gallery-ring-radius: 133px; 
@@ -131,7 +131,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .section-heading .text-gray { color: var(--text-secondary); display: block; text-shadow: none; } 
 
 /* ================================================= */
-/*         8. Services & Tools Grids (UPDATED)       */
+/*         8. Services & Tools Grids (REPLACED)      */
 /* ================================================= */
 
 /* --- Services --- */
@@ -161,7 +161,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
   transform: translateY(-8px);
   box-shadow: var(--shadow-xl);
   border-color: var(--accent-primary-sawad);
-  outline: none; /* Add this to prevent default focus rings from clashing with border change */
+  outline: none;
 }
 
 .service-title {
