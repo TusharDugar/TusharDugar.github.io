@@ -40,7 +40,7 @@
     --transition-timing-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     --transition-timing-line: cubic-bezier(0, 0, 0.2, 1); /* NEW: Added for service line animation */
 
-    /* --- Gallery Slider Variables (Mobile-First) --- */
+    /* --- Gallery Slider Variables (DEPRECATED - Kept for reference) --- */
     --gallery-ring-radius: 133px; 
     --gallery-image-width: 132px; 
     --gallery-image-height: 172px;
@@ -252,24 +252,106 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 .tool-name { font-size: 1.1em; font-weight: 600; color: var(--text-light); margin: 0 0 4px 0; }
 .tool-category { font-size: 0.85em; color: var(--text-medium); margin: 0; }
 
-/* ===================================== */
-/*         10. Featured Websites Section */
-/* ===================================== */
-.gallery-section { text-align: left; }
-.image-ring-container { perspective: 2000px; height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30px); width: 100%; position: relative; display: flex; justify-content: center; align-items: center; }
-.image-ring { position: relative; width: calc(var(--gallery-ring-radius) * 2); height: calc(var(--gallery-ring-radius) * 2); transform-style: preserve-3d; will-change: transform; cursor: grab; }
-.image-ring:active { cursor: grabbing; }
-.gallery-item { position: absolute; width: var(--gallery-image-width); height: var(--gallery-image-height); top: 50%; left: 50%; margin-top: calc(var(--gallery-image-height) / -2); margin-left: calc(var(--gallery-image-width) / -2); padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.08); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; transform-style: preserve-3d; backface-visibility: hidden; transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); border: 1px solid rgba(255, 255, 255, 0.1); }
-.gallery-item:hover, .gallery-item:focus-visible { transform: translateZ(30px); box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7); outline: 2px solid var(--accent-primary-sawad); outline-offset: 4px; }
-.gallery-item-link { overflow: hidden; width: 100%; flex-shrink: 0; }
-.gallery-item-link img { width: 100%; height: auto; max-height: calc(var(--gallery-image-height) * 0.7); object-fit: cover; border-radius: 8px; display: block; filter: brightness(var(--gallery-dimmed-brightness)); transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast); margin-bottom: 5px; }
-.gallery-item-link:hover img, .gallery-item-link:focus-visible img { transform: scale(1.05); filter: brightness(var(--gallery-hover-brightness)); }
-.glitch-effect { background-color: transparent; position: absolute; inset: 0; background: linear-gradient(45deg, transparent 65%, rgba(157, 0, 255, 0.3) 70%, transparent 75%) 0% 0% / 200% 200%; animation: glitch 3s linear infinite; pointer-events: none; }
+/* =================================================== */
+/*         10. Featured Websites Section (FIXED)       */
+/* =================================================== */
+
+/* NEW: This grid container replaces the old .image-ring-container. */
+/* It removes the large vertical empty space and creates a responsive layout. */
+.featured-websites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-m);
+    perspective: 2000px; /* Kept to support 3D hover effects on cards */
+}
+
+/* MODIFIED: The .gallery-item is now a grid item, not an absolutely positioned element. */
+/* This removes its fixed size and position, allowing it to flow in the grid. */
+.gallery-item {
+    /* position, top, left, margins, width, and height are removed to work in the grid */
+    padding: 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gallery-item:hover, .gallery-item:focus-visible {
+    transform: translateZ(30px) translateY(-5px); /* Adjusted for better visual lift */
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7);
+    outline: 2px solid var(--accent-primary-sawad);
+    outline-offset: 4px;
+}
+
+.gallery-item-link {
+    overflow: hidden;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.gallery-item-link img {
+    width: 100%;
+    height: 150px; /* Giving a fixed height for consistency in the grid */
+    object-fit: cover;
+    object-position: top; /* Show the top of the website screenshots */
+    border-radius: 8px;
+    display: block;
+    filter: brightness(var(--gallery-dimmed-brightness));
+    transition: transform var(--transition-speed-fast), filter var(--transition-speed-fast);
+    margin-bottom: 5px;
+}
+
+.gallery-item-link:hover img, .gallery-item-link:focus-visible img {
+    transform: scale(1.05);
+    filter: brightness(var(--gallery-hover-brightness));
+}
+
+.glitch-effect {
+    background-color: transparent;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent 65%, rgba(157, 0, 255, 0.3) 70%, transparent 75%) 0% 0% / 200% 200%;
+    animation: glitch 3s linear infinite;
+    pointer-events: none;
+}
+
 @keyframes glitch { 0%,100%{clip-path:inset(0 0 80% 0);transform:translate(0)}10%{clip-path:inset(10% 0 60% 0);transform:translate(-5px,-2px)}20%{clip-path:inset(20% 0 40% 0);transform:translate(5px,2px)}30%{clip-path:inset(30% 0 20% 0);transform:translate(-2px,1px)}40%{clip-path:inset(40% 0 10% 0);transform:translate(2px,-1px)}50%{clip-path:inset(50% 0 0 0);transform:translate(-1px,2px)}60%{clip-path:inset(20% 0 60% 0);transform:translate(3px,-3px)}70%{clip-path:inset(10% 0 70% 0);transform:translate(-3px,3px)}80%{clip-path:inset(0 0 80% 0);transform:translate(2px,-2px)}90%{clip-path:inset(5% 0 75% 0);transform:translate(-2px,2px)} }
-.gallery-caption { font-size: 0.8rem; line-height: 1.3; color: #ddd; padding: 0 5px; width: 100%; }
-.gallery-caption .memory-date { font-family: "Orbitron", sans-serif; font-size: 0.8rem; color: var(--carousel-accent); text-shadow: 0 0 5px rgba(255, 0, 229, 0.7); }
-.gallery-caption .title { font-size: 1rem; font-weight: 600; color: var(--text-light); white-space: normal; }
-.gallery-caption .description { font-size: 0.85rem; line-height: 1.3; color: var(--text-light); white-space: normal; }
+
+.gallery-caption {
+    font-size: 0.8rem;
+    line-height: 1.3;
+    color: #ddd;
+    padding: 0 5px;
+    width: 100%;
+}
+
+.gallery-caption .memory-date {
+    font-family: "Orbitron", sans-serif;
+    font-size: 0.8rem;
+    color: var(--carousel-accent);
+    text-shadow: 0 0 5px rgba(255, 0, 229, 0.7);
+}
+
+.gallery-caption .title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-light);
+    white-space: normal;
+}
+
+.gallery-caption .description {
+    font-size: 0.85rem;
+    line-height: 1.3;
+    color: var(--text-light);
+    white-space: normal;
+}
 
 /* ===================================== */
 /*         11. Contact Section (Footer)  */
@@ -308,12 +390,6 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
   .tools-grid { grid-template-columns: repeat(2, 1fr); max-width: none; }
   
   .service-description { font-size: 1rem; }
-  
-  :root {
-      --gallery-ring-radius: 167px; 
-      --gallery-image-width: 154px; 
-      --gallery-image-height: 198px; 
-  }
 }
 
 /* Desktop (≥1024px) */
@@ -322,19 +398,6 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
   .left-column-sticky { width: 333px; }
   .tools-grid { grid-template-columns: repeat(3, 1fr); }
   .services-card-grid { gap: 2.5rem; }
-
-  :root {
-    --gallery-image-height: 220px;
-  }
-}
-
-/* Large Desktop (≥1200px) */
-@media (min-width: 1200px) { 
-  :root {
-    --gallery-ring-radius: 213px; 
-    --gallery-image-width: 220px; 
-    --gallery-image-height: 260px;
-  }
 }
 
 /* --- Accessibility: Reduce Motion --- */
@@ -347,43 +410,8 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
 }
 
 /* --- Mobile-Only Fixes --- */
-@media (max-width: 768px) {
-  .gallery-item {
-      width: 100%;
-      height: auto;
-      padding: 14px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  }
-  .gallery-item img,
-  .gallery-item-link img,
-  .ring-image {
-      width: 80%;
-      height: auto;
-      max-width: 260px;
-      border-radius: 14px;
-      display: block;
-      margin: 0 auto 10px;
-  }
-  .gallery-caption {
-      width: 100%;
-      max-width: 260px;
-      text-align: center;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      white-space: normal;
-  }
-  .gallery-caption .title {
-      margin-bottom: 6px;
-  }
-  .gallery-section {
-      padding-top: 10px !important;
-  }
-  .gallery-section .section-heading {
-      margin-top: 0 !important;
-  }
-}
+/* REMOVED: The old mobile fix for the gallery carousel is no longer needed. */
+/* The new CSS Grid is inherently responsive. */
 
 /* --- Tablet & Desktop Alignment Fixes --- */
 @media (min-width: 769px) {
@@ -398,10 +426,10 @@ footer h2 { font-size: clamp(2.5rem, 6vw, 3.2rem); margin-bottom: var(--space-m)
         width: 90%;
     }
 
-    /* Align Section Headings and other content blocks */
+    /* FIX: Align Section Headings and other content blocks */
+    /* .gallery-section was removed from this rule to prevent double-indentation */
     .right-column-scroll .section-heading,
-    .tools-grid,
-    .gallery-section {
+    .tools-grid {
         padding-left: var(--space-l);
     }
 }
