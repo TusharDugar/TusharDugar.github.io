@@ -101,7 +101,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 /* ===================================== */
 /*         5. "About" Card Styles        */
 /* ===================================== */
-.about-left-content { background-color: var(--bg-profile-card); color: var(--text-dark-card); border-radius: 800px; box-shadow: 0 10px 30px var(--shadow-color-card-white); display: flex; flex-direction: column; align-items: center; text-align: center; padding: 4rem var(--space-m) 3rem; max-height: 90vh; }
+.about-left-content { background-color: var(--bg-profile-card); color: var(--text-dark-card); border-radius: 20px; box-shadow: 0 10px 30px var(--shadow-color-card-white); display: flex; flex-direction: column; align-items: center; text-align: center; padding: 4rem var(--space-m) 3rem; max-height: 90vh; }
 .profile-image-container { width: 160px; height: 160px; overflow: hidden; margin-bottom: var(--space-s); }
 .profile-photo { width: 100%; height: 100%; object-fit: cover; }
 .about-left-content h3 { font-size: 2.2em; font-weight: 700; margin: 0 0 var(--space-xs); line-height: 1.1; }
