@@ -256,7 +256,7 @@ html::before { content: ''; position: fixed; inset: 0; z-index: 0; pointer-event
 /*         10. Featured Websites Section */
 /* ===================================== */
 .gallery-section { text-align: left; margin-top: -3.5 rem; padding-top: 0 !important; }
-.image-ring-container { perspective: 2000px; height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 10 px); width: 100%; position: relative; display: flex; justify-content: center; align-items: center; }
+.image-ring-container { perspective: 2000px; height: calc(var(--gallery-ring-radius) * 2 + var(--gallery-image-height) + 30 px); width: 100%; position: relative; display: flex; justify-content: center; align-items: center; }
 .image-ring { position: relative; width: calc(var(--gallery-ring-radius) * 2); height: calc(var(--gallery-ring-radius) * 2); transform-style: preserve-3d; will-change: transform; cursor: grab; }
 .image-ring:active { cursor: grabbing; }
 .gallery-item { position: absolute; width: var(--gallery-image-width); height: var(--gallery-image-height); top: 50%; left: 50%; margin-top: calc(var(--gallery-image-height) / -2); margin-left: calc(var(--gallery-image-width) / -2); padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.08); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; transform-style: preserve-3d; backface-visibility: hidden; transition: transform var(--transition-speed-fast), box-shadow var(--transition-speed-fast); border: 1px solid rgba(255, 255, 255, 0.1); }
